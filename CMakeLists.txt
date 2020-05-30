@@ -1,4 +1,4 @@
-# $Id: CMakeLists.txt 326 2013-01-30 07:16:58Z roland_schwarz $
+# $Id: CMakeLists.txt 332 2013-04-03 14:24:08Z roland_schwarz $
 # This is the CMake project file for the libe57 reference implementation
 #
 # Copyright 2010-2012 Roland Schwarz, Riegl LMS GmbH
@@ -24,6 +24,18 @@
 # FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
+#
+# Requirements:
+#     Xerces library: http://xerces.apache.org/
+#     Boost library: http://www.boost.org
+# Notes:
+#     Since there is not standard cmake module to find the xerces library
+#     we provide one with this distribution. It should be able to find
+#     the library from the XERCES_ROOT cmake variable. Standard layout, as
+#     with the binary packages from apache is assumed.
+# If you find any errors or have suggestion to improve the build script:
+# patches are most welcome! Please send them to the development mailing list.
+
 
 cmake_minimum_required(VERSION 2.8.2)
 

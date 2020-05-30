@@ -1,4 +1,4 @@
-# $Id: CMakeLists.txt 298 2012-04-04 14:37:40Z roland_schwarz $
+# $Id: CMakeLists.txt 332 2013-04-03 14:24:08Z roland_schwarz $
 # This is the CMake project file for the libe57 reference implementation
 #
 # Copyright 2010 Roland Schwarz, Riegl LMS GmbH
@@ -50,7 +50,7 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(T_ ${T_}-${${PROJECT_NAME}_MAJOR_VERSION})
     set(T_ ${T_}.${${PROJECT_NAME}_MINOR_VERSION})
     set(T_ ${T_}.${${PROJECT_NAME}_BUILD_VERSION})
-    set(T_ ${T_}-${${PROJECT_NAME}_BUILD_TAG})
+    # set(T_ ${T_}-${${PROJECT_NAME}_BUILD_TAG})
     set(CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/${T_}
         CACHE PATH
         "Install path prefix, prepended onto install directories."
