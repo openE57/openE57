@@ -1,4 +1,4 @@
-# $Id: CMakeLists.txt 294 2012-04-04 11:09:11Z roland_schwarz $
+# $Id: CMakeLists.txt 326 2013-01-30 07:16:58Z roland_schwarz $
 # This is the CMake project file for the libe57 reference implementation
 #
 # Copyright 2010-2012 Roland Schwarz, Riegl LMS GmbH
@@ -104,6 +104,7 @@ endif()
 
 add_definitions(${Boost_LIB_DIAGNOSTIC_DEFINITIONS})
 add_definitions(-DBOOST_ALL_NO_LIB -DXERCES_STATIC_LIBRARY)
+add_definitions(-DE57_REFIMPL_REVISION_ID=${PROJECT_NAME}-${${PROJECT_NAME}_MAJOR_VERSION}.${${PROJECT_NAME}_MINOR_VERSION}.${${PROJECT_NAME}_BUILD_VERSION}-${${PROJECT_NAME}_BUILD_TAG})
 
 configure_file (
   "${PROJECT_SOURCE_DIR}/include/config.h.in"
