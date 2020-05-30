@@ -1,0 +1,9 @@
+2011-10-04
+    update to use boost version 1.46.1
+    streamlined cmake files for better static linking
+2011-03-14
+    E57RefImplConfig.cmake added
+    e57validate tool added to cmake
+2010-10-16 roland_schwarz
+    e57unpack tool added
+    riegl_1 example files added
