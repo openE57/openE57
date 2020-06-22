@@ -50,6 +50,8 @@
 #    include <fcntl.h>
 #    include <sys\stat.h>
 #    include <windows.h>
+//#include <stdint.h>  //if you need this then remove <boost/cstdint.hpp> in E57Foundation.h line 48
+#pragma warning(disable:4996)
 #  include <boost/uuid/uuid.hpp>
 #  include <boost/uuid/uuid_generators.hpp>
 #  include <boost/uuid/uuid_io.hpp>
@@ -84,7 +86,7 @@
 
 using namespace e57;
 using namespace std;
-using namespace boost;
+//using namespace boost;
 
 namespace e57 {
 char *	GetNewGuid(void);
@@ -869,7 +871,11 @@ VectorNode		ReaderImpl :: GetRawImages2D(void)
 {
 	return images2D_;
 };	//!< /return Returns the raw Image2D VectorNode
-
+//! This function returns the ram ImageFile Node which is need to add enhancements
+ImageFile		ReaderImpl :: GetRawIMF(void)
+{
+	return imf_;
+};  //!< /return Returns the raw ImageFile
 //! This function returns the Data3D header and positions the cursor
 bool	ReaderImpl :: ReadData3D( 
 	int32_t		dataIndex,	//!< This in the index into the images3D vector
@@ -1078,7 +1084,7 @@ bool	ReaderImpl :: ReadData3D(
 		data3DHeader.pointFields.cartesianZField = proto.isDefined("cartesianZ");
 		data3DHeader.pointFields.cartesianInvalidStateField = proto.isDefined("cartesianInvalidState");
 
-		data3DHeader.pointFields.pointRangeScaledInteger = 0.; //FloatNode
+		data3DHeader.pointFields.pointRangeScaledInteger = E57_NOT_SCALED_USE_FLOAT; //FloatNode
 		data3DHeader.pointFields.pointRangeMinimum = 0.;
 		data3DHeader.pointFields.pointRangeMaximum = 0.; 
 
@@ -1099,6 +1105,7 @@ bool	ReaderImpl :: ReadData3D(
 					FloatNode(proto.get("cartesianX")).minimum();
 				data3DHeader.pointFields.pointRangeMaximum =
 					FloatNode(proto.get("cartesianX")).maximum();
+				data3DHeader.pointFields.pointRangeScaledInteger = E57_NOT_SCALED_USE_FLOAT;
 			}
 		} 
 		else if( proto.isDefined("sphericalRange")) {
@@ -1118,6 +1125,7 @@ bool	ReaderImpl :: ReadData3D(
 					FloatNode(proto.get("sphericalRange")).minimum();
 				data3DHeader.pointFields.pointRangeMaximum =
 					FloatNode(proto.get("sphericalRange")).maximum();
+				data3DHeader.pointFields.pointRangeScaledInteger = E57_NOT_SCALED_USE_FLOAT;
 			}
 		}
 
@@ -1126,7 +1134,7 @@ bool	ReaderImpl :: ReadData3D(
 		data3DHeader.pointFields.sphericalElevationField = proto.isDefined("sphericalElevation");
 		data3DHeader.pointFields.sphericalInvalidStateField = proto.isDefined("sphericalInvalidState");
 
-		data3DHeader.pointFields.angleScaledInteger = 0.; //FloatNode
+		data3DHeader.pointFields.angleScaledInteger = E57_NOT_SCALED_USE_FLOAT; //FloatNode
 		data3DHeader.pointFields.angleMinimum = 0.;
 		data3DHeader.pointFields.angleMaximum = 0.;
 
@@ -1147,6 +1155,7 @@ bool	ReaderImpl :: ReadData3D(
 					FloatNode(proto.get("sphericalAzimuth")).minimum();
 				data3DHeader.pointFields.angleMaximum =
 					FloatNode(proto.get("sphericalAzimuth")).maximum();
+				data3DHeader.pointFields.angleScaledInteger = E57_NOT_SCALED_USE_FLOAT;
 			}
 		}
 
@@ -1174,19 +1183,36 @@ bool	ReaderImpl :: ReadData3D(
 		data3DHeader.pointFields.timeStampField = proto.isDefined("timeStamp");
 		data3DHeader.pointFields.isTimeStampInvalidField = proto.isDefined("isTimeStampInvalid");
 		data3DHeader.pointFields.timeMaximum = 0.;
+		data3DHeader.pointFields.timeMinimum = 0.;
+		data3DHeader.pointFields.timeScaledInteger = E57_NOT_SCALED_USE_FLOAT;
 
 		if(proto.isDefined("timeStamp")) {
-			if( proto.get("timeStamp").type() == E57_INTEGER)
+			if(proto.get("timeStamp").type() == E57_INTEGER) {
 				data3DHeader.pointFields.timeMaximum = (double) IntegerNode(proto.get("timeStamp")).maximum();
-			else if( proto.get("timeStamp").type() == E57_FLOAT)
+				data3DHeader.pointFields.timeMinimum = (double) IntegerNode(proto.get("timeStamp")).minimum();
+				data3DHeader.pointFields.timeScaledInteger = E57_NOT_SCALED_USE_FLOAT;
+
+			} else if(proto.get("timeStamp").type() == E57_SCALED_INTEGER) {
+				double scale = ScaledIntegerNode(proto.get("timeStamp")).scale();
+				double offset = ScaledIntegerNode(proto.get("timeStamp")).offset();
+				int64_t minimum = ScaledIntegerNode(proto.get("timeStamp")).minimum();
+				int64_t maximum = ScaledIntegerNode(proto.get("timeStamp")).maximum();
+				data3DHeader.pointFields.timeMinimum = (double)	minimum * scale + offset;	
+				data3DHeader.pointFields.timeMaximum = (double)	maximum * scale + offset;
+				data3DHeader.pointFields.timeScaledInteger = scale;
+
+			} else if(proto.get("timeStamp").type() == E57_FLOAT) {			
+				data3DHeader.pointFields.timeMinimum = FloatNode(proto.get("timeStamp")).minimum();
 				data3DHeader.pointFields.timeMaximum = FloatNode(proto.get("timeStamp")).maximum();
+				data3DHeader.pointFields.timeScaledInteger = E57_NOT_SCALED_USE_FLOAT;
+			}
 		}
 	
 		data3DHeader.pointFields.intensityField = proto.isDefined("intensity");
 		data3DHeader.pointFields.isIntensityInvalidField = proto.isDefined("isIntensityInvalid");
 		data3DHeader.intensityLimits.intensityMinimum = 0.;
 		data3DHeader.intensityLimits.intensityMaximum = 0.;
-		data3DHeader.pointFields.intensityScaledInteger = 0.;
+		data3DHeader.pointFields.intensityScaledInteger = E57_NOT_SCALED_USE_FLOAT;
 
 		if(scan.isDefined("intensityLimits"))
 		{
@@ -1219,7 +1245,7 @@ bool	ReaderImpl :: ReadData3D(
 					data3DHeader.intensityLimits.intensityMaximum = (double)
 						IntegerNode(proto.get("intensity")).maximum();
 				}
-				data3DHeader.pointFields.intensityScaledInteger = -1.;
+				data3DHeader.pointFields.intensityScaledInteger = E57_NOT_SCALED_USE_INTEGER;
 
 			} else if(proto.get("intensity").type() == E57_SCALED_INTEGER) {
 				double scale = ScaledIntegerNode(proto.get("intensity")).scale();
@@ -1242,6 +1268,7 @@ bool	ReaderImpl :: ReadData3D(
 					data3DHeader.intensityLimits.intensityMaximum = 
 						FloatNode(proto.get("intensity")).maximum();
 				}
+				data3DHeader.pointFields.intensityScaledInteger = E57_NOT_SCALED_USE_FLOAT;
 			}
 		}
 
@@ -1544,7 +1571,8 @@ CompressedVectorReader	ReaderImpl :: SetUpData3DPointsData(
 	int8_t*		returnCount,		//!< pointer to a buffer with the total number of returns for the pulse that this corresponds to. Shall be in the interval (0, 2^63). Only for multi-return sensors. 
 
 	double*		timeStamp,			//!< pointer to a buffer with the time (in seconds) since the start time for the data, which is given by acquisitionStart in the parent Data3D Structure. Shall be non-negative
-	int8_t*		isTimeStampInvalid	//!< Value = 0 if the timeStamp is considered valid, 1 otherwise
+	int8_t*		isTimeStampInvalid,	//!< Value = 0 if the timeStamp is considered valid, 1 otherwise
+	bool		(*pointDataExtension)(ImageFile	imf, StructureNode proto, int protoIndex, vector<SourceDestBuffer> & destBuffers)
 	)
 {
 	int64_t		readCount = 0;
@@ -1605,17 +1633,17 @@ CompressedVectorReader	ReaderImpl :: SetUpData3DPointsData(
 
 		else if((name.compare("timeStamp") == 0) && proto.isDefined("timeStamp") && (timeStamp != NULL))
 			destBuffers.push_back(SourceDestBuffer(imf_, "timeStamp",
-				timeStamp,   (unsigned) count, true));
+				timeStamp,   (unsigned) count, true, scaled));
 		else if((name.compare("isTimeStampInvalid") == 0) && proto.isDefined("isTimeStampInvalid") && (isTimeStampInvalid != NULL))
 			destBuffers.push_back(SourceDestBuffer(imf_, "isTimeStampInvalid",
-				isTimeStampInvalid,       (unsigned) count, true));
+				isTimeStampInvalid,(unsigned) count, true));
 
 		else if((name.compare("intensity") == 0) && proto.isDefined("intensity") && (intensity != NULL))
 			destBuffers.push_back(SourceDestBuffer(imf_, "intensity",   intensity,
 				(unsigned) count, true, scaled));
 		else if((name.compare("isIntensityInvalid") == 0) && proto.isDefined("isIntensityInvalid") && (isIntensityInvalid != NULL))
 			destBuffers.push_back(SourceDestBuffer(imf_, "isIntensityInvalid",
-				isIntensityInvalid,       (unsigned) count, true));
+				isIntensityInvalid,(unsigned) count, true));
 
 		else if((name.compare("colorRed") == 0) && proto.isDefined("colorRed") && (colorRed != NULL))
 			destBuffers.push_back(SourceDestBuffer(imf_, "colorRed",
@@ -1628,7 +1656,9 @@ CompressedVectorReader	ReaderImpl :: SetUpData3DPointsData(
 				colorBlue,   (unsigned) count, true, scaled));
 		else if((name.compare("isColorInvalid") == 0) && proto.isDefined("isColorInvalid") && (isColorInvalid != NULL))
 			destBuffers.push_back(SourceDestBuffer(imf_, "isColorInvalid",
-				isColorInvalid,       (unsigned) count, true));
+				isColorInvalid, (unsigned) count, true));
+		else if(pointDataExtension != NULL)
+			(*pointDataExtension)(imf_,proto,(int) protoIndex,destBuffers);
 	}
 
 	CompressedVectorReader reader = points.reader(destBuffers);
@@ -1730,6 +1760,11 @@ VectorNode		WriterImpl :: GetRawImages2D(void)
 {
 	return images2D_;
 };	//!< /return Returns the raw Image2D VectorNode
+//! This function returns the ram ImageFile Node which is need to add enhancements
+ImageFile		WriterImpl :: GetRawIMF(void)
+{
+	return imf_;
+};  //!< /return Returns the raw ImageFile
 ////////////////////////////////////////////////////////////////////
 //
 //	Camera Image picture data
@@ -2019,7 +2054,8 @@ int64_t	WriterImpl :: WriteImage2DData(
 //* The user needs to config a Data3D structure with all the scanning information before making this call. */
 
 int32_t	WriterImpl :: NewData3D( 
-	Data3D &	data3DHeader //!< pointer to the Data3D structure to receive the image information
+	Data3D &	data3DHeader,		//!< pointer to the Data3D structure to receive the image information
+	bool		(*pointExtension)(ImageFile	imf, StructureNode proto)	//!< function pointer to add point data extension
 	)	//!< /return Returns the index of the new scan.
 {
 	int32_t pos = -1;
@@ -2246,29 +2282,18 @@ int32_t	WriterImpl :: NewData3D(
 		StructureNode pose = StructureNode(imf_);
 		scan.set("pose", pose);
 
-		if( (data3DHeader.pose.rotation.w != 1.) ||
-			(data3DHeader.pose.rotation.x != 0.) ||
-			(data3DHeader.pose.rotation.y != 0.) ||
-			(data3DHeader.pose.rotation.z != 0.) )
-		{
-			StructureNode rotation = StructureNode(imf_);
-			rotation.set("w", FloatNode(imf_, data3DHeader.pose.rotation.w));
-			rotation.set("x", FloatNode(imf_, data3DHeader.pose.rotation.x));
-			rotation.set("y", FloatNode(imf_, data3DHeader.pose.rotation.y));
-			rotation.set("z", FloatNode(imf_, data3DHeader.pose.rotation.z));
-			pose.set("rotation", rotation);
-		}
+		StructureNode rotation = StructureNode(imf_);
+		rotation.set("w", FloatNode(imf_, data3DHeader.pose.rotation.w));
+		rotation.set("x", FloatNode(imf_, data3DHeader.pose.rotation.x));
+		rotation.set("y", FloatNode(imf_, data3DHeader.pose.rotation.y));
+		rotation.set("z", FloatNode(imf_, data3DHeader.pose.rotation.z));
+		pose.set("rotation", rotation);
 
-		if( (data3DHeader.pose.translation.x != 0.) ||
-			(data3DHeader.pose.translation.y != 0.) ||
-			(data3DHeader.pose.translation.z != 0.) )
-		{
-			StructureNode translation = StructureNode(imf_);
-			translation.set("x", FloatNode(imf_, data3DHeader.pose.translation.x));
-			translation.set("y", FloatNode(imf_, data3DHeader.pose.translation.y));
-			translation.set("z", FloatNode(imf_, data3DHeader.pose.translation.z));
-			pose.set("translation", translation);
-		}
+		StructureNode translation = StructureNode(imf_);
+		translation.set("x", FloatNode(imf_, data3DHeader.pose.translation.x));
+		translation.set("y", FloatNode(imf_, data3DHeader.pose.translation.y));
+		translation.set("z", FloatNode(imf_, data3DHeader.pose.translation.z));
+		pose.set("translation", translation);
 	}
 // Add start/stop acquisition times to scan.
 	/// Path names: "/data3D/0/acquisitionStart/dateTimeValue",
@@ -2470,7 +2495,7 @@ int32_t	WriterImpl :: NewData3D(
 			proto.set("intensity",  ScaledIntegerNode(imf_, 0,
 				rawIntegerMinimum, rawIntegerMaximum, scale, offset));
 		}
-		else if(data3DHeader.pointFields.intensityScaledInteger == 0.)
+		else if(data3DHeader.pointFields.intensityScaledInteger == E57_NOT_SCALED_USE_FLOAT)
 			proto.set("intensity",  FloatNode(imf_, 0.,	E57_SINGLE,
 				data3DHeader.intensityLimits.intensityMinimum,
 				data3DHeader.intensityLimits.intensityMaximum));
@@ -2508,13 +2533,25 @@ int32_t	WriterImpl :: NewData3D(
 			data3DHeader.pointFields.columnIndexMaximum));
 
 	if(data3DHeader.pointFields.timeStampField){
-		if(data3DHeader.pointFields.timeMaximum == E57_FLOAT_MAX)
-			proto.set("timeStamp",  FloatNode(imf_, 0., E57_SINGLE, E57_FLOAT_MIN, E57_FLOAT_MAX));
-		else if(data3DHeader.pointFields.timeMaximum == E57_DOUBLE_MAX)
-			proto.set("timeStamp",  FloatNode(imf_, 0., E57_DOUBLE, E57_DOUBLE_MIN, E57_DOUBLE_MAX));
+		if(data3DHeader.pointFields.timeScaledInteger > 0.)
+		{
+			double offset = 0;
+			double scale = data3DHeader.pointFields.timeScaledInteger;
+			int64_t rawIntegerMinimum = (int64_t) floor((data3DHeader.pointFields.timeMinimum - offset)/scale +.5);
+			int64_t rawIntegerMaximum = (int64_t) floor((data3DHeader.pointFields.timeMaximum - offset)/scale +.5);
+			proto.set("timeStamp",  ScaledIntegerNode(imf_, 0,
+				rawIntegerMinimum, rawIntegerMaximum, scale, offset));
+		}
+		else if(data3DHeader.pointFields.timeScaledInteger == E57_NOT_SCALED_USE_FLOAT)
+		{
+			if(data3DHeader.pointFields.timeMaximum == E57_FLOAT_MAX)
+				proto.set("timeStamp",  FloatNode(imf_, 0., E57_SINGLE, E57_FLOAT_MIN, E57_FLOAT_MAX));
+			else if(data3DHeader.pointFields.timeMaximum == E57_DOUBLE_MAX)
+				proto.set("timeStamp",  FloatNode(imf_, 0., E57_DOUBLE, E57_DOUBLE_MIN, E57_DOUBLE_MAX));
+		}
 		else
 			proto.set("timeStamp",  IntegerNode(imf_, 0,
-				(int64_t) -data3DHeader.pointFields.timeMaximum,
+				(int64_t) data3DHeader.pointFields.timeMinimum,
 				(int64_t) data3DHeader.pointFields.timeMaximum));
 	}
 #ifdef TEST_EXTENSIONS
@@ -2532,6 +2569,10 @@ int32_t	WriterImpl :: NewData3D(
 		proto.set("isTimeStampInvalid", IntegerNode(imf_, 0, 0, 1));
 
 //   proto.set("demo:extra2", StringNode(imf_));	//Extension here
+
+// do call back to setup any point data extension before the CompressedVectorNode is created.
+	if(pointExtension != NULL)
+		(*pointExtension)(imf_, proto);
 
 // Make empty codecs vector for use in creating points CompressedVector.
     /// If this vector is empty, it is assumed that all fields will use the BitPack codec.
@@ -2572,8 +2613,8 @@ CompressedVectorWriter	WriterImpl :: SetUpData3DPointsData(
 	int8_t*		returnCount,		//!< pointer to a buffer with the total number of returns for the pulse that this corresponds to. Shall be in the interval (0, 2^63). Only for multi-return sensors. 
 
 	double*		timeStamp,			//!< pointer to a buffer with the time (in seconds) since the start time for the data, which is given by acquisitionStart in the parent Data3D Structure. Shall be non-negative
-	int8_t*		isTimeStampInvalid	//!< Value = 0 if the timeStamp is considered valid, 1 otherwise
-
+	int8_t*		isTimeStampInvalid,	//!< Value = 0 if the timeStamp is considered valid, 1 otherwise
+	bool		(*pointDataExtension)(ImageFile	imf, StructureNode proto, vector<SourceDestBuffer> & sourceBuffers)
 	)
 {
 #ifdef TEST_EXTENSIONS
@@ -2636,7 +2677,7 @@ CompressedVectorWriter	WriterImpl :: SetUpData3DPointsData(
 		sourceBuffers.push_back(SourceDestBuffer(imf_, "columnIndex", columnIndex, (unsigned) count, true));
 
 	if(proto.isDefined("timeStamp") && (timeStamp != NULL))
-		sourceBuffers.push_back(SourceDestBuffer(imf_, "timeStamp",   timeStamp,   (unsigned) count, true));
+		sourceBuffers.push_back(SourceDestBuffer(imf_, "timeStamp",   timeStamp,   (unsigned) count, true, true));
 
 #ifdef TEST_EXTENSIONS
 	if(proto.isDefined("ext:extraField3"))
@@ -2653,6 +2694,10 @@ CompressedVectorWriter	WriterImpl :: SetUpData3DPointsData(
 	if(proto.isDefined("isTimeStampInvalid") && (isTimeStampInvalid != NULL))
 		sourceBuffers.push_back(SourceDestBuffer(imf_, "isTimeStampInvalid",       isTimeStampInvalid,       (unsigned) count, true));
 
+	if(pointDataExtension != NULL)
+		(*pointDataExtension)(imf_,proto, sourceBuffers);
+
+// create the writer, all buffers must be setup before this call
 	CompressedVectorWriter writer = points.writer(sourceBuffers);
 
 	return writer;

@@ -1,4 +1,4 @@
-// $Id: e57unpack.cpp 332 2013-04-03 14:24:08Z roland_schwarz $
+// $Id: e57unpack.cpp 338 2013-09-03 12:36:09Z roland_schwarz $
 #include <config.h>
 
 #define PROGRAM_NAME "e57unpack"
@@ -129,13 +129,13 @@ print_help(
 }
 
 class get_at
-    : public static_visitor<variant<double, int64_t> >
+    : public static_visitor<variant<double, int64_t, ustring> >
 {
     size_t at;
 public:
     get_at(size_t at_) : at(at_) {}
     template <typename T>
-    variant<double, int64_t> operator()( T & operand ) const
+    variant<double, int64_t, ustring> operator()( T & operand ) const
     {
         return operand[at];
     }
@@ -254,7 +254,7 @@ main(
                     StructureNode            prototype(points.prototype());
                     vector<SourceDestBuffer> sdb;
                     const size_t buf_size = 1024;
-                    vector<variant<vector<double>, vector<int64_t> > > buf;
+                    vector<variant<vector<double>, vector<int64_t>, vector<ustring> > > buf;
                     string pointrecord;
 
                     string comma;
@@ -273,6 +273,10 @@ main(
                                     if (!opt.count("format"))
                                         fmt += comma +"%d";
                                     break;
+                                case e57::E57_STRING:
+                                    buf.push_back(vector<ustring>(buf_size));
+                                    if (!opt.count("format"))
+                                        fmt += comma + "%s";
                             }
                             if (comma.empty()) comma = ",";
                         }
@@ -305,6 +309,15 @@ main(
                                         , buf_size
                                         , true
                                         , true
+                                    )
+                                );
+                            break;
+                            case e57::E57_STRING:
+                                sdb.push_back(
+                                    SourceDestBuffer(
+                                        imf
+                                        , n.elementName()
+                                        , &get<vector<ustring> >(buf[i])
                                     )
                                 );
                             break;
@@ -392,6 +405,7 @@ main(
 
                     format tfmt(fmt);
                     tfmt.exceptions( all_error_bits ^ too_many_args_bit );
+                    out << pointrecord << endl; // put the header line into csv
                     while(count = rd.read()) {
                         total_count += count;
                         for (size_t i=0; i<count; ++i) {

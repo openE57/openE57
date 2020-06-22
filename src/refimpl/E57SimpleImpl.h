@@ -53,6 +53,7 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+#include <stdint.h>
 #include <boost/crc.hpp>        // for boost::crc_optimal
 
 // Define the following symbol adds some functions to the API for implementation purposes.
@@ -257,7 +258,9 @@ virtual CompressedVectorReader	SetUpData3DPointsData(
 						int8_t*		returnCount = NULL,	//!< pointer to a buffer with the total number of returns for the pulse that this corresponds to. Shall be in the interval (0, 2^63). Only for multi-return sensors. 
 
 						double*		timeStamp = NULL,	//!< pointer to a buffer with the time (in seconds) since the start time for the data, which is given by acquisitionStart in the parent Data3D Structure. Shall be non-negative
-						int8_t*		isTimeStampInvalid = NULL	//!< Value = 0 if the timeStamp is considered valid, 1 otherwise
+						int8_t*		isTimeStampInvalid = NULL,	//!< Value = 0 if the timeStamp is considered valid, 1 otherwise
+						bool		(*pointDataExtension)(ImageFile	imf, StructureNode proto, int protoIndex, vector<SourceDestBuffer> & destBuffers) = NULL
+
 						);
 
 //! This function returns the file raw E57Root Structure Node
@@ -266,7 +269,8 @@ virtual	StructureNode		GetRawE57Root(void);	//!< /return Returns the E57Root Str
 virtual VectorNode			GetRawData3D(void);		//!< /return Returns the raw Data3D VectorNode
 //! This function returns the raw Image2D Vector Node
 virtual VectorNode			GetRawImages2D(void);	//!< /return Returns the raw Image2D VectorNode
-
+//! This function returns the ram ImageFile Node which is need to add enhancements
+virtual ImageFile			GetRawIMF(void);  //!< /return Returns the raw ImageFile
 }; //end Reader class
 
 
@@ -338,7 +342,8 @@ virtual int64_t		WriteImage2DNode(
 //* The user needs to config a Data3D structure with all the scanning information before making this call. */
 
 virtual int32_t		NewData3D( 
-						Data3D &	data3DHeader	//!< pointer to the Data3D structure to receive the image information
+						Data3D &	data3DHeader,	//!< pointer to the Data3D structure to receive the image information
+						bool		(*pointExtension)(ImageFile	imf,StructureNode proto)	//!< function pointer to add point data extension
 						);							//!< /return Returns the index of the new scan's data3D block.
 
 //! This function writes out blocks of point data
@@ -369,7 +374,8 @@ virtual CompressedVectorWriter	SetUpData3DPointsData(
 						int8_t*		returnCount = NULL,	//!< pointer to a buffer with the total number of returns for the pulse that this corresponds to. Shall be in the interval (0, 2^63). Only for multi-return sensors. 
 
 						double*		timeStamp = NULL,	//!< pointer to a buffer with the time (in seconds) since the start time for the data, which is given by acquisitionStart in the parent Data3D Structure. Shall be non-negative
-						int8_t*		isTimeStampInvalid = NULL	//!< Value = 0 if the timeStamp is considered valid, 1 otherwise
+						int8_t*		isTimeStampInvalid = NULL,	//!< Value = 0 if the timeStamp is considered valid, 1 otherwise
+						bool		(*pointDataExtension)(ImageFile	imf, StructureNode proto, vector<SourceDestBuffer> & sourceBuffers) = NULL
 						);
 
 
@@ -388,6 +394,8 @@ virtual	StructureNode		GetRawE57Root(void);	//!< /return Returns the E57Root Str
 virtual VectorNode			GetRawData3D(void);		//!< /return Returns the raw Data3D VectorNode
 //! This function returns the raw Image2D Vector Node
 virtual VectorNode			GetRawImages2D(void);	//!< /return Returns the raw Image2D VectorNode
+//! This function returns the ram ImageFile Node which is need to add enhancements
+virtual ImageFile			GetRawIMF(void);  //!< /return Returns the raw ImageFile
 
 }; //end Writer class
 

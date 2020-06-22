@@ -783,6 +783,7 @@ DEALINGS IN THE SOFTWARE.
 #    include <fcntl.h>
 #    include <sys\stat.h>
 #    include <windows.h>
+#include <stdint.h>
 #  elif defined(__GNUC__)
 #  define _LARGEFILE64_SOURCE
 #  define __LARGE64_FILES
@@ -968,7 +969,7 @@ void Data3D::Reset(void)
 	pointFields.cartesianZField = false;
 	pointFields.cartesianInvalidStateField = false;
 
-	pointFields.pointRangeScaledInteger = 0.;
+	pointFields.pointRangeScaledInteger = E57_NOT_SCALED_USE_FLOAT;
 	pointFields.pointRangeMinimum = E57_FLOAT_MIN;
 	pointFields.pointRangeMaximum = E57_FLOAT_MAX;
 
@@ -977,7 +978,7 @@ void Data3D::Reset(void)
 	pointFields.sphericalElevationField = false;
 	pointFields.sphericalInvalidStateField = false;
 
-	pointFields.angleScaledInteger = 0.;
+	pointFields.angleScaledInteger = E57_NOT_SCALED_USE_FLOAT;
 	pointFields.angleMinimum = E57_FLOAT_MIN;
 	pointFields.angleMaximum = E57_FLOAT_MAX;
 
@@ -997,11 +998,13 @@ void Data3D::Reset(void)
 
 	pointFields.intensityField = false;
 	pointFields.isIntensityInvalidField = false;
-	pointFields.intensityScaledInteger = -1.;	//Default to -1 means IntegerNode, 0. means FloatNode, and >0. means ScaleIntegerNode
+	pointFields.intensityScaledInteger = E57_NOT_SCALED_USE_INTEGER;	//Default to -1 means IntegerNode, 0. means FloatNode, and >0. means ScaleIntegerNode
 
 	pointFields.timeStampField = false;
 	pointFields.isTimeStampInvalidField = false;
 	pointFields.timeMaximum = E57_DOUBLE_MAX;
+	pointFields.timeMinimum = E57_DOUBLE_MIN;
+	pointFields.timeScaledInteger = E57_NOT_SCALED_USE_FLOAT;	//Default to -1 means IntegerNode, 0. means FloatNode, and >0. means ScaleIntegerNode
 	pointsSize = 0;
 };
 ////////////////////////////////////////////////////////////////////
@@ -1134,6 +1137,11 @@ int32_t		Reader :: GetData3DCount( void) const
 	return impl_->GetData3DCount();
 };
 
+// This function returns the ram ImageFile Node which is need to add enhancements
+ImageFile		Reader :: GetRawIMF(void)
+{
+	return impl_->GetRawIMF();
+}
 // This function returns the file raw E57Root Structure Node
 StructureNode	Reader :: GetRawE57Root(void)
 {
@@ -1212,7 +1220,9 @@ CompressedVectorReader	Reader :: SetUpData3DPointsData(
 	int8_t*		returnCount,		//!< pointer to a buffer with the total number of returns for the pulse that this corresponds to. Shall be in the interval (0, 2^63). Only for multi-return sensors. 
 
 	double*		timeStamp,			//!< pointer to a buffer with the time (in seconds) since the start time for the data, which is given by acquisitionStart in the parent Data3D Structure. Shall be non-negative
-	int8_t*		isTimeStampInvalid	//!< Value = 0 if the timeStamp is considered valid, 1 otherwise
+	int8_t*		isTimeStampInvalid,	//!< Value = 0 if the timeStamp is considered valid, 1 otherwise
+	bool		(*pointDataExtension)(ImageFile	imf, StructureNode proto, int protoIndex, vector<SourceDestBuffer> & destBuffers)
+
 	) const
 {
 	return impl_->SetUpData3DPointsData( dataIndex, pointCount,
@@ -1221,7 +1231,7 @@ CompressedVectorReader	Reader :: SetUpData3DPointsData(
 		colorRed, colorGreen, colorBlue, isColorInvalid,
 		sphericalRange, sphericalAzimuth, sphericalElevation, sphericalInvalidState,
 		rowIndex, columnIndex, returnIndex, returnCount,
-		timeStamp, isTimeStampInvalid);
+		timeStamp, isTimeStampInvalid, pointDataExtension);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -1244,6 +1254,13 @@ bool		Writer :: Close(void) const
 {
 	return impl_->Close();
 };
+
+// This function returns the ram ImageFile Node which is need to add enhancements
+ImageFile		Writer :: GetRawIMF(void)
+{
+	return impl_->GetRawIMF();
+}
+
 // This function returns the file raw E57Root Structure Node
 StructureNode	Writer :: GetRawE57Root(void)
 {
@@ -1283,10 +1300,11 @@ int64_t		Writer :: WriteImage2DData(
 };
 
 int32_t		Writer :: NewData3D( 
-	Data3D &	data3DHeader	// pointer to the Data3D structure to receive the image information
+	Data3D &	data3DHeader,	// pointer to the Data3D structure to receive the image information
+	bool		(*pointExtension)(ImageFile	imf, StructureNode proto)	//!< function pointer to add point data extension
 	) const							// /return Returns the index of the new scan's data3D block.
 {
-	return impl_->NewData3D( data3DHeader);
+	return impl_->NewData3D( data3DHeader, pointExtension);
 };
 
 // This function writes out blocks of point data
@@ -1317,7 +1335,8 @@ CompressedVectorWriter	Writer :: SetUpData3DPointsData(
 	int8_t*		returnCount,		//!< pointer to a buffer with the total number of returns for the pulse that this corresponds to. Shall be in the interval (0, 2^63). Only for multi-return sensors. 
 
 	double*		timeStamp,			//!< pointer to a buffer with the time (in seconds) since the start time for the data, which is given by acquisitionStart in the parent Data3D Structure. Shall be non-negative
-	int8_t*		isTimeStampInvalid	//!< Value = 0 if the timeStamp is considered valid, 1 otherwise
+	int8_t*		isTimeStampInvalid,	//!< Value = 0 if the timeStamp is considered valid, 1 otherwise
+	bool		(*pointDataExtension)(ImageFile	imf, StructureNode proto, vector<SourceDestBuffer> & sourceBuffers)
 	) const
 {
 		return impl_->SetUpData3DPointsData( dataIndex, pointCount,
@@ -1326,7 +1345,7 @@ CompressedVectorWriter	Writer :: SetUpData3DPointsData(
 			colorRed, colorGreen, colorBlue, isColorInvalid,
 			sphericalRange, sphericalAzimuth, sphericalElevation, sphericalInvalidState,
 			rowIndex, columnIndex, returnIndex, returnCount,
-			timeStamp, isTimeStampInvalid);
+			timeStamp, isTimeStampInvalid, pointDataExtension);
 }
 
 bool		Writer :: WriteData3DGroupsData(
