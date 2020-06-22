@@ -104,7 +104,7 @@ void	GetSystemTimeFromGPSDateTime(
 
 //! This is the E57 Reader class
 
-class	ReaderImpl : public boost::enable_shared_from_this<ReaderImpl> {
+class	ReaderImpl : public std::enable_shared_from_this<ReaderImpl> {
 
 private:
 
@@ -281,7 +281,7 @@ virtual ImageFile			GetRawIMF(void);  //!< /return Returns the raw ImageFile
 
 //! This is the E57 Writer class
 
-class	WriterImpl : public boost::enable_shared_from_this<WriterImpl> {
+class	WriterImpl : public std::enable_shared_from_this<WriterImpl> {
 
 private:
 	ImageFile				imf_;

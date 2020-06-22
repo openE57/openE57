@@ -1,2 +1,0 @@
-/usr/bin/ar qc lib/libtime_conversion.a  CMakeFiles/time_conversion.dir/src/time_conversion/time_conversion.c.o
-/usr/bin/ranlib lib/libtime_conversion.a

@@ -88,13 +88,13 @@ using std::ios_base;
 using std::scientific;
 using std::setprecision;
 using std::string;
-using std::auto_ptr;
+using std::unique_ptr;
 using std::min;
 using std::max;
 
 //using namespace boost;
-using boost::weak_ptr;
-using boost::shared_ptr;
+using std::weak_ptr;
+using std::shared_ptr;
 using boost::dynamic_pointer_cast;
 
 #include <xercesc/util/TransService.hpp>
@@ -239,14 +239,14 @@ bool NodeImpl::isRoot()
     return(parent_.expired());
 };
 
-boost::shared_ptr<NodeImpl> NodeImpl::parent()
+std::shared_ptr<NodeImpl> NodeImpl::parent()
 {
     checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
     if (isRoot()) {
         /// If is root, then has self as parent (by convention)
         return(shared_from_this());
     } else {
-        boost::shared_ptr<NodeImpl> myParent(parent_);
+        std::shared_ptr<NodeImpl> myParent(parent_);
         return(myParent);
     }
 }
@@ -383,7 +383,7 @@ bool NodeImpl::isTypeConstrained()
     return(false);
 }
 
-boost::shared_ptr<NodeImpl> NodeImpl::get(const ustring& pathName)
+std::shared_ptr<NodeImpl> NodeImpl::get(const ustring& pathName)
 {
     /// This is common virtual function for terminal E57 element types: Integer, ScaledInteger, Float, Blob.
     /// The non-terminal types override this virtual function.
@@ -451,7 +451,7 @@ void NodeImpl::set(const ustring& pathName, shared_ptr<NodeImpl> ni, bool autoPa
     root->set(pathName, ni, autoPathCreate);
 }
 
-void NodeImpl::set(const std::vector<ustring>& /*fields*/, unsigned /*level*/, boost::shared_ptr<NodeImpl> /*ni*/, bool /*autoPathCreate*/)
+void NodeImpl::set(const std::vector<ustring>& /*fields*/, unsigned /*level*/, std::shared_ptr<NodeImpl> /*ni*/, bool /*autoPathCreate*/)
 {
     /// If get here, then tried to call set(fields...) on NodeImpl that wasn't a StructureNodeImpl, so that's an error
     throw E57_EXCEPTION1(E57_ERROR_BAD_PATH_NAME); //???
@@ -829,7 +829,7 @@ void StructureNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, sha
 }
 
 //??? use visitor?
-void StructureNodeImpl::writeXml(boost::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName)
+void StructureNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName)
 {
     /// don't checkImageFileOpen
 
@@ -954,7 +954,7 @@ void VectorNodeImpl::set(int64_t index64, shared_ptr<NodeImpl> ni)
     StructureNodeImpl::set(index64, ni);
 }
 
-void VectorNodeImpl::writeXml(boost::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName)
+void VectorNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName)
 {
     /// don't checkImageFileOpen
 
@@ -1980,7 +1980,7 @@ void CompressedVectorNodeImpl::checkLeavesInSet(const std::set<ustring>& /*pathN
     throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "this->pathName=" + this->pathName());
 }
 
-void CompressedVectorNodeImpl::writeXml(boost::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName)
+void CompressedVectorNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName)
 {
     // don't checkImageFileOpen
 
@@ -2201,7 +2201,7 @@ void IntegerNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, share
         throw E57_EXCEPTION2(E57_ERROR_NO_BUFFER_FOR_ELEMENT, "this->pathName=" + this->pathName());
 }
 
-void IntegerNodeImpl::writeXml(boost::shared_ptr<ImageFileImpl> /*imf???*/, CheckedFile& cf, int indent, const char* forcedFieldName)
+void IntegerNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf???*/, CheckedFile& cf, int indent, const char* forcedFieldName)
 {
     // don't checkImageFileOpen
 
@@ -2382,7 +2382,7 @@ void ScaledIntegerNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames,
         throw E57_EXCEPTION2(E57_ERROR_NO_BUFFER_FOR_ELEMENT, "this->pathName=" + this->pathName());
 }
 
-void ScaledIntegerNodeImpl::writeXml(boost::shared_ptr<ImageFileImpl> /*imf*/, CheckedFile& cf, int indent, const char* forcedFieldName)
+void ScaledIntegerNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf*/, CheckedFile& cf, int indent, const char* forcedFieldName)
 {
     // don't checkImageFileOpen
 
@@ -2533,7 +2533,7 @@ void FloatNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, shared_
         throw E57_EXCEPTION2(E57_ERROR_NO_BUFFER_FOR_ELEMENT, "this->pathName=" + this->pathName());
 }
 
-void FloatNodeImpl::writeXml(boost::shared_ptr<ImageFileImpl> /*imf*/, CheckedFile& cf, int indent, const char* forcedFieldName)
+void FloatNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf*/, CheckedFile& cf, int indent, const char* forcedFieldName)
 {
     // don't checkImageFileOpen
 
@@ -2653,7 +2653,7 @@ void StringNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, shared
         throw E57_EXCEPTION2(E57_ERROR_NO_BUFFER_FOR_ELEMENT, "this->pathName=" + this->pathName());
 }
 
-void StringNodeImpl::writeXml(boost::shared_ptr<ImageFileImpl> /*imf*/, CheckedFile& cf, int indent, const char* forcedFieldName)
+void StringNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf*/, CheckedFile& cf, int indent, const char* forcedFieldName)
 {
     // don't checkImageFileOpen
 
@@ -2853,7 +2853,7 @@ void BlobNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, shared_p
         throw E57_EXCEPTION2(E57_ERROR_NO_BUFFER_FOR_ELEMENT, "this->pathName=" + this->pathName());
 }
 
-void BlobNodeImpl::writeXml(boost::shared_ptr<ImageFileImpl> /*imf*/, CheckedFile& cf, int indent, const char* forcedFieldName)
+void BlobNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf*/, CheckedFile& cf, int indent, const char* forcedFieldName)
 {
     // don't checkImageFileOpen
 
@@ -3009,7 +3009,7 @@ namespace e57 {
 class E57XmlParser : public DefaultHandler
 {
 public:
-    E57XmlParser(boost::shared_ptr<ImageFileImpl> imf);
+    E57XmlParser(std::shared_ptr<ImageFileImpl> imf);
     ~E57XmlParser();
 
     /// SAX interface
@@ -3031,7 +3031,7 @@ private:
     ustring lookupAttribute(const Attributes& attributes, const XMLCh* attribute_name);
     bool    isAttributeDefined(const Attributes& attributes, const XMLCh* attribute_name);
 
-    boost::shared_ptr<ImageFileImpl> imf_;   /// Image file we are reading
+    std::shared_ptr<ImageFileImpl> imf_;   /// Image file we are reading
 
     struct ParseInfo {
         /// All the fields need to remember while parsing the XML
@@ -3100,7 +3100,7 @@ void E57XmlParser::ParseInfo::dump(int indent, ostream& os)
 
 } /// end namespace e57
 
-E57XmlParser::E57XmlParser(boost::shared_ptr<ImageFileImpl> imf)
+E57XmlParser::E57XmlParser(std::shared_ptr<ImageFileImpl> imf)
 : imf_(imf)
 {
 }
@@ -3807,7 +3807,7 @@ void ImageFileImpl::construct2(const ustring& fileName, const ustring& mode, con
              throw E57_EXCEPTION2(E57_ERROR_XML_PARSER_INIT, "parserMessage=" + ustring(XMLString::transcode(ex.getMessage())));
         }
 
-        xmlReader = XMLReaderFactory::createXMLReader(); //??? auto_ptr?
+        xmlReader = XMLReaderFactory::createXMLReader(); //??? std::unique_ptr?
 
         //??? check these are right
         xmlReader->setFeature(XMLUni::fgSAX2CoreValidation,        true);
@@ -5797,7 +5797,7 @@ bool CompressedVectorWriterImpl::isOpen()
     return(isOpen_);
 }
 
-boost::shared_ptr<CompressedVectorNodeImpl> CompressedVectorWriterImpl::compressedVectorNode()
+std::shared_ptr<CompressedVectorNodeImpl> CompressedVectorWriterImpl::compressedVectorNode()
 {
     return(cVector_);
 }
@@ -6277,7 +6277,7 @@ CompressedVectorReaderImpl::CompressedVectorReaderImpl(shared_ptr<CompressedVect
     /// Verify that packet given by dataPhysicalOffset is actually a data packet, init channels
     {
         char* anyPacket = NULL;
-        auto_ptr<PacketLock> packetLock = cache_->lock(dataLogicalOffset, anyPacket);
+        std::unique_ptr<PacketLock> packetLock = cache_->lock(dataLogicalOffset, anyPacket);
 
         DataPacket* dpkt = reinterpret_cast<DataPacket*>(anyPacket);
 
@@ -6440,7 +6440,7 @@ void CompressedVectorReaderImpl::feedPacketToDecoders(uint64_t currentPacketLogi
     {
         /// Get packet at currentPacketLogicalOffset into memory.
         char* anyPacket = NULL;
-        auto_ptr<PacketLock> packetLock = cache_->lock(currentPacketLogicalOffset, anyPacket);
+        std::unique_ptr<PacketLock> packetLock = cache_->lock(currentPacketLogicalOffset, anyPacket);
         DataPacket* dpkt = reinterpret_cast<DataPacket*>(anyPacket);
 
         /// Double check that have a data packet.  Should have already determined this.
@@ -6507,7 +6507,7 @@ void CompressedVectorReaderImpl::feedPacketToDecoders(uint64_t currentPacketLogi
         if (nextPacketLogicalOffset < E57_UINT64_MAX) { //??? huh?
             /// Get packet at nextPacketLogicalOffset into memory.
             char* anyPacket = NULL;
-            auto_ptr<PacketLock> packetLock = cache_->lock(nextPacketLogicalOffset, anyPacket);
+            std::unique_ptr<PacketLock> packetLock = cache_->lock(nextPacketLogicalOffset, anyPacket);
             DataPacket* dpkt = reinterpret_cast<DataPacket*>(anyPacket);
 
             /// Got a data packet, update the channels with exhausted input
@@ -6556,7 +6556,7 @@ uint64_t CompressedVectorReaderImpl::findNextDataPacket(uint64_t nextPacketLogic
     /// Starting at nextPacketLogicalOffset, search for next data packet until hit end of binary section.
     while (nextPacketLogicalOffset < sectionEndLogicalOffset_) {
         char* anyPacket = NULL;
-        auto_ptr<PacketLock> packetLock = cache_->lock(nextPacketLogicalOffset, anyPacket);
+        std::unique_ptr<PacketLock> packetLock = cache_->lock(nextPacketLogicalOffset, anyPacket);
 
         /// Guess it's a data packet, if not continue to next packet
         DataPacket* dpkt = reinterpret_cast<DataPacket*>(anyPacket);
@@ -6589,7 +6589,7 @@ bool CompressedVectorReaderImpl::isOpen()
     return(isOpen_);
 }
 
-boost::shared_ptr<CompressedVectorNodeImpl> CompressedVectorReaderImpl::compressedVectorNode()
+std::shared_ptr<CompressedVectorNodeImpl> CompressedVectorReaderImpl::compressedVectorNode()
 {
     return(cVector_);
 }
@@ -7806,7 +7806,7 @@ PacketReadCache::~PacketReadCache()
     }
 }
 
-auto_ptr<PacketLock> PacketReadCache::lock(uint64_t packetLogicalOffset, char* &pkt)
+std::unique_ptr<PacketLock> PacketReadCache::lock(uint64_t packetLogicalOffset, char* &pkt)
 {
 #ifdef E57_MAX_VERBOSE
     cout << "PacketReadCache::lock() called, packetLogicalOffset=" << packetLogicalOffset << endl;
@@ -7834,7 +7834,7 @@ auto_ptr<PacketLock> PacketReadCache::lock(uint64_t packetLogicalOffset, char* &
             pkt = entries_[i].buffer_;
 
             /// Create lock so we are sure that we will be unlocked when use is finished.
-            auto_ptr<PacketLock> plock(new PacketLock(this, i));
+            std::unique_ptr<PacketLock> plock(new PacketLock(this, i));
 
             /// Increment cache lock just before return
             lockCount_++;
@@ -7862,7 +7862,7 @@ auto_ptr<PacketLock> PacketReadCache::lock(uint64_t packetLogicalOffset, char* &
     pkt = entries_[oldestEntry].buffer_;
 
     /// Create lock so we are sure we will be unlocked when use is finished.
-    auto_ptr<PacketLock> plock(new PacketLock(this, oldestEntry));
+    std::unique_ptr<PacketLock> plock(new PacketLock(this, oldestEntry));
 
     /// Increment cache lock just before return
     lockCount_++;
