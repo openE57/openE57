@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../../include/openE57/time_conversion/basictypes.h
+
+../../include/openE57/time_conversion/constants.h
+
+../../include/openE57/time_conversion/gnss_error.h
+stdio.h
+-
+
+../../include/openE57/time_conversion/time_conversion.h
+basictypes.h
+../../include/openE57/time_conversion/basictypes.h
+
+/home/madduci/Projects/openE57/src/time_conversion/time_conversion.c
+sys/timeb.h
+-
+time.h
+-
+math.h
+-
+openE57/time_conversion/gnss_error.h
+-
+openE57/time_conversion/time_conversion.h
+-
+openE57/time_conversion/constants.h
+-
+windows.h
+-
+

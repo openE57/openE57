@@ -1,0 +1,2 @@
+/usr/bin/ar qc lib/libopenE57.a  CMakeFiles/openE57.dir/src/E57Simple.cpp.o CMakeFiles/openE57.dir/src/E57SimpleImpl.cpp.o CMakeFiles/openE57.dir/src/E57Foundation.cpp.o CMakeFiles/openE57.dir/src/E57FoundationImpl.cpp.o
+/usr/bin/ranlib lib/libopenE57.a

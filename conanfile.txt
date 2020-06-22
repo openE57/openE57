@@ -1,0 +1,13 @@
+[requires]
+icu/67.1
+xerces-c/3.2.2
+boost/1.73.0
+
+[generators]
+cmake
+
+[options]
+boost:multithreading=True
+boost:shared=False
+xerces-c:shared=False
+icu:shared=False

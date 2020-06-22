@@ -1,0 +1,2 @@
+/usr/bin/ar qc lib/libLASReader.a  CMakeFiles/LASReader.dir/src/LAS/LASReader.cpp.o
+/usr/bin/ranlib lib/libLASReader.a

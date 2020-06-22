@@ -1,0 +1,60 @@
+Performing C SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
+Change Dir: /home/madduci/Projects/openE57/build/linux/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_4f68e/fast && /usr/bin/make  -f CMakeFiles/cmTC_4f68e.dir/build.make CMakeFiles/cmTC_4f68e.dir/build
+make[1]: Entering directory '/home/madduci/Projects/openE57/build/linux/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_4f68e.dir/src.c.o
+/usr/bin/cc   -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_4f68e.dir/src.c.o   -c /home/madduci/Projects/openE57/build/linux/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_4f68e
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_4f68e.dir/link.txt --verbose=1
+/usr/bin/cc   -DCMAKE_HAVE_LIBC_PTHREAD    CMakeFiles/cmTC_4f68e.dir/src.c.o  -o cmTC_4f68e 
+/usr/bin/ld: CMakeFiles/cmTC_4f68e.dir/src.c.o: in function `main':
+src.c:(.text+0x3e): undefined reference to `pthread_create'
+/usr/bin/ld: src.c:(.text+0x4a): undefined reference to `pthread_detach'
+/usr/bin/ld: src.c:(.text+0x56): undefined reference to `pthread_cancel'
+/usr/bin/ld: src.c:(.text+0x67): undefined reference to `pthread_join'
+collect2: error: ld returned 1 exit status
+make[1]: *** [CMakeFiles/cmTC_4f68e.dir/build.make:107: cmTC_4f68e] Error 1
+make[1]: Leaving directory '/home/madduci/Projects/openE57/build/linux/CMakeFiles/CMakeTmp'
+make: *** [Makefile:141: cmTC_4f68e/fast] Error 2
+
+
+Source file was:
+#include <pthread.h>
+
+void* test_func(void* data)
+{
+  return data;
+}
+
+int main(void)
+{
+  pthread_t thread;
+  pthread_create(&thread, NULL, test_func, NULL);
+  pthread_detach(thread);
+  pthread_cancel(thread);
+  pthread_join(thread, NULL);
+  pthread_atfork(NULL, NULL, NULL);
+  pthread_exit(NULL);
+
+  return 0;
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/madduci/Projects/openE57/build/linux/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_0c1b3/fast && /usr/bin/make  -f CMakeFiles/cmTC_0c1b3.dir/build.make CMakeFiles/cmTC_0c1b3.dir/build
+make[1]: Entering directory '/home/madduci/Projects/openE57/build/linux/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_0c1b3.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_0c1b3.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.17/Modules/CheckFunctionExists.c
+Linking C executable cmTC_0c1b3
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_0c1b3.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTC_0c1b3.dir/CheckFunctionExists.c.o  -o cmTC_0c1b3  -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+make[1]: *** [CMakeFiles/cmTC_0c1b3.dir/build.make:107: cmTC_0c1b3] Error 1
+make[1]: Leaving directory '/home/madduci/Projects/openE57/build/linux/CMakeFiles/CMakeTmp'
+make: *** [Makefile:141: cmTC_0c1b3/fast] Error 2
+
+
+
