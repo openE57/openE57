@@ -30,20 +30,16 @@
 #include <iomanip>
 #include <float.h>
 #include <map>
-#if defined(_MSC_VER)
-#   include <memory>
-#else
-#   include <tr1/memory>
-#endif
-#include "E57Foundation.h"
-#include "E57FoundationImpl.h" //??? for exceptions, should be in separate file
+#include <memory>
+
+#include <openE57/E57Foundation.h>
+#include <openE57/impl/E57FoundationImpl.h> //??? for exceptions, should be in separate file
 
 #include <boost/math/special_functions/fpclassify.hpp>
 using boost::math::fpclassify;
 
 using namespace e57;
 using namespace std;
-using namespace std::tr1;
 
 //!!! prologue, file name, date, version#, total # elements
 //!!! doc
@@ -446,9 +442,9 @@ struct CVElementInfo {
     /// Only one is used, depending on the type of the E57 element.
     /// One of these three should be resized to BUFFER_ELEMENT_COUNT.
     /// These are smart pointers to avoid the copying (and the moving) when put on the cvElements list.
-    shared_ptr<vector<int64_t> > iBuffer;
-    shared_ptr<vector<double> >  dBuffer;
-    shared_ptr<vector<string> >  sBuffer;
+    std::shared_ptr<vector<int64_t> > iBuffer;
+    std::shared_ptr<vector<double> >  dBuffer;
+    std::shared_ptr<vector<string> >  sBuffer;
 
     /// The precalculated parts of the element path name.
     /// The only part that is missing is the record number which goes in between.

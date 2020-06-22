@@ -32,7 +32,7 @@
 #include <iostream>
 #include <vector>
 #ifndef E57FOUNDATIONIMPL_H_INCLUDED
-#  include "E57FoundationImpl.h"
+#  include <openE57/impl/E57FoundationImpl.h>
 #endif
 
 namespace e57 {

@@ -25,8 +25,8 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-#include "LASReader.h"
-#include "E57FoundationImpl.h"
+#include <openE57/LAS/LASReader.h>
+#include <openE57/impl/E57FoundationImpl.h>
 
 #include <algorithm>
 

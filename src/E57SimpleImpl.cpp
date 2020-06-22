@@ -81,8 +81,8 @@
 #endif
 
 #include <sstream>
-#include "E57SimpleImpl.h"
-#include "time_conversion.h"
+#include <openE57/impl/E57SimpleImpl.h>
+#include <openE57/time_conversion/time_conversion.h>
 
 using namespace e57;
 using namespace std;

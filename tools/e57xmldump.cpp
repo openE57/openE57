@@ -26,8 +26,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 #include <iostream>
-#include "E57Foundation.h"
-#include "E57FoundationImpl.h" //??? for exceptions, should be in separate file
+#include <openE57/E57Foundation.h>
+#include <openE57/impl/E57FoundationImpl.h> //??? for exceptions, should be in separate file
 using namespace e57;
 using namespace std;
 //using namespace std::tr1; //??? is this really needed, gives error on gcc <roland>

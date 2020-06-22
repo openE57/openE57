@@ -10,7 +10,7 @@
 #define STRING_HELPER1(a) STRING_HELPER2(a)
 #define BUILD_VERSION STRING_HELPER1(SVN_VERSION)
 
-#include <E57Foundation.h>
+#include <openE57/E57Foundation.h>
 using e57::Node;
 using e57::ImageFile;
 using e57::StructureNode;
@@ -45,12 +45,7 @@ using std::exception;
 #include <stdexcept>
 using std::runtime_error;
 
-#if defined(_MSC_VER)
-#   include <memory>
-#else
-#   include <tr1/memory>
-#endif
-using std::tr1::shared_ptr;
+#include <memory>
 
 #include <string>
 using std::string;
@@ -101,9 +96,7 @@ print_version(
     cout
     << PROGRAM_NAME" (" << BOOST_PLATFORM << ") "
     << PROGRAM_VERSION
-    << "." << BUILD_VERSION
-    << endl
-    ;
+    << "." << '\n';
 
     int astmMajor;
     int astmMinor;

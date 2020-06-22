@@ -25,7 +25,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-#include "E57Foundation.h"
+#include <openE57/E57Foundation.h>
 using namespace e57;
 using namespace std;
 
