@@ -34,14 +34,14 @@
 #ifndef E57FOUNDATIONIMPL_H_INCLUDED
 #define E57FOUNDATIONIMPL_H_INCLUDED
 
-#include <vector>
-#include <set>
-#include <string>
-#include <iostream>
-#include <iomanip>
-#include <sstream>
 #include <algorithm>
-#include <boost/crc.hpp>        // for boost::crc_optimal
+#include <boost/crc.hpp> // for boost::crc_optimal
+#include <iomanip>
+#include <iostream>
+#include <set>
+#include <sstream>
+#include <string>
+#include <vector>
 
 // Define the following symbol adds some functions to the API for implementation purposes.
 // These functions are not available to a normal API user.
@@ -54,8 +54,8 @@
 // Uncomment the lines below to enable various levels of cross checking and verification in the code.
 // The extra code does not change the file contents.
 // Recommend that E57_DEBUG remain defined even for production versions.
-#define E57_DEBUG       1
-#define E57_MAX_DEBUG   1
+#define E57_DEBUG 1
+#define E57_MAX_DEBUG 1
 
 // Uncomment the lines below to enable various levels of printing to the console of what is going on in the code.
 //#define E57_VERBOSE     1
@@ -66,16 +66,20 @@
 //#define E57_DEBUG_INVARIANCE 1
 
 #ifdef E57_DEBUG_INVARIANCE
-#  define CHECK_THIS_INVARIANCE() {impl_->checkInvariance();}
-#  define CHECK_INVARIANCE_RETURN(RTYPE, EXPR)  { \
-    CHECK_THIS_INVARIANCE() \
-    RTYPE result = (EXPR); \
-    CHECK_THIS_INVARIANCE() \
-    return(result); \
-}
+#  define CHECK_THIS_INVARIANCE()                                                                                                                              \
+    {                                                                                                                                                          \
+      impl_->checkInvariance();                                                                                                                                \
+    }
+#  define CHECK_INVARIANCE_RETURN(RTYPE, EXPR)                                                                                                                 \
+    {                                                                                                                                                          \
+      CHECK_THIS_INVARIANCE()                                                                                                                                  \
+      RTYPE result = (EXPR);                                                                                                                                   \
+      CHECK_THIS_INVARIANCE()                                                                                                                                  \
+      return (result);                                                                                                                                         \
+    }
 #else
 #  define CHECK_THIS_INVARIANCE()
-#  define CHECK_INVARIANCE_RETURN(RTYPE, EXPR)  return(EXPR);
+#  define CHECK_INVARIANCE_RETURN(RTYPE, EXPR) return (EXPR);
 #endif
 
 // Uncomment the line below to enable writing packets that are correct but will stress the reader.
@@ -83,7 +87,7 @@
 
 #ifdef _MSC_VER
 // Disable MSVC warning: warning C4224: nonstandard extension used : formal parameter 'locale' was previously defined as a type
-#pragma warning( disable : 4224)
+#  pragma warning(disable : 4224)
 #endif
 
 #include <stack>
@@ -93,20 +97,21 @@
 //#define XERCES_STATIC_LIBRARY 1
 
 // The XML parser headers
+#include <xercesc/sax2/Attributes.hpp>
+#include <xercesc/sax2/DefaultHandler.hpp>
 #include <xercesc/sax2/SAX2XMLReader.hpp>
 #include <xercesc/sax2/XMLReaderFactory.hpp>
-#include <xercesc/sax2/DefaultHandler.hpp>
-#include <xercesc/sax2/Attributes.hpp>
 
 // Use Xerces namespace (the current version defined in Xerces header)
 XERCES_CPP_NAMESPACE_USE
 
-namespace e57 {
-
-inline ustring exception_string(const char* errorName, const char* fileName, int lineNumber) {
-    std::ostringstream ss;
-    ss << errorName << " at " << fileName << ":" << lineNumber;
-    return(ss.str());
+namespace e57
+{
+inline ustring exception_string(const char* errorName, const char* fileName, int lineNumber)
+{
+  std::ostringstream ss;
+  ss << errorName << " at " << fileName << ":" << lineNumber;
+  return (ss.str());
 }
 #define EXCEPTION(e_name) (std::runtime_error(exception_string((e_name), __FILE__, __LINE__)))
 
@@ -120,11 +125,19 @@ inline ustring exception_string(const char* errorName, const char* fileName, int
 #define LAS_V1_0_URI "http://www.astm.org/COMMIT/E57/2010-las-v1.0" //??? change to v1.0 before final release
 
 /// Create whitespace of given length, for indenting printouts in dump() functions
-inline std::string space(const size_t n) {return(std::string(n,' '));}
+inline std::string space(const size_t n)
+{
+  return (std::string(n, ' '));
+}
 
 /// Convert number to decimal, hexadecimal, and binary strings  (Note hex strings don't have leading zeros).
 template <class T>
-std::string toString(T x) {std::ostringstream ss; ss << x; return(ss.str());}
+std::string toString(T x)
+{
+  std::ostringstream ss;
+  ss << x;
+  return (ss.str());
+}
 #if 0 // <rs> 2011-10-03 below definition gives problems if intXX_t type equal to native type
 inline std::string toString(uint64_t x) {std::ostringstream ss; ss << x; return(ss.str());}
 inline std::string toString(uint32_t x) {std::ostringstream ss; ss << x; return(ss.str());}
@@ -134,54 +147,140 @@ inline std::string toString(int64_t x)  {std::ostringstream ss; ss << x; return(
 inline std::string toString(int32_t x)  {std::ostringstream ss; ss << x; return(ss.str());}
 inline std::string toString(int16_t x)  {std::ostringstream ss; ss << x; return(ss.str());}
 inline std::string toString(int8_t x)   {std::ostringstream ss; ss << x; return(ss.str());}
-#ifndef __GNUC__
+#  ifndef __GNUC__
 inline std::string toString(int x)      {std::ostringstream ss; ss << x; return(ss.str());}
 inline std::string toString(unsigned x) {std::ostringstream ss; ss << x; return(ss.str());}
-#endif
+#  endif
 inline std::string toString(float x)    {std::ostringstream ss; ss << x; return(ss.str());}
 inline std::string toString(double x)   {std::ostringstream ss; ss << x; return(ss.str());}
 inline std::string toString(bool x)     {std::ostringstream ss; ss << x; return(ss.str());}
 #endif
-inline std::string hexString(uint64_t x) {std::ostringstream ss; ss << "0x" << std::hex << std::setw(16)<< std::setfill('0') << x; return(ss.str());}
-inline std::string hexString(uint32_t x) {std::ostringstream ss; ss << "0x" << std::hex << std::setw(8) << std::setfill('0') << x; return(ss.str());}
-inline std::string hexString(uint16_t x) {std::ostringstream ss; ss << "0x" << std::hex << std::setw(4) << std::setfill('0') << x; return(ss.str());}
-inline std::string hexString(uint8_t x)  {std::ostringstream ss; ss << "0x" << std::hex << std::setw(2) << std::setfill('0') << static_cast<unsigned>(x); return(ss.str());}
-inline std::string binaryString(uint64_t x) {std::ostringstream ss;for(int i=63;i>=0;i--){ss<<((x&(1LL<<i))?1:0);if(i>0&&i%8==0)ss<<" ";} return(ss.str());}
-inline std::string binaryString(uint32_t x) {std::ostringstream ss;for(int i=31;i>=0;i--){ss<<((x&(1LL<<i))?1:0);if(i>0&&i%8==0)ss<<" ";} return(ss.str());}
-inline std::string binaryString(uint16_t x) {std::ostringstream ss;for(int i=15;i>=0;i--){ss<<((x&(1LL<<i))?1:0);if(i>0&&i%8==0)ss<<" ";} return(ss.str());}
-inline std::string binaryString(uint8_t x) {std::ostringstream ss;for(int i=7;i>=0;i--){ss<<((x&(1LL<<i))?1:0);if(i>0&&i%8==0)ss<<" ";} return(ss.str());}
-inline std::string hexString(int64_t x) {return(hexString(static_cast<uint64_t>(x)));}
-inline std::string hexString(int32_t x) {return(hexString(static_cast<uint32_t>(x)));}
-inline std::string hexString(int16_t x) {return(hexString(static_cast<uint16_t>(x)));}
-inline std::string hexString(int8_t x)  {return(hexString(static_cast<uint8_t>(x)));}
-inline std::string binaryString(int64_t x) {return(binaryString(static_cast<uint64_t>(x)));}
-inline std::string binaryString(int32_t x) {return(binaryString(static_cast<uint32_t>(x)));}
-inline std::string binaryString(int16_t x) {return(binaryString(static_cast<uint16_t>(x)));}
-inline std::string binaryString(int8_t x)  {return(binaryString(static_cast<uint8_t>(x)));}
+inline std::string hexString(uint64_t x)
+{
+  std::ostringstream ss;
+  ss << "0x" << std::hex << std::setw(16) << std::setfill('0') << x;
+  return (ss.str());
+}
+inline std::string hexString(uint32_t x)
+{
+  std::ostringstream ss;
+  ss << "0x" << std::hex << std::setw(8) << std::setfill('0') << x;
+  return (ss.str());
+}
+inline std::string hexString(uint16_t x)
+{
+  std::ostringstream ss;
+  ss << "0x" << std::hex << std::setw(4) << std::setfill('0') << x;
+  return (ss.str());
+}
+inline std::string hexString(uint8_t x)
+{
+  std::ostringstream ss;
+  ss << "0x" << std::hex << std::setw(2) << std::setfill('0') << static_cast<unsigned>(x);
+  return (ss.str());
+}
+inline std::string binaryString(uint64_t x)
+{
+  std::ostringstream ss;
+  for (int i = 63; i >= 0; i--)
+  {
+    ss << ((x & (1LL << i)) ? 1 : 0);
+    if (i > 0 && i % 8 == 0)
+      ss << " ";
+  }
+  return (ss.str());
+}
+inline std::string binaryString(uint32_t x)
+{
+  std::ostringstream ss;
+  for (int i = 31; i >= 0; i--)
+  {
+    ss << ((x & (1LL << i)) ? 1 : 0);
+    if (i > 0 && i % 8 == 0)
+      ss << " ";
+  }
+  return (ss.str());
+}
+inline std::string binaryString(uint16_t x)
+{
+  std::ostringstream ss;
+  for (int i = 15; i >= 0; i--)
+  {
+    ss << ((x & (1LL << i)) ? 1 : 0);
+    if (i > 0 && i % 8 == 0)
+      ss << " ";
+  }
+  return (ss.str());
+}
+inline std::string binaryString(uint8_t x)
+{
+  std::ostringstream ss;
+  for (int i = 7; i >= 0; i--)
+  {
+    ss << ((x & (1LL << i)) ? 1 : 0);
+    if (i > 0 && i % 8 == 0)
+      ss << " ";
+  }
+  return (ss.str());
+}
+inline std::string hexString(int64_t x)
+{
+  return (hexString(static_cast<uint64_t>(x)));
+}
+inline std::string hexString(int32_t x)
+{
+  return (hexString(static_cast<uint32_t>(x)));
+}
+inline std::string hexString(int16_t x)
+{
+  return (hexString(static_cast<uint16_t>(x)));
+}
+inline std::string hexString(int8_t x)
+{
+  return (hexString(static_cast<uint8_t>(x)));
+}
+inline std::string binaryString(int64_t x)
+{
+  return (binaryString(static_cast<uint64_t>(x)));
+}
+inline std::string binaryString(int32_t x)
+{
+  return (binaryString(static_cast<uint32_t>(x)));
+}
+inline std::string binaryString(int16_t x)
+{
+  return (binaryString(static_cast<uint16_t>(x)));
+}
+inline std::string binaryString(int8_t x)
+{
+  return (binaryString(static_cast<uint8_t>(x)));
+}
 
 /// Forward reference
-template <typename RegisterT> class BitpackIntegerEncoder;
-template <typename RegisterT> class BitpackIntegerDecoder;
+template <typename RegisterT>
+class BitpackIntegerEncoder;
+template <typename RegisterT>
+class BitpackIntegerDecoder;
 class E57XmlParser;
 class Encoder;
 
 /// Version numbers of ASTM standard that this library supports
-const uint32_t E57_FORMAT_MAJOR = 1;			//Changed from 0 to 1 by SC
-const uint32_t E57_FORMAT_MINOR = 0;			//Changed from 6 to 0 by SC
+const uint32_t E57_FORMAT_MAJOR = 1; // Changed from 0 to 1 by SC
+const uint32_t E57_FORMAT_MINOR = 0; // Changed from 6 to 0 by SC
 
 /// Version of Reference Implementation, E57_REFIMPL_REVISION_ID should be passed from compiler command line
 /// All this macro trickery because E57_REFIMPL_REVISION_ID might not be numeric (e.g. 27M, or exported).
 
-#define E57_REFIMPL_MAJOR          1			//Changed from 0 to 1 by SC
-#define E57_REFIMPL_MINOR          0			//Changed from 1 to 0 by SC
+#define E57_REFIMPL_MAJOR 1 // Changed from 0 to 1 by SC
+#define E57_REFIMPL_MINOR 0 // Changed from 1 to 0 by SC
 #ifndef E57_REFIMPL_REVISION_ID
-#  define E57_REFIMPL_REVISION_ID  unknown
+#  define E57_REFIMPL_REVISION_ID unknown
 #endif
-#define STR_VALUE(arg)                  #arg
-#define DO_QUOTE(name)                  STR_VALUE(name)
-#define QUOTED_E57_REFIMPL_MAJOR        DO_QUOTE(E57_REFIMPL_MAJOR)
-#define QUOTED_E57_REFIMPL_MINOR        DO_QUOTE(E57_REFIMPL_MINOR)
-#define QUOTED_E57_REFIMPL_REVISION_ID  DO_QUOTE(E57_REFIMPL_REVISION_ID)
+#define STR_VALUE(arg) #arg
+#define DO_QUOTE(name) STR_VALUE(name)
+#define QUOTED_E57_REFIMPL_MAJOR DO_QUOTE(E57_REFIMPL_MAJOR)
+#define QUOTED_E57_REFIMPL_MINOR DO_QUOTE(E57_REFIMPL_MINOR)
+#define QUOTED_E57_REFIMPL_REVISION_ID DO_QUOTE(E57_REFIMPL_REVISION_ID)
 #if 0
 const char E57_LIBRARY_ID[] = "ReferenceImplementation "      \
                               QUOTED_E57_REFIMPL_MAJOR        \
@@ -193,748 +292,819 @@ const char E57_LIBRARY_ID[] = "ReferenceImplementation "      \
 const char E57_LIBRARY_ID[] = QUOTED_E57_REFIMPL_REVISION_ID;
 #endif
 /// Section types:
-#define E57_BLOB_SECTION                0	//changed from 1 by SC to fit the standard
-#define E57_COMPRESSED_VECTOR_SECTION   1	//changed from 2 by SC to fit the standard
+#define E57_BLOB_SECTION 0              // changed from 1 by SC to fit the standard
+#define E57_COMPRESSED_VECTOR_SECTION 1 // changed from 2 by SC to fit the standard
 
 /// Packet types (in a compressed vector section)
-#define E57_DATA_PACKET                 1
-#define E57_INDEX_PACKET                0	//changed from 2 by SC to fit the standard
-#define E57_EMPTY_PACKET                2	//changed from 3 by SC to fit the standard
+#define E57_DATA_PACKET 1
+#define E57_INDEX_PACKET 0 // changed from 2 by SC to fit the standard
+#define E57_EMPTY_PACKET 2 // changed from 3 by SC to fit the standard
 
 #ifdef E57_BIGENDIAN
-#  define  SWAB(p)  swab(p)
+#  define SWAB(p) swab(p)
 #else
-#  define  SWAB(p)
+#  define SWAB(p)
 #endif
 
 //================================================================
 #define SAFE_MODE 1 //??? CHECKEDFILE_SAFE_MODE?
 
-class CheckedFile {
+class CheckedFile
+{
 public:
-    enum Mode {readOnly, writeCreate, writeExisting};
-    enum OffsetMode {logical, physical};
-    static const size_t   physicalPageSizeLog2;  // physical page size is 2 raised to this power
-    static const size_t   physicalPageSize;
-    static const uint64_t physicalPageSizeMask;
-    static const size_t   logicalPageSize;
+  enum Mode
+  {
+    readOnly,
+    writeCreate,
+    writeExisting
+  };
+  enum OffsetMode
+  {
+    logical,
+    physical
+  };
+  static const size_t   physicalPageSizeLog2; // physical page size is 2 raised to this power
+  static const size_t   physicalPageSize;
+  static const uint64_t physicalPageSizeMask;
+  static const size_t   logicalPageSize;
 
-                    CheckedFile(ustring fileName, Mode mode);
-                    ~CheckedFile();
+  CheckedFile(ustring fileName, Mode mode);
+  ~CheckedFile();
 
-    void            read(char* buf, size_t nRead, size_t bufSize = 0);
-    //???void       write(char* buf, size_t nWrite, size_t bufSize = 0);
-    void            write(const char* buf, size_t nWrite);
-    CheckedFile&    operator<<(const ustring& s);
-    CheckedFile&    operator<<(int64_t i);
-    CheckedFile&    operator<<(uint64_t i);
-    CheckedFile&    operator<<(float f);
-    CheckedFile&    operator<<(double d);
-    void            seek(uint64_t offset, OffsetMode omode = logical);
-    uint64_t        position(OffsetMode omode = logical);
-    uint64_t        length(OffsetMode omode = logical);
-    void            extend(uint64_t length, OffsetMode omode = logical);
-    ustring         fileName() {return(fileName_);};
-    void            flush();
-    void            close();
-    void            unlink();
+  void read(char* buf, size_t nRead, size_t bufSize = 0);
+  //???void       write(char* buf, size_t nWrite, size_t bufSize = 0);
+  void         write(const char* buf, size_t nWrite);
+  CheckedFile& operator<<(const ustring& s);
+  CheckedFile& operator<<(int64_t i);
+  CheckedFile& operator<<(uint64_t i);
+  CheckedFile& operator<<(float f);
+  CheckedFile& operator<<(double d);
+  void         seek(uint64_t offset, OffsetMode omode = logical);
+  uint64_t     position(OffsetMode omode = logical);
+  uint64_t     length(OffsetMode omode = logical);
+  void         extend(uint64_t length, OffsetMode omode = logical);
+  ustring      fileName()
+  {
+    return (fileName_);
+  };
+  void flush();
+  void close();
+  void unlink();
 
-    static size_t   efficientBufferSize(size_t logicalSize);  //??? needed?
+  static size_t efficientBufferSize(size_t logicalSize); //??? needed?
 
-    static inline uint64_t logicalToPhysical(uint64_t logicalOffset);
-    static inline uint64_t physicalToLogical(uint64_t physicalOffset);
+  static inline uint64_t logicalToPhysical(uint64_t logicalOffset);
+  static inline uint64_t physicalToLogical(uint64_t physicalOffset);
+
 private:
-    uint32_t        checksum(char* buf, size_t size);
-template<class FTYPE>
-    CheckedFile&    writeFloatingPoint(FTYPE value, int precision);
+  uint32_t checksum(char* buf, size_t size);
+  template <class FTYPE>
+  CheckedFile& writeFloatingPoint(FTYPE value, int precision);
 
-    ustring         fileName_;
-    int             fd_;
-    bool            readOnly_;
-    uint64_t        logicalLength_;
-    boost::crc_optimal<32,          // bits
-                       0x1EDC6F41,  // truncated polynomial, iSCSI
-                       0xFFFFFFFF,  // initial remainder
-                       0xFFFFFFFF,  // final xor value
-                       true,        // reflect input
-                       true         // reflect remainder
-                      > crcCalculator_;
+  ustring  fileName_;
+  int      fd_;
+  bool     readOnly_;
+  uint64_t logicalLength_;
+  boost::crc_optimal<32,         // bits
+                     0x1EDC6F41, // truncated polynomial, iSCSI
+                     0xFFFFFFFF, // initial remainder
+                     0xFFFFFFFF, // final xor value
+                     true,       // reflect input
+                     true        // reflect remainder
+                     >
+    crcCalculator_;
 
 #ifdef SAFE_MODE
-    void        getCurrentPageAndOffset(uint64_t& page, size_t& pageOffset, OffsetMode omode = logical);
-    void        readPhysicalPage(char* page_buffer, uint64_t page);
-    void        writePhysicalPage(char* page_buffer, uint64_t page);
-    int         open64(ustring fileName, int flags, int mode);
-    uint64_t    lseek64(int64_t offset, int whence);
+  void     getCurrentPageAndOffset(uint64_t& page, size_t& pageOffset, OffsetMode omode = logical);
+  void     readPhysicalPage(char* page_buffer, uint64_t page);
+  void     writePhysicalPage(char* page_buffer, uint64_t page);
+  int      open64(ustring fileName, int flags, int mode);
+  uint64_t lseek64(int64_t offset, int whence);
 #else
-    ???
-    void        finishPage();
+  ? ? ? void finishPage();
 
-    uint32_t    pageChecksum_;
-    bool        currentPageDirty_;
-    char*       temp_page;
+  uint32_t pageChecksum_;
+  bool     currentPageDirty_;
+  char*    temp_page;
 #endif
 };
 
 inline uint64_t CheckedFile::logicalToPhysical(uint64_t logicalOffset)
 {
-    uint64_t page = logicalOffset / logicalPageSize;
-    uint64_t remainder = logicalOffset - page*logicalPageSize;
-    return(page*physicalPageSize + remainder);
+  uint64_t page      = logicalOffset / logicalPageSize;
+  uint64_t remainder = logicalOffset - page * logicalPageSize;
+  return (page * physicalPageSize + remainder);
 }
 
 inline uint64_t CheckedFile::physicalToLogical(uint64_t physicalOffset)
 {
-    uint64_t page = physicalOffset >> physicalPageSizeLog2;
-    size_t remainder = static_cast<size_t> (physicalOffset & physicalPageSizeMask);
+  uint64_t page      = physicalOffset >> physicalPageSizeLog2;
+  size_t   remainder = static_cast<size_t>(physicalOffset & physicalPageSizeMask);
 
-    return(page*logicalPageSize + std::min(remainder, logicalPageSize));
+  return (page * logicalPageSize + std::min(remainder, logicalPageSize));
 }
 
 //================================================================
 
-class NodeImpl : public std::enable_shared_from_this<NodeImpl> {
+class NodeImpl : public std::enable_shared_from_this<NodeImpl>
+{
 public:
-    virtual NodeType        type() = 0;
-    void                    checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName);
-    virtual bool            isTypeEquivalent(std::shared_ptr<NodeImpl> ni) = 0;
-    bool                    isRoot();
-    std::shared_ptr<NodeImpl> parent();
-    ustring                 pathName();
-    ustring                 relativePathName(std::shared_ptr<NodeImpl> origin, ustring childPathName = ustring());
-    ustring                 elementName();
-    std::shared_ptr<ImageFileImpl> destImageFile();
+  virtual NodeType               type() = 0;
+  void                           checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName);
+  virtual bool                   isTypeEquivalent(std::shared_ptr<NodeImpl> ni) = 0;
+  bool                           isRoot();
+  std::shared_ptr<NodeImpl>      parent();
+  ustring                        pathName();
+  ustring                        relativePathName(std::shared_ptr<NodeImpl> origin, ustring childPathName = ustring());
+  ustring                        elementName();
+  std::shared_ptr<ImageFileImpl> destImageFile();
 
-    ustring                 imageFileName();
-    virtual bool            isDefined(const ustring& pathName) = 0;
-    bool                    isAttached();
-    virtual void            setAttachedRecursive();
+  ustring      imageFileName();
+  virtual bool isDefined(const ustring& pathName) = 0;
+  bool         isAttached();
+  virtual void setAttachedRecursive();
 
-    void                    setParent(std::shared_ptr<NodeImpl> parent, const ustring& elementName);
-    bool                    isTypeConstrained();
+  void setParent(std::shared_ptr<NodeImpl> parent, const ustring& elementName);
+  bool isTypeConstrained();
 
-    virtual std::shared_ptr<NodeImpl> get(const ustring& pathName);
-    virtual void            set(const ustring& pathName, std::shared_ptr<NodeImpl> ni, bool autoPathCreate = false);
-    virtual void            set(const std::vector<ustring>& fields, unsigned level, std::shared_ptr<NodeImpl> ni, bool autoPathCreate = false);
+  virtual std::shared_ptr<NodeImpl> get(const ustring& pathName);
+  virtual void                      set(const ustring& pathName, std::shared_ptr<NodeImpl> ni, bool autoPathCreate = false);
+  virtual void                      set(const std::vector<ustring>& fields, unsigned level, std::shared_ptr<NodeImpl> ni, bool autoPathCreate = false);
 
-    virtual void            checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin) = 0;
-    void                    checkBuffers(const std::vector<SourceDestBuffer>& sdbufs, bool allowMissing);
-    bool                    findTerminalPosition(std::shared_ptr<NodeImpl> ni, uint64_t& countFromLeft);
+  virtual void checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin) = 0;
+  void         checkBuffers(const std::vector<SourceDestBuffer>& sdbufs, bool allowMissing);
+  bool         findTerminalPosition(std::shared_ptr<NodeImpl> ni, uint64_t& countFromLeft);
 
-    virtual void            writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=NULL) = 0;
+  virtual void writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName = NULL) = 0;
 
-    virtual                 ~NodeImpl() {};
+  virtual ~NodeImpl(){};
 
 #ifdef E57_DEBUG
-    virtual void            dump(int indent = 0, std::ostream& os = std::cout);
+  virtual void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 #ifdef E57_DEBUG_INVARIANCE
-    virtual void            checkInvariance();
+  virtual void checkInvariance();
 #endif
 
 protected: //=================
-    //??? owned by image file?
-    friend class StructureNodeImpl;
-    friend class CompressedVectorWriterImpl;
-    friend class Decoder; //???
-    friend class Encoder; //???
+  //??? owned by image file?
+  friend class StructureNodeImpl;
+  friend class CompressedVectorWriterImpl;
+  friend class Decoder; //???
+  friend class Encoder; //???
 
-                                         NodeImpl(std::weak_ptr<ImageFileImpl> destImageFile);
-    NodeImpl&                            operator=(NodeImpl& n);
-    virtual std::shared_ptr<NodeImpl>  lookup(const ustring& /*pathName*/) {return(std::shared_ptr<NodeImpl>());}; //???
-    std::shared_ptr<NodeImpl>          getRoot();
+  NodeImpl(std::weak_ptr<ImageFileImpl> destImageFile);
+  NodeImpl&                         operator=(NodeImpl& n);
+  virtual std::shared_ptr<NodeImpl> lookup(const ustring& /*pathName*/)
+  {
+    return (std::shared_ptr<NodeImpl>());
+  }; //???
+  std::shared_ptr<NodeImpl> getRoot();
 
-    std::weak_ptr<ImageFileImpl>       destImageFile_;
-    std::weak_ptr<NodeImpl>            parent_;
-    ustring                              elementName_;
-    bool                                 isAttached_;
+  std::weak_ptr<ImageFileImpl> destImageFile_;
+  std::weak_ptr<NodeImpl>      parent_;
+  ustring                      elementName_;
+  bool                         isAttached_;
 };
 
-class StructureNodeImpl : public NodeImpl {
+class StructureNodeImpl : public NodeImpl
+{
 public:
-                        StructureNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile);
-    virtual             ~StructureNodeImpl() {};
+  StructureNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile);
+  virtual ~StructureNodeImpl(){};
 
-    virtual NodeType    type();
-    virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
-    virtual bool        isDefined(const ustring& pathName);
-    virtual void        setAttachedRecursive();
+  virtual NodeType type();
+  virtual bool     isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
+  virtual bool     isDefined(const ustring& pathName);
+  virtual void     setAttachedRecursive();
 
-    virtual int64_t     childCount();
-    virtual std::shared_ptr<NodeImpl> get(int64_t index);
-    virtual std::shared_ptr<NodeImpl> get(const ustring& pathName);
-    virtual void        set(int64_t index, std::shared_ptr<NodeImpl> ni);
-    virtual void        set(const ustring& pathName, std::shared_ptr<NodeImpl> ni, bool autoPathCreate = false);
-    virtual void        set(const std::vector<ustring>& fields, unsigned level, std::shared_ptr<NodeImpl> ni, bool autoPathCreate = false);
-    virtual void        append(std::shared_ptr<NodeImpl> ni);
+  virtual int64_t                   childCount();
+  virtual std::shared_ptr<NodeImpl> get(int64_t index);
+  virtual std::shared_ptr<NodeImpl> get(const ustring& pathName);
+  virtual void                      set(int64_t index, std::shared_ptr<NodeImpl> ni);
+  virtual void                      set(const ustring& pathName, std::shared_ptr<NodeImpl> ni, bool autoPathCreate = false);
+  virtual void                      set(const std::vector<ustring>& fields, unsigned level, std::shared_ptr<NodeImpl> ni, bool autoPathCreate = false);
+  virtual void                      append(std::shared_ptr<NodeImpl> ni);
 
-    virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
+  virtual void checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
 
-    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=NULL);
+  virtual void writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName = NULL);
 
 #ifdef E57_DEBUG
-    void                dump(int indent = 0, std::ostream& os = std::cout);
+  void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 #ifdef E57_DEBUG_INVARIANCE
-    virtual void        checkInvariance();
+  virtual void checkInvariance();
 #endif
 
 protected: //=================
-    friend class CompressedVectorReaderImpl;
-    virtual std::shared_ptr<NodeImpl> lookup(const ustring& pathName);
+  friend class CompressedVectorReaderImpl;
+  virtual std::shared_ptr<NodeImpl> lookup(const ustring& pathName);
 
-    std::vector<std::shared_ptr<NodeImpl> > children_;
+  std::vector<std::shared_ptr<NodeImpl>> children_;
 };
 
-class VectorNodeImpl : public StructureNodeImpl {
+class VectorNodeImpl : public StructureNodeImpl
+{
 public:
-    explicit            VectorNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, bool allowHeteroChildren);
-    virtual             ~VectorNodeImpl() {};
+  explicit VectorNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, bool allowHeteroChildren);
+  virtual ~VectorNodeImpl(){};
 
-    virtual NodeType    type();
-    virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
-    bool                allowHeteroChildren();
+  virtual NodeType type();
+  virtual bool     isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
+  bool             allowHeteroChildren();
 
-    //???virtual Node   get(int64_t index);
-    //???virtual Node   get(const ustring& pathName);
-    virtual void        set(int64_t index, std::shared_ptr<NodeImpl> ni);
-    //???virtual void   set(const ustring& pathName, std::shared_ptr<NodeImpl> ni);
-    //???virtual void   append(std::shared_ptr<NodeImpl> ni);
+  //???virtual Node   get(int64_t index);
+  //???virtual Node   get(const ustring& pathName);
+  virtual void set(int64_t index, std::shared_ptr<NodeImpl> ni);
+  //???virtual void   set(const ustring& pathName, std::shared_ptr<NodeImpl> ni);
+  //???virtual void   append(std::shared_ptr<NodeImpl> ni);
 
-    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=NULL);
+  virtual void writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName = NULL);
 
 #ifdef E57_DEBUG
-    void                dump(int indent = 0, std::ostream& os = std::cout);
+  void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 #ifdef E57_DEBUG_INVARIANCE
-    virtual void        checkInvariance();
+  virtual void checkInvariance();
 #endif
 protected: //=================
-    bool allowHeteroChildren_;
+  bool allowHeteroChildren_;
 };
 
-class SourceDestBufferImpl : public std::enable_shared_from_this<SourceDestBufferImpl> {
+class SourceDestBufferImpl : public std::enable_shared_from_this<SourceDestBufferImpl>
+{
 public:
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, int8_t* b,   const size_t capacity, bool doConversion = false,
-                         bool doScaling = false, size_t stride = sizeof(int8_t));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, uint8_t* b,  const size_t capacity, bool doConversion = false,
-                         bool doScaling = false, size_t stride = sizeof(uint8_t));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, int16_t* b,  const size_t capacity, bool doConversion = false,
-                         bool doScaling = false, size_t stride = sizeof(int16_t));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, uint16_t* b, const size_t capacity, bool doConversion = false,
-                         bool doScaling = false, size_t stride = sizeof(uint16_t));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, int32_t* b,  const size_t capacity, bool doConversion = false,
-                         bool doScaling = false, size_t stride = sizeof(int32_t));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, uint32_t* b, const size_t capacity, bool doConversion = false,
-                         bool doScaling = false, size_t stride = sizeof(uint32_t));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, int64_t* b,  const size_t capacity, bool doConversion = false,
-                         bool doScaling = false, size_t stride = sizeof(int64_t));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, bool* b,     const size_t capacity, bool doConversion = false,
-                         bool doScaling = false, size_t stride = sizeof(bool));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, float* b,    const size_t capacity, bool doConversion = false,
-                         bool doScaling = false, size_t stride = sizeof(float));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, double* b,   const size_t capacity, bool doConversion = false,
-                         bool doScaling = false, size_t stride = sizeof(double));
-    SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, std::vector<ustring>* b);
+  SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, int8_t* b, const size_t capacity, bool doConversion = false,
+                       bool doScaling = false, size_t stride = sizeof(int8_t));
+  SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, uint8_t* b, const size_t capacity, bool doConversion = false,
+                       bool doScaling = false, size_t stride = sizeof(uint8_t));
+  SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, int16_t* b, const size_t capacity, bool doConversion = false,
+                       bool doScaling = false, size_t stride = sizeof(int16_t));
+  SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, uint16_t* b, const size_t capacity, bool doConversion = false,
+                       bool doScaling = false, size_t stride = sizeof(uint16_t));
+  SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, int32_t* b, const size_t capacity, bool doConversion = false,
+                       bool doScaling = false, size_t stride = sizeof(int32_t));
+  SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, uint32_t* b, const size_t capacity, bool doConversion = false,
+                       bool doScaling = false, size_t stride = sizeof(uint32_t));
+  SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, int64_t* b, const size_t capacity, bool doConversion = false,
+                       bool doScaling = false, size_t stride = sizeof(int64_t));
+  SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, bool* b, const size_t capacity, bool doConversion = false,
+                       bool doScaling = false, size_t stride = sizeof(bool));
+  SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, float* b, const size_t capacity, bool doConversion = false,
+                       bool doScaling = false, size_t stride = sizeof(float));
+  SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, double* b, const size_t capacity, bool doConversion = false,
+                       bool doScaling = false, size_t stride = sizeof(double));
+  SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, std::vector<ustring>* b);
 
-    ustring                 pathName()      {return(pathName_);}
-    MemoryRepresentation    memoryRepresentation() {return(memoryRepresentation_);};
-    void*                   base()          {return(base_);}
-    std::vector<ustring>*   ustrings()      {return(ustrings_);}
-    bool                    doConversion()  {return(doConversion_);}
-    bool                    doScaling()     {return(doScaling_);}
-    size_t                  stride()        {return(stride_);}
-    size_t                  capacity()      {return(capacity_);}
-    unsigned                nextIndex()     {return(nextIndex_);};
-    void                    rewind()        {nextIndex_=0;};
+  ustring pathName()
+  {
+    return (pathName_);
+  }
+  MemoryRepresentation memoryRepresentation()
+  {
+    return (memoryRepresentation_);
+  };
+  void* base()
+  {
+    return (base_);
+  }
+  std::vector<ustring>* ustrings()
+  {
+    return (ustrings_);
+  }
+  bool doConversion()
+  {
+    return (doConversion_);
+  }
+  bool doScaling()
+  {
+    return (doScaling_);
+  }
+  size_t stride()
+  {
+    return (stride_);
+  }
+  size_t capacity()
+  {
+    return (capacity_);
+  }
+  unsigned nextIndex()
+  {
+    return (nextIndex_);
+  };
+  void rewind()
+  {
+    nextIndex_ = 0;
+  };
 
-    /// Get/set values:
-    int64_t         getNextInt64();
-    int64_t         getNextInt64(double scale, double offset);
-    float           getNextFloat();
-    double          getNextDouble();
-    ustring         getNextString();
-    void            setNextInt64(int64_t value);
-    void            setNextInt64(int64_t value, double scale, double offset);
-    void            setNextFloat(float value);
-    void            setNextDouble(double value);
-    void            setNextString(const ustring& value);
+  /// Get/set values:
+  int64_t getNextInt64();
+  int64_t getNextInt64(double scale, double offset);
+  float   getNextFloat();
+  double  getNextDouble();
+  ustring getNextString();
+  void    setNextInt64(int64_t value);
+  void    setNextInt64(int64_t value, double scale, double offset);
+  void    setNextFloat(float value);
+  void    setNextDouble(double value);
+  void    setNextString(const ustring& value);
 
-    void            checkCompatible(std::shared_ptr<SourceDestBufferImpl> newBuf);
+  void checkCompatible(std::shared_ptr<SourceDestBufferImpl> newBuf);
 
 #ifdef E57_DEBUG
-    void            dump(int indent = 0, std::ostream& os = std::cout);
+  void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 #ifdef E57_DEBUG_INVARIANCE
-    virtual void        checkInvariance();
+  virtual void checkInvariance();
 #endif
 
-protected: //=================
-friend class BitpackIntegerEncoder<uint8_t>;   //??? needed?
-friend class BitpackIntegerEncoder<uint16_t>;  //??? needed?
-friend class BitpackIntegerEncoder<uint32_t>;  //??? needed?
-friend class BitpackIntegerEncoder<uint64_t>;  //??? needed?
-friend class BitpackIntegerDecoder<uint8_t> ;  //??? needed?
-friend class BitpackIntegerDecoder<uint16_t>;  //??? needed?
-friend class BitpackIntegerDecoder<uint32_t>;  //??? needed?
-friend class BitpackIntegerDecoder<uint64_t>;  //??? needed?
+protected:                                      //=================
+  friend class BitpackIntegerEncoder<uint8_t>;  //??? needed?
+  friend class BitpackIntegerEncoder<uint16_t>; //??? needed?
+  friend class BitpackIntegerEncoder<uint32_t>; //??? needed?
+  friend class BitpackIntegerEncoder<uint64_t>; //??? needed?
+  friend class BitpackIntegerDecoder<uint8_t>;  //??? needed?
+  friend class BitpackIntegerDecoder<uint16_t>; //??? needed?
+  friend class BitpackIntegerDecoder<uint32_t>; //??? needed?
+  friend class BitpackIntegerDecoder<uint64_t>; //??? needed?
 
-    void                    checkState_();  /// Common routine to check that constructor arguments were ok, throws if not
+  void checkState_(); /// Common routine to check that constructor arguments were ok, throws if not
 
-    //??? verify alignment
-    std::weak_ptr<ImageFileImpl> destImageFile_;
-    ustring                 pathName_;      /// Pathname from CompressedVectorNode to source/dest object, e.g. "Indices/0"
-    MemoryRepresentation    memoryRepresentation_;    /// Type of element (e.g. E57_INT8, E57_UINT64, DOUBLE...)
-    char*                   base_;          /// Address of first element, for non-ustring buffers
-    size_t                  capacity_;      /// Total number of elements in array
-    bool                    doConversion_;  /// Convert memory representation to/from disk representation
-    bool                    doScaling_;     /// Apply scale factor for integer type
-    size_t                  stride_;        /// Distance between each element (different than size_ if elements not contiguous)
-    unsigned                nextIndex_;     /// Number of elements that have been set (dest buffer) or read (source buffer) since rewind().
-    std::vector<ustring>*   ustrings_;      /// Optional array of ustrings (used if memoryRepresentation_==E57_USTRING) ???ownership
+  //??? verify alignment
+  std::weak_ptr<ImageFileImpl> destImageFile_;
+  ustring                      pathName_;             /// Pathname from CompressedVectorNode to source/dest object, e.g. "Indices/0"
+  MemoryRepresentation         memoryRepresentation_; /// Type of element (e.g. E57_INT8, E57_UINT64, DOUBLE...)
+  char*                        base_;                 /// Address of first element, for non-ustring buffers
+  size_t                       capacity_;             /// Total number of elements in array
+  bool                         doConversion_;         /// Convert memory representation to/from disk representation
+  bool                         doScaling_;            /// Apply scale factor for integer type
+  size_t                       stride_;               /// Distance between each element (different than size_ if elements not contiguous)
+  unsigned                     nextIndex_;            /// Number of elements that have been set (dest buffer) or read (source buffer) since rewind().
+  std::vector<ustring>*        ustrings_;             /// Optional array of ustrings (used if memoryRepresentation_==E57_USTRING) ???ownership
 };
 
 //================================================================
 
-class CompressedVectorNodeImpl : public NodeImpl {
+class CompressedVectorNodeImpl : public NodeImpl
+{
 public:
-                        CompressedVectorNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile);
-    virtual             ~CompressedVectorNodeImpl() {};
+  CompressedVectorNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile);
+  virtual ~CompressedVectorNodeImpl(){};
 
-    virtual NodeType    type();
-    virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
-    virtual bool        isDefined(const ustring& pathName);
-    virtual void        setAttachedRecursive();
+  virtual NodeType type();
+  virtual bool     isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
+  virtual bool     isDefined(const ustring& pathName);
+  virtual void     setAttachedRecursive();
 
-    void                setPrototype(std::shared_ptr<NodeImpl> prototype);
-    std::shared_ptr<NodeImpl> getPrototype();
-    void                setCodecs(std::shared_ptr<VectorNodeImpl> codecs);
-    std::shared_ptr<VectorNodeImpl> getCodecs();
+  void                            setPrototype(std::shared_ptr<NodeImpl> prototype);
+  std::shared_ptr<NodeImpl>       getPrototype();
+  void                            setCodecs(std::shared_ptr<VectorNodeImpl> codecs);
+  std::shared_ptr<VectorNodeImpl> getCodecs();
 
-    virtual int64_t     childCount();
+  virtual int64_t childCount();
 
-    virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
+  virtual void checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
 
-    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=NULL);
+  virtual void writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName = NULL);
 
-    /// Iterator constructors
-    std::shared_ptr<CompressedVectorWriterImpl> writer(std::vector<SourceDestBuffer> sbufs);
-    std::shared_ptr<CompressedVectorReaderImpl> reader(std::vector<SourceDestBuffer> dbufs);
+  /// Iterator constructors
+  std::shared_ptr<CompressedVectorWriterImpl> writer(std::vector<SourceDestBuffer> sbufs);
+  std::shared_ptr<CompressedVectorReaderImpl> reader(std::vector<SourceDestBuffer> dbufs);
 
-    int64_t             getRecordCount()                        {return(recordCount_);};
-    int64_t             getBinarySectionLogicalStart()          {return(binarySectionLogicalStart_);};
-    void                setRecordCount(int64_t recordCount)    {recordCount_ = recordCount;};
-    void                setBinarySectionLogicalStart(uint64_t binarySectionLogicalStart)
-                                                                {binarySectionLogicalStart_ = binarySectionLogicalStart;};
+  int64_t getRecordCount()
+  {
+    return (recordCount_);
+  };
+  int64_t getBinarySectionLogicalStart()
+  {
+    return (binarySectionLogicalStart_);
+  };
+  void setRecordCount(int64_t recordCount)
+  {
+    recordCount_ = recordCount;
+  };
+  void setBinarySectionLogicalStart(uint64_t binarySectionLogicalStart)
+  {
+    binarySectionLogicalStart_ = binarySectionLogicalStart;
+  };
 
 #ifdef E57_DEBUG
-    void                dump(int indent = 0, std::ostream& os = std::cout);
+  void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 #ifdef E57_DEBUG_INVARIANCE
-    virtual void        checkInvariance();
+  virtual void checkInvariance();
 #endif
-protected: //=================
-    friend class CompressedVectorReaderImpl; //???
+protected:                                 //=================
+  friend class CompressedVectorReaderImpl; //???
 
-    std::shared_ptr<NodeImpl> prototype_;
-    std::shared_ptr<VectorNodeImpl> codecs_;
+  std::shared_ptr<NodeImpl>       prototype_;
+  std::shared_ptr<VectorNodeImpl> codecs_;
 
-//???    bool                            writeCompleted_;
-    int64_t                     recordCount_;
-    uint64_t                    binarySectionLogicalStart_;
+  //???    bool                            writeCompleted_;
+  int64_t  recordCount_;
+  uint64_t binarySectionLogicalStart_;
 };
 
-class IntegerNodeImpl : public NodeImpl {
+class IntegerNodeImpl : public NodeImpl
+{
 public:
-                        IntegerNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, int64_t value = 0, int64_t minimum = 0, int64_t maximum = 0);
-    virtual             ~IntegerNodeImpl() {};
+  IntegerNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, int64_t value = 0, int64_t minimum = 0, int64_t maximum = 0);
+  virtual ~IntegerNodeImpl(){};
 
-    virtual NodeType    type();
-    virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
-    virtual bool        isDefined(const ustring& pathName);
+  virtual NodeType type();
+  virtual bool     isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
+  virtual bool     isDefined(const ustring& pathName);
 
-    int64_t             value();
-    int64_t             minimum();
-    int64_t             maximum();
+  int64_t value();
+  int64_t minimum();
+  int64_t maximum();
 
-    virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
+  virtual void checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
 
-    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=NULL);
+  virtual void writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName = NULL);
 
 #ifdef E57_DEBUG
-    void                dump(int indent = 0, std::ostream& os = std::cout);
+  void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 #ifdef E57_DEBUG_INVARIANCE
-    virtual void        checkInvariance();
+  virtual void checkInvariance();
 #endif
 
 protected: //=================
-    int64_t             value_;
-    int64_t             minimum_;
-    int64_t             maximum_;
+  int64_t value_;
+  int64_t minimum_;
+  int64_t maximum_;
 };
 
-class ScaledIntegerNodeImpl : public NodeImpl {
+class ScaledIntegerNodeImpl : public NodeImpl
+{
 public:
-                        ScaledIntegerNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile,
-							int64_t value = 0, int64_t minimum = 0, int64_t maximum = 0,
-                            double scale = 1.0, double offset = 0.0);
+  ScaledIntegerNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, int64_t value = 0, int64_t minimum = 0, int64_t maximum = 0, double scale = 1.0,
+                        double offset = 0.0);
 
-						ScaledIntegerNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile,		//Added by SC
-							double scaledValue = 0., double scaledMinimum = 0., double scaledMaximum = 0.,
-                            double scale = 1.0, double offset = 0.0);
+  ScaledIntegerNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, // Added by SC
+                        double scaledValue = 0., double scaledMinimum = 0., double scaledMaximum = 0., double scale = 1.0, double offset = 0.0);
 
-    virtual             ~ScaledIntegerNodeImpl() {};
+  virtual ~ScaledIntegerNodeImpl(){};
 
-    virtual NodeType    type();
-    virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
-    virtual bool        isDefined(const ustring& pathName);
+  virtual NodeType type();
+  virtual bool     isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
+  virtual bool     isDefined(const ustring& pathName);
 
-    int64_t             rawValue();
-    double              scaledValue();
-    int64_t             minimum();
-	double				scaledMinimum();	//Added by SC
-    int64_t             maximum();
-	double				scaledMaximum();	//Added by SC
-    double              scale();
-    double              offset();
+  int64_t rawValue();
+  double  scaledValue();
+  int64_t minimum();
+  double  scaledMinimum(); // Added by SC
+  int64_t maximum();
+  double  scaledMaximum(); // Added by SC
+  double  scale();
+  double  offset();
 
-    virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
+  virtual void checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
 
-    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=NULL);
-
+  virtual void writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName = NULL);
 
 #ifdef E57_DEBUG
-    void                dump(int indent = 0, std::ostream& os = std::cout);
+  void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 #ifdef E57_DEBUG_INVARIANCE
-    virtual void        checkInvariance();
+  virtual void checkInvariance();
 #endif
 
 protected: //=================
-    int64_t             value_;
-    int64_t             minimum_;
-    int64_t             maximum_;
-    double              scale_;
-    double              offset_;
+  int64_t value_;
+  int64_t minimum_;
+  int64_t maximum_;
+  double  scale_;
+  double  offset_;
 };
 
-class FloatNodeImpl : public NodeImpl {
+class FloatNodeImpl : public NodeImpl
+{
 public:
-                        FloatNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile,
-                                      double value = 0, FloatPrecision precision = E57_DOUBLE,
-                                      double minimum = E57_DOUBLE_MIN, double  maximum = E57_DOUBLE_MAX);
-    virtual             ~FloatNodeImpl() {};
+  FloatNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, double value = 0, FloatPrecision precision = E57_DOUBLE, double minimum = E57_DOUBLE_MIN,
+                double maximum = E57_DOUBLE_MAX);
+  virtual ~FloatNodeImpl(){};
 
-    virtual NodeType    type();
-    virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
-    virtual bool        isDefined(const ustring& pathName);
+  virtual NodeType type();
+  virtual bool     isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
+  virtual bool     isDefined(const ustring& pathName);
 
-    double              value();
-    FloatPrecision      precision();
-    double              minimum();
-    double              maximum();
+  double         value();
+  FloatPrecision precision();
+  double         minimum();
+  double         maximum();
 
-    virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
+  virtual void checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
 
-    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=NULL);
+  virtual void writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName = NULL);
 
 #ifdef E57_DEBUG
-    void                dump(int indent = 0, std::ostream& os = std::cout);
+  void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 #ifdef E57_DEBUG_INVARIANCE
-    virtual void        checkInvariance();
+  virtual void checkInvariance();
 #endif
 
 protected: //=================
-    double              value_;
-    FloatPrecision      precision_;
-    double              minimum_;
-    double              maximum_;
+  double         value_;
+  FloatPrecision precision_;
+  double         minimum_;
+  double         maximum_;
 };
 
-class StringNodeImpl : public NodeImpl {
+class StringNodeImpl : public NodeImpl
+{
 public:
-    explicit            StringNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring value = "");
-    virtual             ~StringNodeImpl() {};
+  explicit StringNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring value = "");
+  virtual ~StringNodeImpl(){};
 
-    virtual NodeType    type();
-    virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
-    virtual bool        isDefined(const ustring& pathName);
+  virtual NodeType type();
+  virtual bool     isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
+  virtual bool     isDefined(const ustring& pathName);
 
-    ustring             value();
+  ustring value();
 
-    virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
+  virtual void checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
 
-    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=NULL);
+  virtual void writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName = NULL);
 
 #ifdef E57_DEBUG
-    void                dump(int indent = 0, std::ostream& os = std::cout);
+  void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 #ifdef E57_DEBUG_INVARIANCE
-    virtual void        checkInvariance();
+  virtual void checkInvariance();
 #endif
 
 protected: //=================
-    ustring             value_;
+  ustring value_;
 };
 
-class BlobNodeImpl : public NodeImpl {
+class BlobNodeImpl : public NodeImpl
+{
 public:
-                        BlobNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, int64_t byteCount);
-                        BlobNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, int64_t fileOffset, int64_t length);
-    virtual             ~BlobNodeImpl();
+  BlobNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, int64_t byteCount);
+  BlobNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, int64_t fileOffset, int64_t length);
+  virtual ~BlobNodeImpl();
 
-    virtual NodeType    type();
-    virtual bool        isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
-    virtual bool        isDefined(const ustring& pathName);
+  virtual NodeType type();
+  virtual bool     isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
+  virtual bool     isDefined(const ustring& pathName);
 
-    int64_t             byteCount();
-    void                read(uint8_t* buf, int64_t start, size_t count);
-    void                write(uint8_t* buf, int64_t start, size_t count);
+  int64_t byteCount();
+  void    read(uint8_t* buf, int64_t start, size_t count);
+  void    write(uint8_t* buf, int64_t start, size_t count);
 
-    virtual void        checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
+  virtual void checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin);
 
-    virtual void        writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName=NULL);
+  virtual void writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName = NULL);
 
 #ifdef E57_DEBUG
-    void                dump(int indent = 0, std::ostream& os = std::cout);
+  void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 #ifdef E57_DEBUG_INVARIANCE
-    virtual void        checkInvariance();
+  virtual void checkInvariance();
 #endif
 
 protected: //=================
-    uint64_t            blobLogicalLength_;
-    uint64_t            binarySectionLogicalStart_;
-    uint64_t            binarySectionLogicalLength_;
+  uint64_t blobLogicalLength_;
+  uint64_t binarySectionLogicalStart_;
+  uint64_t binarySectionLogicalLength_;
 };
 
 /// Note: If any fields are added to this structure, swab() may need to be updated.
-struct E57FileHeader {
-    char        fileSignature[8];
-    uint32_t    majorVersion;
-    uint32_t    minorVersion;
-    uint64_t    filePhysicalLength;
-    uint64_t    xmlPhysicalOffset;
-    uint64_t    xmlLogicalLength;
-    uint64_t    pageSize;				//Added by SC
-//  char        e57LibraryVersion[8];	//Not in V1.0 Standard
+struct E57FileHeader
+{
+  char     fileSignature[8];
+  uint32_t majorVersion;
+  uint32_t minorVersion;
+  uint64_t filePhysicalLength;
+  uint64_t xmlPhysicalOffset;
+  uint64_t xmlLogicalLength;
+  uint64_t pageSize; // Added by SC
+  //  char        e57LibraryVersion[8];	//Not in V1.0 Standard
 
 #ifdef E57_BIGENDIAN
-    void        swab();
+  void swab();
 #else
-    void        swab(){};
+  void     swab(){};
 #endif
 #ifdef E57_DEBUG
-    void        dump(int indent = 0, std::ostream& os = std::cout);
+  void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 };
 
-class ImageFileImpl : public std::enable_shared_from_this<ImageFileImpl> {
+class ImageFileImpl : public std::enable_shared_from_this<ImageFileImpl>
+{
 public:
-					ImageFileImpl();
-	void			construct2(const ustring& fileName, const ustring& mode, const ustring& configuration);
-    std::shared_ptr<StructureNodeImpl> root();
-    void            close();
-    void            cancel();
-    bool            isOpen();
-    bool            isWriter();
-    int             writerCount();
-    int             readerCount();
-                    ~ImageFileImpl();
+  ImageFileImpl();
+  void                               construct2(const ustring& fileName, const ustring& mode, const ustring& configuration);
+  std::shared_ptr<StructureNodeImpl> root();
+  void                               close();
+  void                               cancel();
+  bool                               isOpen();
+  bool                               isWriter();
+  int                                writerCount();
+  int                                readerCount();
+  ~ImageFileImpl();
 
-    uint64_t        allocateSpace(uint64_t byteCount, bool doExtendNow);
-    CheckedFile*    file();
-    ustring         fileName();
+  uint64_t     allocateSpace(uint64_t byteCount, bool doExtendNow);
+  CheckedFile* file();
+  ustring      fileName();
 
-    /// Manipulate registered extensions in the file
-    void            extensionsAdd(const ustring& prefix, const ustring& uri);
-    bool            extensionsLookupPrefix(const ustring& prefix, ustring& uri);
-    bool            extensionsLookupUri(const ustring& uri, ustring& prefix);
-    size_t          extensionsCount();
-    ustring         extensionsPrefix(const size_t index);
-    ustring         extensionsUri(const size_t index);
+  /// Manipulate registered extensions in the file
+  void    extensionsAdd(const ustring& prefix, const ustring& uri);
+  bool    extensionsLookupPrefix(const ustring& prefix, ustring& uri);
+  bool    extensionsLookupUri(const ustring& uri, ustring& prefix);
+  size_t  extensionsCount();
+  ustring extensionsPrefix(const size_t index);
+  ustring extensionsUri(const size_t index);
 
-    /// Utility functions:
-    bool            isElementNameExtended(const ustring& elementName);
-    bool            isElementNameLegal(const ustring& elementName, bool allowNumber = true);
-    bool            isPathNameLegal(const ustring& pathName);
-    void            checkElementNameLegal(const ustring& elementName, bool allowNumber = true);
-    void            elementNameParse(const ustring& elementName, ustring& prefix, ustring& localPart, bool allowNumber = true);
+  /// Utility functions:
+  bool isElementNameExtended(const ustring& elementName);
+  bool isElementNameLegal(const ustring& elementName, bool allowNumber = true);
+  bool isPathNameLegal(const ustring& pathName);
+  void checkElementNameLegal(const ustring& elementName, bool allowNumber = true);
+  void elementNameParse(const ustring& elementName, ustring& prefix, ustring& localPart, bool allowNumber = true);
 
-    void            pathNameCheckWellFormed(const ustring& pathName);
-    void            pathNameParse(const ustring& pathName, bool& isRelative, std::vector<ustring>& fields);
-    ustring         pathNameUnparse(bool isRelative, const std::vector<ustring>& fields);
+  void    pathNameCheckWellFormed(const ustring& pathName);
+  void    pathNameParse(const ustring& pathName, bool& isRelative, std::vector<ustring>& fields);
+  ustring pathNameUnparse(bool isRelative, const std::vector<ustring>& fields);
 
-    unsigned        bitsNeeded(int64_t minimum, int64_t maximum); //??? E57Utility?
-    static void     readFileHeader(CheckedFile* file, E57FileHeader& header);
-    void            incrWriterCount();
-    void            decrWriterCount();
-    void            incrReaderCount();
-    void            decrReaderCount();
+  unsigned    bitsNeeded(int64_t minimum, int64_t maximum); //??? E57Utility?
+  static void readFileHeader(CheckedFile* file, E57FileHeader& header);
+  void        incrWriterCount();
+  void        decrWriterCount();
+  void        incrReaderCount();
+  void        decrReaderCount();
 
-    /// Diagnostic functions:
+  /// Diagnostic functions:
 #ifdef E57_DEBUG
-    void            dump(int indent = 0, std::ostream& os = std::cout);
+  void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 #ifdef E57_DEBUG_INVARIANCE
-    virtual void    checkInvariance();
+  virtual void checkInvariance();
 #endif
 
 protected: //=================
-    friend class E57XmlParser;
-    friend class BlobNodeImpl;
-    friend class CompressedVectorWriterImpl;
-    friend class CompressedVectorReaderImpl; //??? add file() instead of accessing file_, others friends too
+  friend class E57XmlParser;
+  friend class BlobNodeImpl;
+  friend class CompressedVectorWriterImpl;
+  friend class CompressedVectorReaderImpl; //??? add file() instead of accessing file_, others friends too
 
-    void checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName);
+  void checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName);
 
-    struct NameSpace {
-        ustring     prefix;
-        ustring     uri;
-                    NameSpace(ustring prefix0, ustring uri0) : prefix(prefix0),uri(uri0) {};
-    };
+  struct NameSpace
+  {
+    ustring prefix;
+    ustring uri;
+    NameSpace(ustring prefix0, ustring uri0) : prefix(prefix0), uri(uri0){};
+  };
 
-    //??? copy, default ctor, assign
+  //??? copy, default ctor, assign
 
-    ustring         fileName_;
-    bool            isWriter_;
-    int             writerCount_;
-    int             readerCount_;
+  ustring fileName_;
+  bool    isWriter_;
+  int     writerCount_;
+  int     readerCount_;
 
-    CheckedFile*    file_;
+  CheckedFile* file_;
 
-    /// Read file attributes
-    uint64_t        xmlLogicalOffset_;
-    uint64_t        xmlLogicalLength_;
+  /// Read file attributes
+  uint64_t xmlLogicalOffset_;
+  uint64_t xmlLogicalLength_;
 
-    /// Write file attributes
-    uint64_t        unusedLogicalStart_;
+  /// Write file attributes
+  uint64_t unusedLogicalStart_;
 
-    /// Bidirectional map from namespace prefix to uri
-    std::vector<NameSpace>  nameSpaces_;
+  /// Bidirectional map from namespace prefix to uri
+  std::vector<NameSpace> nameSpaces_;
 
-    /// Smart pointer to metadata tree
-    std::shared_ptr<StructureNodeImpl> root_;
+  /// Smart pointer to metadata tree
+  std::shared_ptr<StructureNodeImpl> root_;
 };
 
 //================================================================
 
-
-class SeekIndex {
+class SeekIndex
+{
 public:
-    ///!!! implement seek
+  ///!!! implement seek
 #ifdef E57_DEBUG
-    void        dump(int /*indent*/ = 0, std::ostream& /*os*/ = std::cout) {/*???*/};
+  void dump(int /*indent*/ = 0, std::ostream& /*os*/ = std::cout){/*???*/};
 #endif
 };
 
 //================================================================
 
-struct CompressedVectorSectionHeader {
-    uint8_t     sectionId;              // = E57_COMPRESSED_VECTOR_SECTION
-    uint8_t     reserved1[7];           // must be zero
-    uint64_t    sectionLogicalLength;   // byte length of whole section
-    uint64_t    dataPhysicalOffset;     // offset of first data packet
-    uint64_t    indexPhysicalOffset;    // offset of first index packet
+struct CompressedVectorSectionHeader
+{
+  uint8_t  sectionId;            // = E57_COMPRESSED_VECTOR_SECTION
+  uint8_t  reserved1[7];         // must be zero
+  uint64_t sectionLogicalLength; // byte length of whole section
+  uint64_t dataPhysicalOffset;   // offset of first data packet
+  uint64_t indexPhysicalOffset;  // offset of first index packet
 
-                CompressedVectorSectionHeader();
-    void        verify(uint64_t filePhysicalSize=0);
+  CompressedVectorSectionHeader();
+  void verify(uint64_t filePhysicalSize = 0);
 #ifdef E57_BIGENDIAN
-    void        swab();
+  void swab();
 #else
-    void        swab(){};
+  void     swab(){};
 #endif
 #ifdef E57_DEBUG
-    void        dump(int indent = 0, std::ostream& os = std::cout);
+  void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 };
 
 //================================================================
 
-#define E57_DATA_PACKET_MAX (64*1024)  /// maximum size of CompressedVector binary data packet   ??? where put this
+#define E57_DATA_PACKET_MAX (64 * 1024) /// maximum size of CompressedVector binary data packet   ??? where put this
 
+struct DataPacketHeader
+{                      ///??? where put this
+  uint8_t  packetType; // = E57_DATA_PACKET
+  uint8_t  packetFlags;
+  uint16_t packetLogicalLengthMinus1;
+  uint16_t bytestreamCount;
 
-struct DataPacketHeader {  ///??? where put this
-    uint8_t     packetType;         // = E57_DATA_PACKET
-    uint8_t     packetFlags;
-    uint16_t    packetLogicalLengthMinus1;
-    uint16_t    bytestreamCount;
-
-                DataPacketHeader();
-    void        verify(unsigned bufferLength=0); //???use
+  DataPacketHeader();
+  void verify(unsigned bufferLength = 0); //???use
 #ifdef E57_BIGENDIAN
-    void        swab();
+  void swab();
 #else
-    void        swab(){};
+  void     swab(){};
 #endif
 #ifdef E57_DEBUG
-    void        dump(int indent = 0, std::ostream& os = std::cout);
+  void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 };
 
 //================================================================
 
-struct DataPacket {  /// Note this is full sized packet, not just header
-    uint8_t     packetType;         // = E57_DATA_PACKET
-    uint8_t     packetFlags;
-    uint16_t    packetLogicalLengthMinus1;
-    uint16_t    bytestreamCount;
-    uint8_t     payload[64*1024-6]; // pad packet to full length, can't spec layout because depends bytestream data
+struct DataPacket
+{                      /// Note this is full sized packet, not just header
+  uint8_t  packetType; // = E57_DATA_PACKET
+  uint8_t  packetFlags;
+  uint16_t packetLogicalLengthMinus1;
+  uint16_t bytestreamCount;
+  uint8_t  payload[64 * 1024 - 6]; // pad packet to full length, can't spec layout because depends bytestream data
 
-                DataPacket();
-    void        verify(unsigned bufferLength=0);
-    char*       getBytestream(unsigned bytestreamNumber, unsigned& bufferLength);
-    unsigned    getBytestreamBufferLength(unsigned bytestreamNumber);
+  DataPacket();
+  void     verify(unsigned bufferLength = 0);
+  char*    getBytestream(unsigned bytestreamNumber, unsigned& bufferLength);
+  unsigned getBytestreamBufferLength(unsigned bytestreamNumber);
 
 #ifdef E57_BIGENDIAN
-    void        swab(bool toLittleEndian);    //??? change to swabIfBigEndian() and elsewhere
+  void swab(bool toLittleEndian); //??? change to swabIfBigEndian() and elsewhere
 #else
-    void        swab(bool /*toLittleEndian*/){};
+  void     swab(bool /*toLittleEndian*/){};
 #endif
 #ifdef E57_DEBUG
-    void        dump(int indent = 0, std::ostream& os = std::cout);
+  void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 };
 
 //================================================================
 
-struct EmptyPacketHeader {
-    uint8_t     packetType;    // = E57_EMPTY_PACKET
-    uint8_t     reserved1;     // must be zero
-    uint16_t    packetLogicalLengthMinus1;
+struct EmptyPacketHeader
+{
+  uint8_t  packetType; // = E57_EMPTY_PACKET
+  uint8_t  reserved1;  // must be zero
+  uint16_t packetLogicalLengthMinus1;
 
-                EmptyPacketHeader();
-    void        verify(unsigned bufferLength=0); //???use
+  EmptyPacketHeader();
+  void verify(unsigned bufferLength = 0); //???use
 #ifdef E57_BIGENDIAN
-    void        swab();
+  void swab();
 #else
-    void        swab(){};
+  void     swab(){};
 #endif
 #ifdef E57_DEBUG
-    void        dump(int indent = 0, std::ostream& os = std::cout);
+  void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 };
 
 //================================================================
 class Decoder;
-struct DecodeChannel {
-    SourceDestBuffer    dbuf; //??? for now, one input per channel
-    std::shared_ptr<Decoder> decoder;
-    unsigned            bytestreamNumber;
-    uint64_t            maxRecordCount;
-    uint64_t            currentPacketLogicalOffset;
-    size_t              currentBytestreamBufferIndex;
-    size_t              currentBytestreamBufferLength;
-    bool                inputFinished;
+struct DecodeChannel
+{
+  SourceDestBuffer         dbuf; //??? for now, one input per channel
+  std::shared_ptr<Decoder> decoder;
+  unsigned                 bytestreamNumber;
+  uint64_t                 maxRecordCount;
+  uint64_t                 currentPacketLogicalOffset;
+  size_t                   currentBytestreamBufferIndex;
+  size_t                   currentBytestreamBufferLength;
+  bool                     inputFinished;
 
-                        DecodeChannel(SourceDestBuffer dbuf_arg, std::shared_ptr<Decoder> decoder_arg, unsigned bytestreamNumber_arg, uint64_t maxRecordCount_arg);
-                        ~DecodeChannel();
-    bool                isOutputBlocked();
-    bool                isInputBlocked();   /// has exhausted data in the current packet
+  DecodeChannel(SourceDestBuffer dbuf_arg, std::shared_ptr<Decoder> decoder_arg, unsigned bytestreamNumber_arg, uint64_t maxRecordCount_arg);
+  ~DecodeChannel();
+  bool isOutputBlocked();
+  bool isInputBlocked(); /// has exhausted data in the current packet
 #ifdef E57_DEBUG
-    void        dump(int indent = 0, std::ostream& os = std::cout);
+  void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 };
 
@@ -942,551 +1112,582 @@ struct DecodeChannel {
 
 class PacketReadCache;
 
-class CompressedVectorReaderImpl {
+class CompressedVectorReaderImpl
+{
 public:
-                CompressedVectorReaderImpl(std::shared_ptr<CompressedVectorNodeImpl> ni, std::vector<SourceDestBuffer>& dbufs);
-                ~CompressedVectorReaderImpl();
-    unsigned    read();
-    unsigned    read(std::vector<SourceDestBuffer>& dbufs);
-    void        seek(uint64_t recordNumber);
-    bool        isOpen();
-    std::shared_ptr<CompressedVectorNodeImpl> compressedVectorNode();
-    void        close();
+  CompressedVectorReaderImpl(std::shared_ptr<CompressedVectorNodeImpl> ni, std::vector<SourceDestBuffer>& dbufs);
+  ~CompressedVectorReaderImpl();
+  unsigned                                  read();
+  unsigned                                  read(std::vector<SourceDestBuffer>& dbufs);
+  void                                      seek(uint64_t recordNumber);
+  bool                                      isOpen();
+  std::shared_ptr<CompressedVectorNodeImpl> compressedVectorNode();
+  void                                      close();
 
 #ifdef E57_DEBUG
-    void        dump(int indent = 0, std::ostream& os = std::cout);
+  void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 #ifdef E57_DEBUG_INVARIANCE
-    virtual void    checkInvariance();
+  virtual void checkInvariance();
 #endif
 
 protected: //=================
-    void        checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName);
-    void        checkReaderOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName);
-    void        setBuffers(std::vector<SourceDestBuffer>& dbufs); //???needed?
-    uint64_t    earliestPacketNeededForInput();
-    void        feedPacketToDecoders(uint64_t currentPacketLogicalOffset);
-    uint64_t    findNextDataPacket(uint64_t nextPacketLogicalOffset);
+  void     checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName);
+  void     checkReaderOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName);
+  void     setBuffers(std::vector<SourceDestBuffer>& dbufs); //???needed?
+  uint64_t earliestPacketNeededForInput();
+  void     feedPacketToDecoders(uint64_t currentPacketLogicalOffset);
+  uint64_t findNextDataPacket(uint64_t nextPacketLogicalOffset);
 
-    //??? no default ctor, copy, assignment?
+  //??? no default ctor, copy, assignment?
 
-    bool                                        isOpen_;
-    std::vector<SourceDestBuffer>               dbufs_;
-    std::shared_ptr<CompressedVectorNodeImpl> cVector_;
-    std::shared_ptr<NodeImpl>                 proto_;
-    std::vector<DecodeChannel>                  channels_;
-    PacketReadCache*                            cache_;
+  bool                                      isOpen_;
+  std::vector<SourceDestBuffer>             dbufs_;
+  std::shared_ptr<CompressedVectorNodeImpl> cVector_;
+  std::shared_ptr<NodeImpl>                 proto_;
+  std::vector<DecodeChannel>                channels_;
+  PacketReadCache*                          cache_;
 
-    uint64_t    recordCount_;                   /// number of records written so far
-    uint64_t    maxRecordCount_;
-    uint64_t    sectionEndLogicalOffset_;
+  uint64_t recordCount_; /// number of records written so far
+  uint64_t maxRecordCount_;
+  uint64_t sectionEndLogicalOffset_;
 };
 
 //================================================================
 
-class CompressedVectorWriterImpl {
+class CompressedVectorWriterImpl
+{
 public:
-                CompressedVectorWriterImpl(std::shared_ptr<CompressedVectorNodeImpl> ni, std::vector<SourceDestBuffer>& sbufs);
-                ~CompressedVectorWriterImpl();
-    void        write(const size_t requestedRecordCount);
-    void        write(std::vector<SourceDestBuffer>& sbufs, const size_t requestedRecordCount);
-    bool        isOpen();
-    std::shared_ptr<CompressedVectorNodeImpl> compressedVectorNode();
-    void        close();
+  CompressedVectorWriterImpl(std::shared_ptr<CompressedVectorNodeImpl> ni, std::vector<SourceDestBuffer>& sbufs);
+  ~CompressedVectorWriterImpl();
+  void                                      write(const size_t requestedRecordCount);
+  void                                      write(std::vector<SourceDestBuffer>& sbufs, const size_t requestedRecordCount);
+  bool                                      isOpen();
+  std::shared_ptr<CompressedVectorNodeImpl> compressedVectorNode();
+  void                                      close();
 
 #ifdef E57_DEBUG
-    void        dump(int indent = 0, std::ostream& os = std::cout);
+  void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 #ifdef E57_DEBUG_INVARIANCE
-    virtual void    checkInvariance();
+  virtual void checkInvariance();
 #endif
 
 protected: //=================
-    void        checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName);
-    void        checkWriterOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName);
-    void        setBuffers(std::vector<SourceDestBuffer>& sbufs); //???needed?
-    size_t      totalOutputAvailable();
-    size_t      currentPacketSize();
-    uint64_t    packetWrite();
-    void        flush();
+  void     checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName);
+  void     checkWriterOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName);
+  void     setBuffers(std::vector<SourceDestBuffer>& sbufs); //???needed?
+  size_t   totalOutputAvailable();
+  size_t   currentPacketSize();
+  uint64_t packetWrite();
+  void     flush();
 
-    //??? no default ctor, copy, assignment?
+  //??? no default ctor, copy, assignment?
 
-    std::vector<SourceDestBuffer>               sbufs_;
-    std::shared_ptr<CompressedVectorNodeImpl> cVector_;
-    std::shared_ptr<NodeImpl>                 proto_;
+  std::vector<SourceDestBuffer>             sbufs_;
+  std::shared_ptr<CompressedVectorNodeImpl> cVector_;
+  std::shared_ptr<NodeImpl>                 proto_;
 
-    std::vector<std::shared_ptr<Encoder> >  bytestreams_;
-    SeekIndex               seekIndex_;
-    DataPacket              dataPacket_;
+  std::vector<std::shared_ptr<Encoder>> bytestreams_;
+  SeekIndex                             seekIndex_;
+  DataPacket                            dataPacket_;
 
-    bool                    isOpen_;
-    uint64_t                sectionHeaderLogicalStart_;     /// start of CompressedVector binary section
-    uint64_t                sectionLogicalLength_;          /// total length of CompressedVector binary section
-    uint64_t                dataPhysicalOffset_;            /// start of first data packet
-    uint64_t                topIndexPhysicalOffset_;        /// top level index packet
-    uint64_t                recordCount_;                   /// number of records written so far
-    uint64_t                dataPacketsCount_;              /// number of data packets written so far
-    uint64_t                indexPacketsCount_;             /// number of index packets written so far
+  bool     isOpen_;
+  uint64_t sectionHeaderLogicalStart_; /// start of CompressedVector binary section
+  uint64_t sectionLogicalLength_;      /// total length of CompressedVector binary section
+  uint64_t dataPhysicalOffset_;        /// start of first data packet
+  uint64_t topIndexPhysicalOffset_;    /// top level index packet
+  uint64_t recordCount_;               /// number of records written so far
+  uint64_t dataPacketsCount_;          /// number of data packets written so far
+  uint64_t indexPacketsCount_;         /// number of index packets written so far
 };
 
 //================================================================
 
-class Encoder {
+class Encoder
+{
 public:
-    static std::shared_ptr<Encoder>  EncoderFactory(unsigned bytestreamNumber,
-                                       std::shared_ptr<CompressedVectorNodeImpl> cVector,
-                                       std::vector<SourceDestBuffer>& sbuf,
-                                       ustring& codecPath);
+  static std::shared_ptr<Encoder> EncoderFactory(unsigned bytestreamNumber, std::shared_ptr<CompressedVectorNodeImpl> cVector,
+                                                 std::vector<SourceDestBuffer>& sbuf, ustring& codecPath);
 
-    virtual             ~Encoder(){};
+  virtual ~Encoder(){};
 
-    virtual uint64_t    processRecords(size_t recordCount) = 0;
-    virtual unsigned    sourceBufferNextIndex() = 0;
-    virtual uint64_t    currentRecordIndex() = 0;
-    virtual float       bitsPerRecord() = 0;
-    virtual bool        registerFlushToOutput() = 0;
+  virtual uint64_t processRecords(size_t recordCount) = 0;
+  virtual unsigned sourceBufferNextIndex()            = 0;
+  virtual uint64_t currentRecordIndex()               = 0;
+  virtual float    bitsPerRecord()                    = 0;
+  virtual bool     registerFlushToOutput()            = 0;
 
-    virtual size_t      outputAvailable() = 0;                                /// number of bytes that can be read
-    virtual void        outputRead(char* dest, const size_t byteCount) = 0;       /// get data from encoder
-    virtual void        outputClear() = 0;
+  virtual size_t outputAvailable()                              = 0; /// number of bytes that can be read
+  virtual void   outputRead(char* dest, const size_t byteCount) = 0; /// get data from encoder
+  virtual void   outputClear()                                  = 0;
 
-    virtual void        sourceBufferSetNew(std::vector<SourceDestBuffer>& sbufs) = 0;
-    virtual size_t      outputGetMaxSize() = 0;
-    virtual void        outputSetMaxSize(unsigned byteCount) = 0;
+  virtual void   sourceBufferSetNew(std::vector<SourceDestBuffer>& sbufs) = 0;
+  virtual size_t outputGetMaxSize()                                       = 0;
+  virtual void   outputSetMaxSize(unsigned byteCount)                     = 0;
 
-    unsigned            bytestreamNumber() {return(bytestreamNumber_);};
+  unsigned bytestreamNumber()
+  {
+    return (bytestreamNumber_);
+  };
 
 #ifdef E57_DEBUG
-    virtual void        dump(int indent = 0, std::ostream& os = std::cout);
+  virtual void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 protected: //================
-                        Encoder(unsigned bytestreamNumber);
+  Encoder(unsigned bytestreamNumber);
 
-    unsigned            bytestreamNumber_;
+  unsigned bytestreamNumber_;
 };
 
 //================================================================
 
-class BitpackEncoder : public Encoder {
+class BitpackEncoder : public Encoder
+{
 public:
-    virtual uint64_t    processRecords(size_t recordCount) = 0;
-    virtual unsigned    sourceBufferNextIndex();
-    virtual uint64_t    currentRecordIndex();
-    virtual float       bitsPerRecord() = 0;
-    virtual bool        registerFlushToOutput() = 0;
+  virtual uint64_t processRecords(size_t recordCount) = 0;
+  virtual unsigned sourceBufferNextIndex();
+  virtual uint64_t currentRecordIndex();
+  virtual float    bitsPerRecord()         = 0;
+  virtual bool     registerFlushToOutput() = 0;
 
-    virtual size_t      outputAvailable();                                /// number of bytes that can be read
-    virtual void        outputRead(char* dest, const size_t byteCount);       /// get data from encoder
-    virtual void        outputClear();
+  virtual size_t outputAvailable();                              /// number of bytes that can be read
+  virtual void   outputRead(char* dest, const size_t byteCount); /// get data from encoder
+  virtual void   outputClear();
 
-    virtual void        sourceBufferSetNew(std::vector<SourceDestBuffer>& sbufs);
-    virtual size_t      outputGetMaxSize();
-    virtual void        outputSetMaxSize(unsigned byteCount);
+  virtual void   sourceBufferSetNew(std::vector<SourceDestBuffer>& sbufs);
+  virtual size_t outputGetMaxSize();
+  virtual void   outputSetMaxSize(unsigned byteCount);
 
 #ifdef E57_DEBUG
-    virtual void        dump(int indent = 0, std::ostream& os = std::cout);
+  virtual void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 protected: //================
-                        BitpackEncoder(unsigned bytestreamNumber, SourceDestBuffer& sbuf, unsigned outputMaxSize, unsigned alignmentSize);
+  BitpackEncoder(unsigned bytestreamNumber, SourceDestBuffer& sbuf, unsigned outputMaxSize, unsigned alignmentSize);
 
-    void                outBufferShiftDown();
+  void outBufferShiftDown();
 
-    std::shared_ptr<SourceDestBufferImpl>  sourceBuffer_;
+  std::shared_ptr<SourceDestBufferImpl> sourceBuffer_;
 
-    std::vector<char>   outBuffer_;
-    size_t              outBufferFirst_;
-    size_t              outBufferEnd_;
-    size_t              outBufferAlignmentSize_;
+  std::vector<char> outBuffer_;
+  size_t            outBufferFirst_;
+  size_t            outBufferEnd_;
+  size_t            outBufferAlignmentSize_;
 
-    uint64_t            currentRecordIndex_;
+  uint64_t currentRecordIndex_;
 };
 
 //================================================================
 
-class BitpackFloatEncoder : public BitpackEncoder {
+class BitpackFloatEncoder : public BitpackEncoder
+{
 public:
-                        BitpackFloatEncoder(unsigned bytestreamNumber, SourceDestBuffer& sbuf, unsigned outputMaxSize, FloatPrecision precision);
+  BitpackFloatEncoder(unsigned bytestreamNumber, SourceDestBuffer& sbuf, unsigned outputMaxSize, FloatPrecision precision);
 
-    virtual uint64_t    processRecords(size_t recordCount);
-    virtual bool        registerFlushToOutput();
-    virtual float       bitsPerRecord();
+  virtual uint64_t processRecords(size_t recordCount);
+  virtual bool     registerFlushToOutput();
+  virtual float    bitsPerRecord();
 
 #ifdef E57_DEBUG
-    virtual void        dump(int indent = 0, std::ostream& os = std::cout);
+  virtual void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 protected: //================
-    FloatPrecision      precision_;
+  FloatPrecision precision_;
 };
 
 //================================================================
 
-class BitpackStringEncoder : public BitpackEncoder {
+class BitpackStringEncoder : public BitpackEncoder
+{
 public:
-                        BitpackStringEncoder(unsigned bytestreamNumber, SourceDestBuffer& sbuf, unsigned outputMaxSize);
+  BitpackStringEncoder(unsigned bytestreamNumber, SourceDestBuffer& sbuf, unsigned outputMaxSize);
 
-    virtual uint64_t    processRecords(size_t recordCount);
-    virtual bool        registerFlushToOutput();
-    virtual float       bitsPerRecord();
+  virtual uint64_t processRecords(size_t recordCount);
+  virtual bool     registerFlushToOutput();
+  virtual float    bitsPerRecord();
 
 #ifdef E57_DEBUG
-    virtual void        dump(int indent = 0, std::ostream& os = std::cout);
+  virtual void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 protected: //================
-    uint64_t    totalBytesProcessed_;
-    bool        isStringActive_;
-    bool        prefixComplete_;
-    ustring     currentString_;
-    size_t      currentCharPosition_;
+  uint64_t totalBytesProcessed_;
+  bool     isStringActive_;
+  bool     prefixComplete_;
+  ustring  currentString_;
+  size_t   currentCharPosition_;
 };
 
 //================================================================
 
 template <typename RegisterT>
-class BitpackIntegerEncoder : public BitpackEncoder {
+class BitpackIntegerEncoder : public BitpackEncoder
+{
 public:
-                        BitpackIntegerEncoder(bool isScaledInteger, unsigned bytestreamNumber, SourceDestBuffer& sbuf,
-                                              unsigned outputMaxSize, int64_t minimum, int64_t maximum, double scale, double offset);
+  BitpackIntegerEncoder(bool isScaledInteger, unsigned bytestreamNumber, SourceDestBuffer& sbuf, unsigned outputMaxSize, int64_t minimum, int64_t maximum,
+                        double scale, double offset);
 
-    virtual uint64_t    processRecords(size_t recordCount);
-    virtual bool        registerFlushToOutput();
-    virtual float       bitsPerRecord();
+  virtual uint64_t processRecords(size_t recordCount);
+  virtual bool     registerFlushToOutput();
+  virtual float    bitsPerRecord();
 
 #ifdef E57_DEBUG
-    virtual void        dump(int indent = 0, std::ostream& os = std::cout);
+  virtual void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 protected: //================
-    bool            isScaledInteger_;
-    int64_t         minimum_;
-    int64_t         maximum_;
-    double          scale_;
-    double          offset_;
-    unsigned        bitsPerRecord_;
-    uint64_t        sourceBitMask_;
-    unsigned        registerBitsUsed_;
-    RegisterT       register_;
+  bool      isScaledInteger_;
+  int64_t   minimum_;
+  int64_t   maximum_;
+  double    scale_;
+  double    offset_;
+  unsigned  bitsPerRecord_;
+  uint64_t  sourceBitMask_;
+  unsigned  registerBitsUsed_;
+  RegisterT register_;
 };
 
 //================================================================
 
-class ConstantIntegerEncoder : public Encoder {
+class ConstantIntegerEncoder : public Encoder
+{
 public:
-                        ConstantIntegerEncoder(unsigned bytestreamNumber, SourceDestBuffer& sbuf, int64_t minimum);
-    virtual uint64_t    processRecords(size_t recordCount);
-    virtual unsigned    sourceBufferNextIndex();
-    virtual uint64_t    currentRecordIndex();
-    virtual float       bitsPerRecord();
-    virtual bool        registerFlushToOutput();
+  ConstantIntegerEncoder(unsigned bytestreamNumber, SourceDestBuffer& sbuf, int64_t minimum);
+  virtual uint64_t processRecords(size_t recordCount);
+  virtual unsigned sourceBufferNextIndex();
+  virtual uint64_t currentRecordIndex();
+  virtual float    bitsPerRecord();
+  virtual bool     registerFlushToOutput();
 
-    virtual size_t      outputAvailable();                                /// number of bytes that can be read
-    virtual void        outputRead(char* dest, const size_t byteCount);       /// get data from encoder
-    virtual void        outputClear();
+  virtual size_t outputAvailable();                              /// number of bytes that can be read
+  virtual void   outputRead(char* dest, const size_t byteCount); /// get data from encoder
+  virtual void   outputClear();
 
-    virtual void        sourceBufferSetNew(std::vector<SourceDestBuffer>& sbufs);
-    virtual size_t      outputGetMaxSize();
-    virtual void        outputSetMaxSize(unsigned byteCount);
+  virtual void   sourceBufferSetNew(std::vector<SourceDestBuffer>& sbufs);
+  virtual size_t outputGetMaxSize();
+  virtual void   outputSetMaxSize(unsigned byteCount);
 
 #ifdef E57_DEBUG
-    virtual void        dump(int indent = 0, std::ostream& os = std::cout);
+  virtual void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 protected: //================
-    std::shared_ptr<SourceDestBufferImpl>  sourceBuffer_;
-    uint64_t            currentRecordIndex_;
-    int64_t             minimum_;
+  std::shared_ptr<SourceDestBufferImpl> sourceBuffer_;
+  uint64_t                              currentRecordIndex_;
+  int64_t                               minimum_;
 };
 
 //================================================================
 
-class Decoder {
+class Decoder
+{
 public:
-    static std::shared_ptr<Decoder>  DecoderFactory(unsigned bytestreamNumber,
-                                       std::shared_ptr<CompressedVectorNodeImpl> cVector,
-                                       std::vector<SourceDestBuffer>& dbufs,
-                                       const ustring& codecPath);
-    virtual             ~Decoder() {};
+  static std::shared_ptr<Decoder> DecoderFactory(unsigned bytestreamNumber, std::shared_ptr<CompressedVectorNodeImpl> cVector,
+                                                 std::vector<SourceDestBuffer>& dbufs, const ustring& codecPath);
+  virtual ~Decoder(){};
 
-    virtual void        destBufferSetNew(std::vector<SourceDestBuffer>& dbufs) = 0;
-    virtual uint64_t    totalRecordsCompleted() = 0;
-    virtual size_t      inputProcess(const char* source, const size_t count) = 0;
-    virtual void        stateReset() = 0;
-    unsigned            bytestreamNumber() {return(bytestreamNumber_);};
+  virtual void     destBufferSetNew(std::vector<SourceDestBuffer>& dbufs) = 0;
+  virtual uint64_t totalRecordsCompleted()                                = 0;
+  virtual size_t   inputProcess(const char* source, const size_t count)   = 0;
+  virtual void     stateReset()                                           = 0;
+  unsigned         bytestreamNumber()
+  {
+    return (bytestreamNumber_);
+  };
 #ifdef E57_DEBUG
-    virtual void        dump(int indent = 0, std::ostream& os = std::cout) = 0;
+  virtual void dump(int indent = 0, std::ostream& os = std::cout) = 0;
 #endif
 protected: //================
-                        Decoder(unsigned bytestreamNumber);
+  Decoder(unsigned bytestreamNumber);
 
-    unsigned            bytestreamNumber_;
+  unsigned bytestreamNumber_;
 };
 
 //??? into stateReset body
-    /// discard any input queued
-    /// doesn't change dbuf pointers
+/// discard any input queued
+/// doesn't change dbuf pointers
 
 //================================================================
 
-class BitpackDecoder : public Decoder {
+class BitpackDecoder : public Decoder
+{
 public:
-    virtual void        destBufferSetNew(std::vector<SourceDestBuffer>& dbufs);
+  virtual void destBufferSetNew(std::vector<SourceDestBuffer>& dbufs);
 
-    virtual uint64_t    totalRecordsCompleted() {return(currentRecordIndex_);};
+  virtual uint64_t totalRecordsCompleted()
+  {
+    return (currentRecordIndex_);
+  };
 
-    virtual size_t      inputProcess(const char* source, const size_t byteCount);
-    virtual size_t      inputProcessAligned(const char* inbuf, const size_t firstBit, const size_t endBit) = 0;
+  virtual size_t inputProcess(const char* source, const size_t byteCount);
+  virtual size_t inputProcessAligned(const char* inbuf, const size_t firstBit, const size_t endBit) = 0;
 
-    virtual void        stateReset();
+  virtual void stateReset();
 
 #ifdef E57_DEBUG
-    virtual void        dump(int indent = 0, std::ostream& os = std::cout);
+  virtual void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 protected: //================
-                        BitpackDecoder(unsigned bytestreamNumber, SourceDestBuffer& dbuf, unsigned alignmentSize, uint64_t maxRecordCount);
+  BitpackDecoder(unsigned bytestreamNumber, SourceDestBuffer& dbuf, unsigned alignmentSize, uint64_t maxRecordCount);
 
-    void                inBufferShiftDown();
+  void inBufferShiftDown();
 
-    uint64_t            currentRecordIndex_;
-    uint64_t            maxRecordCount_;
+  uint64_t currentRecordIndex_;
+  uint64_t maxRecordCount_;
 
-    std::shared_ptr<SourceDestBufferImpl> destBuffer_;
+  std::shared_ptr<SourceDestBufferImpl> destBuffer_;
 
-    std::vector<char>   inBuffer_;
-    size_t              inBufferFirstBit_;
-    size_t              inBufferEndByte_;
-    unsigned            inBufferAlignmentSize_;
-    unsigned            bitsPerWord_;
-    unsigned            bytesPerWord_;
+  std::vector<char> inBuffer_;
+  size_t            inBufferFirstBit_;
+  size_t            inBufferEndByte_;
+  unsigned          inBufferAlignmentSize_;
+  unsigned          bitsPerWord_;
+  unsigned          bytesPerWord_;
 };
 
 //================================================================
 
-class BitpackFloatDecoder : public BitpackDecoder {
+class BitpackFloatDecoder : public BitpackDecoder
+{
 public:
-                        BitpackFloatDecoder(unsigned bytestreamNumber, SourceDestBuffer& dbuf, FloatPrecision precision, uint64_t maxRecordCount);
+  BitpackFloatDecoder(unsigned bytestreamNumber, SourceDestBuffer& dbuf, FloatPrecision precision, uint64_t maxRecordCount);
 
-    virtual size_t      inputProcessAligned(const char* inbuf, const size_t firstBit, const size_t endBit);
+  virtual size_t inputProcessAligned(const char* inbuf, const size_t firstBit, const size_t endBit);
 
 #ifdef E57_DEBUG
-    virtual void        dump(int indent = 0, std::ostream& os = std::cout);
+  virtual void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 protected: //================
-    FloatPrecision      precision_;
+  FloatPrecision precision_;
 };
 
 //================================================================
 
-class BitpackStringDecoder : public BitpackDecoder {
+class BitpackStringDecoder : public BitpackDecoder
+{
 public:
-                        BitpackStringDecoder(unsigned bytestreamNumber, SourceDestBuffer& dbuf, uint64_t maxRecordCount);
+  BitpackStringDecoder(unsigned bytestreamNumber, SourceDestBuffer& dbuf, uint64_t maxRecordCount);
 
-    virtual size_t      inputProcessAligned(const char* inbuf, const size_t firstBit, const size_t endBit);
+  virtual size_t inputProcessAligned(const char* inbuf, const size_t firstBit, const size_t endBit);
 
 #ifdef E57_DEBUG
-    virtual void        dump(int indent = 0, std::ostream& os = std::cout);
+  virtual void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 protected: //================
-    bool        readingPrefix_;
-    int         prefixLength_;
-    uint8_t     prefixBytes_[8];
-    int         nBytesPrefixRead_;
-    uint64_t    stringLength_;
-    ustring     currentString_;
-    uint64_t    nBytesStringRead_;
+  bool     readingPrefix_;
+  int      prefixLength_;
+  uint8_t  prefixBytes_[8];
+  int      nBytesPrefixRead_;
+  uint64_t stringLength_;
+  ustring  currentString_;
+  uint64_t nBytesStringRead_;
 };
 
 //================================================================
 
 template <typename RegisterT>
-class BitpackIntegerDecoder : public BitpackDecoder {
+class BitpackIntegerDecoder : public BitpackDecoder
+{
 public:
-                        BitpackIntegerDecoder(bool isScaledInteger, unsigned bytestreamNumber, SourceDestBuffer& dbuf,
-                                              int64_t minimum, int64_t maximum, double scale, double offset, uint64_t maxRecordCount);
+  BitpackIntegerDecoder(bool isScaledInteger, unsigned bytestreamNumber, SourceDestBuffer& dbuf, int64_t minimum, int64_t maximum, double scale, double offset,
+                        uint64_t maxRecordCount);
 
-    virtual size_t      inputProcessAligned(const char* inbuf, const size_t firstBit, const size_t endBit);
+  virtual size_t inputProcessAligned(const char* inbuf, const size_t firstBit, const size_t endBit);
 
 #ifdef E57_DEBUG
-    virtual void        dump(int indent = 0, std::ostream& os = std::cout);
+  virtual void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 protected: //================
-    bool        isScaledInteger_;
-    int64_t     minimum_;
-    int64_t     maximum_;
-    double      scale_;
-    double      offset_;
-    unsigned    bitsPerRecord_;
-    RegisterT   destBitMask_;
+  bool      isScaledInteger_;
+  int64_t   minimum_;
+  int64_t   maximum_;
+  double    scale_;
+  double    offset_;
+  unsigned  bitsPerRecord_;
+  RegisterT destBitMask_;
 };
 
 //================================================================
 
-class ConstantIntegerDecoder : public Decoder {
+class ConstantIntegerDecoder : public Decoder
+{
 public:
-                        ConstantIntegerDecoder(bool isScaledInteger, unsigned bytestreamNumber, SourceDestBuffer& dbuf,
-                                              int64_t minimum, double scale, double offset, uint64_t maxRecordCount);
-    virtual void        destBufferSetNew(std::vector<SourceDestBuffer>& dbufs);
-    virtual uint64_t    totalRecordsCompleted() {return(currentRecordIndex_);};
-    virtual size_t      inputProcess(const char* source, const size_t byteCount);
-    virtual void        stateReset();
+  ConstantIntegerDecoder(bool isScaledInteger, unsigned bytestreamNumber, SourceDestBuffer& dbuf, int64_t minimum, double scale, double offset,
+                         uint64_t maxRecordCount);
+  virtual void     destBufferSetNew(std::vector<SourceDestBuffer>& dbufs);
+  virtual uint64_t totalRecordsCompleted()
+  {
+    return (currentRecordIndex_);
+  };
+  virtual size_t inputProcess(const char* source, const size_t byteCount);
+  virtual void   stateReset();
 #ifdef E57_DEBUG
-    virtual void        dump(int indent = 0, std::ostream& os = std::cout);
+  virtual void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 protected: //================
-    uint64_t            currentRecordIndex_;
-    uint64_t            maxRecordCount_;
+  uint64_t currentRecordIndex_;
+  uint64_t maxRecordCount_;
 
-    std::shared_ptr<SourceDestBufferImpl> destBuffer_;
+  std::shared_ptr<SourceDestBufferImpl> destBuffer_;
 
-    bool                isScaledInteger_;
-    int64_t             minimum_;
-    double              scale_;
-    double              offset_;
+  bool    isScaledInteger_;
+  int64_t minimum_;
+  double  scale_;
+  double  offset_;
 };
 
 //================================================================
 
-class PacketLock {
+class PacketLock
+{
 public:
-                    ~PacketLock();
+  ~PacketLock();
 
 private: //================
-    /// Can't be copied or assigned
-                    PacketLock(const PacketLock& plock);
-    PacketLock&     operator=(const PacketLock& plock);
+         /// Can't be copied or assigned
+  PacketLock(const PacketLock& plock);
+  PacketLock& operator=(const PacketLock& plock);
 
 protected: //================
-    friend class PacketReadCache;
-    /// Only PacketReadCache can construct
-                     PacketLock(PacketReadCache* cache, unsigned cacheIndex);
+  friend class PacketReadCache;
+  /// Only PacketReadCache can construct
+  PacketLock(PacketReadCache* cache, unsigned cacheIndex);
 
-    PacketReadCache* cache_;
-    unsigned         cacheIndex_;
+  PacketReadCache* cache_;
+  unsigned         cacheIndex_;
 };
 
 //================================================================
 
-class PacketReadCache {
+class PacketReadCache
+{
 public:
-                        PacketReadCache(CheckedFile* cFile, unsigned packetCount);
-                        ~PacketReadCache();
+  PacketReadCache(CheckedFile* cFile, unsigned packetCount);
+  ~PacketReadCache();
 
-    std::unique_ptr<PacketLock> lock(uint64_t packetLogicalOffset, char* &pkt);  //??? pkt could be const
-    void                 markDiscarable(uint64_t packetLogicalOffset);
+  std::unique_ptr<PacketLock> lock(uint64_t packetLogicalOffset, char*& pkt); //??? pkt could be const
+  void                        markDiscarable(uint64_t packetLogicalOffset);
 
 #ifdef E57_DEBUG
-    void                dump(int indent = 0, std::ostream& os = std::cout);
+  void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 protected: //================
-    /// Only PacketLock can unlock the cache
-    friend class PacketLock;
-    void                unlock(unsigned cacheIndex);
+  /// Only PacketLock can unlock the cache
+  friend class PacketLock;
+  void unlock(unsigned cacheIndex);
 
-    void                readPacket(unsigned oldestEntry, uint64_t packetLogicalOffset);
+  void readPacket(unsigned oldestEntry, uint64_t packetLogicalOffset);
 
-    struct CacheEntry {
-        uint64_t    logicalOffset_;
-        char*       buffer_;  //??? could be const?
-        unsigned    lastUsed_;
-    };
+  struct CacheEntry
+  {
+    uint64_t logicalOffset_;
+    char*    buffer_; //??? could be const?
+    unsigned lastUsed_;
+  };
 
-    unsigned            lockCount_;
-    unsigned            useCount_;
-    CheckedFile*        cFile_;
-    std::vector<CacheEntry>  entries_;
+  unsigned                lockCount_;
+  unsigned                useCount_;
+  CheckedFile*            cFile_;
+  std::vector<CacheEntry> entries_;
 };
 
 //================================================================
 // Swabbing functions
 
-inline void swab(uint16_t& i) {
-    uint8_t* p = reinterpret_cast<uint8_t*>(&i);
-    uint8_t tmp = p[0];
-    p[0] = p[1];
-    p[1] = tmp;
+inline void swab(uint16_t& i)
+{
+  uint8_t* p   = reinterpret_cast<uint8_t*>(&i);
+  uint8_t  tmp = p[0];
+  p[0]         = p[1];
+  p[1]         = tmp;
 }
 
-inline void swab(uint32_t& i) {
-    uint8_t* p = reinterpret_cast<uint8_t*>(&i);
-    uint8_t tmp = p[0];
-    p[0] = p[3];
-    p[3] = tmp;
-    tmp = p[1];
-    p[1] = p[2];
-    p[2] = tmp;
+inline void swab(uint32_t& i)
+{
+  uint8_t* p   = reinterpret_cast<uint8_t*>(&i);
+  uint8_t  tmp = p[0];
+  p[0]         = p[3];
+  p[3]         = tmp;
+  tmp          = p[1];
+  p[1]         = p[2];
+  p[2]         = tmp;
 }
 
-inline void swab(uint64_t& i) {
-    uint8_t* p = reinterpret_cast<uint8_t*>(&i);
-    uint8_t tmp = p[0];
-    p[0] = p[7];
-    p[7] = tmp;
-    tmp = p[1];
-    p[1] = p[6];
-    p[6] = tmp;
-    tmp = p[2];
-    p[2] = p[5];
-    p[5] = tmp;
-    tmp = p[3];
-    p[3] = p[4];
-    p[4] = tmp;
+inline void swab(uint64_t& i)
+{
+  uint8_t* p   = reinterpret_cast<uint8_t*>(&i);
+  uint8_t  tmp = p[0];
+  p[0]         = p[7];
+  p[7]         = tmp;
+  tmp          = p[1];
+  p[1]         = p[6];
+  p[6]         = tmp;
+  tmp          = p[2];
+  p[2]         = p[5];
+  p[5]         = tmp;
+  tmp          = p[3];
+  p[3]         = p[4];
+  p[4]         = tmp;
 }
 
-inline void swab(float& f) {
-    uint8_t* p = reinterpret_cast<uint8_t*>(&f);
-    uint8_t tmp = p[0];
-    p[0] = p[3];
-    p[3] = tmp;
-    tmp = p[1];
-    p[1] = p[2];
-    p[2] = tmp;
+inline void swab(float& f)
+{
+  uint8_t* p   = reinterpret_cast<uint8_t*>(&f);
+  uint8_t  tmp = p[0];
+  p[0]         = p[3];
+  p[3]         = tmp;
+  tmp          = p[1];
+  p[1]         = p[2];
+  p[2]         = tmp;
 }
 
-inline void swab(double& d) {
-    uint8_t* p = reinterpret_cast<uint8_t*>(&d);
-    uint8_t tmp = p[0];
-    p[0] = p[7];
-    p[7] = tmp;
-    tmp = p[1];
-    p[1] = p[6];
-    p[6] = tmp;
-    tmp = p[2];
-    p[2] = p[5];
-    p[5] = tmp;
-    tmp = p[3];
-    p[3] = p[4];
-    p[4] = tmp;
+inline void swab(double& d)
+{
+  uint8_t* p   = reinterpret_cast<uint8_t*>(&d);
+  uint8_t  tmp = p[0];
+  p[0]         = p[7];
+  p[7]         = tmp;
+  tmp          = p[1];
+  p[1]         = p[6];
+  p[6]         = tmp;
+  tmp          = p[2];
+  p[2]         = p[5];
+  p[5]         = tmp;
+  tmp          = p[3];
+  p[3]         = p[4];
+  p[4]         = tmp;
 }
 
-} /// end namespace e57
+} // namespace e57
 
 //================================================================
-struct IndexPacket {  /// Note this is whole packet, not just header
-    static const unsigned MAX_ENTRIES = 2048;
+struct IndexPacket
+{ /// Note this is whole packet, not just header
+  static const unsigned MAX_ENTRIES = 2048;
 
-    boost::uint8_t     packetType;     // = E57_INDEX_PACKET
-    boost::uint8_t     packetFlags;    // flag bitfields
-    boost::uint16_t    packetLogicalLengthMinus1;
-    boost::uint16_t    entryCount;
-    boost::uint8_t     indexLevel;
-    boost::uint8_t     reserved1[9];   // must be zero
-    struct IndexPacketEntry {
-        boost::uint64_t    chunkRecordNumber;
-        boost::uint64_t    chunkPhysicalOffset;
-    } entries[MAX_ENTRIES];
+  boost::uint8_t  packetType;  // = E57_INDEX_PACKET
+  boost::uint8_t  packetFlags; // flag bitfields
+  boost::uint16_t packetLogicalLengthMinus1;
+  boost::uint16_t entryCount;
+  boost::uint8_t  indexLevel;
+  boost::uint8_t  reserved1[9]; // must be zero
+  struct IndexPacketEntry
+  {
+    boost::uint64_t chunkRecordNumber;
+    boost::uint64_t chunkPhysicalOffset;
+  } entries[MAX_ENTRIES];
 
-                IndexPacket();
-    void        verify(unsigned bufferLength=0, boost::uint64_t totalRecordCount=0, boost::uint64_t fileSize=0);
+  IndexPacket();
+  void verify(unsigned bufferLength = 0, boost::uint64_t totalRecordCount = 0, boost::uint64_t fileSize = 0);
 #ifdef E57_BIGENDIAN
-    void        swab(bool toLittleEndian);
+  void swab(bool toLittleEndian);
 #else
-    void        swab(bool /*toLittleEndian*/) {};
+  void     swab(bool /*toLittleEndian*/){};
 #endif
 #ifdef E57_DEBUG
-    void        dump(int indent = 0, std::ostream& os = std::cout);
+  void dump(int indent = 0, std::ostream& os = std::cout);
 #endif
 };
 
-
 #if 0 //!!!
-#define SEEKINDEX_MAX_LEVELS  6
+#  define SEEKINDEX_MAX_LEVELS 6
 
 class SeekIndex {
 public:
@@ -1497,9 +1698,9 @@ public:
     int64_t     entryCount();
     void        lookup(int64_t recordNumber, int64_t& chunkRecordNumber, int64_t& chunkPhysicalOffset);
     void        verify(uint64_t totalRecordCount, uint64_t fileSize);
-#ifdef E57_DEBUG
+#  ifdef E57_DEBUG
     void        dump(int indent = 0, std::ostream& os = std::cout);
-#endif
+#  endif
 
 private: //================
     /// No default ctor, copy, assign
@@ -1706,7 +1907,7 @@ uint64_t SeekIndexWriter::levelWrite(unsigned levelNumber)
 
 }
 
-#ifdef E57_DEBUG
+#  ifdef E57_DEBUG
 void SeekIndexWriter::dump(int indent, std::ostream& os)
 {
     bool                    isOpen_;
@@ -1747,7 +1948,7 @@ void SeekIndexWriter::dump(int indent, std::ostream& os)
     if (i < entryCount)
         os << space(indent) << entryCount-i << "more entries unprinted..." << endl;
 }
-#endif
+#  endif
 //================================================================
 //================================================================
 //================================================================
@@ -1757,9 +1958,9 @@ public:
                 SeekIndexReader(ImageFile imf, uint64_t topLevelPhysicalOffset);
     void        lookup(uint64_t recordNumber, uint64_t& chunkRecordNumber, uint64_t& chunkPhysicalOffset);
 
-#ifdef E57_DEBUG
+#  ifdef E57_DEBUG
     void        dump(int indent = 0, std::ostream& os = std::cout);
-#endif
+#  endif
 protected: //================
     uint64_t    topLevelPhysicalOffset_;
     unsigned    indexDepth_;
@@ -1819,9 +2020,9 @@ public:
     void    append(uint64_t chunkRecordNumber, uint64_t chunkPhysicalOffset);
     void    close();
 
-#ifdef E57_DEBUG
+#  ifdef E57_DEBUG
     void        dump(int indent = 0, std::ostream& os = std::cout);
-#endif
+#  endif
 protected: //================
     uint64_t                sectionPhysicalStart_;
     vector<SeekLevelInfo>   levels_;
@@ -1832,9 +2033,9 @@ public:
                 SeekIndexReader(ImageFile imf, uint64_t topLevelPhysicalOffset);
     void        lookup(uint64_t recordNumber, uint64_t& chunkRecordNumber, uint64_t& chunkPhysicalOffset);
 
-#ifdef E57_DEBUG
+#  ifdef E57_DEBUG
     void        dump(int indent = 0, std::ostream& os = std::cout);
-#endif
+#  endif
 protected: //================
     uint64_t    topLevelPhysicalOffset_;
     unsigned    indexDepth_;
