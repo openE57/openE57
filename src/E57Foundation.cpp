@@ -27,13 +27,15 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-/*================*/ /*!
+/*================*//*!
 @mainpage
 
 @section main_Introduction Introduction
-This browser-based document describes the E57 Foundation API (Application Programmer Interface) version 0.51, which is a collection of functions that help a C++ programmer read and write ASTM E57 format files.
-The API acts a documented software connector between an application (above the interface) and an implementation of the API (also called an E57 Foundation Implementation, below the interface).
-There could (and hopefully will be) more than one E57 Foundation Implementation of this API (perhaps written by a different programmer, or with different performance characteristics), but initially there is a single implementation: the Reference Implementation.
+This browser-based document describes the E57 Foundation API (Application Programmer Interface) version 0.51, which is a collection of functions that help a C++
+programmer read and write ASTM E57 format files. The API acts a documented software connector between an application (above the interface) and an implementation
+of the API (also called an E57 Foundation Implementation, below the interface). There could (and hopefully will be) more than one E57 Foundation Implementation
+of this API (perhaps written by a different programmer, or with different performance characteristics), but initially there is a single implementation: the
+Reference Implementation.
 
 @section main_ReferenceImplemenation The Reference Implementation
 There are two main goals for the Reference Implementation.
@@ -53,8 +55,9 @@ The designer of the API and author of the Reference Implementation (Kevin Ackley
 However, the E57 Standard for 3D Imaging Data Exchange is the final word on what is a legal/valid .e57 file.
 
 @section main_NeedStandard Do I need to get the ASTM standard?
-Yes. The Foundation API provides the building blocks (the E57 primitive elements) for constructing and interpreting an E57 file, but the data structures that are built with these building blocks are up to the user of the API.
-The required names and types of these data structures (not to mention their meanings) are specified in the ASTM standard, so you need a copy.
+Yes. The Foundation API provides the building blocks (the E57 primitive elements) for constructing and interpreting an E57 file, but the data structures that
+are built with these building blocks are up to the user of the API. The required names and types of these data structures (not to mention their meanings) are
+specified in the ASTM standard, so you need a copy.
 
 ASTM owns the standard, which is currently being balloted.
 ASTM E57 committee members can get draft versions of standards.
@@ -74,16 +77,19 @@ The XML section makes references to the binary sections, which are stored separa
 @section main_ApiObjects The API objects
 The Foundation API is described in C++, and is object-oriented.
 There are 15 types of objects, each described in a C++ class.
-There is a class that encapsulates the E57 file (ImageFile), a class for each of the eight E57 primitive elements described in the standard (IntegerNode, ScaledIntegerNode, FloatNode, StringNode, BlobNode, StructureNode, VectorNode, and CompressedVectorNode) and a base class that encapsulates the common functionality of all nodes (Node).
-There are two classes that keep track of the block reads/writes to the binary sections (CompressedVectorReader, CompressedVectorWriter) and a class to manage buffers for these block transfers (SourceDestBuffer).
-Finally, there is a class to organize the reporting of errors (E57Exception), and a class for miscellaneous functions that are not associated with any of the other objects (E57Utilities).
+There is a class that encapsulates the E57 file (ImageFile), a class for each of the eight E57 primitive elements described in the standard (IntegerNode,
+ScaledIntegerNode, FloatNode, StringNode, BlobNode, StructureNode, VectorNode, and CompressedVectorNode) and a base class that encapsulates the common
+functionality of all nodes (Node). There are two classes that keep track of the block reads/writes to the binary sections (CompressedVectorReader,
+CompressedVectorWriter) and a class to manage buffers for these block transfers (SourceDestBuffer). Finally, there is a class to organize the reporting of
+errors (E57Exception), and a class for miscellaneous functions that are not associated with any of the other objects (E57Utilities).
 
 @section main_SetOnce Set-once design
 The primary motivation for the E57 file is to be a conduit between the proprietary formats of two different vendors' software (the reader and the writer).
 It is not a general-purpose 3D database.
 The API design reflects this use case by not allowing modifications of data.
 This simplifies the implementation.
-For example, it is not possible to change a value of a node, or delete an attached child node, and it is an error to attempt to attach a node to the tree using an already existing name.
+For example, it is not possible to change a value of a node, or delete an attached child node, and it is an error to attempt to attach a node to the tree using
+an already existing name.
 
 @section main_HandleSemantics Handle semantics
 All but one of the classes (the exception being E57Exception) have handle semantics, which means that there is a level of indirection.
@@ -113,9 +119,10 @@ So if you have an API handle, you know it points to a valid object.
 There are three separate entities that have version numbers: the ASTM E57 format standard itself, the E57 Library (libe57), and the Foundation API.
 
 When the E57 standard is approved, its version will start out at version 1.0.
-Until that time, and until it is verified that the Reference Implementation writes the correct format, the E57 format version number written in an .e57 file is less than 1.0 (currently 0.5).
-The Reference Implementation is currently configured to reject any E57 format version numbers less than the one it was built to write.
-So don't invest a lot of time in creating .e57 files that can't be recreated, because the format version number in the file will advance at least once more.
+Until that time, and until it is verified that the Reference Implementation writes the correct format, the E57 format version number written in an .e57 file is
+less than 1.0 (currently 0.5). The Reference Implementation is currently configured to reject any E57 format version numbers less than the one it was built to
+write. So don't invest a lot of time in creating .e57 files that can't be recreated, because the format version number in the file will advance at least once
+more.
 
 The E57 library (libe57) is a collection of tools, examples, data files, tests, and software libraries that help read and write .e57 files.
 The Reference Implementation is a key component of the libe57, but there are other parts as well.
@@ -156,9 +163,10 @@ Binary distributions may be made available for some compiler/OSes.
 
 @section main_GetHelp How can I get help?
 Help is available by email through E57 SourceForge repository.
-To get help during the beta phase of the software release you have to agree to be a beta tester (you have to describe what you are doing and hopefully to give a review of your experience).
-To get more information about the beta test, contact Roland Schwarz by email at roland_schwarz@users.sourceforge.net.
-*/ /*================*/ /*!
+To get help during the beta phase of the software release you have to agree to be a beta tester (you have to describe what you are doing and hopefully to give a
+review of your experience). To get more information about the beta test, contact Roland Schwarz by email at roland_schwarz@users.sourceforge.net.
+*/
+/*================*//*!
 @page CopyRightPage Copyright
 
 Copyright 2010 Kevin Ackley (kackley@gwi.net)
@@ -190,13 +198,13 @@ DEALINGS IN THE SOFTWARE.
 
 #include <openE57/impl/E57FoundationImpl.h>
 using namespace e57;
-//using namespace std;
+// using namespace std;
 using std::endl;
 
-//using namespace boost;
+// using namespace boost;
+using boost::dynamic_pointer_cast;
 using std::shared_ptr;
 using std::weak_ptr;
-using boost::dynamic_pointer_cast;
 
 //=====================================================================================
 /*================*/ /*!
@@ -1031,7 +1039,6 @@ Here is the source code without line numbers to cut&paste from:
 @include CheckInvariant.cpp
 */ /*================*/
 
-
 //=====================================================================================
 /*================*/ /*!
 @brief Check whether Node class invariant is true
@@ -1049,113 +1056,162 @@ Checking the invariant recursively may be expensive if the tree is large, so sho
 @see     CheckInvariant.cpp example, Class Invariant section in Node, IntegerNode::checkInvariant, ScaledIntegerNode::checkInvariant, FloatNode::checkInvariant, BlobNode::checkInvariant, StructureNode::checkInvariant, VectorNode::checkInvariant, CompressedVectorNode::checkInvariant
 */ /*================*/
 // begin Node::checkInvariant
-void Node::checkInvariant(bool doRecurse, bool doDowncast) {
-    ImageFile imf = destImageFile();
+void Node::checkInvariant(bool doRecurse, bool doDowncast)
+{
+  ImageFile imf = destImageFile();
 
-    // If destImageFile not open, can't test invariant (almost every call would throw)
-    if (!imf.isOpen())
-        return;
+  // If destImageFile not open, can't test invariant (almost every call would throw)
+  if (!imf.isOpen())
+    return;
 
-    // Parent attachment state is same as this attachment state
-    if (isAttached() != parent().isAttached())
+  // Parent attachment state is same as this attachment state
+  if (isAttached() != parent().isAttached())
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+
+  // Parent destination ImageFile is same as this
+  if (imf != parent().destImageFile())
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+
+  // If this is the ImageFile root node
+  if (*this == imf.root())
+  {
+    // Must be attached
+    if (!isAttached())
+      throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+
+    // Must be is a root node
+    if (!isRoot())
+      throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  }
+
+  // If this is a root node
+  if (isRoot())
+  {
+    // Absolute pathName is "/"
+    if (pathName() != "/")
+      throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+
+    // parent() returns this node
+    if (*this != parent())
+      throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  }
+  else
+  {
+    // Non-root can't be own parent
+    if (*this == parent())
+      throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+
+    // pathName is concatenation of parent pathName and this elementName
+    if (parent().isRoot())
+    {
+      if (pathName() != "/" + elementName())
+        throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+    }
+    else
+    {
+      if (pathName() != parent().pathName() + "/" + elementName())
+        throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+    }
+
+    // Non-root nodes must be children of either a VectorNode or StructureNode
+    if (parent().type() == E57_VECTOR)
+    {
+      VectorNode v = static_cast<VectorNode>(parent());
+
+      // Must be defined in parent VectorNode with this elementName
+      if (!v.isDefined(elementName()))
         throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 
-    // Parent destination ImageFile is same as this
-    if (imf != parent().destImageFile())
+      // Getting child of parent with this elementName must return this
+      if (v.get(elementName()) != *this)
+        throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+    }
+    else if (parent().type() == E57_STRUCTURE)
+    {
+      StructureNode s = static_cast<StructureNode>(parent());
+
+      // Must be defined in parent VectorNode with this elementName
+      if (!s.isDefined(elementName()))
         throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 
-    // If this is the ImageFile root node
-    if (*this == imf.root()) {
-        // Must be attached
-        if (!isAttached())
-           throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-
-        // Must be is a root node
-        if(!isRoot())
-           throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+      // Getting child of parent with this elementName must return this
+      if (s.get(elementName()) != *this)
+        throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
     }
+    else
+      throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  }
 
-    // If this is a root node
-    if (isRoot()) {
-        // Absolute pathName is "/"
-        if (pathName() != "/")
-           throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  // If this is attached
+  if (isAttached())
+  {
+    // Get root of this
+    Node n = *this;
+    while (!n.isRoot())
+      n = n.parent();
 
-        // parent() returns this node
-        if (*this != parent())
-           throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-    } else {
-        // Non-root can't be own parent
-        if (*this == parent())
-           throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+    // If in tree of ImageFile (could be in a prototype instead)
+    if (n == imf.root())
+    {
+      // pathName must be defined
+      if (!imf.root().isDefined(pathName()))
+        throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 
-        // pathName is concatenation of parent pathName and this elementName
-        if (parent().isRoot()) {
-            if (pathName() != "/" + elementName())
-                throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-        } else {
-            if (pathName() != parent().pathName() + "/" + elementName())
-                throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-        }
-
-        // Non-root nodes must be children of either a VectorNode or StructureNode
-        if (parent().type() == E57_VECTOR) {
-            VectorNode v = static_cast<VectorNode>(parent());
-
-            // Must be defined in parent VectorNode with this elementName
-            if (!v.isDefined(elementName()))
-                throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-
-            // Getting child of parent with this elementName must return this
-            if (v.get(elementName()) != *this)
-                throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-        } else if (parent().type() == E57_STRUCTURE) {
-            StructureNode s = static_cast<StructureNode>(parent());
-
-            // Must be defined in parent VectorNode with this elementName
-            if (!s.isDefined(elementName()))
-                throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-
-            // Getting child of parent with this elementName must return this
-            if (s.get(elementName()) != *this)
-                throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-        } else
-            throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+      // Getting by absolute pathName must be this
+      if (imf.root().get(pathName()) != *this)
+        throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
     }
+  }
 
-    // If this is attached
-    if (isAttached()) {
-        // Get root of this
-        Node n = *this;
-        while (!n.isRoot())
-            n = n.parent();
-
-        // If in tree of ImageFile (could be in a prototype instead)
-        if (n == imf.root()) {
-            // pathName must be defined
-            if (!imf.root().isDefined(pathName()))
-                throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-
-            // Getting by absolute pathName must be this
-            if (imf.root().get(pathName()) != *this)
-                throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-        }
+  // If requested, check invariants of derived types:
+  if (doDowncast)
+  {
+    switch (type())
+    {
+    case E57_STRUCTURE: {
+      StructureNode s(*this);
+      s.checkInvariant(doRecurse, false);
     }
-
-    // If requested, check invariants of derived types:
-    if (doDowncast) {
-        switch (type()) {
-            case E57_STRUCTURE:         {StructureNode          s(*this);   s.checkInvariant(doRecurse, false); } break;
-            case E57_VECTOR:            {VectorNode             v(*this);   v.checkInvariant(doRecurse, false); } break;
-            case E57_COMPRESSED_VECTOR: {CompressedVectorNode   cv(*this);  cv.checkInvariant(doRecurse, false);} break;
-            case E57_INTEGER:           {IntegerNode            i(*this);   i.checkInvariant(doRecurse, false); } break;
-            case E57_SCALED_INTEGER:    {ScaledIntegerNode      si(*this);  si.checkInvariant(doRecurse, false);} break;
-            case E57_FLOAT:             {FloatNode              f(*this);   f.checkInvariant(doRecurse, false); } break;
-            case E57_STRING:            {StringNode             s(*this);   s.checkInvariant(doRecurse, false); } break;
-            case E57_BLOB:              {BlobNode               b(*this);   b.checkInvariant(doRecurse, false); } break;
-            default: break;
-        }
+    break;
+    case E57_VECTOR: {
+      VectorNode v(*this);
+      v.checkInvariant(doRecurse, false);
     }
+    break;
+    case E57_COMPRESSED_VECTOR: {
+      CompressedVectorNode cv(*this);
+      cv.checkInvariant(doRecurse, false);
+    }
+    break;
+    case E57_INTEGER: {
+      IntegerNode i(*this);
+      i.checkInvariant(doRecurse, false);
+    }
+    break;
+    case E57_SCALED_INTEGER: {
+      ScaledIntegerNode si(*this);
+      si.checkInvariant(doRecurse, false);
+    }
+    break;
+    case E57_FLOAT: {
+      FloatNode f(*this);
+      f.checkInvariant(doRecurse, false);
+    }
+    break;
+    case E57_STRING: {
+      StringNode s(*this);
+      s.checkInvariant(doRecurse, false);
+    }
+    break;
+    case E57_BLOB: {
+      BlobNode b(*this);
+      b.checkInvariant(doRecurse, false);
+    }
+    break;
+    default:
+      break;
+    }
+  }
 } // end Node::checkInvariant
 
 /*================*/ /*!
@@ -1219,115 +1275,119 @@ The following C++ code checks externally visible state for consistency and throw
 //! @brief Check whether StructureNode class invariant is true
 //! @copydetails IntegerNode::checkInvariant()
 // begin StructureNode::checkInvariant
-void StructureNode::checkInvariant(bool doRecurse, bool doUpcast) {
-    // If destImageFile not open, can't test invariant (almost every call would throw)
-    if (!destImageFile().isOpen())
-        return;
+void StructureNode::checkInvariant(bool doRecurse, bool doUpcast)
+{
+  // If destImageFile not open, can't test invariant (almost every call would throw)
+  if (!destImageFile().isOpen())
+    return;
 
-    // If requested, call Node::checkInvariant
-    if (doUpcast)
-        static_cast<Node>(*this).checkInvariant(false, false);
+  // If requested, call Node::checkInvariant
+  if (doUpcast)
+    static_cast<Node>(*this).checkInvariant(false, false);
 
-    // Check each child
-    for (int64_t i = 0; i < childCount(); i++) {
-        Node child = get(i);
+  // Check each child
+  for (int64_t i = 0; i < childCount(); i++)
+  {
+    Node child = get(i);
 
-        // If requested, check children recursively
-        if (doRecurse)
-            child.checkInvariant(doRecurse, true);
+    // If requested, check children recursively
+    if (doRecurse)
+      child.checkInvariant(doRecurse, true);
 
-        // Child's parent must be this
-        if (static_cast<Node>(*this) != child.parent())
-           throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+    // Child's parent must be this
+    if (static_cast<Node>(*this) != child.parent())
+      throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 
-        // Child's elementName must be defined
-        if (!isDefined(child.elementName()))
-           throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+    // Child's elementName must be defined
+    if (!isDefined(child.elementName()))
+      throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 
-        // Getting child by element name must yield same child
-        Node n = get(child.elementName());
-        if (n != child)
-           throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-    }
+    // Getting child by element name must yield same child
+    Node n = get(child.elementName());
+    if (n != child)
+      throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  }
 } // end StructureNode::checkInvariant
-
 
 //! @brief Check whether VectorNode class invariant is true
 //! @copydetails IntegerNode::checkInvariant()
 // begin VectorNode::checkInvariant
-void VectorNode::checkInvariant(bool doRecurse, bool doUpcast) {
-    // If destImageFile not open, can't test invariant (almost every call would throw)
-    if (!destImageFile().isOpen())
-        return;
+void VectorNode::checkInvariant(bool doRecurse, bool doUpcast)
+{
+  // If destImageFile not open, can't test invariant (almost every call would throw)
+  if (!destImageFile().isOpen())
+    return;
 
-    // If requested, call Node::checkInvariant
-    if (doUpcast)
-        static_cast<Node>(*this).checkInvariant(false, false);
+  // If requested, call Node::checkInvariant
+  if (doUpcast)
+    static_cast<Node>(*this).checkInvariant(false, false);
 
-    // Check each child
-    for (int64_t i = 0; i < childCount(); i++) {
-        Node child = get(i);
+  // Check each child
+  for (int64_t i = 0; i < childCount(); i++)
+  {
+    Node child = get(i);
 
-        // If requested, check children recursively
-        if (doRecurse)
-            child.checkInvariant(doRecurse, true);
+    // If requested, check children recursively
+    if (doRecurse)
+      child.checkInvariant(doRecurse, true);
 
-        // Child's parent must be this
-        if (static_cast<Node>(*this) != child.parent())
-           throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+    // Child's parent must be this
+    if (static_cast<Node>(*this) != child.parent())
+      throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 
-        // Child's elementName must be defined
-        if (!isDefined(child.elementName()))
-           throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+    // Child's elementName must be defined
+    if (!isDefined(child.elementName()))
+      throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 
-        // Getting child by element name must yield same child
-        Node n = get(child.elementName());
-        if (n != child)
-           throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-    }
+    // Getting child by element name must yield same child
+    Node n = get(child.elementName());
+    if (n != child)
+      throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  }
 } // end VectorNode::checkInvariant
 
 //! @brief Check whether CompressedVectorNode class invariant is true
 //! @copydetails IntegerNode::checkInvariant()
 // begin CompressedVectorNode::checkInvariant
-void CompressedVectorNode::checkInvariant(bool doRecurse, bool doUpcast) {
-    // If destImageFile not open, can't test invariant (almost every call would throw)
-    if (!destImageFile().isOpen())
-        return;
+void CompressedVectorNode::checkInvariant(bool doRecurse, bool doUpcast)
+{
+  // If destImageFile not open, can't test invariant (almost every call would throw)
+  if (!destImageFile().isOpen())
+    return;
 
-    // If requested, call Node::checkInvariant
-    if (doUpcast)
-        static_cast<Node>(*this).checkInvariant(false, false);
+  // If requested, call Node::checkInvariant
+  if (doUpcast)
+    static_cast<Node>(*this).checkInvariant(false, false);
 
-    // Check prototype is good Node
-    prototype().checkInvariant(doRecurse);
+  // Check prototype is good Node
+  prototype().checkInvariant(doRecurse);
 
-    // prototype attached state not same as this attached state
-    if (prototype().isAttached() != isAttached())
-       throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  // prototype attached state not same as this attached state
+  if (prototype().isAttached() != isAttached())
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 
-    // prototype not root
-    if (!prototype().isRoot())
-       throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  // prototype not root
+  if (!prototype().isRoot())
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 
-    // prototype dest ImageFile not same as this dest ImageFile
-    if (prototype().destImageFile() != destImageFile())
-       throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  // prototype dest ImageFile not same as this dest ImageFile
+  if (prototype().destImageFile() != destImageFile())
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 
-    // Check codecs is good Node
-    codecs().checkInvariant(doRecurse);
+  // Check codecs is good Node
+  codecs().checkInvariant(doRecurse);
 
-    // codecs attached state not same as this attached state
-    if (codecs().isAttached() != isAttached())
-       throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  // codecs attached state not same as this attached state
+  if (codecs().isAttached() != isAttached())
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 
-    // codecs not root
-    if (!codecs().isRoot())
-       throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  // codecs not root
+  if (!codecs().isRoot())
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 
-    // codecs dest ImageFile not same as this dest ImageFile
-    if (codecs().destImageFile() != destImageFile())
-       throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  // codecs dest ImageFile not same as this dest ImageFile
+  if (codecs().destImageFile() != destImageFile())
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 } // end CompressedVectorNode::checkInvariant
 
 /*================*/ /*!
@@ -1345,94 +1405,100 @@ Checking the invariant recursively may be expensive if the tree is large, so sho
 @see     CheckInvariant.cpp example
 */ /*================*/
 // begin IntegerNode::checkInvariant
-void IntegerNode::checkInvariant(bool /*doRecurse*/, bool doUpcast) {
-    // If destImageFile not open, can't test invariant (almost every call would throw)
-    if (!destImageFile().isOpen())
-        return;
+void IntegerNode::checkInvariant(bool /*doRecurse*/, bool doUpcast)
+{
+  // If destImageFile not open, can't test invariant (almost every call would throw)
+  if (!destImageFile().isOpen())
+    return;
 
-    // If requested, call Node::checkInvariant
-    if (doUpcast)
-        static_cast<Node>(*this).checkInvariant(false, false);
+  // If requested, call Node::checkInvariant
+  if (doUpcast)
+    static_cast<Node>(*this).checkInvariant(false, false);
 
-    if (value() < minimum() || value() > maximum())
-       throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  if (value() < minimum() || value() > maximum())
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 } // end IntegerNode::checkInvariant
 
 //! @brief Check whether ScaledIntegerNode class invariant is true
 //! @copydetails IntegerNode::checkInvariant()
 // begin ScaledIntegerNode::checkInvariant
-void ScaledIntegerNode::checkInvariant(bool /*doRecurse*/, bool doUpcast) {
-    // If destImageFile not open, can't test invariant (almost every call would throw)
-    if (!destImageFile().isOpen())
-        return;
+void ScaledIntegerNode::checkInvariant(bool /*doRecurse*/, bool doUpcast)
+{
+  // If destImageFile not open, can't test invariant (almost every call would throw)
+  if (!destImageFile().isOpen())
+    return;
 
-    // If requested, call Node::checkInvariant
-    if (doUpcast)
-        static_cast<Node>(*this).checkInvariant(false, false);
+  // If requested, call Node::checkInvariant
+  if (doUpcast)
+    static_cast<Node>(*this).checkInvariant(false, false);
 
-    // If value is out of bounds
-    if (rawValue() < minimum() || rawValue() > maximum())
-       throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  // If value is out of bounds
+  if (rawValue() < minimum() || rawValue() > maximum())
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 
-    // If scale is zero
-    if (scale() == 0)
-       throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  // If scale is zero
+  if (scale() == 0)
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 
-    // If scaled value is not calculated correctly
-    if (scaledValue() != rawValue() * scale() + offset())
-       throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  // If scaled value is not calculated correctly
+  if (scaledValue() != rawValue() * scale() + offset())
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 } // end ScaledIntegerNode::checkInvariant
 
 //! @brief Check whether FloatNode class invariant is true
 //! @copydetails IntegerNode::checkInvariant()
 // begin FloatNode::checkInvariant
-void FloatNode::checkInvariant(bool /*doRecurse*/, bool doUpcast) {
-    // If destImageFile not open, can't test invariant (almost every call would throw)
-    if (!destImageFile().isOpen())
-        return;
+void FloatNode::checkInvariant(bool /*doRecurse*/, bool doUpcast)
+{
+  // If destImageFile not open, can't test invariant (almost every call would throw)
+  if (!destImageFile().isOpen())
+    return;
 
-    // If requested, call Node::checkInvariant
-    if (doUpcast)
-        static_cast<Node>(*this).checkInvariant(false, false);
+  // If requested, call Node::checkInvariant
+  if (doUpcast)
+    static_cast<Node>(*this).checkInvariant(false, false);
 
-    if (precision() == E57_SINGLE) {
-        if (minimum() < E57_FLOAT_MIN || maximum() > E57_FLOAT_MAX)
-           throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-    }
+  if (precision() == E57_SINGLE)
+  {
+    if (minimum() < E57_FLOAT_MIN || maximum() > E57_FLOAT_MAX)
+      throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  }
 
-    // If value is out of bounds
-    if (value() < minimum() || value() > maximum())
-       throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  // If value is out of bounds
+  if (value() < minimum() || value() > maximum())
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 } // end FloatNode::checkInvariant
 
 //! @brief Check whether StringNode class invariant is true
 //! @copydetails IntegerNode::checkInvariant()
 // begin StringNode::checkInvariant
-void StringNode::checkInvariant(bool /*doRecurse*/, bool doUpcast) {
-    // If destImageFile not open, can't test invariant (almost every call would throw)
-    if (!destImageFile().isOpen())
-        return;
+void StringNode::checkInvariant(bool /*doRecurse*/, bool doUpcast)
+{
+  // If destImageFile not open, can't test invariant (almost every call would throw)
+  if (!destImageFile().isOpen())
+    return;
 
-    // If requested, call Node::checkInvariant
-    if (doUpcast)
-        static_cast<Node>(*this).checkInvariant(false, false);
-    /// ? check legal UTF-8
+  // If requested, call Node::checkInvariant
+  if (doUpcast)
+    static_cast<Node>(*this).checkInvariant(false, false);
+  /// ? check legal UTF-8
 } // end StringNode::checkInvariant
 
 //! @brief Check whether BlobNode class invariant is true
 //! @copydetails IntegerNode::checkInvariant()
 // begin BlobNode::checkInvariant
-void BlobNode::checkInvariant(bool /*doRecurse*/, bool doUpcast) {
-    // If destImageFile not open, can't test invariant (almost every call would throw)
-    if (!destImageFile().isOpen())
-        return;
+void BlobNode::checkInvariant(bool /*doRecurse*/, bool doUpcast)
+{
+  // If destImageFile not open, can't test invariant (almost every call would throw)
+  if (!destImageFile().isOpen())
+    return;
 
-    // If requested, call Node::checkInvariant
-    if (doUpcast)
-        static_cast<Node>(*this).checkInvariant(false, false);
+  // If requested, call Node::checkInvariant
+  if (doUpcast)
+    static_cast<Node>(*this).checkInvariant(false, false);
 
-    if (byteCount() < 0)
-       throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  if (byteCount() < 0)
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 } // end BlobNode::checkInvariant
 
 /*================*/ /*!
@@ -1446,61 +1512,63 @@ If any invariant clause is violated, an E57Exception with errorCode of E57_ERROR
 @see     CheckInvariant.cpp example
 */ /*================*/
 // begin CompressedVectorReader::checkInvariant
-void CompressedVectorReader::checkInvariant(bool /*doRecurse*/) {
-    // If this CompressedVectorReader is not open, can't test invariant (almost every call would throw)
-    if (!isOpen())
-        return;
+void CompressedVectorReader::checkInvariant(bool /*doRecurse*/)
+{
+  // If this CompressedVectorReader is not open, can't test invariant (almost every call would throw)
+  if (!isOpen())
+    return;
 
-    CompressedVectorNode cv = compressedVectorNode();
-    ImageFile imf = cv.destImageFile();
+  CompressedVectorNode cv  = compressedVectorNode();
+  ImageFile            imf = cv.destImageFile();
 
-    // If destImageFile not open, can't test invariant (almost every call would throw)
-    if (!imf.isOpen())
-        return;
+  // If destImageFile not open, can't test invariant (almost every call would throw)
+  if (!imf.isOpen())
+    return;
 
-    // Associated CompressedVectorNode must be attached to ImageFile
-    if (!cv.isAttached())
-       throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  // Associated CompressedVectorNode must be attached to ImageFile
+  if (!cv.isAttached())
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 
-    // Dest ImageFile must have at least 1 reader (this one)
-    if (imf.readerCount() < 1)
-       throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  // Dest ImageFile must have at least 1 reader (this one)
+  if (imf.readerCount() < 1)
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 
-    // Dest ImageFile can't have any writers
-    if (imf.writerCount() != 0)
-       throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  // Dest ImageFile can't have any writers
+  if (imf.writerCount() != 0)
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 } // end CompressedVectorReader::checkInvariant
 
 //! @brief Check whether CompressedVectorWriter class invariant is true
 //! @copydetails CompressedVectorReader::checkInvariant
 // begin CompressedVectorWriter::checkInvariant
-void CompressedVectorWriter::checkInvariant(bool /*doRecurse*/) {
-    // If this CompressedVectorWriter is not open, can't test invariant (almost every call would throw)
-    if (!isOpen())
-        return;
+void CompressedVectorWriter::checkInvariant(bool /*doRecurse*/)
+{
+  // If this CompressedVectorWriter is not open, can't test invariant (almost every call would throw)
+  if (!isOpen())
+    return;
 
-    CompressedVectorNode cv = compressedVectorNode();
-    ImageFile imf = cv.destImageFile();
+  CompressedVectorNode cv  = compressedVectorNode();
+  ImageFile            imf = cv.destImageFile();
 
-    // If destImageFile not open, can't test invariant (almost every call would throw)
-    if (!imf.isOpen())
-        return;
+  // If destImageFile not open, can't test invariant (almost every call would throw)
+  if (!imf.isOpen())
+    return;
 
-    // Associated CompressedVectorNode must be attached to ImageFile
-    if (!cv.isAttached())
-       throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  // Associated CompressedVectorNode must be attached to ImageFile
+  if (!cv.isAttached())
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 
-    // Dest ImageFile must be writable
-    if (!imf.isWritable())
-       throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  // Dest ImageFile must be writable
+  if (!imf.isWritable())
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 
-    // Dest ImageFile must have exactly 1 writer (this one)
-    if (imf.writerCount() != 1)
-       throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  // Dest ImageFile must have exactly 1 writer (this one)
+  if (imf.writerCount() != 1)
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 
-    // Dest ImageFile can't have any readers
-    if (imf.readerCount() != 0)
-       throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  // Dest ImageFile can't have any readers
+  if (imf.readerCount() != 0)
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 } // end CompressedVectorWriter::checkInvariant
 
 /*================*/ /*!
@@ -1517,100 +1585,128 @@ Checking the invariant recursively may be expensive if the tree is large, so sho
 @see     CheckInvariant.cpp example, Node::checkInvariant
 */ /*================*/
 // begin ImageFile::checkInvariant
-void ImageFile::checkInvariant(bool doRecurse) {
-    // If this ImageFile is not open, can't test invariant (almost every call would throw)
-    if (!isOpen())
-        return;
+void ImageFile::checkInvariant(bool doRecurse)
+{
+  // If this ImageFile is not open, can't test invariant (almost every call would throw)
+  if (!isOpen())
+    return;
 
-    // root() node must be a root node
-    if (!root().isRoot())
-       throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  // root() node must be a root node
+  if (!root().isRoot())
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 
-    // Can't have empty fileName
-    if (fileName() == "")
-       throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  // Can't have empty fileName
+  if (fileName() == "")
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 
-    int wCount = writerCount();
-    int rCount = readerCount();
+  int wCount = writerCount();
+  int rCount = readerCount();
 
-    // Can't have negative number of readers
-    if (rCount < 0)
-       throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  // Can't have negative number of readers
+  if (rCount < 0)
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 
-    // Can't have negative number of writers
-    if (wCount < 0)
-       throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  // Can't have negative number of writers
+  if (wCount < 0)
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 
-    // Can't have more than one writer
-    if (1 < wCount)
-       throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  // Can't have more than one writer
+  if (1 < wCount)
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 
-    // If have writer
-    if (wCount > 0) {
-        // Must be in write-mode
-        if (!isWritable())
-           throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  // If have writer
+  if (wCount > 0)
+  {
+    // Must be in write-mode
+    if (!isWritable())
+      throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 
-        // Can't have any readers
-        if (rCount > 0)
-           throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+    // Can't have any readers
+    if (rCount > 0)
+      throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  }
+
+  // Extension prefixes and URIs are unique
+  const size_t eCount = extensionsCount();
+  for (size_t i = 0; i < eCount; i++)
+  {
+    for (size_t j = i + 1; j < eCount; j++)
+    {
+      if (extensionsPrefix(i) == extensionsPrefix(j))
+        throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+      if (extensionsUri(i) == extensionsUri(j))
+        throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
     }
+  }
 
-    // Extension prefixes and URIs are unique
-    const size_t eCount = extensionsCount();
-    for (size_t i = 0; i < eCount; i++) {
-        for (size_t j = i+1; j < eCount; j++) {
-            if (extensionsPrefix(i) == extensionsPrefix(j))
-                throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-            if (extensionsUri(i) == extensionsUri(j))
-                throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-        }
-    }
+  // Verify lookup functions are correct
+  for (size_t i = 0; i < eCount; i++)
+  {
+    ustring goodPrefix = extensionsPrefix(i);
+    ustring goodUri    = extensionsUri(i);
+    ustring prefix, uri;
+    if (!extensionsLookupPrefix(goodPrefix, uri))
+      throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+    if (uri != goodUri)
+      throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+    if (!extensionsLookupUri(goodUri, prefix))
+      throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+    if (prefix != goodPrefix)
+      throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  }
 
-    // Verify lookup functions are correct
-    for (size_t i = 0; i < eCount; i++) {
-        ustring goodPrefix = extensionsPrefix(i);
-        ustring goodUri    = extensionsUri(i);
-        ustring prefix, uri;
-        if (!extensionsLookupPrefix(goodPrefix, uri))
-            throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-        if (uri != goodUri)
-            throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-        if (!extensionsLookupUri(goodUri, prefix))
-            throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-        if (prefix != goodPrefix)
-            throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-    }
-
-    // If requested, check all objects "below" this one
-    if (doRecurse)
-        root().checkInvariant(doRecurse);
+  // If requested, check all objects "below" this one
+  if (doRecurse)
+    root().checkInvariant(doRecurse);
 } // end ImageFile::checkInvariant
 
 //! @brief Check whether SourceDestBuffer class invariant is true
 // begin SourceDestBuffer::checkInvariant
-void SourceDestBuffer::checkInvariant(bool /*doRecurse*/) {
-    // Stride must be >= a memory type dependent value
-    size_t min_stride = 0;
-    switch (memoryRepresentation()) {
-        case E57_INT8:      min_stride = 1; break;
-        case E57_UINT8:     min_stride = 1; break;
-        case E57_INT16:     min_stride = 2; break;
-        case E57_UINT16:    min_stride = 2; break;
-        case E57_INT32:     min_stride = 4; break;
-        case E57_UINT32:    min_stride = 4; break;
-        case E57_INT64:     min_stride = 8; break;
-        case E57_BOOL:      min_stride = 1; break;
-        case E57_REAL32:    min_stride = 4; break;
-        case E57_REAL64:    min_stride = 8; break;
-        case E57_USTRING:   min_stride = sizeof(ustring); break;
-        default:
-            throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
-    }
-    if (stride() < min_stride)
-        throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+void SourceDestBuffer::checkInvariant(bool /*doRecurse*/)
+{
+  // Stride must be >= a memory type dependent value
+  size_t min_stride = 0;
+  switch (memoryRepresentation())
+  {
+  case E57_INT8:
+    min_stride = 1;
+    break;
+  case E57_UINT8:
+    min_stride = 1;
+    break;
+  case E57_INT16:
+    min_stride = 2;
+    break;
+  case E57_UINT16:
+    min_stride = 2;
+    break;
+  case E57_INT32:
+    min_stride = 4;
+    break;
+  case E57_UINT32:
+    min_stride = 4;
+    break;
+  case E57_INT64:
+    min_stride = 8;
+    break;
+  case E57_BOOL:
+    min_stride = 1;
+    break;
+  case E57_REAL32:
+    min_stride = 4;
+    break;
+  case E57_REAL64:
+    min_stride = 8;
+    break;
+  case E57_USTRING:
+    min_stride = sizeof(ustring);
+    break;
+  default:
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
+  }
+  if (stride() < min_stride)
+    throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
 } // end SourceDestBuffer::checkInvariant
-
 
 /*================*/ /*!
 @brief   Return the NodeType of a generic Node.
@@ -1622,7 +1718,7 @@ void SourceDestBuffer::checkInvariant(bool /*doRecurse*/) {
 */ /*================*/
 NodeType Node::type() const
 {
-    CHECK_INVARIANCE_RETURN(NodeType, impl_->type());
+  CHECK_INVARIANCE_RETURN(NodeType, impl_->type());
 }
 
 /*================*/ /*!
@@ -1642,7 +1738,7 @@ The concept of @em attachement is slightly larger than that of the parent-child 
 */ /*================*/
 bool Node::isRoot() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isRoot());
+  CHECK_INVARIANCE_RETURN(bool, impl_->isRoot());
 }
 
 /*================*/ /*!
@@ -1669,7 +1765,7 @@ Use Node::isRoot to avoid infinite loops or infinite recursion.
 */ /*================*/
 Node Node::parent() const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->parent()));
+  CHECK_INVARIANCE_RETURN(Node, Node(impl_->parent()));
 }
 
 /*================*/ /*!
@@ -1695,7 +1791,7 @@ By convention, in this API, a root node has the empty string ("") as its element
 */ /*================*/
 ustring Node::pathName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
+  CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
 }
 
 /*================*/ /*!
@@ -1720,7 +1816,7 @@ However in a CompressedVectorNode, the elementName string is not stored in the f
 */ /*================*/
 ustring Node::elementName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->elementName());
+  CHECK_INVARIANCE_RETURN(ustring, impl_->elementName());
 }
 
 /*================*/ /*!
@@ -1736,7 +1832,7 @@ Use Node::isAttached to check if the node actually did get attached.
 */ /*================*/
 ImageFile Node::destImageFile() const
 {
-    CHECK_INVARIANCE_RETURN(ImageFile, ImageFile(impl_->destImageFile()));
+  CHECK_INVARIANCE_RETURN(ImageFile, ImageFile(impl_->destImageFile()));
 }
 
 /*================*/ /*!
@@ -1755,7 +1851,7 @@ It is not recommended to create nodes that are not eventually attached to the Im
 */ /*================*/
 bool Node::isAttached() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isAttached());
+  CHECK_INVARIANCE_RETURN(bool, impl_->isAttached());
 }
 
 /*================*/ /*!
@@ -1775,11 +1871,10 @@ The output format may change from version to version.
 #ifdef E57_DEBUG
 void Node::dump(int indent, std::ostream& os) const
 {
-    impl_->dump(indent, os);
+  impl_->dump(indent, os);
 }
 #else
-void Node::dump(int indent, std::ostream& os) const
-{}
+void Node::dump(int indent, std::ostream& os) const {}
 #endif
 
 /*================*/ /*!
@@ -1791,7 +1886,7 @@ void Node::dump(int indent, std::ostream& os) const
 */ /*================*/
 bool Node::operator==(Node n2) const
 {
-    return(impl_ == n2.impl_);
+  return (impl_ == n2.impl_);
 }
 
 /*================*/ /*!
@@ -1803,17 +1898,15 @@ bool Node::operator==(Node n2) const
 */ /*================*/
 bool Node::operator!=(Node n2) const
 {
-    return(impl_ != n2.impl_);
+  return (impl_ != n2.impl_);
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-Node::Node(shared_ptr<NodeImpl> ni)
-: impl_(ni)
-{}
+Node::Node(shared_ptr<NodeImpl> ni) : impl_(ni) {}
 //! @endcond
 
 //=====================================================================================
-/*================*/ /*!
+/*================*//*!
 @class StructureNode
 @brief   An E57 element containing named child nodes.
 @details
@@ -1825,8 +1918,8 @@ See Node class discussion for discussion of the common functions that StructureN
 @section structurenode_invariant Class Invariant
 A class invariant is a list of statements about an object that are always true before and after any operation on the object.
 An invariant is useful for testing correct operation of an implementation.
-Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API user.
-The following C++ code checks externally visible state for consistancy and throws an exception if the invariant is violated:
+Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API
+user. The following C++ code checks externally visible state for consistancy and throws an exception if the invariant is violated:
 @dontinclude E57Foundation.cpp
 @skip begin StructureNode::checkInvariant
 @skip checkInvariant(
@@ -1851,52 +1944,51 @@ It is an error to attempt to attach the StructureNode to a different ImageFile.
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     StructureCreate.cpp example, NodeFunctions.cpp example, Node
 */ /*================*/
-StructureNode::StructureNode(ImageFile destImageFile)
-: impl_(new StructureNodeImpl(destImageFile.impl()))
+StructureNode::StructureNode(ImageFile destImageFile) : impl_(new StructureNodeImpl(destImageFile.impl()))
 {
-    CHECK_THIS_INVARIANCE()
+  CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Is this a root node.
 //! @copydetails Node::isRoot()
 bool StructureNode::isRoot() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isRoot());
+  CHECK_INVARIANCE_RETURN(bool, impl_->isRoot());
 }
 
 //! @brief   Return parent of node, or self if a root node.
 //! @copydetails Node::parent()
 Node StructureNode::parent() const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->parent()));
+  CHECK_INVARIANCE_RETURN(Node, Node(impl_->parent()));
 }
 
 //! @brief   Get absolute pathname of node.
 //! @copydetails Node::pathName()
 ustring StructureNode::pathName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
+  CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
 }
 
 //! @brief   Get elementName string, that identifies the node in its parent.
 //! @copydetails Node::elementName()
 ustring StructureNode::elementName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->elementName());
+  CHECK_INVARIANCE_RETURN(ustring, impl_->elementName());
 }
 
 //! @brief   Get the ImageFile that was declared as the destination for the node when it was created.
 //! @copydetails Node::destImageFile()
 ImageFile StructureNode::destImageFile() const
 {
-    CHECK_INVARIANCE_RETURN(ImageFile, ImageFile(impl_->destImageFile()));
+  CHECK_INVARIANCE_RETURN(ImageFile, ImageFile(impl_->destImageFile()));
 }
 
 //! @brief   Has node been attached into the tree of an ImageFile.
 //! @copydetails Node::isAttached()
 bool StructureNode::isAttached() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isAttached());
+  CHECK_INVARIANCE_RETURN(bool, impl_->isAttached());
 }
 
 /*================*/ /*!
@@ -1910,7 +2002,7 @@ bool StructureNode::isAttached() const
 */ /*================*/
 int64_t StructureNode::childCount() const
 {
-    CHECK_INVARIANCE_RETURN(int64_t, impl_->childCount());
+  CHECK_INVARIANCE_RETURN(int64_t, impl_->childCount());
 }
 
 /*================*/ /*!
@@ -1930,7 +2022,7 @@ If this StructureNode is not attached to an ImageFile, the @a pathName origin ro
 */ /*================*/
 bool StructureNode::isDefined(const ustring& pathName) const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isDefined(pathName));
+  CHECK_INVARIANCE_RETURN(bool, impl_->isDefined(pathName));
 }
 
 /*================*/ /*!
@@ -1950,7 +2042,7 @@ The order of children may change if more children are added to the StructureNode
 */ /*================*/
 Node StructureNode::get(int64_t index) const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->get(index)));
+  CHECK_INVARIANCE_RETURN(Node, Node(impl_->get(index)));
 }
 
 /*================*/ /*!
@@ -1971,7 +2063,7 @@ If this StructureNode is not attached to an ImageFile, the @a pathName origin ro
 */ /*================*/
 Node StructureNode::get(const ustring& pathName) const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->get(pathName)));
+  CHECK_INVARIANCE_RETURN(Node, Node(impl_->get(pathName)));
 }
 
 /*================*/ /*!
@@ -2008,9 +2100,9 @@ This would be very difficult to do dynamically, as some of the naming rules invo
 */ /*================*/
 void StructureNode::set(const ustring& pathName, Node n)
 {
-    CHECK_THIS_INVARIANCE()
-    impl_->set(pathName, n.impl(), false);
-    CHECK_THIS_INVARIANCE()
+  CHECK_THIS_INVARIANCE()
+  impl_->set(pathName, n.impl(), false);
+  CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Diagnostic function to print internal state of object to output stream in an indented format.
@@ -2018,11 +2110,10 @@ void StructureNode::set(const ustring& pathName, Node n)
 #ifdef E57_DEBUG
 void StructureNode::dump(int indent, std::ostream& os) const
 {
-    impl_->dump(indent, os);
+  impl_->dump(indent, os);
 }
 #else
-void StructureNode::dump(int indent, std::ostream& os) const
-{}
+void StructureNode::dump(int indent, std::ostream& os) const {}
 #endif
 
 /*================*/ /*!
@@ -2034,8 +2125,8 @@ void StructureNode::dump(int indent, std::ostream& os) const
 */ /*================*/
 StructureNode::operator Node() const
 {
-    /// Implicitly upcast from shared_ptr<StructureNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_));
+  /// Implicitly upcast from shared_ptr<StructureNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
+  CHECK_INVARIANCE_RETURN(Node, Node(impl_));
 }
 
 /*================*/ /*!
@@ -2050,27 +2141,23 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 */ /*================*/
 StructureNode::StructureNode(const Node& n)
 {
-    /// Downcast from shared_ptr<NodeImpl> to shared_ptr<StructureNodeImpl>
-    shared_ptr<StructureNodeImpl> ni(dynamic_pointer_cast<StructureNodeImpl>(n.impl()));
-    if (!ni)
-        throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
+  /// Downcast from shared_ptr<NodeImpl> to shared_ptr<StructureNodeImpl>
+  shared_ptr<StructureNodeImpl> ni(dynamic_pointer_cast<StructureNodeImpl>(n.impl()));
+  if (!ni)
+    throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
 
-    /// Set our shared_ptr to the downcast shared_ptr
-    impl_ = ni;
+  /// Set our shared_ptr to the downcast shared_ptr
+  impl_ = ni;
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-StructureNode::StructureNode(std::weak_ptr<ImageFileImpl> fileParent)
-: impl_(new StructureNodeImpl(fileParent))
-{}
+StructureNode::StructureNode(std::weak_ptr<ImageFileImpl> fileParent) : impl_(new StructureNodeImpl(fileParent)) {}
 
-StructureNode::StructureNode(shared_ptr<StructureNodeImpl> ni)
-: impl_(ni)
-{}
+StructureNode::StructureNode(shared_ptr<StructureNodeImpl> ni) : impl_(ni) {}
 //! @endcond
 
 //=====================================================================================
-/*================*/ /*!
+/*================*//*!
 @class VectorNode
 @brief   An E57 element containing ordered vector of child nodes.
 @details
@@ -2085,8 +2172,8 @@ See Node class discussion for discussion of the common functions that StructureN
 @section vectornode_invariant Class Invariant
 A class invariant is a list of statements about an object that are always true before and after any operation on the object.
 An invariant is useful for testing correct operation of an implementation.
-Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API user.
-The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
+Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API
+user. The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
 @dontinclude E57Foundation.cpp
 @skip begin VectorNode::checkInvariant
 @skip checkInvariant(
@@ -2118,52 +2205,51 @@ If @a allowHeteroChildren is true, then the types of the children of the VectorN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     VectorCreate.cpp example, VectorFunctions.cpp example, Node, VectorNode::allowHeteroChildren, ::E57_ERROR_HOMOGENEOUS_VIOLATION
 */ /*================*/
-VectorNode::VectorNode(ImageFile destImageFile, bool allowHeteroChildren)
-: impl_(new VectorNodeImpl(destImageFile.impl(), allowHeteroChildren))
+VectorNode::VectorNode(ImageFile destImageFile, bool allowHeteroChildren) : impl_(new VectorNodeImpl(destImageFile.impl(), allowHeteroChildren))
 {
-    CHECK_THIS_INVARIANCE()
+  CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Is this a root node.
 //! @copydetails Node::isRoot()
 bool VectorNode::isRoot() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isRoot());
+  CHECK_INVARIANCE_RETURN(bool, impl_->isRoot());
 }
 
 //! @brief   Return parent of node, or self if a root node.
 //! @copydetails Node::parent()
 Node VectorNode::parent() const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->parent()));
+  CHECK_INVARIANCE_RETURN(Node, Node(impl_->parent()));
 }
 
 //! @brief   Get absolute pathname of node.
 //! @copydetails Node::pathName()
 ustring VectorNode::pathName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
+  CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
 }
 
 //! @brief   Get elementName string, that identifies the node in its parent..
 //! @copydetails Node::elementName()
 ustring VectorNode::elementName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->elementName());
+  CHECK_INVARIANCE_RETURN(ustring, impl_->elementName());
 }
 
 //! @brief   Get the ImageFile that was declared as the destination for the node when it was created.
 //! @copydetails Node::destImageFile()
 ImageFile VectorNode::destImageFile() const
 {
-    CHECK_INVARIANCE_RETURN(ImageFile, ImageFile(impl_->destImageFile()));
+  CHECK_INVARIANCE_RETURN(ImageFile, ImageFile(impl_->destImageFile()));
 }
 
 //! @brief   Has node been attached into the tree of an ImageFile.
 //! @copydetails Node::isAttached()
 bool VectorNode::isAttached() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isAttached());
+  CHECK_INVARIANCE_RETURN(bool, impl_->isAttached());
 }
 
 /*================*/ /*!
@@ -2180,7 +2266,7 @@ The returned attribute is determined when the VectorNode is created, and cannot 
 */ /*================*/
 bool VectorNode::allowHeteroChildren() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->allowHeteroChildren());
+  CHECK_INVARIANCE_RETURN(bool, impl_->allowHeteroChildren());
 }
 
 /*================*/ /*!
@@ -2194,7 +2280,7 @@ bool VectorNode::allowHeteroChildren() const
 */ /*================*/
 int64_t VectorNode::childCount() const
 {
-    CHECK_INVARIANCE_RETURN(int64_t, impl_->childCount());
+  CHECK_INVARIANCE_RETURN(int64_t, impl_->childCount());
 }
 
 /*================*/ /*!
@@ -2216,7 +2302,7 @@ The element names of child elements of VectorNodes are numbers, encoded as strin
 */ /*================*/
 bool VectorNode::isDefined(const ustring& pathName) const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isDefined(pathName));
+  CHECK_INVARIANCE_RETURN(bool, impl_->isDefined(pathName));
 }
 
 /*================*/ /*!
@@ -2233,7 +2319,7 @@ bool VectorNode::isDefined(const ustring& pathName) const
 */ /*================*/
 Node VectorNode::get(int64_t index) const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->get(index)));
+  CHECK_INVARIANCE_RETURN(Node, Node(impl_->get(index)));
 }
 
 /*================*/ /*!
@@ -2257,7 +2343,7 @@ The element names of child elements of VectorNodes are numbers, encoded as strin
 */ /*================*/
 Node VectorNode::get(const ustring& pathName) const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->get(pathName)));
+  CHECK_INVARIANCE_RETURN(Node, Node(impl_->get(pathName)));
 }
 
 /*================*/ /*!
@@ -2282,9 +2368,9 @@ The VectorNode must not be a descendent of a homogeneous VectorNode with more th
 */ /*================*/
 void VectorNode::append(Node n)
 {
-    CHECK_THIS_INVARIANCE()
-    impl_->append(n.impl());
-    CHECK_THIS_INVARIANCE()
+  CHECK_THIS_INVARIANCE()
+  impl_->append(n.impl());
+  CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Diagnostic function to print internal state of object to output stream in an indented format.
@@ -2292,13 +2378,11 @@ void VectorNode::append(Node n)
 #ifdef E57_DEBUG
 void VectorNode::dump(int indent, std::ostream& os) const
 {
-    impl_->dump(indent, os);
+  impl_->dump(indent, os);
 }
 #else
-void VectorNode::dump(int indent, std::ostream& os) const
-{}
+void VectorNode::dump(int indent, std::ostream& os) const {}
 #endif
-
 
 /*================*/ /*!
 @brief   Upcast a VectorNode handle to a generic Node handle.
@@ -2309,8 +2393,8 @@ void VectorNode::dump(int indent, std::ostream& os) const
 */ /*================*/
 VectorNode::operator Node() const
 {
-    /// Implicitly upcast from shared_ptr<VectorNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_));
+  /// Implicitly upcast from shared_ptr<VectorNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
+  CHECK_INVARIANCE_RETURN(Node, Node(impl_));
 }
 
 /*================*/ /*!
@@ -2325,34 +2409,33 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 */ /*================*/
 VectorNode::VectorNode(const Node& n)
 {
-    /// Downcast from shared_ptr<NodeImpl> to shared_ptr<VectorNodeImpl>
-    shared_ptr<VectorNodeImpl> ni(dynamic_pointer_cast<VectorNodeImpl>(n.impl()));
-    if (!ni)
-        throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
+  /// Downcast from shared_ptr<NodeImpl> to shared_ptr<VectorNodeImpl>
+  shared_ptr<VectorNodeImpl> ni(dynamic_pointer_cast<VectorNodeImpl>(n.impl()));
+  if (!ni)
+    throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
 
-    /// Set our shared_ptr to the downcast shared_ptr
-    impl_ = ni;
+  /// Set our shared_ptr to the downcast shared_ptr
+  impl_ = ni;
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-VectorNode::VectorNode(shared_ptr<VectorNodeImpl> ni)
-: impl_(ni)
-{}
+VectorNode::VectorNode(shared_ptr<VectorNodeImpl> ni) : impl_(ni) {}
 //! @endcond
 
 //=====================================================================================
-/*================*/ /*!
+/*================*//*!
 @class SourceDestBuffer
 @brief   A memory buffer to transfer data to/from a CompressedVectorNode in a block.
 @details
 The SourceDestBuffer is an encapsulation of a buffer in memory that will transfer data to/from a field in a CompressedVectorNode.
-The API user is responsible for creating the actual memory buffer, describing it correctly to the API, making sure it exists during the transfer period, and destroying it after the transfer is complete.
-Additionally, the SourceDestBuffer has information that specifies the connection to the CompressedVectorNode field (i.e. the field's path name in the prototype).
+The API user is responsible for creating the actual memory buffer, describing it correctly to the API, making sure it exists during the transfer period, and
+destroying it after the transfer is complete. Additionally, the SourceDestBuffer has information that specifies the connection to the CompressedVectorNode field
+(i.e. the field's path name in the prototype).
 
 The type of buffer element may be an assortment of built-in C++ memory types.
-There are all combinations of signed/unsigned and 8/16/32/64 bit integers (except unsigned 64bit integer, which is not supported in the ASTM standard), bool, float, double, as well as a vector of variable length unicode strings.
-The compiler selects the appropriate constructor automatically based on the type of the buffer array.
-However, the API user is responsible for reporting the correct length and stride options (otherwise unspecified behavior can occur).
+There are all combinations of signed/unsigned and 8/16/32/64 bit integers (except unsigned 64bit integer, which is not supported in the ASTM standard), bool,
+float, double, as well as a vector of variable length unicode strings. The compiler selects the appropriate constructor automatically based on the type of the
+buffer array. However, the API user is responsible for reporting the correct length and stride options (otherwise unspecified behavior can occur).
 
 The connection of the SourceDestBuffer to a CompressedVectorNode field is established by specifying the pathName.
 There are several options to this connection: doConversion and doScaling, which are described in the constructor documentation.
@@ -2360,8 +2443,8 @@ There are several options to this connection: doConversion and doScaling, which 
 @section sourcedestbuffer_invariant Class Invariant
 A class invariant is a list of statements about an object that are always true before and after any operation on the object.
 An invariant is useful for testing correct operation of an implementation.
-Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API user.
-The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
+Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API
+user. The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
 @dontinclude E57Foundation.cpp
 @skip begin SourceDestBuffer::checkInvariant
 @skip checkInvariant(
@@ -2403,100 +2486,83 @@ The @a capacity must match the capacity of all other SourceDestBuffers that will
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferNumericCreate.cpp example, SourceDestVufferStringCreate.cpp example, ImageFile::reader, ImageFile::writer, CompressedVectorReader::read(std::vector<SourceDestBuffer>&), CompressedVectorWriter::write(std::vector<SourceDestBuffer>&)
 */ /*================*/
-SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, int8_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
-: impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
-{
-    CHECK_THIS_INVARIANCE()
-}
+SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, int8_t* b, const size_t capacity, bool doConversion, bool doScaling,
+                                   size_t stride)
+: impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride)){CHECK_THIS_INVARIANCE()}
 
-//! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
-//! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring,int8_t*,size_t,bool,bool,size_t)
-SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, uint8_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
-: impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
-{
-    CHECK_THIS_INVARIANCE()
-}
+  //! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
+  //! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring,int8_t*,size_t,bool,bool,size_t)
+  SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, uint8_t* b, const size_t capacity, bool doConversion, bool doScaling,
+                                     size_t stride)
+: impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride)){CHECK_THIS_INVARIANCE()}
 
-//! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
-//! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring,int8_t*,size_t,bool,bool,size_t)
-SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, int16_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
-: impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
-{
-    CHECK_THIS_INVARIANCE()
-}
+  //! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
+  //! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring,int8_t*,size_t,bool,bool,size_t)
+  SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, int16_t* b, const size_t capacity, bool doConversion, bool doScaling,
+                                     size_t stride)
+: impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride)){CHECK_THIS_INVARIANCE()}
 
-//! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
-//! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring,int8_t*,size_t,bool,bool,size_t)
-SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, uint16_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
-: impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
-{
-    CHECK_THIS_INVARIANCE()
-}
+  //! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
+  //! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring,int8_t*,size_t,bool,bool,size_t)
+  SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, uint16_t* b, const size_t capacity, bool doConversion, bool doScaling,
+                                     size_t stride)
+: impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride)){CHECK_THIS_INVARIANCE()}
 
-//! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
-//! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring,int8_t*,size_t,bool,bool,size_t)
-SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, int32_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
-: impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
-{
-    CHECK_THIS_INVARIANCE()
-}
+  //! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
+  //! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring,int8_t*,size_t,bool,bool,size_t)
+  SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, int32_t* b, const size_t capacity, bool doConversion, bool doScaling,
+                                     size_t stride)
+: impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride)){CHECK_THIS_INVARIANCE()}
 
-//! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
-//! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring,int8_t*,size_t,bool,bool,size_t)
-SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, uint32_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
-: impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
-{
-    CHECK_THIS_INVARIANCE()
-}
+  //! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
+  //! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring,int8_t*,size_t,bool,bool,size_t)
+  SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, uint32_t* b, const size_t capacity, bool doConversion, bool doScaling,
+                                     size_t stride)
+: impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride)){CHECK_THIS_INVARIANCE()}
 
-//! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
-//! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring,int8_t*,size_t,bool,bool,size_t)
-SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, int64_t* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
-: impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
-{
-    CHECK_THIS_INVARIANCE()
-}
+  //! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
+  //! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring,int8_t*,size_t,bool,bool,size_t)
+  SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, int64_t* b, const size_t capacity, bool doConversion, bool doScaling,
+                                     size_t stride)
+: impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride)){CHECK_THIS_INVARIANCE()}
 
-//! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
-//! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring,int8_t*,size_t,bool,bool,size_t)
-SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, bool* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
-: impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
-{
-    CHECK_THIS_INVARIANCE()
-}
+  //! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
+  //! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring,int8_t*,size_t,bool,bool,size_t)
+  SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, bool* b, const size_t capacity, bool doConversion, bool doScaling,
+                                     size_t stride)
+: impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride)){CHECK_THIS_INVARIANCE()}
 
-//! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
-//! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring,int8_t*,size_t,bool,bool,size_t)
-SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, float* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
-: impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
-{
-    CHECK_THIS_INVARIANCE()
-}
+  //! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
+  //! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring,int8_t*,size_t,bool,bool,size_t)
+  SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, float* b, const size_t capacity, bool doConversion, bool doScaling,
+                                     size_t stride)
+: impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride)){CHECK_THIS_INVARIANCE()}
 
-//! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
-//! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring,int8_t*,size_t,bool,bool,size_t)
-SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, double* b, const size_t capacity, bool doConversion, bool doScaling, size_t stride)
-: impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride))
-{
-    CHECK_THIS_INVARIANCE()
-}
+  //! @brief   Designate buffers to transfer data to/from a CompressedVectorNode in a block.
+  //! @copydetails SourceDestBuffer::SourceDestBuffer(ImageFile,const ustring,int8_t*,size_t,bool,bool,size_t)
+  SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, double* b, const size_t capacity, bool doConversion, bool doScaling,
+                                     size_t stride)
+: impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b, capacity, doConversion, doScaling, stride)){CHECK_THIS_INVARIANCE()}
 
-/*================*/ /*!
+  /*================*/
+  /*!
 @brief   Designate vector of strings to transfer data to/from a CompressedVector as a block.
 @param   [in] destImageFile The ImageFile where the new node will eventually be stored.
 @param   [in] pathName      The pathname of the field in CompressedVectorNode that will transfer data to/from.
 @param   [in] b             The caller created vector of ustrings to transfer from/to.
 @details
-This overloaded form of the SourceDestBuffer constructor declares a vector<ustring> to be the source/destination of a transfer of StringNode values stored in a CompressedVectorNode.
+This overloaded form of the SourceDestBuffer constructor declares a vector<ustring> to be the source/destination of a transfer of StringNode values stored in a
+CompressedVectorNode.
 
 The @a pathName will be used to identify a Node in the prototype that will get/receive data from this buffer.
-The @a pathName may be an absolute path name (e.g. "/cartesianX") or a path name relative to the root of the prototype (i.e. the absolute path name without the leading "/", for example: "cartesianX").
+The @a pathName may be an absolute path name (e.g. "/cartesianX") or a path name relative to the root of the prototype (i.e. the absolute path name without the
+leading "/", for example: "cartesianX").
 
-The @a b->size() must match capacity of all other SourceDestBuffers that will participate in a transfer with a CompressedVectorNode (string or any other type of buffer).
-In a read into the SourceDestBuffer, the previous contents of the strings in the vector are lost, and the memory space is potentially freed.
-The @a b->size() of the vector will not be changed.
-It is an error to request a read/write of more records that @a b->size() (just as it would be for buffers of integer types).
-The API user is responsible for ensuring that the lifetime of the @a b vector exceeds the time that it is used in transfers (i.e. the E57 Foundation Implementation cannot detect that the buffer been destroyed).
+The @a b->size() must match capacity of all other SourceDestBuffers that will participate in a transfer with a CompressedVectorNode (string or any other type of
+buffer). In a read into the SourceDestBuffer, the previous contents of the strings in the vector are lost, and the memory space is potentially freed. The @a
+b->size() of the vector will not be changed. It is an error to request a read/write of more records that @a b->size() (just as it would be for buffers of
+integer types). The API user is responsible for ensuring that the lifetime of the @a b vector exceeds the time that it is used in transfers (i.e. the E57
+Foundation Implementation cannot detect that the buffer been destroyed).
 
 @pre     b.size() must be > 0.
 @pre     The @a destImageFile must be open (i.e. destImageFile.isOpen() must be true).
@@ -2506,29 +2572,30 @@ The API user is responsible for ensuring that the lifetime of the @a b vector ex
 @throw   ::E57_ERROR_BAD_BUFFER
 @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     SourceDestBufferStringCreate.cpp example, SourceDestBufferNumericCreate.cpp example, SourceDestBuffer::doConversion for discussion on representations compatible with string SourceDestBuffers.
+@see     SourceDestBufferStringCreate.cpp example, SourceDestBufferNumericCreate.cpp example, SourceDestBuffer::doConversion for discussion on representations
+compatible with string SourceDestBuffers.
 */ /*================*/
-SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, std::vector<ustring>* b)
-: impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b))
-{
-    CHECK_THIS_INVARIANCE()
-}
+  SourceDestBuffer::SourceDestBuffer(ImageFile destImageFile, const ustring pathName, std::vector<ustring>* b)
+: impl_(new SourceDestBufferImpl(destImageFile.impl(), pathName, b)){CHECK_THIS_INVARIANCE()}
 
-/*================*/ /*!
+  /*================*/
+  /*!
 @brief   Get path name in prototype that this SourceDestBuffer will transfer data to/from.
 @details
 The prototype of a CompressedVectorNode describes the fields that are in each record.
 This function returns the path name of the node in the prototype tree that this SourceDestBuffer will write/read.
-The correctness of this path name is checked when this SourceDestBuffer is associated with a CompressedVectorNode (either in CompressedVectorNode::writer, CompressedVectorWriter::write(std::vector<SourceDestBuffer>&, unsigned), CompressedVectorNode::reader, CompressedVectorReader::read(std::vector<SourceDestBuffer>&)).
+The correctness of this path name is checked when this SourceDestBuffer is associated with a CompressedVectorNode (either in CompressedVectorNode::writer,
+CompressedVectorWriter::write(std::vector<SourceDestBuffer>&, unsigned), CompressedVectorNode::reader,
+CompressedVectorReader::read(std::vector<SourceDestBuffer>&)).
 
 @post    No visible state is modified.
 @return  Path name in prototype that this SourceDestBuffer will transfer data to/from.
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     SourceDestBufferFunctions.cpp example, CompressedVector, CompressedVectorNode::prototype
 */ /*================*/
-ustring SourceDestBuffer::pathName() const
+  ustring SourceDestBuffer::pathName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
+  CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
 }
 
 /*================*/ /*!
@@ -2548,7 +2615,7 @@ Some combinations are never possible (e.g. E57_INT16 and StringNode).
 */ /*================*/
 MemoryRepresentation SourceDestBuffer::memoryRepresentation() const
 {
-    CHECK_INVARIANCE_RETURN(MemoryRep, impl_->memoryRepresentation());
+  CHECK_INVARIANCE_RETURN(MemoryRep, impl_->memoryRepresentation());
 }
 
 /*================*/ /*!
@@ -2564,7 +2631,7 @@ If the length is incorrect (in particular, too long) memory may be corrupted or 
 */ /*================*/
 size_t SourceDestBuffer::capacity() const
 {
-    CHECK_INVARIANCE_RETURN(size_t, impl_->capacity());
+  CHECK_INVARIANCE_RETURN(size_t, impl_->capacity());
 }
 
 /*================*/ /*!
@@ -2591,7 +2658,7 @@ Missing or unsupported conversions are detected when the first transfer is attem
 */ /*================*/
 bool SourceDestBuffer::doConversion() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->doConversion());
+  CHECK_INVARIANCE_RETURN(bool, impl_->doConversion());
 }
 
 /*================*/ /*!
@@ -2619,7 +2686,7 @@ Because the ASTM E57 format recommends that SI units without prefix be used (i.e
 */ /*================*/
 bool SourceDestBuffer::doScaling() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->doScaling());
+  CHECK_INVARIANCE_RETURN(bool, impl_->doScaling());
 }
 
 /*================*/ /*!
@@ -2635,7 +2702,7 @@ In the case that the element values are stored consecutively in memory, the stri
 */ /*================*/
 size_t SourceDestBuffer::stride() const
 {
-    CHECK_INVARIANCE_RETURN(size_t, impl_->stride());
+  CHECK_INVARIANCE_RETURN(size_t, impl_->stride());
 }
 
 //! @brief   Diagnostic function to print internal state of object to output stream in an indented format.
@@ -2643,29 +2710,29 @@ size_t SourceDestBuffer::stride() const
 #ifdef E57_DEBUG
 void SourceDestBuffer::dump(int indent, std::ostream& os) const
 {
-    impl_->dump(indent, os);
+  impl_->dump(indent, os);
 }
 #else
-void SourceDestBuffer::dump(int indent, std::ostream& os) const
-{}
+void SourceDestBuffer::dump(int indent, std::ostream& os) const {}
 #endif
 
 //=====================================================================================
-/*================*/ /*!
+/*================*//*!
 @class CompressedVectorReader
 @brief   An iterator object keeping track of a read in progress from a CompressedVectorNode.
 @details
-A CompressedVectorReader object is a block iterator that reads blocks of records from a CompressedVectorNode and stores them in memory buffers (SourceDestBuffers).
-Blocks of records are processed rather than a single record-at-a-time for efficiency reasons.
-The CompressedVectorReader class encapsulates all the state that must be saved in between the processing of one record block and the next (e.g. partially read disk pages, or data decompression state).
-New memory buffers can be used for each record block read, or the previous buffers can be reused.
+A CompressedVectorReader object is a block iterator that reads blocks of records from a CompressedVectorNode and stores them in memory buffers
+(SourceDestBuffers). Blocks of records are processed rather than a single record-at-a-time for efficiency reasons. The CompressedVectorReader class encapsulates
+all the state that must be saved in between the processing of one record block and the next (e.g. partially read disk pages, or data decompression state). New
+memory buffers can be used for each record block read, or the previous buffers can be reused.
 
 CompressedVectorReader objects have an open/closed state.
 Initially a newly created CompressedVectorReader is in the open state.
 After the API user calls CompressedVectorReader::close, the object will be in the closed state and no more data transfers will be possible.
 
 There is no CompressedVectorReader constructor in the API.
-The function CompressedVectorNode::reader returns an already constructed CompressedVectorReader object with given memory buffers (SourceDestBuffers) already associated.
+The function CompressedVectorNode::reader returns an already constructed CompressedVectorReader object with given memory buffers (SourceDestBuffers) already
+associated.
 
 It is recommended to call CompressedVectorReader::close to gracefully end the transfer.
 Unlike the CompressedVectorWriter, not all fields in the record of the CompressedVectorNode are required to be read at one time.
@@ -2673,8 +2740,8 @@ Unlike the CompressedVectorWriter, not all fields in the record of the Compresse
 @section CompressedVectorReader_invariant Class Invariant
 A class invariant is a list of statements about an object that are always true before and after any operation on the object.
 An invariant is useful for testing correct operation of an implementation.
-Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API user.
-The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
+Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API
+user. The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
 @dontinclude E57Foundation.cpp
 @skip begin CompressedVectorReader::checkInvariant
 @skip checkInvariant(
@@ -2684,9 +2751,7 @@ The following C++ code checks externally visible state for consistency and throw
 */
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-CompressedVectorReader::CompressedVectorReader(shared_ptr<CompressedVectorReaderImpl> ni)
-: impl_(ni)
-{}
+CompressedVectorReader::CompressedVectorReader(shared_ptr<CompressedVectorReaderImpl> ni) : impl_(ni) {}
 //! @endcond
 
 /*================*/ /*!
@@ -2723,7 +2788,7 @@ The E57 Foundation Implementation cannot detect that a memory buffer been destro
 */ /*================*/
 unsigned CompressedVectorReader::read()
 {
-    CHECK_INVARIANCE_RETURN(unsigned, impl_->read());
+  CHECK_INVARIANCE_RETURN(unsigned, impl_->read());
 }
 
 /*================*/ /*!
@@ -2769,7 +2834,7 @@ The E57 Foundation Implementation cannot detect that a memory buffer been destro
 */ /*================*/
 unsigned CompressedVectorReader::read(std::vector<SourceDestBuffer>& dbufs)
 {
-    CHECK_INVARIANCE_RETURN(unsigned, impl_->read(dbufs));
+  CHECK_INVARIANCE_RETURN(unsigned, impl_->read(dbufs));
 }
 
 /*================*/ /*!
@@ -2795,9 +2860,9 @@ It is not an error to seek to recordNumber = childCount() (i.e. to one record pa
 */ /*================*/
 void CompressedVectorReader::seek(int64_t recordNumber)
 {
-    CHECK_THIS_INVARIANCE()
-    impl_->seek(recordNumber);
-    CHECK_THIS_INVARIANCE()
+  CHECK_THIS_INVARIANCE()
+  impl_->seek(recordNumber);
+  CHECK_THIS_INVARIANCE()
 }
 
 /*================*/ /*!
@@ -2812,9 +2877,9 @@ This function will cause the CompressedVectorReader to enter the closed state, a
 */ /*================*/
 void CompressedVectorReader::close()
 {
-    CHECK_THIS_INVARIANCE()
-    impl_->close();
-    CHECK_THIS_INVARIANCE()
+  CHECK_THIS_INVARIANCE()
+  impl_->close();
+  CHECK_THIS_INVARIANCE()
 }
 
 /*================*/ /*!
@@ -2826,7 +2891,7 @@ void CompressedVectorReader::close()
 */ /*================*/
 bool CompressedVectorReader::isOpen()
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isOpen());
+  CHECK_INVARIANCE_RETURN(bool, impl_->isOpen());
 }
 
 /*================*/ /*!
@@ -2841,7 +2906,7 @@ It is not an error if this CompressedVectorReader is closed.
 */ /*================*/
 CompressedVectorNode CompressedVectorReader::compressedVectorNode() const
 {
-    CHECK_INVARIANCE_RETURN(CompressedVectorNode, impl_->compressedVectorNode());
+  CHECK_INVARIANCE_RETURN(CompressedVectorNode, impl_->compressedVectorNode());
 }
 
 //! @brief   Diagnostic function to print internal state of object to output stream in an indented format.
@@ -2849,38 +2914,39 @@ CompressedVectorNode CompressedVectorReader::compressedVectorNode() const
 #ifdef E57_DEBUG
 void CompressedVectorReader::dump(int indent, std::ostream& os) const
 {
-    impl_->dump(indent, os);
+  impl_->dump(indent, os);
 }
 #else
-void CompressedVectorReader::dump(int indent, std::ostream& os) const
-{}
+void CompressedVectorReader::dump(int indent, std::ostream& os) const {}
 #endif
 
 //=====================================================================================
-/*================*/ /*!
+/*================*//*!
 @class CompressedVectorWriter
 @brief   An iterator object keeping track of a write in progress to a CompressedVectorNode.
 @details
 A CompressedVectorWriter object is a block iterator that reads blocks of records from memory and stores them in a CompressedVectorNode.
 Blocks of records are processed rather than a single record-at-a-time for efficiency reasons.
-The CompressedVectorWriter class encapsulates all the state that must be saved in between the processing of one record block and the next (e.g. partially written disk pages, partially filled bytes in a bytestream, or data compression state).
-New memory buffers can be used for each record block write, or the previous buffers can be reused.
+The CompressedVectorWriter class encapsulates all the state that must be saved in between the processing of one record block and the next (e.g. partially
+written disk pages, partially filled bytes in a bytestream, or data compression state). New memory buffers can be used for each record block write, or the
+previous buffers can be reused.
 
 CompressedVectorWriter objects have an open/closed state.
 Initially a newly created CompressedVectorWriter is in the open state.
 After the API user calls CompressedVectorWriter::close, the object will be in the closed state and no more data transfers will be possible.
 
 There is no CompressedVectorWriter constructor in the API.
-The function CompressedVectorNode::writer returns an already constructed CompressedVectorWriter object with given memory buffers (SourceDestBuffers) already associated.
-CompressedVectorWriter::close must explicitly be called to safely and gracefully end the transfer.
+The function CompressedVectorNode::writer returns an already constructed CompressedVectorWriter object with given memory buffers (SourceDestBuffers) already
+associated. CompressedVectorWriter::close must explicitly be called to safely and gracefully end the transfer.
 
-@b Warning: If CompressedVectorWriter::close is not called before the CompressedVectorWriter destructor is invoked, all writes to the CompressedVectorNode will be lost (it will have zero children).
+@b Warning: If CompressedVectorWriter::close is not called before the CompressedVectorWriter destructor is invoked, all writes to the CompressedVectorNode will
+be lost (it will have zero children).
 
 @section CompressedVectorWriter_invariant Class Invariant
 A class invariant is a list of statements about an object that are always true before and after any operation on the object.
 An invariant is useful for testing correct operation of an implementation.
-Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API user.
-The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
+Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API
+user. The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
 @dontinclude E57Foundation.cpp
 @skip begin CompressedVectorWriter::checkInvariant
 @skip checkInvariant(
@@ -2890,9 +2956,7 @@ The following C++ code checks externally visible state for consistency and throw
 */
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-CompressedVectorWriter::CompressedVectorWriter(shared_ptr<CompressedVectorWriterImpl> ni)
-: impl_(ni)
-{}
+CompressedVectorWriter::CompressedVectorWriter(shared_ptr<CompressedVectorWriterImpl> ni) : impl_(ni) {}
 //! @endcond
 
 /*================*/ /*!
@@ -2930,9 +2994,9 @@ If CompressedVectorWriter::close is not called before the CompressedVectorWriter
 */ /*================*/
 void CompressedVectorWriter::write(const size_t recordCount)
 {
-    CHECK_THIS_INVARIANCE()
-    impl_->write(recordCount);
-    CHECK_THIS_INVARIANCE()
+  CHECK_THIS_INVARIANCE()
+  impl_->write(recordCount);
+  CHECK_THIS_INVARIANCE()
 }
 
 /*================*/ /*!
@@ -2977,9 +3041,9 @@ If a file I/O or checksum error occurs during the transfer, both this Compressed
 */ /*================*/
 void CompressedVectorWriter::write(std::vector<SourceDestBuffer>& sbufs, const size_t recordCount)
 {
-    CHECK_THIS_INVARIANCE()
-    impl_->write(sbufs, recordCount);
-    CHECK_THIS_INVARIANCE()
+  CHECK_THIS_INVARIANCE()
+  impl_->write(sbufs, recordCount);
+  CHECK_THIS_INVARIANCE()
 }
 
 /*================*/ /*!
@@ -3003,9 +3067,9 @@ This function will cause the CompressedVectorWriter to enter the closed state, a
 */ /*================*/
 void CompressedVectorWriter::close()
 {
-    CHECK_THIS_INVARIANCE()
-    impl_->close();
-    CHECK_THIS_INVARIANCE()
+  CHECK_THIS_INVARIANCE()
+  impl_->close();
+  CHECK_THIS_INVARIANCE()
 }
 
 /*================*/ /*!
@@ -3017,7 +3081,7 @@ void CompressedVectorWriter::close()
 */ /*================*/
 bool CompressedVectorWriter::isOpen()
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isOpen());
+  CHECK_INVARIANCE_RETURN(bool, impl_->isOpen());
 }
 
 /*================*/ /*!
@@ -3030,7 +3094,7 @@ bool CompressedVectorWriter::isOpen()
 */ /*================*/
 CompressedVectorNode CompressedVectorWriter::compressedVectorNode() const
 {
-    CHECK_INVARIANCE_RETURN(CompressedVectorNode, impl_->compressedVectorNode());
+  CHECK_INVARIANCE_RETURN(CompressedVectorNode, impl_->compressedVectorNode());
 }
 
 //! @brief   Diagnostic function to print internal state of object to output stream in an indented format.
@@ -3038,15 +3102,14 @@ CompressedVectorNode CompressedVectorWriter::compressedVectorNode() const
 #ifdef E57_DEBUG
 void CompressedVectorWriter::dump(int indent, std::ostream& os) const
 {
-    impl_->dump(indent, os);
+  impl_->dump(indent, os);
 }
 #else
-void CompressedVectorWriter::dump(int indent, std::ostream& os) const
-{}
+void CompressedVectorWriter::dump(int indent, std::ostream& os) const {}
 #endif
 
 //=====================================================================================
-/*================*/ /*!
+/*================*//*!
 @class CompressedVectorNode
 @brief   An E57 element containing ordered vector of child nodes, stored in an efficient binary format.
 @details
@@ -3055,33 +3118,36 @@ In an E57 file, the per-point information (coordinates, intensity, color, time s
 For time and space efficiency, the CompressedVectorNode data is stored in a binary section of the E57 file.
 
 Conceptually, the CompressedVectorNode encodes a structure that looks very much like a homogeneous VectorNode object.
-However because of the huge volume of data (E57 files can store more than 10 billion points) within a CompressedVectorNode, the functions for accessing the data are dramatically different.
-CompressedVectorNode data is accessed in large blocks of records (100s to 1000s at a time).
+However because of the huge volume of data (E57 files can store more than 10 billion points) within a CompressedVectorNode, the functions for accessing the data
+are dramatically different. CompressedVectorNode data is accessed in large blocks of records (100s to 1000s at a time).
 
 Two attributes are required to create a new CompressedVectorNode.
 The first attribute describes the shape of the record that will be stored.
 This record type description is called the @c prototype of the CompressedVectorNode.
 Often the @c prototype will be a StructNode with a single level of named child elements.
-However, the prototype can be a tree of any depth consisting of the following node types: IntegerNode, ScaledIntegerNode, FloatNode, StringNode, StructureNode, or VectorNode (i.e. CompressedVectorNode and BlobNode are not allowed).
-Only the node types and attributes are used in the prototype, the values stored are ignored.
-For example, if the prototype contains an IntegerNode, with a value=0, minimum=0, maximum=1023, then this means that each record will contain an integer that can take any value in the interval [0,1023].
-As a second example, if the prototype contains an ScaledIntegerNode, with a value=0, minimum=0, maximum=1023, scale=.001, offset=0 then this means that each record will contain an integer that can take any value in the interval [0,1023] and if a reader requests the scaledValue of the field, the rawValue should be multiplied by 0.001.
+However, the prototype can be a tree of any depth consisting of the following node types: IntegerNode, ScaledIntegerNode, FloatNode, StringNode, StructureNode,
+or VectorNode (i.e. CompressedVectorNode and BlobNode are not allowed). Only the node types and attributes are used in the prototype, the values stored are
+ignored. For example, if the prototype contains an IntegerNode, with a value=0, minimum=0, maximum=1023, then this means that each record will contain an
+integer that can take any value in the interval [0,1023]. As a second example, if the prototype contains an ScaledIntegerNode, with a value=0, minimum=0,
+maximum=1023, scale=.001, offset=0 then this means that each record will contain an integer that can take any value in the interval [0,1023] and if a reader
+requests the scaledValue of the field, the rawValue should be multiplied by 0.001.
 
-The second attribute needed to describe a new CompressedVectorNode is the @c codecs description of how the values of the records are to be represented on the disk.
-The codec object is a VectorNode of a particular format that describes the encoding for each field in the record, which codec will be used to transfer the values to and from the disk.
-Currently only one codec is defined for E57 files, the bitPackCodec, which copies the numbers from memory, removes any unused bit positions, and stores the without additional spaces on the disk.
-The bitPackCodec has no configuration options or parameters to tune.
-In the ASTM standard, if no codec is specified, the bitPackCodec is assumed.
-So specifying the @c codecs as an empty VectorNode is equivalent to requesting at all fields in the record be encoded with the bitPackCodec.
+The second attribute needed to describe a new CompressedVectorNode is the @c codecs description of how the values of the records are to be represented on the
+disk. The codec object is a VectorNode of a particular format that describes the encoding for each field in the record, which codec will be used to transfer the
+values to and from the disk. Currently only one codec is defined for E57 files, the bitPackCodec, which copies the numbers from memory, removes any unused bit
+positions, and stores the without additional spaces on the disk. The bitPackCodec has no configuration options or parameters to tune. In the ASTM standard, if
+no codec is specified, the bitPackCodec is assumed. So specifying the @c codecs as an empty VectorNode is equivalent to requesting at all fields in the record
+be encoded with the bitPackCodec.
 
 Other than the @c prototype and @c codecs attributes, the only other state directly accessible is the number of children (records) in the CompressedVectorNode.
-The read/write access to the contents of the CompressedVectorNode is coordinated by two other Foundation API objects: CompressedVectorReader and CompressedVectorWriter.
+The read/write access to the contents of the CompressedVectorNode is coordinated by two other Foundation API objects: CompressedVectorReader and
+CompressedVectorWriter.
 
 @section CompressedVectorNode_invariant Class Invariant
 A class invariant is a list of statements about an object that are always true before and after any operation on the object.
 An invariant is useful for testing correct operation of an implementation.
-Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API user.
-The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
+Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API
+user. The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
 @dontinclude E57Foundation.cpp
 @skip begin CompressedVectorNode::checkInvariant
 @skip checkInvariant(
@@ -3128,52 +3194,52 @@ Since currently only one codec is supported (bitPackCodec), and it is the defaul
 CompressedVectorNode::CompressedVectorNode(ImageFile destImageFile, Node prototype, VectorNode codecs)
 : impl_(new CompressedVectorNodeImpl(destImageFile.impl()))
 {
-    /// Because of shared_ptr quirks, can't set prototype,codecs in CompressedVectorNodeImpl(), so set it afterwards
-    impl_->setPrototype(prototype.impl());
-    impl_->setCodecs(codecs.impl());
-    CHECK_THIS_INVARIANCE()
+  /// Because of shared_ptr quirks, can't set prototype,codecs in CompressedVectorNodeImpl(), so set it afterwards
+  impl_->setPrototype(prototype.impl());
+  impl_->setCodecs(codecs.impl());
+  CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Is this a root node.
 //! @copydetails Node::isRoot()
 bool CompressedVectorNode::isRoot() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isRoot());
+  CHECK_INVARIANCE_RETURN(bool, impl_->isRoot());
 }
 
 //! @brief   Return parent of node, or self if a root node.
 //! @copydetails Node::parent()
 Node CompressedVectorNode::parent() const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->parent()));
+  CHECK_INVARIANCE_RETURN(Node, Node(impl_->parent()));
 }
 
 //! @brief   Get absolute pathname of node.
 //! @copydetails Node::pathName()
 ustring CompressedVectorNode::pathName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
+  CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
 }
 
 //! @brief   Get elementName string, that identifies the node in its parent..
 //! @copydetails Node::elementName()
 ustring CompressedVectorNode::elementName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->elementName());
+  CHECK_INVARIANCE_RETURN(ustring, impl_->elementName());
 }
 
 //! @brief   Get the ImageFile that was declared as the destination for the node when it was created.
 //! @copydetails Node::destImageFile()
 ImageFile CompressedVectorNode::destImageFile() const
 {
-    CHECK_INVARIANCE_RETURN(ImageFile, ImageFile(impl_->destImageFile()));
+  CHECK_INVARIANCE_RETURN(ImageFile, ImageFile(impl_->destImageFile()));
 }
 
 //! @brief   Has node been attached into the tree of an ImageFile.
 //! @copydetails Node::isAttached()
 bool CompressedVectorNode::isAttached() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isAttached());
+  CHECK_INVARIANCE_RETURN(bool, impl_->isAttached());
 }
 
 /*================*/ /*!
@@ -3189,7 +3255,7 @@ For a CompressedVectorNode with an active CompressedVectorWriter, the returned n
 */ /*================*/
 int64_t CompressedVectorNode::childCount() const
 {
-    CHECK_INVARIANCE_RETURN(int64_t, impl_->childCount());
+  CHECK_INVARIANCE_RETURN(int64_t, impl_->childCount());
 }
 
 /*================*/ /*!
@@ -3203,7 +3269,7 @@ int64_t CompressedVectorNode::childCount() const
 */ /*================*/
 Node CompressedVectorNode::prototype() const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->getPrototype()));
+  CHECK_INVARIANCE_RETURN(Node, Node(impl_->getPrototype()));
 }
 
 /*================*/ /*!
@@ -3217,7 +3283,7 @@ Node CompressedVectorNode::prototype() const
 */ /*================*/
 VectorNode CompressedVectorNode::codecs() const
 {
-    CHECK_INVARIANCE_RETURN(VectorNode, VectorNode(impl_->getCodecs()));
+  CHECK_INVARIANCE_RETURN(VectorNode, VectorNode(impl_->getCodecs()));
 }
 
 //! @brief   Diagnostic function to print internal state of object to output stream in an indented format.
@@ -3225,11 +3291,10 @@ VectorNode CompressedVectorNode::codecs() const
 #ifdef E57_DEBUG
 void CompressedVectorNode::dump(int indent, std::ostream& os) const
 {
-    impl_->dump(indent, os);
+  impl_->dump(indent, os);
 }
 #else
-void CompressedVectorNode::dump(int indent, std::ostream& os) const
-{}
+void CompressedVectorNode::dump(int indent, std::ostream& os) const {}
 #endif
 
 /*================*/ /*!
@@ -3241,8 +3306,8 @@ void CompressedVectorNode::dump(int indent, std::ostream& os) const
 */ /*================*/
 CompressedVectorNode::operator Node() const
 {
-    /// Implicitly upcast from shared_ptr<CompressedVectorNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_));
+  /// Implicitly upcast from shared_ptr<CompressedVectorNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
+  CHECK_INVARIANCE_RETURN(Node, Node(impl_));
 }
 
 /*================*/ /*!
@@ -3257,19 +3322,17 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 */ /*================*/
 CompressedVectorNode::CompressedVectorNode(const Node& n)
 {
-    /// Downcast from shared_ptr<NodeImpl> to shared_ptr<CompressedVectorNodeImpl>
-    shared_ptr<CompressedVectorNodeImpl> ni(dynamic_pointer_cast<CompressedVectorNodeImpl>(n.impl()));
-    if (!ni)
-        throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
+  /// Downcast from shared_ptr<NodeImpl> to shared_ptr<CompressedVectorNodeImpl>
+  shared_ptr<CompressedVectorNodeImpl> ni(dynamic_pointer_cast<CompressedVectorNodeImpl>(n.impl()));
+  if (!ni)
+    throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
 
-    /// Set our shared_ptr to the downcast shared_ptr
-    impl_ = ni;
+  /// Set our shared_ptr to the downcast shared_ptr
+  impl_ = ni;
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-CompressedVectorNode::CompressedVectorNode(shared_ptr<CompressedVectorNodeImpl> ni)
-: impl_(ni)
-{}
+CompressedVectorNode::CompressedVectorNode(shared_ptr<CompressedVectorNodeImpl> ni) : impl_(ni) {}
 //! @endcond
 
 /*================*/ /*!
@@ -3307,7 +3370,7 @@ It is an error to call this function if the CompressedVectorNode already has any
 */ /*================*/
 CompressedVectorWriter CompressedVectorNode::writer(std::vector<SourceDestBuffer>& sbufs)
 {
-    CHECK_INVARIANCE_RETURN(CompressedVectorWriter, CompressedVectorWriter(impl_->writer(sbufs)));
+  CHECK_INVARIANCE_RETURN(CompressedVectorWriter, CompressedVectorWriter(impl_->writer(sbufs)));
 }
 
 /*================*/ /*!
@@ -3336,11 +3399,11 @@ It is not an error to create a CompressedVectorReader for an empty CompressedVec
 */ /*================*/
 CompressedVectorReader CompressedVectorNode::reader(const std::vector<SourceDestBuffer>& dbufs)
 {
-    CHECK_INVARIANCE_RETURN(CompressedVectorReader, CompressedVectorReader(impl_->reader(dbufs)));
+  CHECK_INVARIANCE_RETURN(CompressedVectorReader, CompressedVectorReader(impl_->reader(dbufs)));
 }
 
 //=====================================================================================
-/*================*/ /*!
+/*================*//*!
 @class IntegerNode
 @brief   An E57 element encoding an integer value.
 @details
@@ -3356,8 +3419,8 @@ See Node class discussion for discussion of the common functions that StructureN
 @section IntegerNode_invariant Class Invariant
 A class invariant is a list of statements about an object that are always true before and after any operation on the object.
 An invariant is useful for testing correct operation of an implementation.
-Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API user.
-The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
+Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API
+user. The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
 @dontinclude E57Foundation.cpp
 @skip begin IntegerNode::checkInvariant
 @skip checkInvariant(
@@ -3395,52 +3458,52 @@ If the IntegerNode is to be used in a prototype, it is recommended to specify a 
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     IntegerCreate.cpp example, IntegerNode::value, Node, CompressedVectorNode, CompressedVectorNode::prototype
 */ /*================*/
-IntegerNode::IntegerNode(ImageFile destImageFile, int64_t value, int64_t  minimum, int64_t  maximum)
+IntegerNode::IntegerNode(ImageFile destImageFile, int64_t value, int64_t minimum, int64_t maximum)
 : impl_(new IntegerNodeImpl(destImageFile.impl(), value, minimum, maximum))
 {
-    CHECK_THIS_INVARIANCE()
+  CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Is this a root node.
 //! @copydetails Node::isRoot()
 bool IntegerNode::isRoot() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isRoot());
+  CHECK_INVARIANCE_RETURN(bool, impl_->isRoot());
 }
 
 //! @brief   Return parent of node, or self if a root node.
 //! @copydetails Node::parent()
 Node IntegerNode::parent() const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->parent()));
+  CHECK_INVARIANCE_RETURN(Node, Node(impl_->parent()));
 }
 
 //! @brief   Get absolute pathname of node.
 //! @copydetails Node::pathName()
 ustring IntegerNode::pathName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
+  CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
 }
 
 //! @brief   Get elementName string, that identifies the node in its parent..
 //! @copydetails Node::elementName()
 ustring IntegerNode::elementName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->elementName());
+  CHECK_INVARIANCE_RETURN(ustring, impl_->elementName());
 }
 
 //! @brief   Get the ImageFile that was declared as the destination for the node when it was created.
 //! @copydetails Node::destImageFile()
 ImageFile IntegerNode::destImageFile() const
 {
-    CHECK_INVARIANCE_RETURN(ImageFile, ImageFile(impl_->destImageFile()));
+  CHECK_INVARIANCE_RETURN(ImageFile, ImageFile(impl_->destImageFile()));
 }
 
 //! @brief   Has node been attached into the tree of an ImageFile.
 //! @copydetails Node::isAttached()
 bool IntegerNode::isAttached() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isAttached());
+  CHECK_INVARIANCE_RETURN(bool, impl_->isAttached());
 }
 
 /*================*/ /*!
@@ -3454,7 +3517,7 @@ bool IntegerNode::isAttached() const
 */ /*================*/
 int64_t IntegerNode::value() const
 {
-    CHECK_INVARIANCE_RETURN(int64_t, impl_->value());
+  CHECK_INVARIANCE_RETURN(int64_t, impl_->value());
 }
 
 /*================*/ /*!
@@ -3468,7 +3531,7 @@ int64_t IntegerNode::value() const
 */ /*================*/
 int64_t IntegerNode::minimum() const
 {
-    CHECK_INVARIANCE_RETURN(int64_t, impl_->minimum());
+  CHECK_INVARIANCE_RETURN(int64_t, impl_->minimum());
 }
 
 /*================*/ /*!
@@ -3482,7 +3545,7 @@ int64_t IntegerNode::minimum() const
 */ /*================*/
 int64_t IntegerNode::maximum() const
 {
-    CHECK_INVARIANCE_RETURN(int64_t, impl_->maximum());
+  CHECK_INVARIANCE_RETURN(int64_t, impl_->maximum());
 }
 
 //! @brief   Diagnostic function to print internal state of object to output stream in an indented format.
@@ -3490,11 +3553,10 @@ int64_t IntegerNode::maximum() const
 #ifdef E57_DEBUG
 void IntegerNode::dump(int indent, std::ostream& os) const
 {
-    impl_->dump(indent, os);
+  impl_->dump(indent, os);
 }
 #else
-void IntegerNode::dump(int indent, std::ostream& os) const
-{}
+void IntegerNode::dump(int indent, std::ostream& os) const {}
 #endif
 
 /*================*/ /*!
@@ -3506,8 +3568,8 @@ void IntegerNode::dump(int indent, std::ostream& os) const
 */ /*================*/
 IntegerNode::operator Node() const
 {
-    /// Upcast from shared_ptr<IntegerNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_));
+  /// Upcast from shared_ptr<IntegerNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
+  CHECK_INVARIANCE_RETURN(Node, Node(impl_));
 }
 
 /*================*/ /*!
@@ -3522,27 +3584,26 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 */ /*================*/
 IntegerNode::IntegerNode(const Node& n)
 {
-    /// Downcast from shared_ptr<NodeImpl> to shared_ptr<IntegerNodeImpl>
-    shared_ptr<IntegerNodeImpl> ni(dynamic_pointer_cast<IntegerNodeImpl>(n.impl()));
-    if (!ni)
-        throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
+  /// Downcast from shared_ptr<NodeImpl> to shared_ptr<IntegerNodeImpl>
+  shared_ptr<IntegerNodeImpl> ni(dynamic_pointer_cast<IntegerNodeImpl>(n.impl()));
+  if (!ni)
+    throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
 
-    /// Set our shared_ptr to the downcast shared_ptr
-    impl_ = ni;
+  /// Set our shared_ptr to the downcast shared_ptr
+  impl_ = ni;
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-IntegerNode::IntegerNode(shared_ptr<IntegerNodeImpl> ni)
-: impl_(ni)
-{}
+IntegerNode::IntegerNode(shared_ptr<IntegerNodeImpl> ni) : impl_(ni) {}
 //! @endcond
 
 //=====================================================================================
-/*================*/ /*!
+/*================*//*!
 @class ScaledIntegerNode
 @brief   An E57 element encoding a fixed point number.
 @details
-An ScaledIntegerNode is a terminal node (i.e. having no children) that holds a fixed point number encoded by an integer @c rawValue, a double precision floating point @c scale, an double precision floating point @c offset, and integer minimum/maximum bounds.
+An ScaledIntegerNode is a terminal node (i.e. having no children) that holds a fixed point number encoded by an integer @c rawValue, a double precision floating
+point @c scale, an double precision floating point @c offset, and integer minimum/maximum bounds.
 
 The @c minimum attribute may be a number in the interval [-2^63, 2^63).
 The @c maximum attribute may be a number in the interval [minimum, 2^63).
@@ -3554,8 +3615,8 @@ See Node class discussion for discussion of the common functions that StructureN
 @section ScaledIntegerNode_invariant Class Invariant
 A class invariant is a list of statements about an object that are always true before and after any operation on the object.
 An invariant is useful for testing correct operation of an implementation.
-Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API user.
-The following C++ code checks externally visible state for consistancy and throws an exception if the invariant is violated:
+Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API
+user. The following C++ code checks externally visible state for consistancy and throws an exception if the invariant is violated:
 @dontinclude E57Foundation.cpp
 @skip begin ScaledIntegerNode::checkInvariant
 @skip checkInvariant(
@@ -3596,91 +3657,87 @@ If the ScaledIntegerNode is to be used in a prototype, it is recommended to spec
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::rawValue, Node, CompressedVectorNode, CompressedVectorNode::prototype
 */ /*================*/
-ScaledIntegerNode::ScaledIntegerNode(ImageFile destImageFile, int64_t rawValue, int64_t  minimum, int64_t  maximum, double scale, double offset)
-: impl_(new ScaledIntegerNodeImpl(destImageFile.impl(), rawValue, minimum, maximum, scale, offset))
-{
-    CHECK_THIS_INVARIANCE()
-}
-ScaledIntegerNode::ScaledIntegerNode(ImageFile destImageFile, int rawValue, int64_t  minimum, int64_t  maximum, double scale, double offset)
-: impl_(new ScaledIntegerNodeImpl(destImageFile.impl(), (int64_t) rawValue, minimum, maximum, scale, offset))
-{
-    CHECK_THIS_INVARIANCE()
-}
-ScaledIntegerNode::ScaledIntegerNode(ImageFile destImageFile, int rawValue, int  minimum, int  maximum, double scale, double offset)
-: impl_(new ScaledIntegerNodeImpl(destImageFile.impl(), (int64_t) rawValue, (int64_t) minimum, (int64_t) maximum, scale, offset))
-{
-    CHECK_THIS_INVARIANCE()
-}
-/*================*/ /*!
-@brief   This second constructor create an E57 element for storing a fixed point number but does the scaling for you.
-@param   [in] destImageFile   The ImageFile where the new node will eventually be stored.
-@param   [in] scaledValue	  The scaled integer value of the element.
-@param   [in] scaledMinimum   The smallest scaledValue that the element may take.
-@param   [in] scaledMaximum   The largest scaledValue that the element may take.
-@param   [in] scale     The scaling factor used to compute scaledValue from rawValue.
-@param   [in] offset    The offset factor used to compute scaledValue from rawValue.
-@details
-An ScaledIntegerNode stores an integer value, a lower and upper bound, and two conversion factors.
-This ScaledIntegerNode constructor calculates the rawValue, minimum, and maximum by doing the floor((scaledValue - offset)/scale + .5) on each scaled parameters.
-@b Warning: it is an error to give an @a rawValue outside the @a minimum / @a maximum bounds, even if the ScaledIntegerNode is destined to be used in a CompressedVectorNode prototype (where the @a rawValue will be ignored).
-If the ScaledIntegerNode is to be used in a prototype, it is recommended to specify a @a rawValue = 0 if 0 is within bounds, or a @a rawValue = @a minimum if 0 is not within bounds.
-@pre     The @a destImageFile must be open (i.e. destImageFile.isOpen() must be true).
-@pre     The @a destImageFile must have been opened in write mode (i.e. destImageFile.isWritable() must be true).
-@pre     scaledMinimum <= scaledValue <= scaledMaximum
-@pre     scale != 0
-@return  A smart ScaledIntegerNode handle referencing the underlying object.
-@throw   ::E57_ERROR_BAD_API_ARGUMENT
-@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-@throw   ::E57_ERROR_FILE_IS_READ_ONLY
-@throw   ::E57_ERROR_VALUE_OUT_OF_BOUNDS
-@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-@see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::scaledValue, Node, CompressedVectorNode, CompressedVectorNode::prototype
-*/ /*================*/
-ScaledIntegerNode::ScaledIntegerNode(ImageFile destImageFile, double scaledValue, double  scaledMinimum, double  scaledMaximum, double scale, double offset)
+ScaledIntegerNode::ScaledIntegerNode(ImageFile destImageFile, int64_t rawValue, int64_t minimum, int64_t maximum, double scale, double offset)
+: impl_(new ScaledIntegerNodeImpl(destImageFile.impl(), rawValue, minimum, maximum, scale,
+                                  offset)){CHECK_THIS_INVARIANCE()} ScaledIntegerNode::ScaledIntegerNode(ImageFile destImageFile, int rawValue, int64_t minimum,
+                                                                                                         int64_t maximum, double scale, double offset)
+: impl_(new ScaledIntegerNodeImpl(destImageFile.impl(), (int64_t)rawValue, minimum, maximum, scale,
+                                  offset)){CHECK_THIS_INVARIANCE()} ScaledIntegerNode::ScaledIntegerNode(ImageFile destImageFile, int rawValue, int minimum,
+                                                                                                         int maximum, double scale, double offset)
+: impl_(new ScaledIntegerNodeImpl(destImageFile.impl(), (int64_t)rawValue, (int64_t)minimum, (int64_t)maximum, scale,
+                                  offset)){CHECK_THIS_INVARIANCE()} /*================*/
+                                                                    /*!
+                                               @brief   This second constructor create an E57 element for storing a fixed point number but does the scaling for you.
+                                               @param   [in] destImageFile   The ImageFile where the new node will eventually be stored.
+                                               @param   [in] scaledValue	  The scaled integer value of the element.
+                                               @param   [in] scaledMinimum   The smallest scaledValue that the element may take.
+                                               @param   [in] scaledMaximum   The largest scaledValue that the element may take.
+                                               @param   [in] scale     The scaling factor used to compute scaledValue from rawValue.
+                                               @param   [in] offset    The offset factor used to compute scaledValue from rawValue.
+                                               @details
+                                               An ScaledIntegerNode stores an integer value, a lower and upper bound, and two conversion factors.
+                                               This ScaledIntegerNode constructor calculates the rawValue, minimum, and maximum by doing the floor((scaledValue - offset)/scale + .5) on each scaled
+                                                                  parameters.
+                                               @b Warning: it is an error to give an @a rawValue outside the @a minimum / @a maximum bounds, even if the ScaledIntegerNode is destined to be used in a
+                                                                  CompressedVectorNode prototype (where the @a rawValue will be ignored).                                                                   If the ScaledIntegerNode is to be used in a prototype, it is recommended to specify a @a
+                                                                  rawValue = 0 if 0 is within bounds, or a @a rawValue = @a minimum if 0 is not within bounds.
+                                               @pre     The @a destImageFile must be open (i.e. destImageFile.isOpen() must be true).
+                                               @pre     The @a destImageFile must have been opened in write mode (i.e. destImageFile.isWritable() must be true).
+                                               @pre     scaledMinimum <= scaledValue <= scaledMaximum
+                                               @pre     scale != 0
+                                               @return  A smart ScaledIntegerNode handle referencing the underlying object.
+                                               @throw   ::E57_ERROR_BAD_API_ARGUMENT
+                                               @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
+                                               @throw   ::E57_ERROR_FILE_IS_READ_ONLY
+                                               @throw   ::E57_ERROR_VALUE_OUT_OF_BOUNDS
+                                               @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+                                               @see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::scaledValue, Node, CompressedVectorNode, CompressedVectorNode::prototype
+                                               */                                                                  /*================*/
+  ScaledIntegerNode::ScaledIntegerNode(ImageFile destImageFile, double scaledValue, double scaledMinimum, double scaledMaximum, double scale, double offset)
 : impl_(new ScaledIntegerNodeImpl(destImageFile.impl(), scaledValue, scaledMinimum, scaledMaximum, scale, offset))
 {
-    CHECK_THIS_INVARIANCE()
+  CHECK_THIS_INVARIANCE()
 }
 //! @brief   Is this a root node.
 //! @copydetails Node::isRoot()
 bool ScaledIntegerNode::isRoot() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isRoot());
+  CHECK_INVARIANCE_RETURN(bool, impl_->isRoot());
 }
 
 //! @brief   Return parent of node, or self if a root node.
 //! @copydetails Node::parent()
 Node ScaledIntegerNode::parent() const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->parent()));
+  CHECK_INVARIANCE_RETURN(Node, Node(impl_->parent()));
 }
 
 //! @brief   Get absolute pathname of node.
 //! @copydetails Node::pathName()
 ustring ScaledIntegerNode::pathName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
+  CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
 }
 
 //! @brief   Get elementName string, that identifies the node in its parent..
 //! @copydetails Node::elementName()
 ustring ScaledIntegerNode::elementName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->elementName());
+  CHECK_INVARIANCE_RETURN(ustring, impl_->elementName());
 }
 
 //! @brief   Get the ImageFile that was declared as the destination for the node when it was created.
 //! @copydetails Node::destImageFile()
 ImageFile ScaledIntegerNode::destImageFile() const
 {
-    CHECK_INVARIANCE_RETURN(ImageFile, ImageFile(impl_->destImageFile()));
+  CHECK_INVARIANCE_RETURN(ImageFile, ImageFile(impl_->destImageFile()));
 }
 
 //! @brief   Has node been attached into the tree of an ImageFile.
 //! @copydetails Node::isAttached()
 bool ScaledIntegerNode::isAttached() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isAttached());
+  CHECK_INVARIANCE_RETURN(bool, impl_->isAttached());
 }
 
 /*================*/ /*!
@@ -3694,7 +3751,7 @@ bool ScaledIntegerNode::isAttached() const
 */ /*================*/
 int64_t ScaledIntegerNode::rawValue() const
 {
-    CHECK_INVARIANCE_RETURN(int64_t, impl_->rawValue());
+  CHECK_INVARIANCE_RETURN(int64_t, impl_->rawValue());
 }
 
 /*================*/ /*!
@@ -3706,9 +3763,9 @@ int64_t ScaledIntegerNode::rawValue() const
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::rawValue
 */ /*================*/
-double  ScaledIntegerNode::scaledValue() const
+double ScaledIntegerNode::scaledValue() const
 {
-    CHECK_INVARIANCE_RETURN(double, impl_->scaledValue());
+  CHECK_INVARIANCE_RETURN(double, impl_->scaledValue());
 }
 
 /*================*/ /*!
@@ -3722,7 +3779,7 @@ double  ScaledIntegerNode::scaledValue() const
 */ /*================*/
 int64_t ScaledIntegerNode::minimum() const
 {
-    CHECK_INVARIANCE_RETURN(int64_t, impl_->minimum());
+  CHECK_INVARIANCE_RETURN(int64_t, impl_->minimum());
 }
 /*================*/ /*!
 @brief   Get the declared scaled minimum that the scaled value may take.
@@ -3733,9 +3790,9 @@ int64_t ScaledIntegerNode::minimum() const
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::scaledMaximum, ScaledIntegerNode::scaledValue
 */ /*================*/
-double ScaledIntegerNode::scaledMinimum() const		//Added by SC
+double ScaledIntegerNode::scaledMinimum() const // Added by SC
 {
-    CHECK_INVARIANCE_RETURN(double, impl_->scaledMinimum());
+  CHECK_INVARIANCE_RETURN(double, impl_->scaledMinimum());
 }
 /*================*/ /*!
 @brief   Get the declared maximum that the raw value may take.
@@ -3748,7 +3805,7 @@ double ScaledIntegerNode::scaledMinimum() const		//Added by SC
 */ /*================*/
 int64_t ScaledIntegerNode::maximum() const
 {
-    CHECK_INVARIANCE_RETURN(int64_t, impl_->maximum());
+  CHECK_INVARIANCE_RETURN(int64_t, impl_->maximum());
 }
 /*================*/ /*!
 @brief   Get the declared scaled maximum that the scaled value may take.
@@ -3759,9 +3816,9 @@ int64_t ScaledIntegerNode::maximum() const
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::scaledMinimum, ScaledIntegerNode::scaledValue
 */ /*================*/
-double ScaledIntegerNode::scaledMaximum() const		//Added by SC
+double ScaledIntegerNode::scaledMaximum() const // Added by SC
 {
-    CHECK_INVARIANCE_RETURN(double, impl_->scaledMaximum());
+  CHECK_INVARIANCE_RETURN(double, impl_->scaledMaximum());
 }
 /*================*/ /*!
 @brief   Get declared scaling factor.
@@ -3772,9 +3829,9 @@ double ScaledIntegerNode::scaledMaximum() const		//Added by SC
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::scaledValue
 */ /*================*/
-double  ScaledIntegerNode::scale() const
+double ScaledIntegerNode::scale() const
 {
-    CHECK_INVARIANCE_RETURN(double, impl_->scale());
+  CHECK_INVARIANCE_RETURN(double, impl_->scale());
 }
 
 /*================*/ /*!
@@ -3786,9 +3843,9 @@ double  ScaledIntegerNode::scale() const
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::scaledValue
 */ /*================*/
-double  ScaledIntegerNode::offset() const
+double ScaledIntegerNode::offset() const
 {
-    CHECK_INVARIANCE_RETURN(double, impl_->offset());
+  CHECK_INVARIANCE_RETURN(double, impl_->offset());
 }
 
 //! @brief   Diagnostic function to print internal state of object to output stream in an indented format.
@@ -3796,11 +3853,10 @@ double  ScaledIntegerNode::offset() const
 #ifdef E57_DEBUG
 void ScaledIntegerNode::dump(int indent, std::ostream& os) const
 {
-    impl_->dump(indent, os);
+  impl_->dump(indent, os);
 }
 #else
-void ScaledIntegerNode::dump(int indent, std::ostream& os) const
-{}
+void ScaledIntegerNode::dump(int indent, std::ostream& os) const {}
 #endif
 
 /*================*/ /*!
@@ -3812,8 +3868,8 @@ void ScaledIntegerNode::dump(int indent, std::ostream& os) const
 */ /*================*/
 ScaledIntegerNode::operator Node() const
 {
-    /// Upcast from shared_ptr<ScaledIntegerNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_));
+  /// Upcast from shared_ptr<ScaledIntegerNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
+  CHECK_INVARIANCE_RETURN(Node, Node(impl_));
 }
 
 /*================*/ /*!
@@ -3828,23 +3884,21 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 */ /*================*/
 ScaledIntegerNode::ScaledIntegerNode(const Node& n)
 {
-    /// Downcast from shared_ptr<NodeImpl> to shared_ptr<ScaledIntegerNodeImpl>
-    shared_ptr<ScaledIntegerNodeImpl> ni(dynamic_pointer_cast<ScaledIntegerNodeImpl>(n.impl()));
-    if (!ni)
-        throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
+  /// Downcast from shared_ptr<NodeImpl> to shared_ptr<ScaledIntegerNodeImpl>
+  shared_ptr<ScaledIntegerNodeImpl> ni(dynamic_pointer_cast<ScaledIntegerNodeImpl>(n.impl()));
+  if (!ni)
+    throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
 
-    /// Set our shared_ptr to the downcast shared_ptr
-    impl_ = ni;
+  /// Set our shared_ptr to the downcast shared_ptr
+  impl_ = ni;
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-ScaledIntegerNode::ScaledIntegerNode(shared_ptr<ScaledIntegerNodeImpl> ni)
-: impl_(ni)
-{}
+ScaledIntegerNode::ScaledIntegerNode(shared_ptr<ScaledIntegerNodeImpl> ni) : impl_(ni) {}
 //! @endcond
 
 //=====================================================================================
-/*================*/ /*!
+/*================*//*!
 @class FloatNode
 @brief   An E57 element encoding a single or double precision IEEE floating point number.
 @details
@@ -3867,8 +3921,8 @@ See Node class discussion for discussion of the common functions that StructureN
 @section FloatNode_invariant Class Invariant
 A class invariant is a list of statements about an object that are always true before and after any operation on the object.
 An invariant is useful for testing correct operation of an implementation.
-Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API user.
-The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
+Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API
+user. The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
 @dontinclude E57Foundation.cpp
 @skip begin FloatNode::checkInvariant
 @skip checkInvariant(
@@ -3915,49 +3969,49 @@ If the FloatNode is to be used in a prototype, it is recommended to specify a @a
 FloatNode::FloatNode(ImageFile destImageFile, double value, FloatPrecision precision, double minimum, double maximum)
 : impl_(new FloatNodeImpl(destImageFile.impl(), value, precision, minimum, maximum))
 {
-    CHECK_THIS_INVARIANCE()
+  CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Is this a root node.
 //! @copydetails Node::isRoot()
 bool FloatNode::isRoot() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isRoot());
+  CHECK_INVARIANCE_RETURN(bool, impl_->isRoot());
 }
 
 //! @brief   Return parent of node, or self if a root node.
 //! @copydetails Node::parent()
 Node FloatNode::parent() const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->parent()));
+  CHECK_INVARIANCE_RETURN(Node, Node(impl_->parent()));
 }
 
 //! @brief   Get absolute pathname of node.
 //! @copydetails Node::pathName()
 ustring FloatNode::pathName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
+  CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
 }
 
 //! @brief   Get elementName string, that identifies the node in its parent..
 //! @copydetails Node::elementName()
 ustring FloatNode::elementName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->elementName());
+  CHECK_INVARIANCE_RETURN(ustring, impl_->elementName());
 }
 
 //! @brief   Get the ImageFile that was declared as the destination for the node when it was created.
 //! @copydetails Node::destImageFile()
 ImageFile FloatNode::destImageFile() const
 {
-    CHECK_INVARIANCE_RETURN(ImageFile, ImageFile(impl_->destImageFile()));
+  CHECK_INVARIANCE_RETURN(ImageFile, ImageFile(impl_->destImageFile()));
 }
 
 //! @brief   Has node been attached into the tree of an ImageFile.
 //! @copydetails Node::isAttached()
 bool FloatNode::isAttached() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isAttached());
+  CHECK_INVARIANCE_RETURN(bool, impl_->isAttached());
 }
 
 /*================*/ /*!
@@ -3974,7 +4028,7 @@ If precision is E57_DOUBLE, the double precision value is returned as a double.
 */ /*================*/
 double FloatNode::value() const
 {
-    CHECK_INVARIANCE_RETURN(double, impl_->value());
+  CHECK_INVARIANCE_RETURN(double, impl_->value());
 }
 
 /*================*/ /*!
@@ -3988,7 +4042,7 @@ double FloatNode::value() const
 */ /*================*/
 FloatPrecision FloatNode::precision() const
 {
-    CHECK_INVARIANCE_RETURN(FloatPrecision, impl_->precision());
+  CHECK_INVARIANCE_RETURN(FloatPrecision, impl_->precision());
 }
 
 /*================*/ /*!
@@ -4005,7 +4059,7 @@ If precision is E57_DOUBLE, the double precision minimum is returned as a double
 */ /*================*/
 double FloatNode::minimum() const
 {
-    CHECK_INVARIANCE_RETURN(double, impl_->minimum());
+  CHECK_INVARIANCE_RETURN(double, impl_->minimum());
 }
 
 /*================*/ /*!
@@ -4022,7 +4076,7 @@ If precision is E57_DOUBLE, the double precision maximum is returned as a double
 */ /*================*/
 double FloatNode::maximum() const
 {
-    CHECK_INVARIANCE_RETURN(double, impl_->maximum());
+  CHECK_INVARIANCE_RETURN(double, impl_->maximum());
 }
 
 //! @brief   Diagnostic function to print internal state of object to output stream in an indented format.
@@ -4030,11 +4084,10 @@ double FloatNode::maximum() const
 #ifdef E57_DEBUG
 void FloatNode::dump(int indent, std::ostream& os) const
 {
-    impl_->dump(indent, os);
+  impl_->dump(indent, os);
 }
 #else
-void FloatNode::dump(int indent, std::ostream& os) const
-{}
+void FloatNode::dump(int indent, std::ostream& os) const {}
 #endif
 
 /*================*/ /*!
@@ -4046,8 +4099,8 @@ void FloatNode::dump(int indent, std::ostream& os) const
 */ /*================*/
 FloatNode::operator Node() const
 {
-    /// Upcast from shared_ptr<FloatNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_));
+  /// Upcast from shared_ptr<FloatNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
+  CHECK_INVARIANCE_RETURN(Node, Node(impl_));
 }
 
 /*================*/ /*!
@@ -4062,23 +4115,21 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 */ /*================*/
 FloatNode::FloatNode(const Node& n)
 {
-    /// Downcast from shared_ptr<NodeImpl> to shared_ptr<FloatNodeImpl>
-    shared_ptr<FloatNodeImpl> ni(dynamic_pointer_cast<FloatNodeImpl>(n.impl()));
-    if (!ni)
-        throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
+  /// Downcast from shared_ptr<NodeImpl> to shared_ptr<FloatNodeImpl>
+  shared_ptr<FloatNodeImpl> ni(dynamic_pointer_cast<FloatNodeImpl>(n.impl()));
+  if (!ni)
+    throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
 
-    /// Set our shared_ptr to the downcast shared_ptr
-    impl_ = ni;
+  /// Set our shared_ptr to the downcast shared_ptr
+  impl_ = ni;
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-FloatNode::FloatNode(shared_ptr<FloatNodeImpl> ni)
-: impl_(ni)
-{}
+FloatNode::FloatNode(shared_ptr<FloatNodeImpl> ni) : impl_(ni) {}
 //! @endcond
 
 //=====================================================================================
-/*================*/ /*!
+/*================*//*!
 @class StringNode
 @brief   An E57 element encoding a Unicode character string value.
 @details
@@ -4090,8 +4141,8 @@ See Node class discussion for discussion of the common functions that StructureN
 @section StringNode_invariant Class Invariant
 A class invariant is a list of statements about an object that are always true before and after any operation on the object.
 An invariant is useful for testing correct operation of an implementation.
-Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API user.
-The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
+Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API
+user. The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
 @dontinclude E57Foundation.cpp
 @skip begin StringNode::checkInvariant
 @skip checkInvariant(
@@ -4122,52 +4173,51 @@ If the StringNode is to be used in a CompressedVectorNode prototype, it is recom
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     StringCreate.cpp example, StringNode::value, Node, CompressedVectorNode, CompressedVectorNode::prototype
 */ /*================*/
-StringNode::StringNode(ImageFile destImageFile, const ustring value)
-: impl_(new StringNodeImpl(destImageFile.impl(), value))
+StringNode::StringNode(ImageFile destImageFile, const ustring value) : impl_(new StringNodeImpl(destImageFile.impl(), value))
 {
-    CHECK_THIS_INVARIANCE()
+  CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Is this a root node.
 //! @copydetails Node::isRoot()
 bool StringNode::isRoot() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isRoot());
+  CHECK_INVARIANCE_RETURN(bool, impl_->isRoot());
 }
 
 //! @brief   Return parent of node, or self if a root node.
 //! @copydetails Node::parent()
 Node StringNode::parent() const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->parent()));
+  CHECK_INVARIANCE_RETURN(Node, Node(impl_->parent()));
 }
 
 //! @brief   Get absolute pathname of node.
 //! @copydetails Node::pathName()
 ustring StringNode::pathName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
+  CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
 }
 
 //! @brief   Get elementName string, that identifies the node in its parent..
 //! @copydetails Node::elementName()
 ustring StringNode::elementName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->elementName());
+  CHECK_INVARIANCE_RETURN(ustring, impl_->elementName());
 }
 
 //! @brief   Get the ImageFile that was declared as the destination for the node when it was created.
 //! @copydetails Node::destImageFile()
 ImageFile StringNode::destImageFile() const
 {
-    CHECK_INVARIANCE_RETURN(ImageFile, ImageFile(impl_->destImageFile()));
+  CHECK_INVARIANCE_RETURN(ImageFile, ImageFile(impl_->destImageFile()));
 }
 
 //! @brief   Has node been attached into the tree of an ImageFile.
 //! @copydetails Node::isAttached()
 bool StringNode::isAttached() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isAttached());
+  CHECK_INVARIANCE_RETURN(bool, impl_->isAttached());
 }
 
 /*================*/ /*!
@@ -4181,7 +4231,7 @@ bool StringNode::isAttached() const
 */ /*================*/
 ustring StringNode::value() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->value());
+  CHECK_INVARIANCE_RETURN(ustring, impl_->value());
 }
 
 //! @brief   Diagnostic function to print internal state of object to output stream in an indented format.
@@ -4189,11 +4239,10 @@ ustring StringNode::value() const
 #ifdef E57_DEBUG
 void StringNode::dump(int indent, std::ostream& os) const
 {
-    impl_->dump(indent, os);
+  impl_->dump(indent, os);
 }
 #else
-void StringNode::dump(int indent, std::ostream& os) const
-{}
+void StringNode::dump(int indent, std::ostream& os) const {}
 #endif
 
 /*================*/ /*!
@@ -4205,8 +4254,8 @@ void StringNode::dump(int indent, std::ostream& os) const
 */ /*================*/
 StringNode::operator Node() const
 {
-    /// Upcast from shared_ptr<StringNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_));
+  /// Upcast from shared_ptr<StringNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
+  CHECK_INVARIANCE_RETURN(Node, Node(impl_));
 }
 
 /*================*/ /*!
@@ -4221,23 +4270,21 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 */ /*================*/
 StringNode::StringNode(const Node& n)
 {
-    /// Downcast from shared_ptr<NodeImpl> to shared_ptr<StringNodeImpl>
-    shared_ptr<StringNodeImpl> ni(dynamic_pointer_cast<StringNodeImpl>(n.impl()));
-    if (!ni)
-        throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
+  /// Downcast from shared_ptr<NodeImpl> to shared_ptr<StringNodeImpl>
+  shared_ptr<StringNodeImpl> ni(dynamic_pointer_cast<StringNodeImpl>(n.impl()));
+  if (!ni)
+    throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
 
-    /// Set our shared_ptr to the downcast shared_ptr
-    impl_ = ni;
+  /// Set our shared_ptr to the downcast shared_ptr
+  impl_ = ni;
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-StringNode::StringNode(shared_ptr<StringNodeImpl> ni)
-: impl_(ni)
-{}
+StringNode::StringNode(shared_ptr<StringNodeImpl> ni) : impl_(ni) {}
 //! @endcond
 
 //=====================================================================================
-/*================*/ /*!
+/*================*//*!
 @class BlobNode
 @brief   An E57 element encoding an fixed-length sequence of bytes with an opaque format.
 @details
@@ -4254,9 +4301,10 @@ This is useful for storing proprietary data that a writer does not wish to share
 Rather than put this information in a separate file, the writer can embed the file inside the E57 file so it cannot be lost.
 
 In a public BlobNode, the format is published or follows some industry standard format (e.g. JPEG).
-Rather than reinvent the wheel in applications that are already well-served by an existing format standard, an E57 file writer can just embed an existing file as an "attachment" in a BlobNode.
-The internal format of a public BlobNode is not enforced by the Foundation API.
-It is recommended that there be some mechanism for a reader to know ahead of time which format the BlobNode content adheres to (either specified by a document, or encoded by some scheme in the E57 Element tree).
+Rather than reinvent the wheel in applications that are already well-served by an existing format standard, an E57 file writer can just embed an existing file
+as an "attachment" in a BlobNode. The internal format of a public BlobNode is not enforced by the Foundation API. It is recommended that there be some mechanism
+for a reader to know ahead of time which format the BlobNode content adheres to (either specified by a document, or encoded by some scheme in the E57 Element
+tree).
 
 The BlobNode is the one node type where the set-once policy is not strictly enforced.
 It is possible to write the same byte location in a BlobNode several times.
@@ -4267,8 +4315,8 @@ See Node class discussion for discussion of the common functions that StructureN
 @section BlobNode_invariant Class Invariant
 A class invariant is a list of statements about an object that are always true before and after any operation on the object.
 An invariant is useful for testing correct operation of an implementation.
-Statements in an invariant can involve only externally visible state, or, can refer to internal implementation-specific state that is not visible to the API user.
-The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
+Statements in an invariant can involve only externally visible state, or, can refer to internal implementation-specific state that is not visible to the API
+user. The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
 @dontinclude E57Foundation.cpp
 @skip begin BlobNode::checkInvariant
 @skip checkInvariant(
@@ -4303,52 +4351,51 @@ It is an error to attempt to attach the BlobNode to a different ImageFile.
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     BlobCreate.cpp example, Node, BlobNode::read, BlobNode::write
 */ /*================*/
-BlobNode::BlobNode(ImageFile destImageFile, int64_t byteCount)
-: impl_(new BlobNodeImpl(destImageFile.impl(), byteCount))
+BlobNode::BlobNode(ImageFile destImageFile, int64_t byteCount) : impl_(new BlobNodeImpl(destImageFile.impl(), byteCount))
 {
-    CHECK_THIS_INVARIANCE()
+  CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Is this a root node.
 //! @copydetails Node::isRoot()
 bool BlobNode::isRoot() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isRoot());
+  CHECK_INVARIANCE_RETURN(bool, impl_->isRoot());
 }
 
 //! @brief   Return parent of node, or self if a root node.
 //! @copydetails Node::parent()
 Node BlobNode::parent() const
 {
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_->parent()));
+  CHECK_INVARIANCE_RETURN(Node, Node(impl_->parent()));
 }
 
 //! @brief   Get absolute pathname of node.
 //! @copydetails Node::pathName()
 ustring BlobNode::pathName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
+  CHECK_INVARIANCE_RETURN(ustring, impl_->pathName());
 }
 
 //! @brief   Get elementName string, that identifies the node in its parent..
 //! @copydetails Node::elementName()
 ustring BlobNode::elementName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->elementName());
+  CHECK_INVARIANCE_RETURN(ustring, impl_->elementName());
 }
 
 //! @brief   Get the ImageFile that was declared as the destination for the node when it was created.
 //! @copydetails Node::destImageFile()
 ImageFile BlobNode::destImageFile() const
 {
-    CHECK_INVARIANCE_RETURN(ImageFile, ImageFile(impl_->destImageFile()));
+  CHECK_INVARIANCE_RETURN(ImageFile, ImageFile(impl_->destImageFile()));
 }
 
 //! @brief   Has node been attached into the tree of an ImageFile.
 //! @copydetails Node::isAttached()
 bool BlobNode::isAttached() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isAttached());
+  CHECK_INVARIANCE_RETURN(bool, impl_->isAttached());
 }
 
 /*================*/ /*!
@@ -4362,7 +4409,7 @@ bool BlobNode::isAttached() const
 */ /*================*/
 int64_t BlobNode::byteCount() const
 {
-    CHECK_INVARIANCE_RETURN(int64_t, impl_->byteCount());
+  CHECK_INVARIANCE_RETURN(int64_t, impl_->byteCount());
 }
 
 /*================*/ /*!
@@ -4393,7 +4440,7 @@ Any part of the Blob data can be read zero or more times.
 */ /*================*/
 void BlobNode::read(uint8_t* buf, int64_t start, size_t count)
 {
-    impl_->read(buf, start, count);
+  impl_->read(buf, start, count);
 }
 
 /*================*/ /*!
@@ -4431,9 +4478,9 @@ The BlobNode is one of the two node types that must be attached to the root of a
 */ /*================*/
 void BlobNode::write(uint8_t* buf, int64_t start, size_t count)
 {
-    CHECK_THIS_INVARIANCE()
-    impl_->write(buf, start, count);
-    CHECK_THIS_INVARIANCE()
+  CHECK_THIS_INVARIANCE()
+  impl_->write(buf, start, count);
+  CHECK_THIS_INVARIANCE()
 }
 
 //! @brief   Diagnostic function to print internal state of object to output stream in an indented format.
@@ -4441,11 +4488,10 @@ void BlobNode::write(uint8_t* buf, int64_t start, size_t count)
 #ifdef E57_DEBUG
 void BlobNode::dump(int indent, std::ostream& os) const
 {
-    impl_->dump(indent, os);
+  impl_->dump(indent, os);
 }
 #else
-void BlobNode::dump(int indent, std::ostream& os) const
-{}
+void BlobNode::dump(int indent, std::ostream& os) const {}
 #endif
 
 /*================*/ /*!
@@ -4457,8 +4503,8 @@ void BlobNode::dump(int indent, std::ostream& os) const
 */ /*================*/
 BlobNode::operator Node() const
 {
-    /// Upcast from shared_ptr<StringNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
-    CHECK_INVARIANCE_RETURN(Node, Node(impl_));
+  /// Upcast from shared_ptr<StringNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
+  CHECK_INVARIANCE_RETURN(Node, Node(impl_));
 }
 
 /*================*/ /*!
@@ -4473,27 +4519,23 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 */ /*================*/
 BlobNode::BlobNode(const Node& n)
 {
-    /// Downcast from shared_ptr<NodeImpl> to shared_ptr<BlobNodeImpl>
-    shared_ptr<BlobNodeImpl> ni(dynamic_pointer_cast<BlobNodeImpl>(n.impl()));
-    if (!ni)
-        throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
+  /// Downcast from shared_ptr<NodeImpl> to shared_ptr<BlobNodeImpl>
+  shared_ptr<BlobNodeImpl> ni(dynamic_pointer_cast<BlobNodeImpl>(n.impl()));
+  if (!ni)
+    throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
 
-    /// Set our shared_ptr to the downcast shared_ptr
-    impl_ = ni;
+  /// Set our shared_ptr to the downcast shared_ptr
+  impl_ = ni;
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-BlobNode::BlobNode(ImageFile destImageFile, int64_t fileOffset, int64_t length)
-: impl_(new BlobNodeImpl(destImageFile.impl(), fileOffset, length))
-{}
+BlobNode::BlobNode(ImageFile destImageFile, int64_t fileOffset, int64_t length) : impl_(new BlobNodeImpl(destImageFile.impl(), fileOffset, length)) {}
 
-BlobNode::BlobNode(shared_ptr<BlobNodeImpl> ni)
-: impl_(ni)
-{}
+BlobNode::BlobNode(shared_ptr<BlobNodeImpl> ni) : impl_(ni) {}
 //! @endcond
 
 //=====================================================================================
-/*================*/ /*!
+/*================*//*!
 @class ImageFile
 @brief   An ASTM E57 3D format file object.
 @details
@@ -4530,7 +4572,8 @@ Extensions are identified by URIs.
 Extensions are not identified by prefixes.
 Prefixes are a shorthand, used in a particular file, to make the element names more palatable for humans.
 When thinking about a prefixed element name, in your mind you should immediately substitute the URI for the prefix.
-For example, think "http://www.example.com/DemoExtension:extra2" rather than "demo:extra2", if the prefix "demo" is declared in the file to be a shorthand for the URI "http://www.example.com/DemoExtension".
+For example, think "http://www.example.com/DemoExtension:extra2" rather than "demo:extra2", if the prefix "demo" is declared in the file to be a shorthand for
+the URI "http://www.example.com/DemoExtension".
 
 The rules are statements of: what is valid, what element names are possible, what values are possible.
 The rules establish the answer to the following yes/no question: "Is this extended E57 file valid?".
@@ -4540,17 +4583,18 @@ The "meanings" part of the above equation defines what the files in the first se
 This definition usually comes in the form of documentation of the content of each new element in the format and how they relate to the other elements.
 
 An element name in an E57 file is a member of exactly one namespace (either the default namespace defined in the ASTM standard, or an extension namespace).
-Rules about the structure of an E57 extension (what element names can appear where), are implicitly assumed only to govern the element names within the namespace of the extension.
-Element names in other namespaces are unconstrained.
-This is because a reader is required to ignore elements in namespaces that are unfamiliar (to treat them as if they didn't exist).
-This enables a writer to "tack on" new elements into pre-defined structures (e.g. structures defined in the ASTM standard), without fear that it will confuse a reader that is only familiar with the old format.
-This allows an extension designer to communicate to two sets of readers: the old readers that will understand the information in the old base format, and the new-fangled readers that will be able to read the base format and the extra information stored in element names in the extended namespace.
+Rules about the structure of an E57 extension (what element names can appear where), are implicitly assumed only to govern the element names within the
+namespace of the extension. Element names in other namespaces are unconstrained. This is because a reader is required to ignore elements in namespaces that are
+unfamiliar (to treat them as if they didn't exist). This enables a writer to "tack on" new elements into pre-defined structures (e.g. structures defined in the
+ASTM standard), without fear that it will confuse a reader that is only familiar with the old format. This allows an extension designer to communicate to two
+sets of readers: the old readers that will understand the information in the old base format, and the new-fangled readers that will be able to read the base
+format and the extra information stored in element names in the extended namespace.
 
 @section ImageFile_invariant Class Invariant
 A class invariant is a list of statements about an object that are always true before and after any operation on the object.
 An invariant is useful for testing correct operation of an implementation.
-Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API user.
-The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
+Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API
+user. The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
 @dontinclude E57Foundation.cpp
 @skip begin ImageFile::checkInvariant
 @skip checkInvariant(
@@ -4601,13 +4645,12 @@ There is no API support for appending data onto an existing E57 data file.
 @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
 @see     HelloWorld.cpp example, IntegerNode, ScaledIntegerNode, FloatNode, StringNode, BlobNode, StructureNode, VectorNode, CompressedVectorNode, E57Exception, E57Utilities::E57Utilities
 */ /*================*/
-ImageFile::ImageFile(const ustring& fname, const ustring& mode, const ustring& configuration)
-: impl_(new ImageFileImpl())
+ImageFile::ImageFile(const ustring& fname, const ustring& mode, const ustring& configuration) : impl_(new ImageFileImpl())
 {
-    /// Do second phase of construction, now that ImageFile object is complete.
-    impl_->construct2(fname, mode, configuration);
+  /// Do second phase of construction, now that ImageFile object is complete.
+  impl_->construct2(fname, mode, configuration);
 
-    CHECK_THIS_INVARIANCE()
+  CHECK_THIS_INVARIANCE()
 }
 
 /*================*/ /*!
@@ -4622,7 +4665,7 @@ The root node is empty in a newly created write mode ImageFile.
 */ /*================*/
 StructureNode ImageFile::root() const
 {
-    CHECK_INVARIANCE_RETURN(StructureNode, StructureNode(impl_->root()));
+  CHECK_INVARIANCE_RETURN(StructureNode, StructureNode(impl_->root()));
 }
 
 /*================*/ /*!
@@ -4651,9 +4694,9 @@ It is not an error if ImageFile is already closed.
 */ /*================*/
 void ImageFile::close()
 {
-    CHECK_THIS_INVARIANCE()
-    impl_->close();
-    CHECK_THIS_INVARIANCE()
+  CHECK_THIS_INVARIANCE()
+  impl_->close();
+  CHECK_THIS_INVARIANCE()
 }
 
 /*================*/ /*!
@@ -4668,9 +4711,9 @@ It is not an error if ImageFile is already closed.
 */ /*================*/
 void ImageFile::cancel()
 {
-    CHECK_THIS_INVARIANCE()
-    impl_->cancel();
-    CHECK_THIS_INVARIANCE()
+  CHECK_THIS_INVARIANCE()
+  impl_->cancel();
+  CHECK_THIS_INVARIANCE()
 }
 
 /*================*/ /*!
@@ -4682,7 +4725,7 @@ void ImageFile::cancel()
 */ /*================*/
 bool ImageFile::isOpen() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isOpen());
+  CHECK_INVARIANCE_RETURN(bool, impl_->isOpen());
 }
 
 /*================*/ /*!
@@ -4694,7 +4737,7 @@ bool ImageFile::isOpen() const
 */ /*================*/
 bool ImageFile::isWritable() const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isWriter());
+  CHECK_INVARIANCE_RETURN(bool, impl_->isWriter());
 }
 
 /*================*/ /*!
@@ -4706,7 +4749,7 @@ bool ImageFile::isWritable() const
 */ /*================*/
 ustring ImageFile::fileName() const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->fileName());
+  CHECK_INVARIANCE_RETURN(ustring, impl_->fileName());
 }
 
 /*================*/ /*!
@@ -4723,7 +4766,7 @@ CompressedVectorWriter objects are created by the CompressedVectorNode::writer f
 */ /*================*/
 int ImageFile::writerCount() const
 {
-    CHECK_INVARIANCE_RETURN(int, impl_->writerCount());
+  CHECK_INVARIANCE_RETURN(int, impl_->writerCount());
 }
 
 /*================*/ /*!
@@ -4740,7 +4783,7 @@ CompressedVectorReader objects are created by the CompressedVectorNode::reader f
 */ /*================*/
 int ImageFile::readerCount() const
 {
-    CHECK_INVARIANCE_RETURN(int, impl_->readerCount());
+  CHECK_INVARIANCE_RETURN(int, impl_->readerCount());
 }
 
 /*================*/ /*!
@@ -4777,9 +4820,9 @@ See the class discussion at bottom of ImageFile page for more details about name
 */ /*================*/
 void ImageFile::extensionsAdd(const ustring& prefix, const ustring& uri)
 {
-    CHECK_THIS_INVARIANCE()
-    impl_->extensionsAdd(prefix, uri);
-    CHECK_THIS_INVARIANCE()
+  CHECK_THIS_INVARIANCE()
+  impl_->extensionsAdd(prefix, uri);
+  CHECK_THIS_INVARIANCE()
 }
 
 /*================*/ /*!
@@ -4801,7 +4844,7 @@ It is not an error if @a prefix is well-formed, but not defined in the ImageFile
 */ /*================*/
 bool ImageFile::extensionsLookupPrefix(const ustring& prefix, ustring& uri) const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->extensionsLookupPrefix(prefix, uri));
+  CHECK_INVARIANCE_RETURN(bool, impl_->extensionsLookupPrefix(prefix, uri));
 }
 
 /*================*/ /*!
@@ -4823,7 +4866,7 @@ It is not an error if @a uri is well-formed, but not defined in the ImageFile (t
 */ /*================*/
 bool ImageFile::extensionsLookupUri(const ustring& uri, ustring& prefix) const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->extensionsLookupUri(uri, prefix));
+  CHECK_INVARIANCE_RETURN(bool, impl_->extensionsLookupUri(uri, prefix));
 }
 
 /*================*/ /*!
@@ -4839,7 +4882,7 @@ The default E57 namespace does not count as an extension.
 */ /*================*/
 size_t ImageFile::extensionsCount() const
 {
-    CHECK_INVARIANCE_RETURN(size_t, impl_->extensionsCount());
+  CHECK_INVARIANCE_RETURN(size_t, impl_->extensionsCount());
 }
 
 /*================*/ /*!
@@ -4860,7 +4903,7 @@ The default E57 namespace is not counted as an extension.
 */ /*================*/
 ustring ImageFile::extensionsPrefix(const size_t index) const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->extensionsPrefix(index));
+  CHECK_INVARIANCE_RETURN(ustring, impl_->extensionsPrefix(index));
 }
 
 /*================*/ /*!
@@ -4881,7 +4924,7 @@ The default E57 namespace is not counted as an extension.
 */ /*================*/
 ustring ImageFile::extensionsUri(const size_t index) const
 {
-    CHECK_INVARIANCE_RETURN(ustring, impl_->extensionsUri(index));
+  CHECK_INVARIANCE_RETURN(ustring, impl_->extensionsUri(index));
 }
 
 /*================*/ /*!
@@ -4896,7 +4939,7 @@ The element name has a prefix if the function elementNameParse(elementName,prefi
 */ /*================*/
 bool ImageFile::isElementNameExtended(const ustring& elementName) const
 {
-    CHECK_INVARIANCE_RETURN(bool, impl_->isElementNameExtended(elementName));
+  CHECK_INVARIANCE_RETURN(bool, impl_->isElementNameExtended(elementName));
 }
 
 /*================*/ /*!
@@ -4915,9 +4958,9 @@ If in prefixed form, the prefix does not have to be declared in the ImageFile.
 */ /*================*/
 void ImageFile::elementNameParse(const ustring& elementName, ustring& prefix, ustring& localPart) const
 {
-    CHECK_THIS_INVARIANCE()
-    impl_->elementNameParse(elementName, prefix, localPart);
-    CHECK_THIS_INVARIANCE()
+  CHECK_THIS_INVARIANCE()
+  impl_->elementNameParse(elementName, prefix, localPart);
+  CHECK_THIS_INVARIANCE()
 }
 
 /*================*/ /*!
@@ -4927,11 +4970,10 @@ void ImageFile::elementNameParse(const ustring& elementName, ustring& prefix, us
 #ifdef E57_DEBUG
 void ImageFile::dump(int indent, std::ostream& os) const
 {
-    impl_->dump(indent, os);
+  impl_->dump(indent, os);
 }
 #else
-void ImageFile::dump(int indent, std::ostream& os) const
-{}
+void ImageFile::dump(int indent, std::ostream& os) const {}
 #endif
 
 /*================*/ /*!
@@ -4943,7 +4985,7 @@ void ImageFile::dump(int indent, std::ostream& os) const
 */ /*================*/
 bool ImageFile::operator==(ImageFile imf2) const
 {
-    return(impl_ == imf2.impl_);
+  return (impl_ == imf2.impl_);
 }
 
 /*================*/ /*!
@@ -4955,56 +4997,57 @@ bool ImageFile::operator==(ImageFile imf2) const
 */ /*================*/
 bool ImageFile::operator!=(ImageFile imf2) const
 {
-    return(impl_ != imf2.impl_);
+  return (impl_ != imf2.impl_);
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-ImageFile::ImageFile(shared_ptr<ImageFileImpl> imfi)
-: impl_(imfi)
-{}
+ImageFile::ImageFile(shared_ptr<ImageFileImpl> imfi) : impl_(imfi) {}
 //! @endcond
 
 //=====================================================================================
-/*================*/ /*!
+/*================*//*!
 @class E57Exception
 @brief   Object thrown by E57 Foundation API functions to communicate the conditions of an error.
 @details
 The E57Exception object communicates information about errors occuring in calls to the E57 Foundation API functions.
-The error information is communicated from the location in the E57 Foundation Implementation where the error was detected to the @c catch statement in the code of the API user.
-The state of E57Exception object has one mandatory field, the errorCode, and several optional fields that can be set depending on the debug level of the E57 Foundation Implementation.
-There are three optional fields that encode the location in the source code of the E57 Foundation Implementation where the error was detected: @c sourceFileName, @c sourceFunctionName, and @c sourceLineNumber.
-Another optional field is the @c context string that is human (or at least programmer) readable, which can capture some variable values that might be useful in debugging.
-The E57Exception class is derived from std::exception.
-So applications that only catch std::exceptions will detect E57Exceptions (but with no information about the origin of the error).
+The error information is communicated from the location in the E57 Foundation Implementation where the error was detected to the @c catch statement in the code
+of the API user. The state of E57Exception object has one mandatory field, the errorCode, and several optional fields that can be set depending on the debug
+level of the E57 Foundation Implementation. There are three optional fields that encode the location in the source code of the E57 Foundation Implementation
+where the error was detected: @c sourceFileName, @c sourceFunctionName, and @c sourceLineNumber. Another optional field is the @c context string that is human
+(or at least programmer) readable, which can capture some variable values that might be useful in debugging. The E57Exception class is derived from
+std::exception. So applications that only catch std::exceptions will detect E57Exceptions (but with no information about the origin of the error).
 
 Many other APIs use error codes (defined integer constants) returned from the API functions to communicate success or failure of the requested command.
-In contrast, the E57 Foundation API uses the C++ exception mechanism to communicate failure (success is communicated by the return of the function without exception).
-E57Exception(E57_SUCCESS) is never thrown.
-The Foundation API ErrorCode is packaged inside the E57Exception.
-The documentation for each function in the Foundation API declares which ErrorCode values (inside an E57Exception) can possibly be thrown by the function.
-Some Foundation API functions do not throw any E57Exceptions, and this is documented by the designation "No E57Exceptions." in the "Exceptions:" section of the function documentation page.
+In contrast, the E57 Foundation API uses the C++ exception mechanism to communicate failure (success is communicated by the return of the function without
+exception). E57Exception(E57_SUCCESS) is never thrown. The Foundation API ErrorCode is packaged inside the E57Exception. The documentation for each function in
+the Foundation API declares which ErrorCode values (inside an E57Exception) can possibly be thrown by the function. Some Foundation API functions do not throw
+any E57Exceptions, and this is documented by the designation "No E57Exceptions." in the "Exceptions:" section of the function documentation page.
 
 If an API function does throw an E57Exception, the API user will rightfully be concerned about the state of all of the API objects.
 There are four categories of guarantee about the state of all objects that the API specifies.
 
 1) <b>All objects unchanged</b> - all API objects are left in their original state before the API function was called.
-This is the default guarantee, so if there is no notation next to the ErrorCode in the "Exceptions:" section of the function documentation page, the this category is implied.
+This is the default guarantee, so if there is no notation next to the ErrorCode in the "Exceptions:" section of the function documentation page, the this
+category is implied.
 
 2) <b>XXX object modified, but consistent</b> - The given object (or objects) have been modified, but are left in a consistent state.
 
-3) <b>XXX object in undocumented state</b> - The given object (or objects) may have been left in an inconsistent state, and the only safe thing to do with them is to call their destructor.
+3) <b>XXX object in undocumented state</b> - The given object (or objects) may have been left in an inconsistent state, and the only safe thing to do with them
+is to call their destructor.
 
-4) <b>All objects in undocumented state</b> - A very serious consistency error has been detected, and the state of all API objects is suspect.  The only safe thing to do is to call their destructors.
+4) <b>All objects in undocumented state</b> - A very serious consistency error has been detected, and the state of all API objects is suspect.  The only safe
+thing to do is to call their destructors.
 
 Almost all of the API functions can throw the following two ErrorCodes: E57_ERROR_IMAGEFILE_NOT_OPEN and E57_ERROR_INTERNAL.
 In some E57 Foundation Implementations, the tree information may be stored on disk rather than in memory.
 If the disk file is closed, even the most basic information may not be available about nodes in the tree.
-So if the ImageFile is closed (by calling ImageFile::close), the API user must be ready for many of the API functions to throw E57Exception(E57_ERROR_IMAGEFILE_NOT_OPEN).
-Secondly, regarding the E57_ERROR_INTERNAL error, there is a lot of consistancy checking in the Reference Implementation, and there may be much more added.
-Even if some API routines do not now throw E57_ERROR_INTERNAL, they could some time in the future, or in different implementations.
-So the right to throw E57_ERROR_INTERNAL is reserved for every API function (except those that by design can't throw E57Exceptions).
+So if the ImageFile is closed (by calling ImageFile::close), the API user must be ready for many of the API functions to throw
+E57Exception(E57_ERROR_IMAGEFILE_NOT_OPEN). Secondly, regarding the E57_ERROR_INTERNAL error, there is a lot of consistancy checking in the Reference
+Implementation, and there may be much more added. Even if some API routines do not now throw E57_ERROR_INTERNAL, they could some time in the future, or in
+different implementations. So the right to throw E57_ERROR_INTERNAL is reserved for every API function (except those that by design can't throw E57Exceptions).
 
-It is strongly recommended that catch statements in user code that call API functions catch E57Exception by reference (i.e. <tt>catch (E57Exception& ex)</tt> and, if necessary, rethrow using the syntax that throws the currently active exception (i.e. <tt>throw;</tt>).
+It is strongly recommended that catch statements in user code that call API functions catch E57Exception by reference (i.e. <tt>catch (E57Exception& ex)</tt>
+and, if necessary, rethrow using the syntax that throws the currently active exception (i.e. <tt>throw;</tt>).
 
 Exceptions other that E57Exception may be thrown by calls to API functions (e.g. std::bad_alloc).
 Production code will likely have catch handlers for these exceptions as well.
@@ -5013,15 +5056,9 @@ Production code will likely have catch handlers for these exceptions as well.
 */
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-E57Exception::E57Exception(ErrorCode ecode, const ustring context,
-                           const char* srcFileName, int srcLineNumber, const char* srcFunctionName)
-: errorCode_(ecode),
-  context_(context),
-  sourceFileName_(srcFileName),
-  sourceFunctionName_(srcFunctionName),
-  sourceLineNumber_(srcLineNumber)
-{
-}
+E57Exception::E57Exception(ErrorCode ecode, const ustring context, const char* srcFileName, int srcLineNumber, const char* srcFunctionName)
+: errorCode_(ecode), context_(context), sourceFileName_(srcFileName), sourceFunctionName_(srcFunctionName), sourceLineNumber_(srcLineNumber)
+{}
 //! @endcond
 
 /*================*/ /*!
@@ -5038,19 +5075,18 @@ The amount of information printed to output stream may depend on whether the E57
 */ /*================*/
 void E57Exception::report(const char* reportingFileName, int reportingLineNumber, const char* reportingFunctionName, std::ostream& os) const
 {
-    os << "**** Got an e57 exception: " << E57Utilities().errorCodeToString(errorCode()) << endl;
+  os << "**** Got an e57 exception: " << E57Utilities().errorCodeToString(errorCode()) << endl;
 #ifdef E57_DEBUG
-    os << "  Debug info: " << endl;
-    os << "    context: "             << context_ << endl;
-    os << "    sourceFunctionName: "   << sourceFunctionName_ << endl;
-    if (reportingFunctionName != NULL)
-        os << "    reportingFunctionName: "   << reportingFunctionName << endl;
+  os << "  Debug info: " << endl;
+  os << "    context: " << context_ << endl;
+  os << "    sourceFunctionName: " << sourceFunctionName_ << endl;
+  if (reportingFunctionName != NULL)
+    os << "    reportingFunctionName: " << reportingFunctionName << endl;
 
-
-    /*** Add a line in error message that a smart editor (gnu emacs) can interpret as a link to the source code: */
-    os << sourceFileName_ << "(" << sourceLineNumber_ << ") : error C" << errorCode_ << ":  <--- occurred on" << endl;
-    if (reportingFileName != NULL)
-        os << reportingFileName << "(" << reportingLineNumber << ") : error C0:  <--- reported on" << endl;
+  /*** Add a line in error message that a smart editor (gnu emacs) can interpret as a link to the source code: */
+  os << sourceFileName_ << "(" << sourceLineNumber_ << ") : error C" << errorCode_ << ":  <--- occurred on" << endl;
+  if (reportingFileName != NULL)
+    os << reportingFileName << "(" << reportingLineNumber << ") : error C0:  <--- reported on" << endl;
 #endif
 }
 
@@ -5063,7 +5099,7 @@ void E57Exception::report(const char* reportingFileName, int reportingLineNumber
 */ /*================*/
 ErrorCode E57Exception::errorCode() const
 {
-    return(errorCode_);
+  return (errorCode_);
 }
 
 /*================*/ /*!
@@ -5079,7 +5115,7 @@ However, in the Reference Implementation, many strings contain a sequence of " V
 */ /*================*/
 ustring E57Exception::context() const
 {
-    return(context_);
+  return (context_);
 }
 
 /*================*/ /*!
@@ -5093,7 +5129,7 @@ Returns "E57 Exception" for all E57Exceptions, no matter what the errorCode.
 */ /*================*/
 const char* E57Exception::what() const throw()
 {
-    return("E57 exception");
+  return ("E57 exception");
 }
 
 /*================*/ /*!
@@ -5108,7 +5144,7 @@ May return the empty string ("") in some E57 Foundation Implementations.
 */ /*================*/
 const char* E57Exception::sourceFileName() const
 {
-    return(sourceFileName_);
+  return (sourceFileName_);
 }
 
 /*================*/ /*!
@@ -5123,7 +5159,7 @@ May return the empty string ("") in some E57 Foundation Implementations.
 */ /*================*/
 const char* E57Exception::sourceFunctionName() const
 {
-    return(sourceFunctionName_);
+  return (sourceFunctionName_);
 }
 
 /*================*/ /*!
@@ -5138,17 +5174,17 @@ May return the empty string ("") in some E57 Foundation Implementations.
 */ /*================*/
 int E57Exception::sourceLineNumber() const
 {
-    return(sourceLineNumber_);
+  return (sourceLineNumber_);
 }
 
-
 //=====================================================================================
-/*================*/ /*!
+/*================*//*!
 @class E57Utilities
 @brief   Utility functions not associated with any object.
 @details
 The E57Utilities encapsulates the miscellaneous functions that aren't associated with an API object.
-Having these functions be member functions of a constructed object allows these functions to be dynamically linked at run-time rather than be statically linked at compile time.
+Having these functions be member functions of a constructed object allows these functions to be dynamically linked at run-time rather than be statically linked
+at compile time.
 */
 
 /*================*/ /*!
@@ -5160,7 +5196,6 @@ Because the construction of the E57Utilities object may be expensive, it is reco
 @throw   ::E57_ERROR_BAD_CONFIGURATION
 @see     Versions.cpp example, ImageFile::ImageFile
 */ /*================*/
-
 
 /*================*/ /*!
 @brief   Get the version of ASTM E57 standard that the API implementation supports, and library id string.
@@ -5175,9 +5210,9 @@ This function returns these identifiers from the underlying implementation.
 */ /*================*/
 void E57Utilities::getVersions(int& astmMajor, int& astmMinor, ustring& libraryId)
 {
-    astmMajor = E57_FORMAT_MAJOR;
-    astmMinor = E57_FORMAT_MINOR;
-    libraryId = E57_LIBRARY_ID;
+  astmMajor = E57_FORMAT_MAJOR;
+  astmMinor = E57_FORMAT_MINOR;
+  libraryId = E57_LIBRARY_ID;
 }
 
 /*================*/ /*!
@@ -5191,118 +5226,121 @@ The errorCode is translated into a one-line English string.
 */ /*================*/
 ustring E57Utilities::errorCodeToString(ErrorCode ecode)
 {
-    switch (ecode) {
-        /*
-         * N.B.  *** When changing error strings here, remember to update the Doxygen strings in E57Foundation.h ****
-         */
-        case E57_SUCCESS:
-            return("operation was successful (E57_SUCCESS)");
-        case E57_ERROR_BAD_CV_HEADER:
-            return("a CompressedVector binary header was bad (E57_ERROR_BAD_CV_HEADER)");
-        case E57_ERROR_BAD_CV_PACKET:
-            return("a CompressedVector binary packet was bad (E57_ERROR_BAD_CV_PACKET)");
-        case E57_ERROR_CHILD_INDEX_OUT_OF_BOUNDS:
-            return("a numerical index identifying a child was out of bounds (E57_ERROR_CHILD_INDEX_OUT_OF_BOUNDS)");
-        case E57_ERROR_SET_TWICE:
-            return("attempted to set an existing child element to a new value (E57_ERROR_SET_TWICE)");
-        case E57_ERROR_HOMOGENEOUS_VIOLATION:
-            return("attempted to add an E57 Element that would have made the children of a homogenous Vector have different types (E57_ERROR_HOMOGENEOUS_VIOLATION)");
-        case E57_ERROR_VALUE_NOT_REPRESENTABLE:
-            return("a value could not be represented in the requested type (E57_ERROR_VALUE_NOT_REPRESENTABLE)");
-        case E57_ERROR_SCALED_VALUE_NOT_REPRESENTABLE:
-            return("after scaling the result could not be represented in the requested type (E57_ERROR_SCALED_VALUE_NOT_REPRESENTABLE)");
-        case E57_ERROR_REAL64_TOO_LARGE:
-            return("a 64 bit IEEE float was too large to store in a 32 bit IEEE float (E57_ERROR_REAL64_TOO_LARGE)");
-        case E57_ERROR_EXPECTING_NUMERIC:
-            return("Expecting numeric representation in user's buffer, found ustring (E57_ERROR_EXPECTING_NUMERIC)");
-        case E57_ERROR_EXPECTING_USTRING:
-            return("Expecting string representation in user's buffer, found numeric (E57_ERROR_EXPECTING_USTRING)");
-        case E57_ERROR_INTERNAL:
-            return("An unrecoverable inconsistent internal state was detected (E57_ERROR_INTERNAL)");
-        case E57_ERROR_BAD_XML_FORMAT:
-            return("E57 primitive not encoded in XML correctly (E57_ERROR_BAD_XML_FORMAT)");
-        case E57_ERROR_XML_PARSER:
-            return("XML not well formed (E57_ERROR_XML_PARSER)");
-        case E57_ERROR_BAD_API_ARGUMENT:
-            return("bad API function argument provided by user (E57_ERROR_BAD_API_ARGUMENT)");
-        case E57_ERROR_FILE_IS_READ_ONLY:
-            return("can't modify read only file (E57_ERROR_FILE_IS_READ_ONLY)");
-        case E57_ERROR_BAD_CHECKSUM:
-            return("checksum mismatch, file is corrupted (E57_ERROR_BAD_CHECKSUM)");
-        case E57_ERROR_OPEN_FAILED:
-            return("open() failed (E57_ERROR_OPEN_FAILED)");
-        case E57_ERROR_CLOSE_FAILED:
-            return("close() failed (E57_ERROR_CLOSE_FAILED)");
-        case E57_ERROR_READ_FAILED:
-            return("read() failed (E57_ERROR_READ_FAILED)");
-        case E57_ERROR_WRITE_FAILED:
-            return("write() failed (E57_ERROR_WRITE_FAILED)");
-        case E57_ERROR_LSEEK_FAILED:
-            return("lseek() failed (E57_ERROR_LSEEK_FAILED)");
-        case E57_ERROR_PATH_UNDEFINED:
-            return("E57 element path well formed but not defined (E57_ERROR_PATH_UNDEFINED)");
-        case E57_ERROR_BAD_BUFFER:
-            return("bad SourceDestBuffer (E57_ERROR_BAD_BUFFER)");
-        case E57_ERROR_NO_BUFFER_FOR_ELEMENT:
-            return("no buffer specified for an element in CompressedVectorNode during write (E57_ERROR_NO_BUFFER_FOR_ELEMENT)");
-        case E57_ERROR_BUFFER_SIZE_MISMATCH:
-            return("SourceDestBuffers not all same size (E57_ERROR_BUFFER_SIZE_MISMATCH)");
-        case E57_ERROR_BUFFER_DUPLICATE_PATHNAME:
-            return("duplicate pathname in CompressedVectorNode read/write (E57_ERROR_BUFFER_DUPLICATE_PATHNAME)");
-        case E57_ERROR_BAD_FILE_SIGNATURE:
-            return("file signature not ""ASTM-E57"" (E57_ERROR_BAD_FILE_SIGNATURE)");
-        case E57_ERROR_UNKNOWN_FILE_VERSION:
-            return("incompatible file version (E57_ERROR_UNKNOWN_FILE_VERSION)");
-        case E57_ERROR_BAD_FILE_LENGTH:
-            return("size in file header not same as actual (E57_ERROR_BAD_FILE_LENGTH)");
-        case E57_ERROR_XML_PARSER_INIT:
-            return("XML parser failed to initialize (E57_ERROR_XML_PARSER_INIT)");
-        case E57_ERROR_DUPLICATE_NAMESPACE_PREFIX:
-            return("namespace prefix already defined (E57_ERROR_DUPLICATE_NAMESPACE_PREFIX)");
-        case E57_ERROR_DUPLICATE_NAMESPACE_URI:
-            return("namespace URI already defined (E57_ERROR_DUPLICATE_NAMESPACE_URI)");
-        case E57_ERROR_BAD_PROTOTYPE:
-            return("bad prototype in CompressedVectorNode (E57_ERROR_BAD_PROTOTYPE)");
-        case E57_ERROR_BAD_CODECS:
-            return("bad codecs in CompressedVectorNode (E57_ERROR_BAD_CODECS)");
-        case E57_ERROR_VALUE_OUT_OF_BOUNDS:
-            return("element value out of min/max bounds (E57_ERROR_VALUE_OUT_OF_BOUNDS)");
-        case E57_ERROR_CONVERSION_REQUIRED:
-            return("conversion required to assign element value, but not requested (E57_ERROR_CONVERSION_REQUIRED)");
-        case E57_ERROR_BAD_PATH_NAME:
-            return("E57 path name is not well formed (E57_ERROR_BAD_PATH_NAME)");
-        case E57_ERROR_NOT_IMPLEMENTED:
-            return("functionality not implemented (E57_ERROR_NOT_IMPLEMENTED)");
-        case E57_ERROR_BAD_NODE_DOWNCAST:
-            return("bad downcast from Node to specific node type (E57_ERROR_BAD_NODE_DOWNCAST)");
-        case E57_ERROR_WRITER_NOT_OPEN:
-            return("CompressedVectorWriter is no longer open (E57_ERROR_WRITER_NOT_OPEN)");
-        case E57_ERROR_READER_NOT_OPEN:
-            return("CompressedVectorReader is no longer open (E57_ERROR_READER_NOT_OPEN)");
-        case E57_ERROR_NODE_UNATTACHED:
-            return("node is not yet attached to tree of ImageFile (E57_ERROR_NODE_UNATTACHED)");
-        case E57_ERROR_ALREADY_HAS_PARENT:
-            return("node already has a parent (E57_ERROR_ALREADY_HAS_PARENT)");
-        case E57_ERROR_DIFFERENT_DEST_IMAGEFILE:
-            return("nodes were constructed with different destImageFiles (E57_ERROR_DIFFERENT_DEST_IMAGEFILE)");
-        case E57_ERROR_IMAGEFILE_NOT_OPEN:
-            return("destImageFile is no longer open (E57_ERROR_IMAGEFILE_NOT_OPEN)");
-        case E57_ERROR_BUFFERS_NOT_COMPATIBLE:
-            return("SourceDestBuffers not compatible with previously given ones (E57_ERROR_BUFFERS_NOT_COMPATIBLE)");
-        case E57_ERROR_TOO_MANY_WRITERS:
-            return("too many open CompressedVectorWriters of an ImageFile (E57_ERROR_TOO_MANY_WRITERS)");
-        case E57_ERROR_TOO_MANY_READERS:
-            return("too many open CompressedVectorReaders of an ImageFile (E57_ERROR_TOO_MANY_READERS)");
-        case E57_ERROR_BAD_CONFIGURATION:
-            return("bad configuration string (E57_ERROR_BAD_CONFIGURATION)");
-        case E57_ERROR_INVARIANCE_VIOLATION:
-            return("class invariance constraint violation in debug mode (E57_ERROR_INVARIANCE_VIOLATION)");
-        /*
-         * N.B.  *** When changing error strings here, remember to update the Doxygen strings in E57Foundation.h ****
-         */
-        default:
-            return("<unknown ErrorCode>");
-    }
+  switch (ecode)
+  {
+  /*
+   * N.B.  *** When changing error strings here, remember to update the Doxygen strings in E57Foundation.h ****
+   */
+  case E57_SUCCESS:
+    return ("operation was successful (E57_SUCCESS)");
+  case E57_ERROR_BAD_CV_HEADER:
+    return ("a CompressedVector binary header was bad (E57_ERROR_BAD_CV_HEADER)");
+  case E57_ERROR_BAD_CV_PACKET:
+    return ("a CompressedVector binary packet was bad (E57_ERROR_BAD_CV_PACKET)");
+  case E57_ERROR_CHILD_INDEX_OUT_OF_BOUNDS:
+    return ("a numerical index identifying a child was out of bounds (E57_ERROR_CHILD_INDEX_OUT_OF_BOUNDS)");
+  case E57_ERROR_SET_TWICE:
+    return ("attempted to set an existing child element to a new value (E57_ERROR_SET_TWICE)");
+  case E57_ERROR_HOMOGENEOUS_VIOLATION:
+    return ("attempted to add an E57 Element that would have made the children of a homogenous Vector have different types (E57_ERROR_HOMOGENEOUS_VIOLATION)");
+  case E57_ERROR_VALUE_NOT_REPRESENTABLE:
+    return ("a value could not be represented in the requested type (E57_ERROR_VALUE_NOT_REPRESENTABLE)");
+  case E57_ERROR_SCALED_VALUE_NOT_REPRESENTABLE:
+    return ("after scaling the result could not be represented in the requested type (E57_ERROR_SCALED_VALUE_NOT_REPRESENTABLE)");
+  case E57_ERROR_REAL64_TOO_LARGE:
+    return ("a 64 bit IEEE float was too large to store in a 32 bit IEEE float (E57_ERROR_REAL64_TOO_LARGE)");
+  case E57_ERROR_EXPECTING_NUMERIC:
+    return ("Expecting numeric representation in user's buffer, found ustring (E57_ERROR_EXPECTING_NUMERIC)");
+  case E57_ERROR_EXPECTING_USTRING:
+    return ("Expecting string representation in user's buffer, found numeric (E57_ERROR_EXPECTING_USTRING)");
+  case E57_ERROR_INTERNAL:
+    return ("An unrecoverable inconsistent internal state was detected (E57_ERROR_INTERNAL)");
+  case E57_ERROR_BAD_XML_FORMAT:
+    return ("E57 primitive not encoded in XML correctly (E57_ERROR_BAD_XML_FORMAT)");
+  case E57_ERROR_XML_PARSER:
+    return ("XML not well formed (E57_ERROR_XML_PARSER)");
+  case E57_ERROR_BAD_API_ARGUMENT:
+    return ("bad API function argument provided by user (E57_ERROR_BAD_API_ARGUMENT)");
+  case E57_ERROR_FILE_IS_READ_ONLY:
+    return ("can't modify read only file (E57_ERROR_FILE_IS_READ_ONLY)");
+  case E57_ERROR_BAD_CHECKSUM:
+    return ("checksum mismatch, file is corrupted (E57_ERROR_BAD_CHECKSUM)");
+  case E57_ERROR_OPEN_FAILED:
+    return ("open() failed (E57_ERROR_OPEN_FAILED)");
+  case E57_ERROR_CLOSE_FAILED:
+    return ("close() failed (E57_ERROR_CLOSE_FAILED)");
+  case E57_ERROR_READ_FAILED:
+    return ("read() failed (E57_ERROR_READ_FAILED)");
+  case E57_ERROR_WRITE_FAILED:
+    return ("write() failed (E57_ERROR_WRITE_FAILED)");
+  case E57_ERROR_LSEEK_FAILED:
+    return ("lseek() failed (E57_ERROR_LSEEK_FAILED)");
+  case E57_ERROR_PATH_UNDEFINED:
+    return ("E57 element path well formed but not defined (E57_ERROR_PATH_UNDEFINED)");
+  case E57_ERROR_BAD_BUFFER:
+    return ("bad SourceDestBuffer (E57_ERROR_BAD_BUFFER)");
+  case E57_ERROR_NO_BUFFER_FOR_ELEMENT:
+    return ("no buffer specified for an element in CompressedVectorNode during write (E57_ERROR_NO_BUFFER_FOR_ELEMENT)");
+  case E57_ERROR_BUFFER_SIZE_MISMATCH:
+    return ("SourceDestBuffers not all same size (E57_ERROR_BUFFER_SIZE_MISMATCH)");
+  case E57_ERROR_BUFFER_DUPLICATE_PATHNAME:
+    return ("duplicate pathname in CompressedVectorNode read/write (E57_ERROR_BUFFER_DUPLICATE_PATHNAME)");
+  case E57_ERROR_BAD_FILE_SIGNATURE:
+    return ("file signature not "
+            "ASTM-E57"
+            " (E57_ERROR_BAD_FILE_SIGNATURE)");
+  case E57_ERROR_UNKNOWN_FILE_VERSION:
+    return ("incompatible file version (E57_ERROR_UNKNOWN_FILE_VERSION)");
+  case E57_ERROR_BAD_FILE_LENGTH:
+    return ("size in file header not same as actual (E57_ERROR_BAD_FILE_LENGTH)");
+  case E57_ERROR_XML_PARSER_INIT:
+    return ("XML parser failed to initialize (E57_ERROR_XML_PARSER_INIT)");
+  case E57_ERROR_DUPLICATE_NAMESPACE_PREFIX:
+    return ("namespace prefix already defined (E57_ERROR_DUPLICATE_NAMESPACE_PREFIX)");
+  case E57_ERROR_DUPLICATE_NAMESPACE_URI:
+    return ("namespace URI already defined (E57_ERROR_DUPLICATE_NAMESPACE_URI)");
+  case E57_ERROR_BAD_PROTOTYPE:
+    return ("bad prototype in CompressedVectorNode (E57_ERROR_BAD_PROTOTYPE)");
+  case E57_ERROR_BAD_CODECS:
+    return ("bad codecs in CompressedVectorNode (E57_ERROR_BAD_CODECS)");
+  case E57_ERROR_VALUE_OUT_OF_BOUNDS:
+    return ("element value out of min/max bounds (E57_ERROR_VALUE_OUT_OF_BOUNDS)");
+  case E57_ERROR_CONVERSION_REQUIRED:
+    return ("conversion required to assign element value, but not requested (E57_ERROR_CONVERSION_REQUIRED)");
+  case E57_ERROR_BAD_PATH_NAME:
+    return ("E57 path name is not well formed (E57_ERROR_BAD_PATH_NAME)");
+  case E57_ERROR_NOT_IMPLEMENTED:
+    return ("functionality not implemented (E57_ERROR_NOT_IMPLEMENTED)");
+  case E57_ERROR_BAD_NODE_DOWNCAST:
+    return ("bad downcast from Node to specific node type (E57_ERROR_BAD_NODE_DOWNCAST)");
+  case E57_ERROR_WRITER_NOT_OPEN:
+    return ("CompressedVectorWriter is no longer open (E57_ERROR_WRITER_NOT_OPEN)");
+  case E57_ERROR_READER_NOT_OPEN:
+    return ("CompressedVectorReader is no longer open (E57_ERROR_READER_NOT_OPEN)");
+  case E57_ERROR_NODE_UNATTACHED:
+    return ("node is not yet attached to tree of ImageFile (E57_ERROR_NODE_UNATTACHED)");
+  case E57_ERROR_ALREADY_HAS_PARENT:
+    return ("node already has a parent (E57_ERROR_ALREADY_HAS_PARENT)");
+  case E57_ERROR_DIFFERENT_DEST_IMAGEFILE:
+    return ("nodes were constructed with different destImageFiles (E57_ERROR_DIFFERENT_DEST_IMAGEFILE)");
+  case E57_ERROR_IMAGEFILE_NOT_OPEN:
+    return ("destImageFile is no longer open (E57_ERROR_IMAGEFILE_NOT_OPEN)");
+  case E57_ERROR_BUFFERS_NOT_COMPATIBLE:
+    return ("SourceDestBuffers not compatible with previously given ones (E57_ERROR_BUFFERS_NOT_COMPATIBLE)");
+  case E57_ERROR_TOO_MANY_WRITERS:
+    return ("too many open CompressedVectorWriters of an ImageFile (E57_ERROR_TOO_MANY_WRITERS)");
+  case E57_ERROR_TOO_MANY_READERS:
+    return ("too many open CompressedVectorReaders of an ImageFile (E57_ERROR_TOO_MANY_READERS)");
+  case E57_ERROR_BAD_CONFIGURATION:
+    return ("bad configuration string (E57_ERROR_BAD_CONFIGURATION)");
+  case E57_ERROR_INVARIANCE_VIOLATION:
+    return ("class invariance constraint violation in debug mode (E57_ERROR_INVARIANCE_VIOLATION)");
+  /*
+   * N.B.  *** When changing error strings here, remember to update the Doxygen strings in E57Foundation.h ****
+   */
+  default:
+    return ("<unknown ErrorCode>");
+  }
 }
 
 /*================*/ /*!
@@ -5324,14 +5362,14 @@ The E57 file header section must be well formed.
 */ /*================*/
 int64_t E57Utilities::rawXmlLength(const ustring& fname)
 {
-    /// Open file for reading.
-    CheckedFile cf(fname, CheckedFile::readOnly);
+  /// Open file for reading.
+  CheckedFile cf(fname, CheckedFile::readOnly);
 
-    /// Get header from file (swabbed if neccesary)
-    E57FileHeader header;
-    ImageFileImpl::readFileHeader(&cf, header);
+  /// Get header from file (swabbed if neccesary)
+  E57FileHeader header;
+  ImageFileImpl::readFileHeader(&cf, header);
 
-    return(header.xmlLogicalLength);
+  return (header.xmlLogicalLength);
 }
 
 /*================*/ /*!
@@ -5361,24 +5399,23 @@ It is not an error to only read a portion of the XML section in a single call.
 */ /*================*/
 void E57Utilities::rawXmlRead(const ustring& fname, uint8_t* buf, int64_t logicalStart, size_t byteCount)
 {
-    ///??? check logicalStart not negative
+  ///??? check logicalStart not negative
 
-    /// Open file for reading.
-    CheckedFile cf(fname, CheckedFile::readOnly);
+  /// Open file for reading.
+  CheckedFile cf(fname, CheckedFile::readOnly);
 
-    /// Get header from file (swabbed if necessary)
-    E57FileHeader header;
-    ImageFileImpl::readFileHeader(&cf, header);
+  /// Get header from file (swabbed if necessary)
+  E57FileHeader header;
+  ImageFileImpl::readFileHeader(&cf, header);
 
-    /// Check start and byteCount ok
-    if (static_cast<uint64_t>(logicalStart) + byteCount > header.xmlLogicalLength) {
-        throw E57_EXCEPTION2(E57_ERROR_BAD_API_ARGUMENT,
-                              "logicalStart=" + toString(logicalStart)
-                            + " byteCount=" + toString(byteCount)
-                            + " headerLength=" + toString(header.xmlLogicalLength));
-    }
+  /// Check start and byteCount ok
+  if (static_cast<uint64_t>(logicalStart) + byteCount > header.xmlLogicalLength)
+  {
+    throw E57_EXCEPTION2(E57_ERROR_BAD_API_ARGUMENT,
+                         "logicalStart=" + toString(logicalStart) + " byteCount=" + toString(byteCount) + " headerLength=" + toString(header.xmlLogicalLength));
+  }
 
-    /// Seek to logical position and read buffer
-    cf.seek(cf.physicalToLogical(header.xmlPhysicalOffset) + logicalStart, CheckedFile::logical);
-    cf.read(reinterpret_cast<char*>(buf), byteCount);
+  /// Seek to logical position and read buffer
+  cf.seek(cf.physicalToLogical(header.xmlPhysicalOffset) + logicalStart, CheckedFile::logical);
+  cf.read(reinterpret_cast<char*>(buf), byteCount);
 }

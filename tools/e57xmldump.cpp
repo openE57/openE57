@@ -30,82 +30,91 @@
 #include <openE57/impl/E57FoundationImpl.h> //??? for exceptions, should be in separate file
 using namespace e57;
 using namespace std;
-//using namespace std::tr1; //??? is this really needed, gives error on gcc <roland>
+// using namespace std::tr1; //??? is this really needed, gives error on gcc <roland>
 
 /// Uncomment the line below to enable debug printing
 //#define VERBOSE 1
 
-struct CommandLineOptions {
-    ustring inputFileName;
+struct CommandLineOptions
+{
+  ustring inputFileName;
 
-            CommandLineOptions(){};
-    void    parse(int argc, char** argv);
+  CommandLineOptions(){};
+  void parse(int argc, char** argv);
 };
-
 
 int main(int argc, char** argv)
 {
-	/// Catch any exceptions thrown.
-	try {
-        CommandLineOptions options;
-        options.parse(argc, argv);
+  /// Catch any exceptions thrown.
+  try
+  {
+    CommandLineOptions options;
+    options.parse(argc, argv);
 
-        const int N = 1024;
-        static uint8_t buf[N];
+    const int      N = 1024;
+    static uint8_t buf[N];
 
-        uint64_t length = E57Utilities().rawXmlLength(options.inputFileName);
+    uint64_t length = E57Utilities().rawXmlLength(options.inputFileName);
 
-        uint64_t start = 0;
-        while (start < length) {
-            size_t count;
-            if (length-start > N)
-                count = N;
-            else
-                count = static_cast<size_t>(length-start);
+    uint64_t start = 0;
+    while (start < length)
+    {
+      size_t count;
+      if (length - start > N)
+        count = N;
+      else
+        count = static_cast<size_t>(length - start);
 
-            /// Read a block of xml text
-            E57Utilities().rawXmlRead(options.inputFileName, buf, start, count);
+      /// Read a block of xml text
+      E57Utilities().rawXmlRead(options.inputFileName, buf, start, count);
 
-            /// Send block to cout
-            cout.write(reinterpret_cast<char*>(buf), count);
+      /// Send block to cout
+      cout.write(reinterpret_cast<char*>(buf), count);
 
-            start += count;
-        }
-    } catch(E57Exception& ex) {
-        ex.report(__FILE__, __LINE__, __FUNCTION__);
-        return -1;
-    } catch (std::exception& ex) {
-        cerr << "Got an std::exception, what=" << ex.what() << endl;
-        return -1;
-    } catch (...) {
-        cerr << "Got an unknown exception" << endl;
-        return -1;
+      start += count;
     }
-    return 0;
+  }
+  catch (E57Exception& ex)
+  {
+    ex.report(__FILE__, __LINE__, __FUNCTION__);
+    return -1;
+  }
+  catch (std::exception& ex)
+  {
+    cerr << "Got an std::exception, what=" << ex.what() << endl;
+    return -1;
+  }
+  catch (...)
+  {
+    cerr << "Got an unknown exception" << endl;
+    return -1;
+  }
+  return 0;
 }
 
 //================================================================
 
 void usage(ustring msg)
 {
-    cerr << "ERROR: " << msg << endl;
-    cerr << "Usage:" << endl;
-    cerr << "    e57xmldump <e57_file>" << endl;
-    cerr << "    For example:" << endl;
-    cerr << "        e57fields scan0001.e57" << endl;
-    cerr << endl;
+  cerr << "ERROR: " << msg << endl;
+  cerr << "Usage:" << endl;
+  cerr << "    e57xmldump <e57_file>" << endl;
+  cerr << "    For example:" << endl;
+  cerr << "        e57fields scan0001.e57" << endl;
+  cerr << endl;
 }
-
 
 void CommandLineOptions::parse(int argc, char** argv)
 {
-    /// Skip program name
-    argc--; argv++;
+  /// Skip program name
+  argc--;
+  argv++;
 
-	if (argc != 1) {
-        usage("wrong number of command line arguments");
-        throw EXCEPTION("wrong number of command line arguments"); //??? UsageException
-    }
+  if (argc != 1)
+  {
+    usage("wrong number of command line arguments");
+    throw EXCEPTION("wrong number of command line arguments"); //??? UsageException
+  }
 
-    inputFileName = argv[0];
+  inputFileName = argv[0];
 }
