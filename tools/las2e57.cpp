@@ -25,7 +25,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-#include <openE57 //LAS/LASReader.h>
+#include <openE57/LAS/LASReader.h>
 #include <openE57/E57Foundation.h>
 #include <openE57/time_conversion/time_conversion.h> // code from Essential GNSS Project
 
