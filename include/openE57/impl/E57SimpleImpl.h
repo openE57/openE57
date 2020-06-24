@@ -399,6 +399,6 @@ virtual ImageFile			GetRawIMF(void);  //!< /return Returns the raw ImageFile
 
 }; //end Writer class
 
-}; //end namespace
+} //end namespace
 
 #endif

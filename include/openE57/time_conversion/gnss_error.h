@@ -62,7 +62,7 @@ ERROR_MSG( msg );
 \since    2008-03-19
 
 */
-#define GNSS_ERROR_MSG( msg )  { const char *themsg = msg; if( themsg != NULL ){ printf( "\n%s,\n%s, %d,\n%s\n", __FILE__, __FUNCTION__, __LINE__, themsg ); }else{ printf( "\n%s,\n%s, %d,\nUnknown Error\n", __FILE__, __FUNCTION__, __LINE__ ); } }
+#define GNSS_ERROR_MSG( msg )  { const char *themsg = msg; if( themsg != NULL ){ printf( "\n%s,\n%s, %d,\n%s\n", __FILE__, __func__, __LINE__, themsg ); }else{ printf( "\n%s,\n%s, %d,\nUnknown Error\n", __FILE__, __func__, __LINE__ ); } }
 
 #ifdef __cplusplus
 }

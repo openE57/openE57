@@ -39,9 +39,6 @@ LASReader::LASReader(string fname)
     if (!fs_.is_open())
         throw EXCEPTION("open failed"); //??? TODO pick standard exception
 
-    /// Initialize all fields in header to zero
-    memset(&hdr_, 0, sizeof(hdr_));
-
     /// Read each header field.
     /// Note file is little endian, so if running on big endian machine need to 
     ///   reverse byte order for fields larger than 1 byte.  See below.

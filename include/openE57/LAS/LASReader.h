@@ -191,9 +191,9 @@ public:
 
 protected: //================
     std::ifstream           fs_;
-    LASPublicHeaderBlock    hdr_;
-    unsigned                nextVLROffset_;
-    unsigned                readVLRCount_;
+    LASPublicHeaderBlock    hdr_{};
+    unsigned                nextVLROffset_{0};
+    unsigned                readVLRCount_{0};
 
     //TODO this doesn't work in MSVC6.0:
     //static const int POINT_DATA_RECORD_MAX_BYTES = 63;  // version dependency!, change if point record gets longer
@@ -202,6 +202,6 @@ protected: //================
     void readPoint(LASPointDataRecord& point);
 };
 
-}; // end namspace e57
+} // end namspace e57
 
 #endif

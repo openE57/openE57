@@ -119,7 +119,7 @@ void	GetSystemTimeFromGPSDateTime(
 	SYSTEMTIME	&sysTim		//!< Windows System Time
 	);
 #endif
-};
+}
 ////////////////////////////////////////////////////////////////////
 //
 //	e57::GetGPSTime
@@ -139,7 +139,7 @@ double             julian_date;  //!< Number of days since noon Universal Time J
 unsigned short     gps_week;     //!< GPS week (0-1024+)            [week]
 double             gps_tow;	  //!< GPS time of week (0-604800.0) [s]
 
-BOOL ret = TIMECONV_GetSystemTime(&utc_year, &utc_month, &utc_day, &utc_hour, &utc_minute, &utc_seconds,
+TIMECONV_GetSystemTime(&utc_year, &utc_month, &utc_day, &utc_hour, &utc_minute, &utc_seconds,
 	&utc_offset, &julian_date, &gps_week, &gps_tow);
 
 double gpsTime = (gps_week * 604800.) + gps_tow;
@@ -151,7 +151,7 @@ double gpsTime = e57::GetGPSDateTimeFromSystemTime(currentSystemTime);
 #endif
 
 return gpsTime;
-};
+}
 #if defined(WIN32)
 ////////////////////////////////////////////////////////////////////
 //
@@ -180,7 +180,7 @@ double	e57::GetGPSDateTimeFromSystemTime(
 	currentTime.LowPart = currentFileTime.dwLowDateTime;
 	currentTime.HighPart = currentFileTime.dwHighDateTime;
 
-	SYSTEMTIME		gpsSystemTime = {1980,1,0,6,0,0,0,0};	//GPS started in Jan. 6, 1980
+	SYSTEMTIME		gpsSystemTime = {1980,1,0,6,0,0,0,0}	//GPS started in Jan. 6, 1980
 	FILETIME		gpsFileTime;
 	SystemTimeToFileTime(&gpsSystemTime,&gpsFileTime);
 
@@ -193,7 +193,7 @@ double	e57::GetGPSDateTimeFromSystemTime(
 	gpsTime += 15.;			//Add utc offset leap seconds
 #endif
 	return gpsTime;
-};
+}
 ////////////////////////////////////////////////////////////////////
 //
 //	e57::GetSystemTimeFromGPSDateTime
@@ -235,7 +235,7 @@ void	e57::GetSystemTimeFromGPSDateTime(
 	gpsTime -= 15.;			//Sub utc offset leap seconds
 	gpsTime *= 10000000.;	//convert to 100 nanoseconds;
 
-	SYSTEMTIME		gpsSystemTime = {1980,1,0,6,0,0,0,0};	//GPS started in Jan. 6, 1980
+	SYSTEMTIME		gpsSystemTime = {1980,1,0,6,0,0,0,0}	//GPS started in Jan. 6, 1980
 	FILETIME		gpsFileTime;
 	SystemTimeToFileTime(&gpsSystemTime,&gpsFileTime);
 
@@ -251,7 +251,7 @@ void	e57::GetSystemTimeFromGPSDateTime(
 	currentFileTime.dwHighDateTime = currentTime.HighPart;
 	FileTimeToSystemTime(&currentFileTime,&sysTim);
 #endif
-};
+}
 #endif
 ////////////////////////////////////////////////////////////////////
 //
@@ -307,7 +307,7 @@ double	e57::GetGPSDateTimeFromUTC(
 	double gpsTime = e57::GetGPSDateTimeFromSystemTime(sysTim);
 #endif
 	return gpsTime;
-};
+}
 ////////////////////////////////////////////////////////////////////
 //
 //	e57::GetUTCFromGPSDateTime
@@ -363,7 +363,7 @@ void	e57::GetUTCFromGPSDateTime(
 	utc_seconds += sysTim.wMilliseconds/1000;
 #endif
 	return;
-};
+}
 ////////////////////////////////////////////////////////////////////
 //
 //	e57::GetNewGuid
@@ -392,7 +392,7 @@ char * e57::GetNewGuid(void)
 	fileGuid[38] = 0;
 #endif
 	return fileGuid;
-};
+}
 ////////////////////////////////////////////////////////////////////
 //
 //	e57::ReaderImpl
@@ -404,13 +404,13 @@ char * e57::GetNewGuid(void)
 	, data3D_(root_.get("/data3D"))
 	, images2D_(root_.get("/images2D"))
 {
-};
+}
 
 	ReaderImpl::~ReaderImpl(void)
 {
 	if(IsOpen())
 		Close();
-};
+}
 
 
 //! This function returns true if the file is open
@@ -419,7 +419,7 @@ bool	ReaderImpl :: IsOpen(void)
 	if( imf_.isOpen())
 		return true;
 	return false;
-};
+}
 
 //! This function closes the file
 bool	ReaderImpl :: Close(void)
@@ -430,7 +430,7 @@ bool	ReaderImpl :: Close(void)
 		return true;
 	}
 	return false;
-};
+}
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -469,7 +469,7 @@ bool	ReaderImpl :: GetE57Root(
 		return true;
 	}
 	return false;
-};
+}
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -479,7 +479,7 @@ bool	ReaderImpl :: GetE57Root(
 int32_t	ReaderImpl :: GetImage2DCount( void)
 {
 	return (int32_t) images2D_.childCount();
-};
+}
 
 //! This function returns the Image2Ds header and positions the cursor
 bool	ReaderImpl :: ReadImage2D( 
@@ -647,7 +647,7 @@ bool	ReaderImpl :: ReadImage2D(
 		return true;
 	}
 	return false;
-};
+}
 //! This function reads one of the image blobs
 int64_t ReaderImpl :: ReadImage2DNode(
 	e57::StructureNode		image,			//!< 1 of 3 projects or the visual
@@ -690,9 +690,9 @@ int64_t ReaderImpl :: ReadImage2DNode(
 			}
 			break;
 		}
-	};
+	}
 	return transferred;
-};
+}
 //! This function reads one of the image blobs
 bool ReaderImpl :: GetImage2DNodeSizes(
 	e57::StructureNode		image,			//!< 1 of 3 projects or the visual
@@ -738,7 +738,7 @@ bool ReaderImpl :: GetImage2DNodeSizes(
 		imageMaskType = E57_PNG_IMAGE_MASK;
 	}
 	return true;
-};
+}
 
 // This function returns the image sizes
 bool		ReaderImpl :: GetImage2DSizes(
@@ -788,9 +788,9 @@ bool		ReaderImpl :: GetImage2DSizes(
 		imageProjection = E57_CYLINDRICAL;
 		StructureNode cylindricalRepresentation(image.get("cylindricalRepresentation"));
 		ret = GetImage2DNodeSizes(cylindricalRepresentation, imageType, imageWidth, imageHeight, imageSize, imageMaskType);
-	};
+	}
 	return ret;
-};
+}
 //! This function reads the block
 int64_t	ReaderImpl :: ReadImage2DData(
 	int32_t					imageIndex,		//!< picture block index
@@ -840,9 +840,9 @@ int64_t	ReaderImpl :: ReadImage2DData(
 			transferred = ReadImage2DNode(cylindricalRepresentation, imageType, pBuffer, start, count);
 		}
 		break;
-	};
+	}
 	return transferred;
-};
+}
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -852,30 +852,30 @@ int64_t	ReaderImpl :: ReadImage2DData(
 int32_t	ReaderImpl :: GetData3DCount( void)
 {
 	return (int32_t) data3D_.childCount();
-};
+}
 
 //! This function returns the file raw E57Root Structure Node
 StructureNode	ReaderImpl :: GetRawE57Root(void)
 {
 	return root_;
-};	//!< /return Returns the E57Root StructureNode
+}	//!< /return Returns the E57Root StructureNode
 
 //! This function returns the raw Data3D Vector Node
 VectorNode		ReaderImpl :: GetRawData3D(void)
 {
 	return data3D_;
-};//!< /return Returns the raw Data3D VectorNode
+}//!< /return Returns the raw Data3D VectorNode
 
 //! This function returns the raw Images2D Vector Node
 VectorNode		ReaderImpl :: GetRawImages2D(void)
 {
 	return images2D_;
-};	//!< /return Returns the raw Image2D VectorNode
+}	//!< /return Returns the raw Image2D VectorNode
 //! This function returns the ram ImageFile Node which is need to add enhancements
 ImageFile		ReaderImpl :: GetRawIMF(void)
 {
 	return imf_;
-};  //!< /return Returns the raw ImageFile
+}  //!< /return Returns the raw ImageFile
 //! This function returns the Data3D header and positions the cursor
 bool	ReaderImpl :: ReadData3D( 
 	int32_t		dataIndex,	//!< This in the index into the images3D vector
@@ -1391,7 +1391,7 @@ bool	ReaderImpl :: ReadData3D(
 		return true;
 	}
 	return false;
-};
+}
 
 //! This function returns the size of the point data
 bool	ReaderImpl :: GetData3DSizes(
@@ -1484,7 +1484,7 @@ bool	ReaderImpl :: GetData3DSizes(
 		return true;
 	}
 	return false;
-};
+}
 
 //! This funtion writes out the group data
 bool	ReaderImpl :: ReadData3DGroupsData(
@@ -1539,7 +1539,7 @@ bool	ReaderImpl :: ReadData3DGroupsData(
 		}
 	}
 	return false;
-};
+}
 
 //! This function returns the point data fields fetched in single call
 //* All the non-NULL buffers in the call below have number of elements = count */
@@ -1664,7 +1664,7 @@ CompressedVectorReader	ReaderImpl :: SetUpData3DPointsData(
 	CompressedVectorReader reader = points.reader(destBuffers);
 
 	return reader;
-};
+}
 
 //#define TEST_EXTENSIONS
 ////////////////////////////////////////////////////////////////////
@@ -1718,20 +1718,20 @@ CompressedVectorReader	ReaderImpl :: SetUpData3DPointsData(
 
 	root_.set("data3D", data3D_);
 	root_.set("images2D", images2D_);
-};
+}
 //! This function is the destructor for the writer class
 	WriterImpl::~WriterImpl(void)
 {
 	if(IsOpen())
 		Close();
-};
+}
 //! This function returns true if the file is open
 bool	WriterImpl :: IsOpen(void)
 {
 	if(imf_.isOpen())
 		return true;
 	return false;
-};
+}
 
 //! This function closes the file
 bool	WriterImpl :: Close(void)
@@ -1742,29 +1742,29 @@ bool	WriterImpl :: Close(void)
 		return true;
 	}
 	return false;
-};
+}
 //! This function returns the file raw E57Root Structure Node
 StructureNode	WriterImpl :: GetRawE57Root(void)
 {
 	return root_;
-};	//!< /return Returns the E57Root StructureNode
+}	//!< /return Returns the E57Root StructureNode
 
 //! This function returns the raw Data3D Vector Node
 VectorNode		WriterImpl :: GetRawData3D(void)
 {
 	return data3D_;
-};//!< /return Returns the raw Data3D VectorNode
+}//!< /return Returns the raw Data3D VectorNode
 
 //! This function returns the raw Images2D Vector Node
 VectorNode		WriterImpl :: GetRawImages2D(void)
 {
 	return images2D_;
-};	//!< /return Returns the raw Image2D VectorNode
+}	//!< /return Returns the raw Image2D VectorNode
 //! This function returns the ram ImageFile Node which is need to add enhancements
 ImageFile		WriterImpl :: GetRawIMF(void)
 {
 	return imf_;
-};  //!< /return Returns the raw ImageFile
+}  //!< /return Returns the raw ImageFile
 ////////////////////////////////////////////////////////////////////
 //
 //	Camera Image picture data
@@ -1954,7 +1954,7 @@ int32_t	WriterImpl :: NewImage2D(
 			FloatNode(imf_, image2DHeader.cylindricalRepresentation.radius));
 	}
 	return pos;
-};
+}
 //! This function reads one of the image blobs
 int64_t WriterImpl :: WriteImage2DNode(
 	e57::StructureNode		image,			//!< 1 of 3 projects or the visual
@@ -1997,9 +1997,9 @@ int64_t WriterImpl :: WriteImage2DNode(
 			}
 			break;
 		}
-	};
+	}
 	return transferred;
-};
+}
 //! This function writes the block
 int64_t	WriterImpl :: WriteImage2DData(
 	int32_t					imageIndex,		//!< picture block index
@@ -2046,9 +2046,9 @@ int64_t	WriterImpl :: WriteImage2DData(
 			transferred = WriteImage2DNode(cylindricalRepresentation, imageType, pBuffer, start, count);
 		}
 		break;
-	};
+	}
 	return transferred;
-};
+}
 
 //! This function sets up the Data3D header and positions the cursor for the binary data
 //* The user needs to config a Data3D structure with all the scanning information before making this call. */
@@ -2584,7 +2584,7 @@ int32_t	WriterImpl :: NewData3D(
     CompressedVectorNode points = CompressedVectorNode(imf_, proto, codecs);
     scan.set("points", points);
 	return pos;
-};
+}
 
 CompressedVectorWriter	WriterImpl :: SetUpData3DPointsData(
 	int32_t		dataIndex,
@@ -2701,7 +2701,7 @@ CompressedVectorWriter	WriterImpl :: SetUpData3DPointsData(
 	CompressedVectorWriter writer = points.writer(sourceBuffers);
 
 	return writer;
-};
+}
 //! This funtion writes out the group data
 bool	WriterImpl :: WriteData3DGroupsData(
 						int32_t		dataIndex,			//!< data block index given by the NewData3D
@@ -2739,7 +2739,7 @@ bool	WriterImpl :: WriteData3DGroupsData(
     writer.close();
 
 	return true;
-};
+}
 
 
 

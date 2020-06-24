@@ -870,5 +870,5 @@ protected: //=================
 }; //end Writer class
 
 
-}; //end namespace
+} //end namespace
 #endif

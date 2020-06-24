@@ -819,17 +819,17 @@ using namespace boost;
 {
 	dateTimeValue = 0.;
 	isAtomicClockReferenced = 0;
-};
+}
 
 	DateTime::~DateTime(void)
 {
-};
+}
 
 void	DateTime::SetCurrentGPSTime(void)
 {
 	dateTimeValue = e57::GetGPSTime();
 	isAtomicClockReferenced = 0;
-};
+}
 
 void	DateTime::SetUTCDateTime(
 	int utc_year,		//!< The year 1900-9999
@@ -844,7 +844,7 @@ void	DateTime::SetUTCDateTime(
 		utc_day, utc_hour, utc_minute, utc_seconds);
 
 	isAtomicClockReferenced = 0;
-};
+}
 
 void	DateTime::GetUTCDateTime(
 	int &utc_year,		//!< The year 1900-9999
@@ -857,7 +857,7 @@ void	DateTime::GetUTCDateTime(
 {
 	e57::GetUTCFromGPSDateTime(dateTimeValue, utc_year, utc_month,
 		utc_day, utc_hour, utc_minute, utc_seconds);
-};
+}
 #if defined(WIN32)
 
 void	DateTime::SetSystemTime(
@@ -866,14 +866,14 @@ void	DateTime::SetSystemTime(
 {
 	dateTimeValue = e57::GetGPSDateTimeFromSystemTime(sysTim);
 	isAtomicClockReferenced = 0;
-};
+}
 
 void	DateTime::GetSystemTime(
 	SYSTEMTIME	&sysTim		//!< Windows System Time
 	)
 {
 	e57::GetSystemTimeFromGPSDateTime(dateTimeValue,sysTim);
-};
+}
 #endif
 ////////////////////////////////////////////////////////////////////
 //
@@ -882,11 +882,11 @@ void	DateTime::GetSystemTime(
 	E57Root::E57Root(void)
 {
 	Reset();
-};
+}
 
 	E57Root::~E57Root(void)
 {
-};
+}
 
 void E57Root::Reset(void)
 {
@@ -896,7 +896,7 @@ void E57Root::Reset(void)
 	creationDateTime.isAtomicClockReferenced = 0;
 	data3DSize = 0;
 	images2DSize = 0;
-};
+}
 ////////////////////////////////////////////////////////////////////
 //
 //	e57::Data3D
@@ -904,11 +904,11 @@ void E57Root::Reset(void)
 	Data3D::Data3D(void)
 {
 	Reset();
-};
+}
 
 	Data3D::~Data3D(void)
 {
-};
+}
 void Data3D::Reset(void)
 {
 	originalGuids.clear();
@@ -1006,7 +1006,7 @@ void Data3D::Reset(void)
 	pointFields.timeMinimum = E57_DOUBLE_MIN;
 	pointFields.timeScaledInteger = E57_NOT_SCALED_USE_FLOAT;	//Default to -1 means IntegerNode, 0. means FloatNode, and >0. means ScaleIntegerNode
 	pointsSize = 0;
-};
+}
 ////////////////////////////////////////////////////////////////////
 //
 //	e57::Image2D
@@ -1014,11 +1014,11 @@ void Data3D::Reset(void)
 	Image2D::Image2D(void)
 {
 	Reset();
-};
+}
 
 	Image2D::~Image2D(void)
 {
-};
+}
 
 void Image2D::Reset(void)
 {
@@ -1067,7 +1067,7 @@ void Image2D::Reset(void)
 	cylindricalRepresentation.pixelWidth = 0;
 	cylindricalRepresentation.principalPointY = 0;
 	cylindricalRepresentation.radius = 0;
-};
+}
 ////////////////////////////////////////////////////////////////////
 //
 //	e57::Reader
@@ -1080,30 +1080,30 @@ void Image2D::Reset(void)
 bool		Reader :: IsOpen(void) const
 {
 	return impl_->IsOpen();
-};
+}
 
 bool		Reader :: Close(void) const
 {
 	return impl_->Close();
-};
+}
 
 bool		Reader :: GetE57Root(
 	E57Root & fileHeader) const
 {
 	return impl_->GetE57Root(fileHeader);
-};
+}
 
 int32_t		Reader :: GetImage2DCount( void) const
 {
 	return impl_->GetImage2DCount();
-};
+}
 
 bool		Reader :: ReadImage2D( 
 	int32_t			imageIndex,
 	Image2D &	image2DHeader) const
 {
 	return impl_->ReadImage2D(imageIndex,image2DHeader);
-};
+}
 
 bool		Reader :: GetImage2DSizes(
 	int32_t					imageIndex,		// This in the index into the image2D vector
@@ -1118,7 +1118,7 @@ bool		Reader :: GetImage2DSizes(
 {
 	return impl_->GetImage2DSizes(imageIndex, imageProjection, imageType,
 		imageWidth, imageHeight, imageSize, imageMaskType, imageVisualType);
-};
+}
 
 int64_t		Reader :: ReadImage2DData(
 	int32_t					imageIndex,		// picture block index
@@ -1130,12 +1130,12 @@ int64_t		Reader :: ReadImage2DData(
 	) const
 {
 	return impl_->ReadImage2DData(imageIndex, imageProjection, imageType, pBuffer, start, count);
-};
+}
 
 int32_t		Reader :: GetData3DCount( void) const
 {
 	return impl_->GetData3DCount();
-};
+}
 
 // This function returns the ram ImageFile Node which is need to add enhancements
 ImageFile		Reader :: GetRawIMF(void)
@@ -1146,19 +1146,19 @@ ImageFile		Reader :: GetRawIMF(void)
 StructureNode	Reader :: GetRawE57Root(void)
 {
 	return impl_->GetRawE57Root();
-};	// /return Returns the E57Root StructureNode
+}	// /return Returns the E57Root StructureNode
 
 // This function returns the raw Data3D Vector Node
 VectorNode		Reader :: GetRawData3D(void)
 {
 	return impl_->GetRawData3D();
-};// /return Returns the raw Data3D VectorNode
+}// /return Returns the raw Data3D VectorNode
 
 // This function returns the raw Images2D Vector Node
 VectorNode		Reader :: GetRawImages2D(void)
 {
 	return impl_->GetRawImages2D();
-};	// /return Returns the raw Image2D VectorNode
+}	// /return Returns the raw Image2D VectorNode
 
 bool		Reader :: ReadData3D( 
 	int32_t		dataIndex,	// This in the index into the images3D vector
@@ -1248,12 +1248,12 @@ CompressedVectorReader	Reader :: SetUpData3DPointsData(
 bool		Writer :: IsOpen(void) const
 {
 	return impl_->IsOpen();
-};
+}
 
 bool		Writer :: Close(void) const
 {
 	return impl_->Close();
-};
+}
 
 // This function returns the ram ImageFile Node which is need to add enhancements
 ImageFile		Writer :: GetRawIMF(void)
@@ -1265,26 +1265,26 @@ ImageFile		Writer :: GetRawIMF(void)
 StructureNode	Writer :: GetRawE57Root(void)
 {
 	return impl_->GetRawE57Root();
-};	// /return Returns the E57Root StructureNode
+}	// /return Returns the E57Root StructureNode
 
 // This function returns the raw Data3D Vector Node
 VectorNode		Writer :: GetRawData3D(void)
 {
 	return impl_->GetRawData3D();
-};// /return Returns the raw Data3D VectorNode
+}// /return Returns the raw Data3D VectorNode
 
 // This function returns the raw Images2D Vector Node
 VectorNode		Writer :: GetRawImages2D(void)
 {
 	return impl_->GetRawImages2D();
-};	// /return Returns the raw Image2D VectorNode
+}	// /return Returns the raw Image2D VectorNode
 
 int32_t		Writer :: NewImage2D( 
 	Image2D &	image2DHeader	// pointer to the Image2D structure to receive the picture information
 	) const						// /return Returns the image2D index
 {
 	return impl_->NewImage2D( image2DHeader);
-};
+}
 
 
 int64_t		Writer :: WriteImage2DData(
@@ -1297,7 +1297,7 @@ int64_t		Writer :: WriteImage2DData(
 	) const									// /return Returns the number of bytes written
 {
 	return impl_->WriteImage2DData( imageIndex, imageType, imageProjection, pBuffer, start, count);
-};
+}
 
 int32_t		Writer :: NewData3D( 
 	Data3D &	data3DHeader,	// pointer to the Data3D structure to receive the image information
@@ -1305,7 +1305,7 @@ int32_t		Writer :: NewData3D(
 	) const							// /return Returns the index of the new scan's data3D block.
 {
 	return impl_->NewData3D( data3DHeader, pointExtension);
-};
+}
 
 // This function writes out blocks of point data
 CompressedVectorWriter	Writer :: SetUpData3DPointsData(
