@@ -6,17 +6,16 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    container:
-      image: conanio/gcc10:latest
-
+    runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v2
-    - name: configure
-      run: mkdir -p build && cd build
-    - name: init dependencies
-      run: conan install ../.. --build=missing
-    - name: cmake configure
-      run: cmake ../.. -DBUILD_EXAMPLES=ON -DBUILD_TOOLS=ON -DCMAKE_BUILD_TYPE=Release
-    - name: make
-      run: make
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - name: install-conan
+        run: pip install conan
+      - name: build library
+        run: |
+            mkdir -p build && cd build
+            conan install ../.. --build=missing
+            cmake ../.. -DBUILD_EXAMPLES=ON -DBUILD_TOOLS=ON -DCMAKE_BUILD_TYPE=Release
+            conan --build .
+  
