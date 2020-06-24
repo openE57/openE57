@@ -18,8 +18,9 @@ jobs:
       - name: build library
         run: |
             ls -l
-            mkdir -p build && cd build
-            conan install ../.. --build=missing
-            cmake ../.. -DBUILD_EXAMPLES=ON -DBUILD_TOOLS=ON -DCMAKE_BUILD_TYPE=Release
+            mkdir -p build 
+            cd build
+            conan install .. --build=missing
+            cmake .. -DBUILD_EXAMPLES=ON -DBUILD_TOOLS=ON -DCMAKE_BUILD_TYPE=Release
             conan --build .
   
