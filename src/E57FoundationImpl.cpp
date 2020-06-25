@@ -292,7 +292,6 @@ ustring NodeImpl::imageFileName()
 void NodeImpl::setParent(shared_ptr<NodeImpl> parent, const ustring& elementName)
 {
   /// don't checkImageFileOpen
-
   /// First check if our parent_ is already set, throw E57_ERROR_ALREADY_HAS_PARENT
   /// The isAttached_ condition is to catch two errors:
   ///    1) if user attempts to use the ImageFile root as a child (e.g. root.set("x", root))
@@ -351,6 +350,7 @@ bool NodeImpl::isTypeConstrained()
     default:
       break;
     }
+
   }
   /// Didn't find any constraining VECTORs or COMPRESSED_VECTORs in path above us, so our type is not constrained.
   return (false);
@@ -806,6 +806,7 @@ void StructureNodeImpl::set(const vector<ustring>& fields, unsigned level, share
       parent->set(fields.at(level), child);
       parent = child;
     }
+
     parent->set(fields.at(level), ni);
   }
 }
@@ -2613,6 +2614,7 @@ void FloatNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf*/, CheckedFile
       cf << "/>\n";
   }
 }
+
 
 #ifdef E57_DEBUG
 void FloatNodeImpl::dump(int indent, ostream& os)
@@ -4854,6 +4856,8 @@ uint64_t CheckedFile::lseek64(int64_t offset, int whence)
   int64_t result = ::lseek64(fd_, offset, whence);
 #elif defined(__APPLE__) || defined(__unix__)
   int64_t result = ::lseek(fd_, offset, whence);
+#else
+#  error "no supported OS platform defined"
 #endif
   if (result < 0)
   {
