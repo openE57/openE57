@@ -31,7 +31,7 @@ else(MSVC)
       $<$<CONFIG:DEBUG>:-g>
       $<$<CONFIG:DEBUG>:-p>
       $<$<CONFIG:DEBUG>:-pg>
-      $<$<CXX_COMPILER_ID:Clang>:-stdlib=libc++>)
+      $<$<COMPILE_LANG_AND_ID:AppleClang,Clang>:-stdlib=libc++>)
 
   list(APPEND compiler_definitions
    $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>>:_FORTIFY_SOURCE=2>
@@ -49,7 +49,7 @@ else(MSVC)
  $<$<CONFIG:DEBUG>:-fsanitize=address>
  $<$<CONFIG:DEBUG>:-fsanitize=leak>
  $<$<CONFIG:DEBUG>:-fsanitize=undefined>
- $<$<NOT:$<COMPILE_LANG_AND_ID:AppleClang>>:-fstack-clash-protection>
+ $<$<NOT:$<CXX_COMPILER_ID:AppleClang>>:-fstack-clash-protection>
  -fstack-protector
  -fbounds-check
  -fPIC)
