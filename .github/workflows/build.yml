@@ -22,10 +22,6 @@ jobs:
       - name: Perform checkout
         uses: actions/checkout@v2
         
-      - name: SonarCloud Scan
-        if: matrix.os == 'ubuntu-20.04'
-        uses: SonarSource/sonarcloud-github-action@v1.3
-        
       - name: Install Python environment 
         uses: actions/setup-python@v2
         
