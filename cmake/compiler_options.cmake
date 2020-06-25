@@ -49,9 +49,9 @@ else(MSVC)
  $<$<CONFIG:DEBUG>:-fsanitize=address>
  $<$<CONFIG:DEBUG>:-fsanitize=leak>
  $<$<CONFIG:DEBUG>:-fsanitize=undefined>
+ $<$<NOT:$<COMPILE_LANG_AND_ID:AppleClang>>:-fstack-clash-protection>
  -fstack-protector
  -fbounds-check
- -fstack-clash-protection
  -fPIC)
 
 endif()
