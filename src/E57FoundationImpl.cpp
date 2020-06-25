@@ -48,7 +48,7 @@
 #  else
 #    error "no supported compiler defined"
 #  endif
-#elif defined(LINUX)
+#elif defined(LINUX) || defined(__APPLE__) || defined(__unix__)
 #  define _LARGEFILE64_SOURCE
 #  define __LARGE64_FILES
 #  include <fcntl.h>
@@ -4850,10 +4850,8 @@ uint64_t CheckedFile::lseek64(int64_t offset, int whence)
 #  else
 #    error "no supported compiler defined"
 #  endif
-#elif defined(LINUX)
-  int64_t result = ::lseek64(fd_, offset, whence);
 #else
-#  error "no supported OS platform defined"
+  int64_t result = ::lseek64(fd_, offset, whence);
 #endif
   if (result < 0)
   {

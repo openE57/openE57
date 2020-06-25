@@ -796,7 +796,7 @@ DEALINGS IN THE SOFTWARE.
 #  else
 #    error "no supported compiler defined"
 #  endif
-#elif defined(LINUX)
+#elif defined(LINUX) || defined(__APPLE__) || defined(__unix__)
 #  define _LARGEFILE64_SOURCE
 #  define __LARGE64_FILES
 #  include <sys/types.h>
