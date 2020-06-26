@@ -415,12 +415,12 @@ struct GroupRecord
   int64_t     startIndex;
   BoundingBox bbox;
 
-  GroupRecord(int64_t id);
+  explicit GroupRecord(int64_t id = 0);
   void addMember(double coords[3], int64_t recordIndex);
   void dump(int indent = 0, std::ostream& os = std::cout);
 };
 
-GroupRecord::GroupRecord(int64_t id_arg = 0) : id(id_arg), count(0), startIndex(0), bbox() {}
+GroupRecord::GroupRecord(int64_t id_arg) : id(id_arg), count(0), startIndex(0), bbox() {}
 
 void GroupRecord::addMember(double coords[3], int64_t recordIndex)
 {
