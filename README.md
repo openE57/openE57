@@ -1,5 +1,7 @@
 # openE57
 
+![openE57](https://github.com/madduci/openE57/workflows/openE57/badge.svg)
+
 openE57 is a forked version of the original LibE57 (http://www.libe57.org) project, with the intent to refine and optimize the source code in a modern C++ idiomatic way and remove unnecessary dependencies (e.g. Boost) in favour of the C++ Standard Library.
 
 The library is compiled as C++17, since some of following language intrinsics and libraries are used:
