@@ -30,28 +30,28 @@ else(MSVC)
       $<$<CONFIG:DEBUG>:-O0>
       $<$<CONFIG:DEBUG>:-g>
       $<$<CONFIG:DEBUG>:-p>
-      $<$<CONFIG:DEBUG>:-pg>
-      $<$<COMPILE_LANG_AND_ID:AppleClang,Clang>:-stdlib=libc++>)
+      $<$<CONFIG:DEBUG>:-pg>)
 
   list(APPEND compiler_definitions
    $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>>:_FORTIFY_SOURCE=2>
   )
-
+ 
  list(APPEND linker_flags
  -Wl,-z,defs
  -Wl,-z,now
  -Wl,-z,relro
- $<$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>:-Wl,-pie>
- $<$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>:-fpie>
- $<$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>:-pipe>
- $<$<BOOL:${BUILD_SHARED_LIBS}>:-static-libstdc++>
+ # Clang doesn't support these hardening flags
+ $<$<AND:$<NOT:$<CXX_COMPILER_ID:AppleClang>>,$<NOT:$<CXX_COMPILER_ID:Clang>>,$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>>:-Wl,-pie>
+ $<$<AND:$<NOT:$<CXX_COMPILER_ID:AppleClang>>,$<NOT:$<CXX_COMPILER_ID:Clang>>,$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>>:-fpie>
+ $<$<AND:$<NOT:$<CXX_COMPILER_ID:AppleClang>>,$<NOT:$<CXX_COMPILER_ID:Clang>>,$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>>:-pipe>
+ $<$<AND:$<NOT:$<CXX_COMPILER_ID:AppleClang>>,$<NOT:$<CXX_COMPILER_ID:Clang>>,$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>>:-static-libstdc++>
  $<$<CONFIG:DEBUG>:-fno-omit-frame-pointer>
  $<$<CONFIG:DEBUG>:-fsanitize=address>
  $<$<CONFIG:DEBUG>:-fsanitize=leak>
  $<$<CONFIG:DEBUG>:-fsanitize=undefined>
- $<$<NOT:$<CXX_COMPILER_ID:AppleClang>>:-fstack-clash-protection>
+ $<$<AND:$<NOT:$<CXX_COMPILER_ID:AppleClang>>,$<NOT:$<CXX_COMPILER_ID:Clang>>>:-fstack-clash-protection>
+ $<$<AND:$<NOT:$<CXX_COMPILER_ID:AppleClang>>,$<NOT:$<CXX_COMPILER_ID:Clang>>>:-fbounds-check>
  -fstack-protector
- -fbounds-check
  -fPIC)
 
 endif()
