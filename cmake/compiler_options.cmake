@@ -37,9 +37,9 @@ else(MSVC)
   )
  
  list(APPEND linker_flags
- -Wl,-z,defs
- -Wl,-z,now
- -Wl,-z,relro
+ $<$<NOT:$<CXX_COMPILER_ID:AppleClang>>:-Wl,-z,defs>
+ $<$<NOT:$<CXX_COMPILER_ID:AppleClang>>:-Wl,-z,now>
+ $<$<NOT:$<CXX_COMPILER_ID:AppleClang>>:-Wl,-z,relro>
  # Clang doesn't support these hardening flags
  $<$<AND:$<NOT:$<CXX_COMPILER_ID:AppleClang>>,$<NOT:$<CXX_COMPILER_ID:Clang>>,$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>>:-Wl,-pie>
  $<$<AND:$<NOT:$<CXX_COMPILER_ID:AppleClang>>,$<NOT:$<CXX_COMPILER_ID:Clang>>,$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>>:-fpie>
