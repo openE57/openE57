@@ -1,8 +1,10 @@
-2020-06-22 madduci
+2020-06-26 madduci
     added support for conan, reorganisation of code
-    update codebase to c++17
-    updated CMake project
+    added support for clang and apple clang compilers
+    improved code formatting with specific clang-format
+    improvode CMake project with options and flags
     added LICENSE, CONTRIBUTORS files
+    updated to use latest version of Boost, Xerces and ICU
 2013-08-29 roland_schwarz
 	SVN commit test
 2013-04-03 roland_schwarz
