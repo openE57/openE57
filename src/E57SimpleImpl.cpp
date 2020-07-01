@@ -262,11 +262,11 @@ double e57::GetGPSDateTimeFromUTC(int   utc_year,   //!< The year 1900-9999
   unsigned short gps_week;    //!< GPS week (0-1024+)            [week]
   double         gps_tow;     //!< GPS time of week (0-604800.0) [s]
 
-  BOOL result = TIMECONV_GetJulianDateFromUTCTime(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds, &julian_date);
+  TIMECONV_GetJulianDateFromUTCTime(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds, &julian_date);
 
-  result = TIMECONV_DetermineUTCOffset(julian_date, &utc_offset);
+  TIMECONV_DetermineUTCOffset(julian_date, &utc_offset);
 
-  result = TIMECONV_GetGPSTimeFromJulianDate(julian_date, utc_offset, &gps_week, &gps_tow);
+  TIMECONV_GetGPSTimeFromJulianDate(julian_date, utc_offset, &gps_week, &gps_tow);
 
   double gpsTime = (gps_week * 604800.) + gps_tow;
 
@@ -310,7 +310,7 @@ void e57::GetUTCFromGPSDateTime(double gpsTime,    //!< GPS Date Time
   gps_week = ((int)floor(gpsTime)) / 604800;
   gps_tow  = gpsTime - gps_week * 604800.;
 
-  BOOL result = TIMECONV_GetUTCTimeFromGPSTime(gps_week, gps_tow, &utc_year, &utc_month, &utc_day, &utc_hour, &utc_minute, &utc_seconds);
+  TIMECONV_GetUTCTimeFromGPSTime(gps_week, gps_tow, &utc_year, &utc_month, &utc_day, &utc_hour, &utc_minute, &utc_seconds);
 
   utc_Year   = utc_year;
   utc_Month  = utc_month;
@@ -611,6 +611,9 @@ int64_t ReaderImpl ::ReadImage2DNode(e57::StructureNode image,     //!< 1 of 3 p
     }
     break;
   }
+  case E57_NO_IMAGE:
+  default:
+    break;
   }
   return transferred;
 }
@@ -759,6 +762,10 @@ int64_t ReaderImpl ::ReadImage2DData(int32_t                imageIndex,      //!
       StructureNode cylindricalRepresentation(image.get("cylindricalRepresentation"));
       transferred = ReadImage2DNode(cylindricalRepresentation, imageType, pBuffer, start, count);
     }
+    break;
+
+  case E57_NO_PROJECTION:
+  default:
     break;
   }
   return transferred;
@@ -1480,8 +1487,6 @@ CompressedVectorReader ReaderImpl ::SetUpData3DPointsData(
   int8_t* isTimeStampInvalid, //!< Value = 0 if the timeStamp is considered valid, 1 otherwise
   bool (*pointDataExtension)(ImageFile imf, StructureNode proto, int protoIndex, vector<SourceDestBuffer>& destBuffers))
 {
-  int64_t readCount = 0;
-
   StructureNode        scan(data3D_.get(dataIndex));
   CompressedVectorNode points(scan.get("points"));
   StructureNode        proto(points.prototype());
@@ -1831,6 +1836,9 @@ int64_t WriterImpl ::WriteImage2DNode(e57::StructureNode image,     //!< 1 of 3 
     }
     break;
   }
+  case E57_NO_IMAGE:
+  default:
+    break;
   }
   return transferred;
 }
@@ -1879,6 +1887,9 @@ int64_t WriterImpl ::WriteImage2DData(int32_t                imageIndex,      //
       transferred = WriteImage2DNode(cylindricalRepresentation, imageType, pBuffer, start, count);
     }
     break;
+  case E57_NO_PROJECTION:
+  default:
+    break;
   }
   return transferred;
 }
@@ -1892,8 +1903,8 @@ int32_t WriterImpl ::NewData3D(Data3D& data3DHeader,                            
 {
   int32_t pos = -1;
 
-  int32_t row = (int32_t)data3DHeader.indexBounds.rowMaximum - (int32_t)data3DHeader.indexBounds.rowMinimum + 1;
-  int32_t col = (int32_t)data3DHeader.indexBounds.columnMaximum - (int32_t)data3DHeader.indexBounds.columnMinimum + 1;
+  // int32_t row = (int32_t)data3DHeader.indexBounds.rowMaximum - (int32_t)data3DHeader.indexBounds.rowMinimum + 1;
+  // int32_t col = (int32_t)data3DHeader.indexBounds.columnMaximum - (int32_t)data3DHeader.indexBounds.columnMinimum + 1;
 
   if (data3DHeader.guid.empty())
     return -1;
