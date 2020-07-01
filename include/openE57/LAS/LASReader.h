@@ -87,43 +87,38 @@ struct LASPublicHeaderBlock
 
 //              file format#:  1.0 1.1 1.0 1.1
 struct LASPointDataRecord
-{                                       //              point format#: pf0 pf0 pf1 pf1 pf2 pf3 pf4 pf5
-  int32_t  x;                           // required, 32  32  32  32  32  32  32  32
-  int32_t  y;                           // required, 32  32  32  32  32  32  32  32
-  int32_t  z;                           // required, 32  32  32  32  32  32  32  32
-  uint16_t intensity;                   // optional, 16  16  16  16  16  16  16  16
-  uint8_t  returnNumber;                // required,  3   3   3   3   3   3   3   3
-  uint8_t  numberOfReturns;             // required,  3   3   3   3   3   3   3   3
-  bool     scanDirectionFlag;           // required,  1   1   1   1   1   1   1   1
-  bool     edgeOfFlightLine;            // required,  1   1   1   1   1   1   1   1
-  uint8_t  classification;              // required,  8   5   8   5   5   5   5   5
-  bool     synthetic;                   // required,      1       1   1   1   1   1
-  bool     keyPoint;                    // required,      1       1   1   1   1   1
-  bool     withheld;                    // required,      1       1   1   1   1   1
-  int8_t   scanAngleRank;               // required,  8   8   8   8   8   8   8   8
-  uint8_t  fileMarker;                  // optional,  8       8
-  uint16_t userBitField;                // optional  16      16
-  uint8_t  userData;                    // optional       8       8   8   8   8   8
-  uint16_t pointSourceId;               // required      16      16  16  16  16  16
-  double   gpsTime;                     // required          64  64      64  64  64
-  uint16_t red;                         // required                  16  16      16
-  uint16_t green;                       // required                  16  16      16
-  uint16_t blue;                        // required                  16  16      16
-  uint8_t  wavePacketDescriptorIndex;   // required                           8   8
-  uint64_t byteOffsetToWaveformData;    // required                          64  64
-  uint32_t waveformPacketSizeInBytes;   // required                          32  32
-  float    returnPointWaveformLocation; // required                          32  32
-  float    xT;                          // required                          32  32
-  float    yT;                          // required                          32  32
-  float    zT;                          // required                          32  32
+{                                            //              point format#: pf0 pf0 pf1 pf1 pf2 pf3 pf4 pf5
+  int32_t  x{0};                             // required, 32  32  32  32  32  32  32  32
+  int32_t  y{0};                             // required, 32  32  32  32  32  32  32  32
+  int32_t  z{0};                             // required, 32  32  32  32  32  32  32  32
+  uint16_t intensity{0};                     // optional, 16  16  16  16  16  16  16  16
+  uint8_t  returnNumber{0};                  // required,  3   3   3   3   3   3   3   3
+  uint8_t  numberOfReturns{0};               // required,  3   3   3   3   3   3   3   3
+  bool     scanDirectionFlag{false};         // required,  1   1   1   1   1   1   1   1
+  bool     edgeOfFlightLine{false};          // required,  1   1   1   1   1   1   1   1
+  uint8_t  classification{0};                // required,  8   5   8   5   5   5   5   5
+  bool     synthetic{false};                 // required,      1       1   1   1   1   1
+  bool     keyPoint{false};                  // required,      1       1   1   1   1   1
+  bool     withheld{false};                  // required,      1       1   1   1   1   1
+  int8_t   scanAngleRank{0};                 // required,  8   8   8   8   8   8   8   8
+  uint8_t  fileMarker{0};                    // optional,  8       8
+  uint16_t userBitField{0};                  // optional  16      16
+  uint8_t  userData{0};                      // optional       8       8   8   8   8   8
+  uint16_t pointSourceId{0};                 // required      16      16  16  16  16  16
+  double   gpsTime{0.0};                     // required          64  64      64  64  64
+  uint16_t red{0};                           // required                  16  16      16
+  uint16_t green{0};                         // required                  16  16      16
+  uint16_t blue{0};                          // required                  16  16      16
+  uint8_t  wavePacketDescriptorIndex{0};     // required                           8   8
+  uint64_t byteOffsetToWaveformData{0};      // required                          64  64
+  uint32_t waveformPacketSizeInBytes{0};     // required                          32  32
+  float    returnPointWaveformLocation{0.0}; // required                          32  32
+  float    xT{0.0};                          // required                          32  32
+  float    yT{0.0};                          // required                          32  32
+  float    zT{0.0};                          // required                          32  32
 
   /// Diagnostic functions:
   void dump(int indent = 0, std::ostream& os = std::cout);
-
-  LASPointDataRecord()
-  {
-    memset(this, 0, sizeof(*this));
-  };
 };
 
 struct LASVariableRecordLengthHeader

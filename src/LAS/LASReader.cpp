@@ -254,9 +254,6 @@ void LASReader::readPoint(LASPointDataRecord& point)
   if (!fs_.is_open())
     throw EXCEPTION("file not open"); //??? TODO pick standard exception
 
-  /// Initialize all fields in output point record to zero
-  memset(&point, 0, sizeof(LASPointDataRecord));
-
   /// A buffer on the stack big enough to hold a whole point record from file
   unsigned char buf[POINT_DATA_RECORD_MAX_BYTES];
 
@@ -569,7 +566,7 @@ void LASReader::dump(int indent, std::ostream& os)
   unsigned i;
   for (i = 0; i < hdr_.numberOfPointRecords && i < 4; i++)
   {
-    LASPointDataRecord pt;
+    LASPointDataRecord pt{};
     readPoints(&pt, i, 1);
     os << space(indent) << "Point[" << i << "]:" << endl;
     pt.dump(4, os);

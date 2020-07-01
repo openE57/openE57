@@ -237,6 +237,13 @@ int main(int argc, char* argv[])
                 buf.push_back(vector<ustring>(buf_size));
                 if (!opt.count("format"))
                   fmt += comma + "%s";
+                break;
+              case e57::E57_STRUCTURE:
+              case e57::E57_VECTOR:
+              case e57::E57_COMPRESSED_VECTOR:
+              case e57::E57_BLOB:
+              default:
+                break;
               }
               if (comma.empty())
                 comma = ",";
@@ -358,7 +365,7 @@ int main(int argc, char* argv[])
           format tfmt(fmt);
           tfmt.exceptions(all_error_bits ^ too_many_args_bit);
           out << pointrecord << endl; // put the header line into csv
-          while (count = rd.read())
+          while ((count = rd.read()))
           {
             total_count += count;
             for (size_t i = 0; i < count; ++i)
