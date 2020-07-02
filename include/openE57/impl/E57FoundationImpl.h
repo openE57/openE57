@@ -1044,12 +1044,12 @@ struct DataPacketHeader
 //================================================================
 
 struct DataPacket
-{                      /// Note this is full sized packet, not just header
-  uint8_t  packetType; // = E57_DATA_PACKET
-  uint8_t  packetFlags;
-  uint16_t packetLogicalLengthMinus1;
-  uint16_t bytestreamCount;
-  uint8_t  payload[64 * 1024 - 6]; // pad packet to full length, can't spec layout because depends bytestream data
+{                         /// Note this is full sized packet, not just header
+  uint8_t  packetType{0}; // = E57_DATA_PACKET
+  uint8_t  packetFlags{0};
+  uint16_t packetLogicalLengthMinus1{0};
+  uint16_t bytestreamCount{0};
+  uint8_t  payload[64 * 1024 - 6]{}; // pad packet to full length, can't spec layout because depends bytestream data
 
   DataPacket();
   void     verify(unsigned bufferLength = 0);
@@ -1184,6 +1184,7 @@ protected: //=================
 
   //??? no default ctor, copy, assignment?
 
+  bool                                      isOpen_;
   std::vector<SourceDestBuffer>             sbufs_;
   std::shared_ptr<CompressedVectorNodeImpl> cVector_;
   std::shared_ptr<NodeImpl>                 proto_;
@@ -1192,7 +1193,6 @@ protected: //=================
   SeekIndex                             seekIndex_;
   DataPacket                            dataPacket_;
 
-  bool     isOpen_;
   uint64_t sectionHeaderLogicalStart_; /// start of CompressedVector binary section
   uint64_t sectionLogicalLength_;      /// total length of CompressedVector binary section
   uint64_t dataPhysicalOffset_;        /// start of first data packet

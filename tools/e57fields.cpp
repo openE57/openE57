@@ -53,7 +53,7 @@ ustring decimalString(uint64_t x)
   std::ostringstream ss;
   ss << x;
   return (ss.str());
-};
+}
 
 struct CommandLineOptions
 {
@@ -526,9 +526,8 @@ void findAllNodes(Node n, vector<Node>& allNodes)
 
   allNodes.push_back(n);
 
-  switch (n.type())
+  if (E57_STRUCTURE == n.type())
   {
-  case E57_STRUCTURE: {
     StructureNode s(n);
 
     /// Recursively visit child nodes
@@ -536,16 +535,14 @@ void findAllNodes(Node n, vector<Node>& allNodes)
     for (uint64_t i = 0; i < childCount; i++)
       findAllNodes(s.get(i), allNodes);
   }
-  break;
-  case E57_VECTOR: {
+  else if (E57_VECTOR == n.type())
+  {
     VectorNode v(n);
 
     /// Recursively visit child nodes
     uint64_t childCount = v.childCount();
     for (uint64_t i = 0; i < childCount; i++)
       findAllNodes(v.get(i), allNodes);
-  }
-  break;
   }
 }
 
@@ -850,7 +847,7 @@ void printExtrema(const StatEntry* stats, ustring elementName, ustring typeName,
 
 //================================================================
 
-void printStats(CommandLineOptions& options, Statistics& stats, ImageFile imf)
+void printStats(CommandLineOptions& options, Statistics& stats, ImageFile /*imf*/)
 {
   //??? other info here?
   cout << "Summary of file: " << options.inputFileName << endl;

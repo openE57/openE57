@@ -111,19 +111,18 @@ inline std::string toString(double x)   {std::ostringstream ss; ss << x; return(
 inline std::string toString(bool x)     {std::ostringstream ss; ss << x; return(ss.str());}
 #endif
 
-/// Don't do any work if past specified maximumum message count (including expanding arguments).
+/// Don't do any work if past specified maximum message count (including expanding arguments).
 /// Note: the do{}while(0) loop eats the trailing semicolon after macro expansion of "PRINT_MESSAGE(...);"
 /// printMessage is called when messageCount is < 2 beyond allowed to allow suppression message to be printed.
 #define PRINT_MESSAGE(messageNumber, n, msg, cvp, index)                                                                                                       \
-  do                                                                                                                                                           \
   {                                                                                                                                                            \
-    if ((messageNumber) >= 0 && (messageNumber) < E57ValidatorOptions::MessageNumberCount)                                                                     \
+    if constexpr ((messageNumber) >= 0 && (messageNumber) < E57ValidatorOptions::MessageNumberCount)                                                                     \
     {                                                                                                                                                          \
       messageCount_[(messageNumber)]++;                                                                                                                        \
       if (messageCount_[(messageNumber)] < options_.messagesAllowed[(messageNumber)] + 2)                                                                      \
         printMessage((messageNumber), (n), (msg), (cvp), (index));                                                                                             \
     }                                                                                                                                                          \
-  } while (0)
+  } 
 
 //================================================================
 
@@ -301,9 +300,9 @@ void CommandLineOptions::parse(int argc, char** argv)
         if (argv[0][6] != '=' || strlen(argv[0]) == 7)
           usage(ustring("bad option format in flag ") + argv[0]);
 
-        for (size_t j = 7; j < strlen(argv[0]); j++)
+        for (size_t jj = 7; jj < strlen(argv[0]); jj++)
         {
-          if (argv[0][j] < '0' || '9' < argv[0][j])
+          if (argv[0][jj] < '0' || '9' < argv[0][jj])
             usage(ustring("bad decimal number in flag") + argv[0]);
         }
         allowed = atoi(&argv[0][7]);
@@ -687,14 +686,14 @@ bool BoundingBox::contains(double coords[3])
     for (unsigned i = 0; i < 3; i++)
     {
       if (coords[i] < minimum[i])
-        return (false);
+        return false;
       if (coords[i] > maximum[i])
-        return (false);
+        return false;
     }
-    return (true);
+    return true;
   }
   else
-    return (false);
+    return false;
 }
 
 void BoundingBox::dump(int indent, std::ostream& os)
@@ -888,8 +887,7 @@ LineGrouping::LineGrouping(Node data3DNode)
       gbufs.sphericalBoundsElevationMinimum = new double[gbufs.elementCount];
       gbufs.sphericalBoundsElevationMaximum = new double[gbufs.elementCount];
     }
-    else
-      ; /// Ignore any unknown child element names
+    /// Ignore any unknown child element names
   }
 
   // printf("calling groups read\n"); //???
@@ -992,9 +990,9 @@ public:
 
   //================
 protected:
-  std::ostream&       os_;
   E57ValidatorOptions options_;
   uint64_t            messageCount_[E57ValidatorOptions::MessageNumberCount];
+  std::ostream&       os_;
 
   bool validateInteger(Node n, CompressedVectorNode* cvp = NULL, uint64_t index = 0);
   bool validateScaledInteger(Node n, CompressedVectorNode* cvp = NULL, uint64_t index = 0);
@@ -1097,7 +1095,7 @@ bool E57Validator::validateInteger(Node n, CompressedVectorNode* cvp, uint64_t i
   if (n.type() != E57_INTEGER)
   {
     PRINT_MESSAGE(1000 /*???*/, n, "expecting Integer type", cvp, index);
-    return (false);
+    return false;
   }
 
   IntegerNode in    = IntegerNode(n);
@@ -1107,19 +1105,19 @@ bool E57Validator::validateInteger(Node n, CompressedVectorNode* cvp, uint64_t i
   if (value > in.maximum())
   {
     PRINT_MESSAGE(1000 /*???*/, n, "Integer is greater than declared maximum", cvp, index);
-    return (false);
+    return false;
   }
   if (value < in.minimum())
   {
     PRINT_MESSAGE(1000 /*???*/, n, "Integer is less than declared minimum", cvp, index);
-    return (false);
+    return false;
   }
 
   /// Check if anything suspicious
   if (value > 1e12)
     PRINT_MESSAGE(3000 /*???*/, n, "magnitude of Integer value is suspiciously large: " + toString(value), cvp, index);
 
-  return (true);
+  return true;
 }
 
 bool E57Validator::validateScaledInteger(Node n, CompressedVectorNode* cvp, uint64_t index)
@@ -1127,7 +1125,7 @@ bool E57Validator::validateScaledInteger(Node n, CompressedVectorNode* cvp, uint
   if (n.type() != E57_SCALED_INTEGER)
   {
     PRINT_MESSAGE(1000 /*???*/, n, "expecting ScaledInteger type", cvp, index);
-    return (false);
+    return false;
   }
 
   ScaledIntegerNode sin         = ScaledIntegerNode(n);
@@ -1140,19 +1138,19 @@ bool E57Validator::validateScaledInteger(Node n, CompressedVectorNode* cvp, uint
   if (rawValue > sin.maximum())
   {
     PRINT_MESSAGE(1000 /*???*/, n, "ScaledInteger rawValue is greater than declared maximum: " + toString(rawValue), cvp, index);
-    return (false);
+    return false;
   }
   if (rawValue < sin.minimum())
   {
     PRINT_MESSAGE(1000 /*???*/, n, "ScaledInteger rawValue is less than declared minimum: " + toString(rawValue), cvp, index);
-    return (false);
+    return false;
   }
 
   /// Is scale illegal?
   if (scale == 0.0)
   {
     PRINT_MESSAGE(1000 /*???*/, n, "ScaledInteger scale is zero", cvp, index);
-    return (false);
+    return false;
   }
 
   /// Check if anything suspicious
@@ -1171,7 +1169,7 @@ bool E57Validator::validateScaledInteger(Node n, CompressedVectorNode* cvp, uint
   if (scaledValue != 0 && fabs(scaledValue) < 1e-12)
     PRINT_MESSAGE(3000 /*???*/, n, "ScaledInteger scaledValue is suspiciously close to zero: " + toString(scaledValue), cvp, index);
 
-  return (true);
+  return true;
 }
 
 bool E57Validator::validateFloat(Node n, CompressedVectorNode* cvp, uint64_t index)
@@ -1179,7 +1177,7 @@ bool E57Validator::validateFloat(Node n, CompressedVectorNode* cvp, uint64_t ind
   if (n.type() != E57_FLOAT)
   {
     PRINT_MESSAGE(1000 /*???*/, n, "expecting Float type", cvp, index);
-    return (false);
+    return false;
   }
 
   FloatNode fn    = FloatNode(n);
@@ -1189,12 +1187,12 @@ bool E57Validator::validateFloat(Node n, CompressedVectorNode* cvp, uint64_t ind
   if (value > fn.maximum())
   {
     PRINT_MESSAGE(1000 /*???*/, n, "Float is greater than declared maximum: " + toString(value), cvp, index);
-    return (false);
+    return false;
   }
   if (value < fn.minimum())
   {
     PRINT_MESSAGE(1000 /*???*/, n, "Float is less than declared maximum: " + toString(value), cvp, index);
-    return (false);
+    return false;
   }
 
   /// Check if anything suspicious
@@ -1203,23 +1201,23 @@ bool E57Validator::validateFloat(Node n, CompressedVectorNode* cvp, uint64_t ind
   if (value != 0.0 && fabs(value) < 1e-12)
     PRINT_MESSAGE(3000 /*???*/, n, "magnitude of Float value is suspiciously close to zero: " + toString(value), cvp, index);
 
-  return (true);
+  return true;
 }
 
 bool E57Validator::validateDoubleFloat(Node n, CompressedVectorNode* cvp, uint64_t index)
 {
   if (!validateFloat(n))
-    return (false);
+    return false;
 
   FloatNode fn    = FloatNode(n);
   double    value = fn.value(); // Added by SC
   if (value != 0.0 && fn.precision() != E57_DOUBLE)
   {
     PRINT_MESSAGE(1000 /*???*/, n, "expecting E57_DOUBLE precision for Float", cvp, index);
-    return (false);
+    return false;
   }
 
-  return (true);
+  return true;
 }
 
 bool E57Validator::validateNumeric(Node n, bool allowInteger, CompressedVectorNode* cvp, uint64_t index)
@@ -1233,15 +1231,19 @@ bool E57Validator::validateNumeric(Node n, bool allowInteger, CompressedVectorNo
   case E57_INTEGER:
     if (allowInteger)
       return (validateInteger(n));
-    // fall through to default case...
+    return false;
   default:
     if (allowInteger)
+    {
       PRINT_MESSAGE(1000 /*???*/, n, "expecting Float, ScaledInteger, or Integer types", cvp, index);
+    }
     else
+    {
       PRINT_MESSAGE(1000 /*???*/, n, "expecting Float, or ScaledInteger types", cvp, index);
-    return (false);
+    }
+    return false;
   }
-  return (true);
+  return true;
 }
 
 bool E57Validator::validateString(Node n, CompressedVectorNode* cvp, uint64_t index)
@@ -1249,14 +1251,14 @@ bool E57Validator::validateString(Node n, CompressedVectorNode* cvp, uint64_t in
   if (n.type() != E57_STRING)
   {
     PRINT_MESSAGE(1000 /*???*/, n, "expecting String type", cvp, index);
-    return (false);
+    return false;
   }
   //??? check unicode encoding is correct
 
   /// Check if anything suspicious
   //??? empty string is suspicious
   //??? only whitespace in string is suspicious
-  return (true);
+  return true;
 }
 
 bool E57Validator::validateBlob(Node n)
@@ -1264,7 +1266,7 @@ bool E57Validator::validateBlob(Node n)
   if (n.type() != E57_BLOB)
   {
     PRINT_MESSAGE(1000 /*???*/, n, "expecting Blob type", NULL, 0);
-    return (false);
+    return false;
   }
   BlobNode bn = BlobNode(n);
 
@@ -1272,7 +1274,7 @@ bool E57Validator::validateBlob(Node n)
   if (bn.byteCount() < 4)
     PRINT_MESSAGE(3000 /*???*/, n, "Blob byte count is suspiciously small: " + toString(bn.byteCount()), NULL, 0);
 
-  return (true);
+  return true;
 }
 
 bool E57Validator::validateStructure(Node n, CompressedVectorNode* cvp, uint64_t index)
@@ -1280,9 +1282,9 @@ bool E57Validator::validateStructure(Node n, CompressedVectorNode* cvp, uint64_t
   if (n.type() != E57_STRUCTURE)
   {
     PRINT_MESSAGE(1000 /*???*/, n, "expecting Structure type", cvp, index);
-    return (false);
+    return false;
   }
-  return (true);
+  return true;
 }
 
 bool E57Validator::validateHomogeneousVector(Node n, CompressedVectorNode* cvp, uint64_t index)
@@ -1290,15 +1292,15 @@ bool E57Validator::validateHomogeneousVector(Node n, CompressedVectorNode* cvp, 
   if (n.type() != E57_VECTOR)
   {
     PRINT_MESSAGE(1000 /*???*/, n, "expecting Vector type", cvp, index);
-    return (false);
+    return false;
   }
   VectorNode vn = VectorNode(n);
   if (vn.allowHeteroChildren())
   {
     PRINT_MESSAGE(1000 /*???*/, n, "expecting homogeneous Vector", cvp, index);
-    return (false);
+    return false;
   }
-  return (true);
+  return true;
 }
 
 bool E57Validator::validateHeterogeneousVector(Node n, CompressedVectorNode* cvp, uint64_t index)
@@ -1306,15 +1308,15 @@ bool E57Validator::validateHeterogeneousVector(Node n, CompressedVectorNode* cvp
   if (n.type() != E57_VECTOR)
   {
     PRINT_MESSAGE(1000 /*???*/, n, "expecting Vector type", cvp, index);
-    return (false);
+    return false;
   }
   VectorNode vn = VectorNode(n);
   if (!vn.allowHeteroChildren())
   {
     PRINT_MESSAGE(1000 /*???*/, n, "expecting heterogeneous Vector", cvp, index);
-    return (false);
+    return false;
   }
-  return (true);
+  return true;
 }
 
 bool E57Validator::validateCompressedVector(Node n)
@@ -1322,17 +1324,17 @@ bool E57Validator::validateCompressedVector(Node n)
   if (n.type() != E57_COMPRESSED_VECTOR)
   {
     PRINT_MESSAGE(1000 /*???*/, n, "expecting CompressedVector type", NULL, 0);
-    return (false);
+    return false;
   }
   if (!validateCodecs(n))
-    return (false);
-  return (true);
+    return false;
+  return true;
 }
 
-bool E57Validator::validateCodecs(Node n)
+bool E57Validator::validateCodecs(Node /*n*/)
 {
   //???
-  return (true);
+  return true;
 }
 
 bool E57Validator::validateCodec(CompressedVectorNode cv)
@@ -1346,7 +1348,7 @@ bool E57Validator::validateCodec(CompressedVectorNode cv)
 
     /// Validate type and downcast
     if (!validateStructure(cc))
-      return (false);
+      return false;
     StructureNode sn = StructureNode(cc);
 
     /// Verify required elements exist
@@ -1371,15 +1373,15 @@ bool E57Validator::validateCodec(CompressedVectorNode cv)
     }
   }
 
-  return (true); //??? need flag?
+  return true; //??? need flag?
 }
 
-void E57Validator::validateCodecInputs(Node n)
+void E57Validator::validateCodecInputs(Node /*n*/)
 {
   //???
 }
 
-void E57Validator::validateBitPackCodec(Node n)
+void E57Validator::validateBitPackCodec(Node /*n*/)
 {
   //???
 }
@@ -1602,7 +1604,7 @@ void E57Validator::validateData3D(Node n)
   }
 }
 
-void E57Validator::validateOriginalGuids(Node n)
+void E57Validator::validateOriginalGuids(Node /*n*/)
 {
   //???
 }
@@ -1822,11 +1824,9 @@ void E57Validator::validatePointRecordContents(CompressedVectorNode cv, Structur
   }
 
   /// Get indexBounds, if any
-  bool        indexBoundsDefined = false;
   BoundingBox indexBounds;
   if (data3D.isDefined("indexBounds"))
   {
-    indexBoundsDefined = true;
     indexBounds        = BoundingBox(StructureNode(data3D.get("indexBounds")), "indexBounds");
     // cout << "indexBounds:" << endl; //???
     // indexBounds.dump(4); //???
@@ -1982,9 +1982,14 @@ void E57Validator::validatePointRecordContents(CompressedVectorNode cv, Structur
             else
             {
               if (lineGrouping.isByRow())
+              {
                 PRINT_MESSAGE(1000 /*???*/, proto.get("rowIndex"), "no line group for row number " + toString(lineIndex), &cv, blockStart + i);
+              }
               else
+              {
                 PRINT_MESSAGE(1000 /*???*/, proto.get("columnIndex"), "no line group for column number " + toString(lineIndex), &cv, blockStart + i);
+              }
+                
             }
           }
 
@@ -2128,9 +2133,13 @@ void E57Validator::validatePointRecordContents(CompressedVectorNode cv, Structur
             else
             {
               if (lineGrouping.isByRow())
+              {
                 PRINT_MESSAGE(1000 /*???*/, proto.get("rowIndex"), "no line group for row number " + toString(lineIndex), &cv, blockStart + i);
+              }
               else
+              {
                 PRINT_MESSAGE(1000 /*???*/, proto.get("columnIndex"), "no line group for column number " + toString(lineIndex), &cv, blockStart + i);
+              }
             }
           }
 
@@ -3247,7 +3256,7 @@ void E57Validator::validateDateTime(Node n, CompressedVectorNode* cvp, uint64_t 
   }
 }
 
-void E57Validator::validateGuid(Node n, CompressedVectorNode* cvp, uint64_t index)
+void E57Validator::validateGuid(Node /*n*/, CompressedVectorNode* /*cvp*/, uint64_t /*index*/)
 {
   //??? recommend no leading/trailing whitespace
 }
@@ -3359,7 +3368,7 @@ bool validateFile(E57ValidatorOptions options, ustring fname)
   {
     cerr << "Got an unknown exception" << endl;
   }
-  return (false);
+  return false;
 }
 
 int main(int argc, char** argv)
@@ -3436,7 +3445,7 @@ int main(int argc, char** argv)
   validateFile(cmdLineOptions.options, "C:/kevin/astm/DataFormat/LAS/examples/xyzrgb_manuscript_detail.e57");
   return (0);
 #endif
-};
+}
 
 #if 0
 // hash_map_find.cpp

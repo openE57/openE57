@@ -42,7 +42,7 @@ cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
 # Enables the MSVC_RUNTIME_LIBRARY property on targets
 cmake_policy(SET CMP0091 NEW)
 
-project(openE57 VERSION 1.2.0 LANGUAGES C CXX DESCRIPTION "openE57 is a library for handling e57 files")
+project(openE57 VERSION 1.3.0 LANGUAGES C CXX DESCRIPTION "openE57 is a library for handling e57 files")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)

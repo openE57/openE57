@@ -32,7 +32,7 @@ using namespace std;
 
 void printSomePoints(ImageFile imf, CompressedVectorNode points);
 
-int main(int argc, char** argv)
+int main(int /*argc*/, char** /*argv*/)
 {
   try
   {

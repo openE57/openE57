@@ -275,7 +275,7 @@ UseInfo::UseInfo()
   maximumZ                        = E57_INT64_MIN;
 }
 
-void UseInfo::processPoint(LASPublicHeaderBlock& hdr, LASPointDataRecord& point, int64_t columnIndex)
+void UseInfo::processPoint(LASPublicHeaderBlock& /*hdr*/, LASPointDataRecord& point, int64_t columnIndex)
 {
   gotPoint = true;
   if (point.intensity != 0)
@@ -489,7 +489,7 @@ void DenseGroupingScheme::addMember(int64_t id, double coords[3], int64_t record
   groups[static_cast<size_t>(id - minimumId)].addMember(coords, recordIndex);
 }
 
-void DenseGroupingScheme::write(ImageFile imf, StructureNode groupingSchemeNode, ustring idElementName, ustring description)
+void DenseGroupingScheme::write(ImageFile imf, StructureNode groupingSchemeNode, ustring idElementName, ustring /*description*/)
 {
   groupingSchemeNode.set("idElementName", StringNode(imf, idElementName));
   //    groupingSchemeNode.set("description", StringNode(imf, description)); //??? not in draft standard
@@ -592,7 +592,7 @@ void SparseGroupingScheme::addMember(int64_t id, double coords[3], int64_t recor
   groups[id].addMember(coords, recordIndex);
 }
 
-void SparseGroupingScheme::write(ImageFile imf, StructureNode groupingSchemeNode, ustring idElementName, ustring description)
+void SparseGroupingScheme::write(ImageFile imf, StructureNode groupingSchemeNode, ustring idElementName, ustring /*description*/)
 {
   groupingSchemeNode.set("idElementName", StringNode(imf, idElementName));
   //    groupingSchemeNode.set("description", StringNode(imf, description)); //??? not in draft standard
@@ -1008,7 +1008,7 @@ int main(int argc, char** argv)
 
 //================================================================
 
-void findUnusedFields(CommandLineOptions& options, LASReader& lasf, ImageFile imf, UseInfo& useInfo)
+void findUnusedFields(CommandLineOptions& /*options*/, LASReader& lasf, ImageFile /*imf*/, UseInfo& useInfo)
 {
   LASPublicHeaderBlock hdr;
   lasf.getHeader(hdr);
@@ -1112,7 +1112,6 @@ void copyPerScanData(CommandLineOptions& options, LASReader& lasf, ImageFile imf
   ///   in various LAS versions.  Assuming this is when the data was acquired.
   /// Might be when file was written by processing software (can't tell).
   /// Path name: "/data3D/0/acquisitionStart/dateTimeValue"
-  double acquisitionStartGpsTime = 0.0;
   if (hdr.fileCreationDayOfYear > 0 && hdr.fileCreationYear > 0)
   {
     unsigned short year      = static_cast<unsigned short>(hdr.fileCreationYear);
@@ -1181,7 +1180,7 @@ void copyPerScanData(CommandLineOptions& options, LASReader& lasf, ImageFile imf
 
 //================================================================
 
-void copyVariableLengthRecords(CommandLineOptions& options, LASReader& lasf, ImageFile imf, WaveformDatabase& waveDb)
+void copyVariableLengthRecords(CommandLineOptions& /*options*/, LASReader& lasf, ImageFile imf, WaveformDatabase& /*waveDb*/)
 {
   LASPublicHeaderBlock hdr;
   lasf.getHeader(hdr);
@@ -1247,7 +1246,7 @@ void copyVariableLengthRecords(CommandLineOptions& options, LASReader& lasf, Ima
 
 //================================================================
 
-void copyWaveformData(CommandLineOptions& options, LASReader& lasf, ImageFile imf, WaveformDatabase& waveDb)
+void copyWaveformData(CommandLineOptions& /*options*/, LASReader& lasf, ImageFile imf, WaveformDatabase& /*waveDb*/)
 {
   LASPublicHeaderBlock hdr;
   lasf.getHeader(hdr);
@@ -1271,7 +1270,7 @@ void copyWaveformData(CommandLineOptions& options, LASReader& lasf, ImageFile im
 
 //================================================================
 
-void copyPerPointData(CommandLineOptions& options, LASReader& lasf, ImageFile imf, UseInfo& useInfo, GroupingSchemes& groupings, WaveformDatabase& waveDb)
+void copyPerPointData(CommandLineOptions& options, LASReader& lasf, ImageFile imf, UseInfo& useInfo, GroupingSchemes& groupings, WaveformDatabase& /*waveDb*/)
 {
   LASPublicHeaderBlock hdr;
   lasf.getHeader(hdr);
@@ -1570,7 +1569,7 @@ void copyPerPointData(CommandLineOptions& options, LASReader& lasf, ImageFile im
         /// So timeStamp = gpsTime+lasTimeOffset - e57TimeOffset
         /// Be careful about order of addition/subtraction so as not to lose resolution.
         /// Subtract two larger numbers first.  It is OK to trash old value of gpsTime here.
-        long double netOffset = lasTimeOffset - e57TimeOffset;
+        double netOffset = lasTimeOffset - e57TimeOffset;
         for (unsigned i = 0; i < recordCount; i++)
           pointBuffer[i].gpsTime += netOffset;
       }
@@ -1591,7 +1590,7 @@ void copyPerPointData(CommandLineOptions& options, LASReader& lasf, ImageFile im
 
 //================================================================
 
-void copyPerFileData(CommandLineOptions& options, LASReader& lasf, ImageFile imf, UseInfo& useInfo)
+void copyPerFileData(CommandLineOptions& /*options*/, LASReader& /*lasf*/, ImageFile imf, UseInfo& /*useInfo*/)
 {
   StructureNode root = imf.root();
 

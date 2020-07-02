@@ -205,7 +205,7 @@ bool NodeImpl::isRoot()
 {
   checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
   return (parent_.expired());
-};
+}
 
 std::shared_ptr<NodeImpl> NodeImpl::parent()
 {
@@ -261,7 +261,7 @@ ustring NodeImpl::elementName()
 {
   checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
   return (elementName_);
-};
+}
 
 shared_ptr<ImageFileImpl> NodeImpl::destImageFile()
 {
@@ -350,7 +350,6 @@ bool NodeImpl::isTypeConstrained()
     default:
       break;
     }
-
   }
   /// Didn't find any constraining VECTORs or COMPRESSED_VECTORs in path above us, so our type is not constrained.
   return (false);
@@ -430,7 +429,7 @@ void NodeImpl::set(const std::vector<ustring>& /*fields*/, unsigned /*level*/, s
 {
   /// If get here, then tried to call set(fields...) on NodeImpl that wasn't a StructureNodeImpl, so that's an error
   throw E57_EXCEPTION1(E57_ERROR_BAD_PATH_NAME); //???
-};
+}
 
 void NodeImpl::checkBuffers(const vector<SourceDestBuffer>& sdbufs, bool allowMissing) //??? convert sdbufs to vector of shared_ptr
 {
@@ -599,7 +598,8 @@ int64_t StructureNodeImpl::childCount()
 {
   checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
   return (children_.size());
-};
+}
+
 shared_ptr<NodeImpl> StructureNodeImpl::get(int64_t index)
 {
   checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
@@ -909,7 +909,7 @@ NodeType VectorNodeImpl::type()
 {
   /// don't checkImageFileOpen
   return (E57_VECTOR);
-};
+}
 
 bool VectorNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
 {
@@ -947,7 +947,7 @@ bool VectorNodeImpl::allowHeteroChildren()
 {
   checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
   return (allowHeteroChildren_);
-};
+}
 
 void VectorNodeImpl::set(int64_t index64, shared_ptr<NodeImpl> ni)
 {
@@ -1423,6 +1423,7 @@ double SourceDestBufferImpl::getNextDouble()
       throw E57_EXCEPTION2(E57_ERROR_CONVERSION_REQUIRED, "pathName=" + pathName_);
     /// Convert bool to 0/1, all non-zero values map to 1.0
     value = (*reinterpret_cast<bool*>(p)) ? 1.0 : 0.0;
+    break;
   case E57_REAL32:
     value = static_cast<double>(*reinterpret_cast<float*>(p));
     break;
@@ -2615,7 +2616,6 @@ void FloatNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf*/, CheckedFile
   }
 }
 
-
 #ifdef E57_DEBUG
 void FloatNodeImpl::dump(int indent, ostream& os)
 {
@@ -2988,7 +2988,7 @@ XMLSize_t E57FileInputStream::readBytes(XMLByte* const toFill, const XMLSize_t m
 
   /// Be careful if size_t is smaller than int64_t
   size_t available_size;
-  if (sizeof(size_t) >= sizeof(int64_t))
+  if constexpr (sizeof(size_t) >= sizeof(int64_t))
     /// size_t is at least as big as int64_t
     available_size = static_cast<size_t>(available);
   else
@@ -3700,12 +3700,9 @@ void E57XmlParser::processingInstruction(const XMLCh* const /*target*/, const XM
 #endif
 }
 
-void E57XmlParser::characters(const XMLCh* const chars, const XMLSize_t length)
+void E57XmlParser::characters(const XMLCh* const chars, const XMLSize_t /*length*/)
 {
 //??? use length to make ustring
-#ifdef E57_MAX_VERBOSE
-  cout << "characters, chars=\"" << toUString(chars) << "\" length=" << length << endl;
-#endif
   /// Get active element
   ParseInfo& pi = stack_.top();
 
@@ -3935,7 +3932,7 @@ void ImageFileImpl::readFileHeader(CheckedFile* file, E57FileHeader& header)
 {
 #ifdef E57_DEBUG
   /// Double check that compiler thinks sizeof header is what it is supposed to be
-  if (sizeof(E57FileHeader) != 48) // Changed from 40 to 48 by SC
+  if constexpr (sizeof(E57FileHeader) != 48) // Changed from 40 to 48 by SC
     throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "headerSize=" + toString(sizeof(E57FileHeader)));
 #endif
 
@@ -5020,11 +5017,8 @@ void CheckedFile::unlink()
   }
 
   /// Try to unlink the file, don't report a failure
-  int result = ::_unlink(fileName_.c_str()); //??? unicode support here
-#ifdef E57_MAX_VERBOSE
-  if (result < 0)
-    cout << "::unlink() failed, result=" << result << endl;
-#endif
+  ::_unlink(fileName_.c_str()); //??? unicode support here
+
 }
 
 size_t CheckedFile::efficientBufferSize(size_t logicalBytes)
@@ -5229,7 +5223,7 @@ int main()
 CompressedVectorSectionHeader::CompressedVectorSectionHeader()
 {
   /// Double check that header is correct length.  Watch out for RTTI increasing the size.
-  if (sizeof(*this) != 32)
+  if constexpr (sizeof(*this) != 32)
     throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "size=" + toString(sizeof(*this)));
 
   /// Now confident we have correct size, zero header.
@@ -5298,7 +5292,7 @@ void CompressedVectorSectionHeader::dump(int indent, std::ostream& os)
 DataPacketHeader::DataPacketHeader()
 {
   /// Double check that packet struct is correct length.  Watch out for RTTI increasing the size.
-  if (sizeof(*this) != 6)
+  if constexpr (sizeof(*this) != 6)
     throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "size=" + toString(sizeof(*this)));
 
   /// Now confident we have correct size, zero packet.
@@ -5364,7 +5358,7 @@ void DataPacketHeader::dump(int indent, std::ostream& os)
 DataPacket::DataPacket()
 {
   /// Double check that packet struct is correct length.  Watch out for RTTI increasing the size.
-  if (sizeof(*this) != 64 * 1024)
+  if constexpr (sizeof(*this) != 64 * 1024)
     throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "size=" + toString(sizeof(*this)));
 
   /// Now confident we have correct size, zero packet.
@@ -5521,7 +5515,7 @@ void DataPacket::dump(int indent, std::ostream& os)
 IndexPacket::IndexPacket()
 {
   /// Double check that packet struct is correct length.  Watch out for RTTI increasing the size.
-  if (sizeof(*this) != 16 + 16 * MAX_ENTRIES)
+  if constexpr (sizeof(*this) != 16 + 16 * MAX_ENTRIES)
     throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "size=" + toString(sizeof(*this)));
 
   /// Now confident we have correct size, zero packet.
@@ -5688,7 +5682,7 @@ void IndexPacket::dump(int indent, std::ostream& os)
 EmptyPacketHeader::EmptyPacketHeader()
 {
   /// Double check that packet struct is correct length.  Watch out for RTTI increasing the size.
-  if (sizeof(*this) != 4)
+  if constexpr (sizeof(*this) != 4)
     throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "size=" + toString(sizeof(*this)));
 
   /// Now confident we have correct size, zero packet.
@@ -5763,7 +5757,7 @@ CompressedVectorWriterImpl::CompressedVectorWriterImpl(shared_ptr<CompressedVect
   setBuffers(sbufs); //??? copy code here?
 
   /// Zero dataPacket_ at start
-  memset(&dataPacket_, 0, sizeof(dataPacket_));
+  dataPacket_ = DataPacket{};
 
   /// For each individual sbuf, create an appropriate Encoder based on the cVector_ attributes
   for (unsigned i = 0; i < sbufs_.size(); i++)
@@ -6013,11 +6007,7 @@ void CompressedVectorWriterImpl::write(const size_t requestedRecordCount)
     float totalBitsPerRecord = 0; // an estimate of future performance
     for (unsigned i = 0; i < bytestreams_.size(); i++)
       totalBitsPerRecord += bytestreams_.at(i)->bitsPerRecord();
-    float totalBytesPerRecord = max(totalBitsPerRecord / 8, 0.1F); //??? trust
-
-#ifdef E57_MAX_VERBOSE
-    cout << "  totalBytesPerRecord=" << totalBytesPerRecord << endl; //???
-#endif
+    //float totalBytesPerRecord = max(totalBitsPerRecord / 8, 0.1F); //??? trust
 
     //!!!        unsigned spaceRemaining = E57_DATA_PACKET_MAX - currentPacketSize();
     //!!!        unsigned appoxRecordsNeeded = static_cast<unsigned>(floor(spaceRemaining / totalBytesPerRecord)); //??? divide by zero if all constants
@@ -6242,7 +6232,7 @@ void CompressedVectorWriterImpl::flush()
     bytestreams_.at(i)->registerFlushToOutput();
 }
 
-void CompressedVectorWriterImpl::checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName)
+void CompressedVectorWriterImpl::checkImageFileOpen(const char* /*srcFileName*/, int /*srcLineNumber*/, const char* /*srcFunctionName*/)
 {
 #if 0
 !!! how get destImageFile?
@@ -6536,7 +6526,6 @@ unsigned CompressedVectorReaderImpl::read()
 uint64_t CompressedVectorReaderImpl::earliestPacketNeededForInput()
 {
   uint64_t earliestPacketLogicalOffset = E57_UINT64_MAX;
-  unsigned earliestChannel             = 0;
   for (unsigned i = 0; i < channels_.size(); i++)
   {
     DecodeChannel* chan = &channels_[i];
@@ -6549,16 +6538,9 @@ uint64_t CompressedVectorReaderImpl::earliestPacketNeededForInput()
       if (chan->currentPacketLogicalOffset < earliestPacketLogicalOffset)
       {
         earliestPacketLogicalOffset = chan->currentPacketLogicalOffset;
-        earliestChannel             = i;
       }
     }
   }
-#ifdef E57_MAX_VERBOSE
-  if (earliestPacketLogicalOffset == E57_UINT64_MAX)
-    cout << "earliestPacketNeededForInput returning none found" << endl;
-  else
-    cout << "earliestPacketNeededForInput returning " << earliestPacketLogicalOffset << " for channel[" << earliestChannel << "]" << endl;
-#endif
   return (earliestPacketLogicalOffset);
 }
 
@@ -6756,7 +6738,7 @@ void CompressedVectorReaderImpl::close()
   isOpen_ = false;
 }
 
-void CompressedVectorReaderImpl::checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName)
+void CompressedVectorReaderImpl::checkImageFileOpen(const char* /*srcFileName*/, int /*srcLineNumber*/, const char* /*srcFunctionName*/)
 {
 #if 0
 !!! how get destImageFile?
@@ -6916,6 +6898,7 @@ shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber, shared_pt
     {
       shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint64_t>(true, bytestreamNumber, sbuf, E57_DATA_PACKET_MAX /*!!!*/, sini->minimum(),
                                                                       sini->maximum(), sini->scale(), sini->offset()));
+      return (encoder);
     }
   }
   case E57_FLOAT: {
@@ -7871,12 +7854,8 @@ void ConstantIntegerDecoder::destBufferSetNew(vector<SourceDestBuffer>& dbufs)
   destBuffer_ = dbufs.at(0).impl();
 }
 
-size_t ConstantIntegerDecoder::inputProcess(const char* source, const size_t availableByteCount)
+size_t ConstantIntegerDecoder::inputProcess(const char* /*source*/, const size_t /*availableByteCount*/)
 {
-#ifdef E57_MAX_VERBOSE
-  cout << "ConstantIntegerDecoder::inputprocess() called, source=" << (unsigned)source << " availableByteCount=" << availableByteCount << endl;
-#endif
-
   /// We don't need any input bytes to produce output, so ignore source and availableByteCount.
 
   /// Fill dest buffer unless get to maxRecordCount
@@ -8047,12 +8026,9 @@ void PacketReadCache::markDiscarable(uint64_t packetLogicalOffset)
   }
 }
 
-void PacketReadCache::unlock(unsigned lockedEntry)
+void PacketReadCache::unlock(unsigned /*lockedEntry*/)
 {
 //??? why lockedEntry not used?
-#ifdef E57_MAX_VERBOSE
-  cout << "PacketReadCache::unlock() called, lockedEntry=" << lockedEntry << endl;
-#endif
 
   if (lockCount_ != 1)
     throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "lockCount=" + toString(lockCount_));
