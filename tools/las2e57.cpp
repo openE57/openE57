@@ -1569,7 +1569,7 @@ void copyPerPointData(CommandLineOptions& options, LASReader& lasf, ImageFile im
         /// So timeStamp = gpsTime+lasTimeOffset - e57TimeOffset
         /// Be careful about order of addition/subtraction so as not to lose resolution.
         /// Subtract two larger numbers first.  It is OK to trash old value of gpsTime here.
-        long double netOffset = lasTimeOffset - e57TimeOffset;
+        double netOffset = lasTimeOffset - e57TimeOffset;
         for (unsigned i = 0; i < recordCount; i++)
           pointBuffer[i].gpsTime += netOffset;
       }

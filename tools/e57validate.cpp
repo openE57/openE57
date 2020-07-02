@@ -111,19 +111,18 @@ inline std::string toString(double x)   {std::ostringstream ss; ss << x; return(
 inline std::string toString(bool x)     {std::ostringstream ss; ss << x; return(ss.str());}
 #endif
 
-/// Don't do any work if past specified maximumum message count (including expanding arguments).
+/// Don't do any work if past specified maximum message count (including expanding arguments).
 /// Note: the do{}while(0) loop eats the trailing semicolon after macro expansion of "PRINT_MESSAGE(...);"
 /// printMessage is called when messageCount is < 2 beyond allowed to allow suppression message to be printed.
 #define PRINT_MESSAGE(messageNumber, n, msg, cvp, index)                                                                                                       \
-  do                                                                                                                                                           \
   {                                                                                                                                                            \
-    if ((messageNumber) >= 0 && (messageNumber) < E57ValidatorOptions::MessageNumberCount)                                                                     \
+    if constexpr ((messageNumber) >= 0 && (messageNumber) < E57ValidatorOptions::MessageNumberCount)                                                                     \
     {                                                                                                                                                          \
       messageCount_[(messageNumber)]++;                                                                                                                        \
       if (messageCount_[(messageNumber)] < options_.messagesAllowed[(messageNumber)] + 2)                                                                      \
         printMessage((messageNumber), (n), (msg), (cvp), (index));                                                                                             \
     }                                                                                                                                                          \
-  } while (0)
+  } 
 
 //================================================================
 
@@ -301,9 +300,9 @@ void CommandLineOptions::parse(int argc, char** argv)
         if (argv[0][6] != '=' || strlen(argv[0]) == 7)
           usage(ustring("bad option format in flag ") + argv[0]);
 
-        for (size_t j = 7; j < strlen(argv[0]); j++)
+        for (size_t jj = 7; jj < strlen(argv[0]); jj++)
         {
-          if (argv[0][j] < '0' || '9' < argv[0][j])
+          if (argv[0][jj] < '0' || '9' < argv[0][jj])
             usage(ustring("bad decimal number in flag") + argv[0]);
         }
         allowed = atoi(&argv[0][7]);
@@ -1235,9 +1234,13 @@ bool E57Validator::validateNumeric(Node n, bool allowInteger, CompressedVectorNo
     return false;
   default:
     if (allowInteger)
+    {
       PRINT_MESSAGE(1000 /*???*/, n, "expecting Float, ScaledInteger, or Integer types", cvp, index);
+    }
     else
+    {
       PRINT_MESSAGE(1000 /*???*/, n, "expecting Float, or ScaledInteger types", cvp, index);
+    }
     return false;
   }
   return true;
@@ -1979,9 +1982,14 @@ void E57Validator::validatePointRecordContents(CompressedVectorNode cv, Structur
             else
             {
               if (lineGrouping.isByRow())
+              {
                 PRINT_MESSAGE(1000 /*???*/, proto.get("rowIndex"), "no line group for row number " + toString(lineIndex), &cv, blockStart + i);
+              }
               else
+              {
                 PRINT_MESSAGE(1000 /*???*/, proto.get("columnIndex"), "no line group for column number " + toString(lineIndex), &cv, blockStart + i);
+              }
+                
             }
           }
 
@@ -2125,9 +2133,13 @@ void E57Validator::validatePointRecordContents(CompressedVectorNode cv, Structur
             else
             {
               if (lineGrouping.isByRow())
+              {
                 PRINT_MESSAGE(1000 /*???*/, proto.get("rowIndex"), "no line group for row number " + toString(lineIndex), &cv, blockStart + i);
+              }
               else
+              {
                 PRINT_MESSAGE(1000 /*???*/, proto.get("columnIndex"), "no line group for column number " + toString(lineIndex), &cv, blockStart + i);
+              }
             }
           }
 

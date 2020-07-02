@@ -2988,7 +2988,7 @@ XMLSize_t E57FileInputStream::readBytes(XMLByte* const toFill, const XMLSize_t m
 
   /// Be careful if size_t is smaller than int64_t
   size_t available_size;
-  if (sizeof(size_t) >= sizeof(int64_t))
+  if constexpr (sizeof(size_t) >= sizeof(int64_t))
     /// size_t is at least as big as int64_t
     available_size = static_cast<size_t>(available);
   else
@@ -3932,7 +3932,7 @@ void ImageFileImpl::readFileHeader(CheckedFile* file, E57FileHeader& header)
 {
 #ifdef E57_DEBUG
   /// Double check that compiler thinks sizeof header is what it is supposed to be
-  if (sizeof(E57FileHeader) != 48) // Changed from 40 to 48 by SC
+  if constexpr (sizeof(E57FileHeader) != 48) // Changed from 40 to 48 by SC
     throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "headerSize=" + toString(sizeof(E57FileHeader)));
 #endif
 
@@ -5223,7 +5223,7 @@ int main()
 CompressedVectorSectionHeader::CompressedVectorSectionHeader()
 {
   /// Double check that header is correct length.  Watch out for RTTI increasing the size.
-  if (sizeof(*this) != 32)
+  if constexpr (sizeof(*this) != 32)
     throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "size=" + toString(sizeof(*this)));
 
   /// Now confident we have correct size, zero header.
@@ -5292,7 +5292,7 @@ void CompressedVectorSectionHeader::dump(int indent, std::ostream& os)
 DataPacketHeader::DataPacketHeader()
 {
   /// Double check that packet struct is correct length.  Watch out for RTTI increasing the size.
-  if (sizeof(*this) != 6)
+  if constexpr (sizeof(*this) != 6)
     throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "size=" + toString(sizeof(*this)));
 
   /// Now confident we have correct size, zero packet.
@@ -5358,7 +5358,7 @@ void DataPacketHeader::dump(int indent, std::ostream& os)
 DataPacket::DataPacket()
 {
   /// Double check that packet struct is correct length.  Watch out for RTTI increasing the size.
-  if (sizeof(*this) != 64 * 1024)
+  if constexpr (sizeof(*this) != 64 * 1024)
     throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "size=" + toString(sizeof(*this)));
 
   /// Now confident we have correct size, zero packet.
@@ -5515,7 +5515,7 @@ void DataPacket::dump(int indent, std::ostream& os)
 IndexPacket::IndexPacket()
 {
   /// Double check that packet struct is correct length.  Watch out for RTTI increasing the size.
-  if (sizeof(*this) != 16 + 16 * MAX_ENTRIES)
+  if constexpr (sizeof(*this) != 16 + 16 * MAX_ENTRIES)
     throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "size=" + toString(sizeof(*this)));
 
   /// Now confident we have correct size, zero packet.
@@ -5682,7 +5682,7 @@ void IndexPacket::dump(int indent, std::ostream& os)
 EmptyPacketHeader::EmptyPacketHeader()
 {
   /// Double check that packet struct is correct length.  Watch out for RTTI increasing the size.
-  if (sizeof(*this) != 4)
+  if constexpr (sizeof(*this) != 4)
     throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "size=" + toString(sizeof(*this)));
 
   /// Now confident we have correct size, zero packet.
