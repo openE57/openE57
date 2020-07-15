@@ -3664,35 +3664,36 @@ ScaledIntegerNode::ScaledIntegerNode(ImageFile destImageFile, int64_t rawValue, 
 : impl_(new ScaledIntegerNodeImpl(destImageFile.impl(), (int64_t)rawValue, minimum, maximum, scale,
                                   offset)){CHECK_THIS_INVARIANCE()} ScaledIntegerNode::ScaledIntegerNode(ImageFile destImageFile, int rawValue, int minimum,
                                                                                                          int maximum, double scale, double offset)
-: impl_(new ScaledIntegerNodeImpl(destImageFile.impl(), (int64_t)rawValue, (int64_t)minimum, (int64_t)maximum, scale,
-                                  offset)){CHECK_THIS_INVARIANCE()} /*================*/
-                                                                    /*!
-                                               @brief   This second constructor create an E57 element for storing a fixed point number but does the scaling for you.
-                                               @param   [in] destImageFile   The ImageFile where the new node will eventually be stored.
-                                               @param   [in] scaledValue	  The scaled integer value of the element.
-                                               @param   [in] scaledMinimum   The smallest scaledValue that the element may take.
-                                               @param   [in] scaledMaximum   The largest scaledValue that the element may take.
-                                               @param   [in] scale     The scaling factor used to compute scaledValue from rawValue.
-                                               @param   [in] offset    The offset factor used to compute scaledValue from rawValue.
-                                               @details
-                                               An ScaledIntegerNode stores an integer value, a lower and upper bound, and two conversion factors.
-                                               This ScaledIntegerNode constructor calculates the rawValue, minimum, and maximum by doing the floor((scaledValue - offset)/scale + .5) on each scaled
-                                                                  parameters.
-                                               @b Warning: it is an error to give an @a rawValue outside the @a minimum / @a maximum bounds, even if the ScaledIntegerNode is destined to be used in a
-                                                                  CompressedVectorNode prototype (where the @a rawValue will be ignored).                                                                   If the ScaledIntegerNode is to be used in a prototype, it is recommended to specify a @a
-                                                                  rawValue = 0 if 0 is within bounds, or a @a rawValue = @a minimum if 0 is not within bounds.
-                                               @pre     The @a destImageFile must be open (i.e. destImageFile.isOpen() must be true).
-                                               @pre     The @a destImageFile must have been opened in write mode (i.e. destImageFile.isWritable() must be true).
-                                               @pre     scaledMinimum <= scaledValue <= scaledMaximum
-                                               @pre     scale != 0
-                                               @return  A smart ScaledIntegerNode handle referencing the underlying object.
-                                               @throw   ::E57_ERROR_BAD_API_ARGUMENT
-                                               @throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
-                                               @throw   ::E57_ERROR_FILE_IS_READ_ONLY
-                                               @throw   ::E57_ERROR_VALUE_OUT_OF_BOUNDS
-                                               @throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
-                                               @see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::scaledValue, Node, CompressedVectorNode, CompressedVectorNode::prototype
-                                               */                                                                  /*================*/
+: impl_(new ScaledIntegerNodeImpl(destImageFile.impl(), (int64_t)rawValue, (int64_t)minimum, (int64_t)maximum, scale, offset)){CHECK_THIS_INVARIANCE()}
+  /*================*/
+  /*!
+@brief   This second constructor create an E57 element for storing a fixed point number but does the scaling for you.
+@param   [in] destImageFile   The ImageFile where the new node will eventually be stored.
+@param   [in] scaledValue	  The scaled integer value of the element.
+@param   [in] scaledMinimum   The smallest scaledValue that the element may take.
+@param   [in] scaledMaximum   The largest scaledValue that the element may take.
+@param   [in] scale     The scaling factor used to compute scaledValue from rawValue.
+@param   [in] offset    The offset factor used to compute scaledValue from rawValue.
+@details
+An ScaledIntegerNode stores an integer value, a lower and upper bound, and two conversion factors.
+This ScaledIntegerNode constructor calculates the rawValue, minimum, and maximum by doing the floor((scaledValue - offset)/scale + .5) on each scaled
+parameters.
+@b Warning: it is an error to give an @a rawValue outside the @a minimum / @a maximum bounds, even if the ScaledIntegerNode is destined to be used in a
+CompressedVectorNode prototype (where the @a rawValue will be ignored).                                                                   If the
+ScaledIntegerNode is to be used in a prototype, it is recommended to specify a @a rawValue = 0 if 0 is within bounds, or a @a rawValue = @a minimum if 0 is not
+within bounds.
+@pre     The @a destImageFile must be open (i.e. destImageFile.isOpen() must be true).
+@pre     The @a destImageFile must have been opened in write mode (i.e. destImageFile.isWritable() must be true).
+@pre     scaledMinimum <= scaledValue <= scaledMaximum
+@pre     scale != 0
+@return  A smart ScaledIntegerNode handle referencing the underlying object.
+@throw   ::E57_ERROR_BAD_API_ARGUMENT
+@throw   ::E57_ERROR_IMAGEFILE_NOT_OPEN
+@throw   ::E57_ERROR_FILE_IS_READ_ONLY
+@throw   ::E57_ERROR_VALUE_OUT_OF_BOUNDS
+@throw   ::E57_ERROR_INTERNAL           All objects in undocumented state
+@see     ScaledIntegerCreate.cpp example, ScaledIntegerNode::scaledValue, Node, CompressedVectorNode, CompressedVectorNode::prototype
+*/ /*================*/
   ScaledIntegerNode::ScaledIntegerNode(ImageFile destImageFile, double scaledValue, double scaledMinimum, double scaledMaximum, double scale, double offset)
 : impl_(new ScaledIntegerNodeImpl(destImageFile.impl(), scaledValue, scaledMinimum, scaledMaximum, scale, offset))
 {

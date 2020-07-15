@@ -3702,7 +3702,7 @@ void E57XmlParser::processingInstruction(const XMLCh* const /*target*/, const XM
 
 void E57XmlParser::characters(const XMLCh* const chars, const XMLSize_t /*length*/)
 {
-//??? use length to make ustring
+  //??? use length to make ustring
   /// Get active element
   ParseInfo& pi = stack_.top();
 
@@ -5018,7 +5018,6 @@ void CheckedFile::unlink()
 
   /// Try to unlink the file, don't report a failure
   ::_unlink(fileName_.c_str()); //??? unicode support here
-
 }
 
 size_t CheckedFile::efficientBufferSize(size_t logicalBytes)
@@ -6007,7 +6006,7 @@ void CompressedVectorWriterImpl::write(const size_t requestedRecordCount)
     float totalBitsPerRecord = 0; // an estimate of future performance
     for (unsigned i = 0; i < bytestreams_.size(); i++)
       totalBitsPerRecord += bytestreams_.at(i)->bitsPerRecord();
-    //float totalBytesPerRecord = max(totalBitsPerRecord / 8, 0.1F); //??? trust
+    // float totalBytesPerRecord = max(totalBitsPerRecord / 8, 0.1F); //??? trust
 
     //!!!        unsigned spaceRemaining = E57_DATA_PACKET_MAX - currentPacketSize();
     //!!!        unsigned appoxRecordsNeeded = static_cast<unsigned>(floor(spaceRemaining / totalBytesPerRecord)); //??? divide by zero if all constants
@@ -8028,7 +8027,7 @@ void PacketReadCache::markDiscarable(uint64_t packetLogicalOffset)
 
 void PacketReadCache::unlock(unsigned /*lockedEntry*/)
 {
-//??? why lockedEntry not used?
+  //??? why lockedEntry not used?
 
   if (lockCount_ != 1)
     throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "lockCount=" + toString(lockCount_));

@@ -42,7 +42,7 @@ cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
 # Enables the MSVC_RUNTIME_LIBRARY property on targets
 cmake_policy(SET CMP0091 NEW)
 
-project(openE57 VERSION 1.3.0 LANGUAGES C CXX DESCRIPTION "openE57 is a library for handling e57 files")
+project(openE57 VERSION 1.4.0 LANGUAGES C CXX DESCRIPTION "openE57 is a library for handling e57 files")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
@@ -82,6 +82,7 @@ include(InstallRequiredSystemLibraries)
 include(GenerateExportHeader)
 include(${CMAKE_SOURCE_DIR}/cmake/compiler_options.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/dependencies.cmake)
+
 
 set(CONFIG_PACKAGE_INSTALL_DIR lib/cmake/${PROJECT_NAME})
 
@@ -190,6 +191,12 @@ endif()
 if(${BUILD_TOOLS})
   add_subdirectory(${CMAKE_SOURCE_DIR}/tools)
 endif()
+
+
+#
+# Add Clang Format
+#
+include(${CMAKE_SOURCE_DIR}/cmake/clang_format.cmake)
 
 # 
 # Install Artifacts
