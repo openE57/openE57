@@ -218,7 +218,7 @@ install(
     include/openE57)
 
 install(FILES  
-  ${CMAKE_SOURCE_DIR}/CHANGES.TXT 
+  ${CMAKE_SOURCE_DIR}/CHANGELOG.md
 DESTINATION .)
 
 set(CPACK_PACKAGE_VENDOR "Michele Adduci <adduci@tutanota.com>")
