@@ -97,14 +97,14 @@ configure_file("${PROJECT_SOURCE_DIR}/include/config.h.in"
 #
 add_library(
   ${PROJECT_NAME} ${LIBRARY_TYPE}
-  ${CMAKE_SOURCE_DIR}/src/E57Simple.cpp
-  ${CMAKE_SOURCE_DIR}/src/E57SimpleImpl.cpp
-  ${CMAKE_SOURCE_DIR}/src/E57Foundation.cpp
-  ${CMAKE_SOURCE_DIR}/src/E57FoundationImpl.cpp
-  ${CMAKE_SOURCE_DIR}/include/openE57/impl/E57FoundationImpl.h
-  ${CMAKE_SOURCE_DIR}/include/openE57/impl/E57SimpleImpl.h
-  ${CMAKE_SOURCE_DIR}/include/openE57/E57Foundation.h
-  ${CMAKE_SOURCE_DIR}/include/openE57/E57Simple.h)
+  ${CMAKE_SOURCE_DIR}/src/openE57Simple.cpp
+  ${CMAKE_SOURCE_DIR}/src/openE57SimpleImpl.cpp
+  ${CMAKE_SOURCE_DIR}/src/openE57.cpp
+  ${CMAKE_SOURCE_DIR}/src/openE57Impl.cpp
+  ${CMAKE_SOURCE_DIR}/include/openE57/impl/openE57Impl.h
+  ${CMAKE_SOURCE_DIR}/include/openE57/impl/openE57SimpleImpl.h
+  ${CMAKE_SOURCE_DIR}/include/openE57/openE57.h
+  ${CMAKE_SOURCE_DIR}/include/openE57/openE57Simple.h)
 
 generate_export_header(${PROJECT_NAME})
 set_target_properties(${PROJECT_NAME} PROPERTIES 
@@ -211,7 +211,7 @@ install(
 
 install(
   FILES 
-    ${CMAKE_SOURCE_DIR}/include/openE57/E57Foundation.h
+    ${CMAKE_SOURCE_DIR}/include/openE57/openE57.h
     ${CMAKE_SOURCE_DIR}/include/openE57/E57Simple.h 
     ${CMAKE_BINARY_DIR}/opene57_export.h
   DESTINATION 

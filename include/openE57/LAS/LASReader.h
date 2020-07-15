@@ -1,7 +1,8 @@
 /*
  * lasreader.h - header for simple interface for reading LAS files.
  *
- * Copyright 2009 - 2010 Kevin Ackley (kackley@gwi.net)
+ * Copyright (c) 2009 - 2010 Kevin Ackley (kackley@gwi.net)
+ * Copyright (c) 2020 Michele Adduci (adduci@tutanota.com)
  *
  * Permission is hereby granted, free of charge, to any person or organization
  * obtaining a copy of the software and accompanying documentation covered by
@@ -32,7 +33,7 @@
 #include <iostream>
 #include <vector>
 #ifndef E57FOUNDATIONIMPL_H_INCLUDED
-#  include <openE57/impl/E57FoundationImpl.h>
+#  include <openE57/impl/openE57Impl.h>
 #endif
 
 namespace e57
