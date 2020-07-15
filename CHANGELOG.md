@@ -29,6 +29,9 @@
 - Uniform code formatting with .clang-format
 - Update to latest version of dependencies (Boost, Xerces, ICU)
 
+------------
+
+# libE57 Reference Implementation
 
 ## [1.1.350] - 2013-04-03
 ### Changed

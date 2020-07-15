@@ -212,10 +212,10 @@ install(
 install(
   FILES 
     ${CMAKE_SOURCE_DIR}/include/openE57/openE57.h
-    ${CMAKE_SOURCE_DIR}/include/openE57/E57Simple.h 
+    ${CMAKE_SOURCE_DIR}/include/openE57/openE57Simple.h 
     ${CMAKE_BINARY_DIR}/opene57_export.h
   DESTINATION 
-    include/e57)
+    include/openE57)
 
 install(FILES  
   ${CMAKE_SOURCE_DIR}/CHANGES.TXT 
