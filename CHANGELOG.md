@@ -1,6 +1,6 @@
 # openE57
 
-## [1.4.0] - development
+## [1.4.0] - 2020-07-16
 ### Added
 - `clang-format` as CMake target
 
