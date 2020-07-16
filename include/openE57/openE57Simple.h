@@ -1,8 +1,10 @@
 //////////////////////////////////////////////////////////////////////////
 //
-//  E57Simple.h - public header of E57 Simple API for reading/writing .e57 files.
+//  openE57Simple.h - public header of E57 Simple API for reading/writing .e57 files.
 //
 //	Copyright (c) 2010 Stan Coleby (scoleby@intelisum.com)
+//  Copyright (c) 2020 Michele Adduci (adduci@tutanota.com)
+//  
 //	All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person or organization
@@ -27,7 +29,7 @@
 //  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 //  DEALINGS IN THE SOFTWARE.
 //
-//	The Boost license Vestion 1.0 - August 17th, 2003 is discussed in
+//	The Boost license Version 1.0 - August 17th, 2003 is discussed in
 //	http://www.boost.org/users/license.html.
 //
 //  This source code is only intended as a supplement to promote the
@@ -35,26 +37,14 @@
 //	of Lidar Data.  See http://www.libe57.org.
 //
 //////////////////////////////////////////////////////////////////////////
-//
-//  Old ReaderE57.h
-//	V1		Aug 4, 2008		Stan Coleby		scoleby@intelisum.com
-//	V2		Aug 19, 2008	Stan Coleby		scoleby@intelisum.com
-//  V3		Oct 4, 2008		Stan Coleby		scoleby@intelisum.com
-//  V4		Oct 29, 2008	Stan Coleby		scoleby@intelisum.com
-//
-//	New E57Simple.h
-//	V5		May 12, 2010	Stan Coleby		scoleby@intelisum.com
-//	V6		June 8, 2010	Stan Coleby		scoleby@intelisum.com
-//
-//////////////////////////////////////////////////////////////////////////
 
-//! @file E57Simple.h
+//! @file openE57Simple.h
 
 #ifndef E57SIMPLE_H_INCLUDED
 #define E57SIMPLE_H_INCLUDED
 
 #ifndef E57FOUNDATION_H_INCLUDED
-#  include <openE57/E57Foundation.h>
+#  include <openE57/openE57.h>
 #endif
 
 #ifndef _C_TIMECONV_H_

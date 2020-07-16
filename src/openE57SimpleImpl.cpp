@@ -1,8 +1,9 @@
 //////////////////////////////////////////////////////////////////////////
 //
-//  E57SimpleImpl.cpp - private implementation header of E57 format reference implementation.
+//  openE57SimpleImpl.cpp - private implementation header of E57 format reference implementation.
 //
 //	Copyright (c) 2010 Stan Coleby (scoleby@intelisum.com)
+//	Copyright (c) 2020 Michele Adduci (adduci@tutanota.com)
 //	All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person or organization
@@ -35,14 +36,8 @@
 //	of Lidar Data.  See http://www.libe57.org.
 //
 //////////////////////////////////////////////////////////////////////////
-//
-//	New E57SimpleImpl.cpp
-//	V1		May 18, 2010	Stan Coleby		scoleby@intelisum.com
-//	V6		June 8, 2010	Stan Coleby		scoleby@intelisum.com
-//
-//////////////////////////////////////////////////////////////////////////
 
-//! @file E57SimpleImpl.cpp
+//! @file openE57SimpleImpl.cpp
 
 #if defined(WIN32)
 #  if defined(_MSC_VER)
@@ -80,7 +75,7 @@
 #  error "no supported OS platform defined"
 #endif
 
-#include <openE57/impl/E57SimpleImpl.h>
+#include <openE57/impl/openE57SimpleImpl.h>
 #include <openE57/time_conversion/time_conversion.h>
 #include <sstream>
 

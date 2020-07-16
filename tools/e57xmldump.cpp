@@ -1,7 +1,8 @@
 /*
  * e57xmldump.cpp - print XML section of E57 file to stdout.
  *
- * Copyright 2009 - 2010 Kevin Ackley (kackley@gwi.net)
+ * Copyright (c) 2009 - 2010 Kevin Ackley (kackley@gwi.net)
+ * Copyright (c) 2020 Michele Adduci (adduci@tutanota.com)
  *
  * Permission is hereby granted, free of charge, to any person or organization
  * obtaining a copy of the software and accompanying documentation covered by
@@ -26,8 +27,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 #include <iostream>
-#include <openE57/E57Foundation.h>
-#include <openE57/impl/E57FoundationImpl.h> //??? for exceptions, should be in separate file
+#include <openE57/openE57.h>
+#include <openE57/impl/openE57Impl.h> //??? for exceptions, should be in separate file
 using namespace e57;
 using namespace std;
 // using namespace std::tr1; //??? is this really needed, gives error on gcc <roland>

@@ -10,7 +10,7 @@
 #define STRING_HELPER1(a) STRING_HELPER2(a)
 #define BUILD_VERSION STRING_HELPER1(SVN_VERSION)
 
-#include <openE57/E57Foundation.h>
+#include <openE57/openE57.h>
 using e57::BlobNode;
 using e57::CompressedVectorNode;
 using e57::CompressedVectorReader;

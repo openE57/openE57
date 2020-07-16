@@ -42,7 +42,7 @@ cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
 # Enables the MSVC_RUNTIME_LIBRARY property on targets
 cmake_policy(SET CMP0091 NEW)
 
-project(openE57 VERSION 1.3.0 LANGUAGES C CXX DESCRIPTION "openE57 is a library for handling e57 files")
+project(openE57 VERSION 1.4.0 LANGUAGES C CXX DESCRIPTION "openE57 is a library for handling e57 files")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
@@ -83,6 +83,7 @@ include(GenerateExportHeader)
 include(${CMAKE_SOURCE_DIR}/cmake/compiler_options.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/dependencies.cmake)
 
+
 set(CONFIG_PACKAGE_INSTALL_DIR lib/cmake/${PROJECT_NAME})
 
 list(APPEND compiler_definitions
@@ -96,14 +97,14 @@ configure_file("${PROJECT_SOURCE_DIR}/include/config.h.in"
 #
 add_library(
   ${PROJECT_NAME} ${LIBRARY_TYPE}
-  ${CMAKE_SOURCE_DIR}/src/E57Simple.cpp
-  ${CMAKE_SOURCE_DIR}/src/E57SimpleImpl.cpp
-  ${CMAKE_SOURCE_DIR}/src/E57Foundation.cpp
-  ${CMAKE_SOURCE_DIR}/src/E57FoundationImpl.cpp
-  ${CMAKE_SOURCE_DIR}/include/openE57/impl/E57FoundationImpl.h
-  ${CMAKE_SOURCE_DIR}/include/openE57/impl/E57SimpleImpl.h
-  ${CMAKE_SOURCE_DIR}/include/openE57/E57Foundation.h
-  ${CMAKE_SOURCE_DIR}/include/openE57/E57Simple.h)
+  ${CMAKE_SOURCE_DIR}/src/openE57Simple.cpp
+  ${CMAKE_SOURCE_DIR}/src/openE57SimpleImpl.cpp
+  ${CMAKE_SOURCE_DIR}/src/openE57.cpp
+  ${CMAKE_SOURCE_DIR}/src/openE57Impl.cpp
+  ${CMAKE_SOURCE_DIR}/include/openE57/impl/openE57Impl.h
+  ${CMAKE_SOURCE_DIR}/include/openE57/impl/openE57SimpleImpl.h
+  ${CMAKE_SOURCE_DIR}/include/openE57/openE57.h
+  ${CMAKE_SOURCE_DIR}/include/openE57/openE57Simple.h)
 
 generate_export_header(${PROJECT_NAME})
 set_target_properties(${PROJECT_NAME} PROPERTIES 
@@ -191,6 +192,12 @@ if(${BUILD_TOOLS})
   add_subdirectory(${CMAKE_SOURCE_DIR}/tools)
 endif()
 
+
+#
+# Add Clang Format
+#
+include(${CMAKE_SOURCE_DIR}/cmake/clang_format.cmake)
+
 # 
 # Install Artifacts
 #
@@ -204,14 +211,14 @@ install(
 
 install(
   FILES 
-    ${CMAKE_SOURCE_DIR}/include/openE57/E57Foundation.h
-    ${CMAKE_SOURCE_DIR}/include/openE57/E57Simple.h 
+    ${CMAKE_SOURCE_DIR}/include/openE57/openE57.h
+    ${CMAKE_SOURCE_DIR}/include/openE57/openE57Simple.h 
     ${CMAKE_BINARY_DIR}/opene57_export.h
   DESTINATION 
-    include/e57)
+    include/openE57)
 
 install(FILES  
-  ${CMAKE_SOURCE_DIR}/CHANGES.TXT 
+  ${CMAKE_SOURCE_DIR}/CHANGELOG.md
 DESTINATION .)
 
 set(CPACK_PACKAGE_VENDOR "Michele Adduci <adduci@tutanota.com>")

@@ -1,7 +1,8 @@
 /*
- * E57FoundationImpl.h - private implementation header of E57 format reference implementation.
+ * openE57Impl.h - private implementation header of E57 format reference implementation.
  *
- * Copyright 2009 - 2010 Kevin Ackley (kackley@gwi.net)
+ * Copyright (c) 2009 - 2010 Kevin Ackley (kackley@gwi.net)
+ * Copyright (c) 2020 Michele Adduci (adduci@tutanota.com)
  *
  * Permission is hereby granted, free of charge, to any person or organization
  * obtaining a copy of the software and accompanying documentation covered by
@@ -26,10 +27,6 @@
  * DEALINGS IN THE SOFTWARE.
  */
 //////////////////////////////////////////////////////////////////////////
-//
-//	V106	Dec 1, 2010		Stan Coleby	SC	scoleby@intelisum.com
-//								Added pageSize to E57FileHeader
-//								Changed Version to 1.0
 
 #ifndef E57FOUNDATIONIMPL_H_INCLUDED
 #define E57FOUNDATIONIMPL_H_INCLUDED
@@ -48,7 +45,7 @@
 #define E57_INTERNAL_IMPLEMENTATION_ENABLE 1
 
 #ifndef E57FOUNDATION_H_INCLUDED
-#  include <openE57/E57Foundation.h>
+#  include <openE57/openE57.h>
 #endif
 
 // Uncomment the lines below to enable various levels of cross checking and verification in the code.

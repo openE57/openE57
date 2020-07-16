@@ -1,7 +1,8 @@
 /*================================================================
  * Validator for ASTM Standard E57 format v1.0.
  *
- * Copyright (C) 2010 Kevin Ackley (kackley@gwi.net)
+ * Copyright (c) 2009 - 2010 Kevin Ackley (kackley@gwi.net)
+ * Copyright (c) 2020 Michele Adduci (adduci@tutanota.com)
  *
  * Permission is hereby granted, free of charge, to any person or organization
  * obtaining a copy of the software and accompanying documentation covered by
@@ -73,7 +74,7 @@ using std::strlen;
 #include <cmath>
 using std::fabs;
 
-#include <openE57/E57Foundation.h>
+#include <openE57/openE57.h>
 using namespace e57;
 using namespace std;
 

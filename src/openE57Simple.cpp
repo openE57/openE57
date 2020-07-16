@@ -1,8 +1,9 @@
 //////////////////////////////////////////////////////////////////////////
 //
-//  E57Simple.cpp - private implementation header of E57 format reference implementation.
+//  openE57Simple.cpp - private implementation header of E57 format reference implementation.
 //
 //	Copyright (c) 2010 Stan Coleby (scoleby@intelisum.com)
+//	Copyright (c) 2020 Michele Adduci (adduci@tutanota.com)
 //	All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person or organization
@@ -35,15 +36,8 @@
 //	of Lidar Data.  See http://www.libe57.org.
 //
 //////////////////////////////////////////////////////////////////////////
-//
-//	New E57Simple.cpp
-//	V5		May 18, 2010	Stan Coleby		scoleby@intelisum.com
-//	V6		June 8, 2010	Stan Coleby		scoleby@intelisum.com
-//  V7		July 28,2010	Stan Coleby		scoleby@intelisum.com
-//  V8		Nov. 3, 2010	Stan Coleby		scoleby@intelisum.com  Added new intensityLimits and colorLimits
-//
-//////////////////////////////////////////////////////////////////////////
-/*================*//*!
+/*================*/
+/*!
 @mainpage
 
 @section main_Introduction Introduction
@@ -776,7 +770,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 */
 
-//! @file E57Simple.cpp
+//! @file openE57Simple.cpp
 
 #if defined(WIN32)
 #  if defined(_MSC_VER)
@@ -805,8 +799,8 @@ DEALINGS IN THE SOFTWARE.
 #  error "no supported OS platform defined"
 #endif
 
-#include <openE57/E57Simple.h>
-#include <openE57/impl/E57SimpleImpl.h>
+#include <openE57/openE57Simple.h>
+#include <openE57/impl/openE57SimpleImpl.h>
 
 using namespace e57;
 using namespace std;

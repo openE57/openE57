@@ -1,7 +1,8 @@
 /*
- * E57Foundation.h - public header of E57 Foundation API for reading/writing .e57 files.
+ * openE57.h - public header of E57 Foundation API for reading/writing .e57 files.
  *
- * Copyright 2009 - 2010 Kevin Ackley (kackley@gwi.net)
+ * Copyright (c) 2009 - 2010 Kevin Ackley (kackley@gwi.net)
+ * Copyright (c) 2020 Michele Adduci (adduci@tutanota.com)
  *
  * Permission is hereby granted, free of charge, to any person or organization
  * obtaining a copy of the software and accompanying documentation covered by
@@ -28,7 +29,7 @@
 #ifndef E57FOUNDATION_H_INCLUDED
 #define E57FOUNDATION_H_INCLUDED
 
-//! @file  E57Foundation.h header file for the E57 Foundation API
+//! @file  openE57.h header file for the E57 Foundation API
 
 // Define the following symbol to enable heap corruption and memory leakage debugging:
 //#define E57_DEBUG_MEMORY 1
