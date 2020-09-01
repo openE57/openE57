@@ -12,6 +12,8 @@ The library is compiled as C++17, since some of following language intrinsics an
 * thread (replaces boost::thread)
 * memory (replaces boost::shared_ptr and std::auto_ptr)
 
+At the current state, Boost is still required as in the original source code, but it will be completely removed with the release 2.0.0.
+
 ## Requirements
 
 You need the following tools to build this library:
