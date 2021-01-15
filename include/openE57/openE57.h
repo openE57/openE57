@@ -39,7 +39,7 @@
 #  include <stdlib.h>
 #endif
 
-#include <boost/cstdint.hpp> // for int8_t, int16_t, int32_t, etc...
+#include <cstdint> // for int8_t, int16_t, int32_t, etc...
 #include <memory>
 #include <float.h>
 #include <iostream>
@@ -52,14 +52,14 @@ namespace e57
 #endif
 
 // Use Boost type names for signed/unsigned integers in various witdths
-using boost::int16_t;
-using boost::int32_t;
-using boost::int64_t;
-using boost::int8_t;
-using boost::uint16_t;
-using boost::uint32_t;
-using boost::uint64_t;
-using boost::uint8_t;
+using std::int16_t;
+using std::int32_t;
+using std::int64_t;
+using std::int8_t;
+using std::uint16_t;
+using std::uint32_t;
+using std::uint64_t;
+using std::uint8_t;
 
 // Shorthand for unicode string
 //! @brief UTF-8 encodeded Unicode string
