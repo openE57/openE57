@@ -28,9 +28,6 @@
 //  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 //  DEALINGS IN THE SOFTWARE.
 //
-//	The Boost license Vestion 1.0 - August 17th, 2003 is discussed in
-//	http://www.boost.org/users/license.html.
-//
 //  This source code is only intended as a supplement to promote the
 //	ASTM E57.04 3D Imaging System File Format standard for interoperability
 //	of Lidar Data.  See http://www.libe57.org.
@@ -45,7 +42,6 @@
 #    include <io.h>
 #    include <sys\stat.h>
 #    include <windows.h>
-//#include <stdint.h>  //if you need this then remove <boost/cstdint.hpp> in E57Foundation.h line 48
 #    pragma warning(disable : 4996)
 #  elif defined(__GNUC__)
 #    define _LARGEFILE64_SOURCE

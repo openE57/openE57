@@ -8,6 +8,7 @@ The library is compiled as C++17, since some of following language intrinsics an
 
 * constexpr values
 * enum classes
+* random (replaces boost::uuid)
 * filesystem (replaces boost::filesystem)
 * thread (replaces boost::thread)
 * memory (replaces boost::shared_ptr and std::auto_ptr)
