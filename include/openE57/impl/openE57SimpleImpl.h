@@ -248,7 +248,7 @@ public:
     double* timeStamp = NULL, //!< pointer to a buffer with the time (in seconds) since the start time for the data, which is given by acquisitionStart in the
                               //!< parent Data3D Structure. Shall be non-negative
     int8_t* isTimeStampInvalid = NULL, //!< Value = 0 if the timeStamp is considered valid, 1 otherwise
-    bool (*pointDataExtension)(ImageFile imf, StructureNode proto, int protoIndex, vector<SourceDestBuffer>& destBuffers) = NULL
+    bool (*pointDataExtension)(ImageFile imf, StructureNode proto, int protoIndex, std::vector<SourceDestBuffer>& destBuffers) = NULL
 
   );
 
@@ -362,7 +362,7 @@ public:
     double* timeStamp = NULL, //!< pointer to a buffer with the time (in seconds) since the start time for the data, which is given by acquisitionStart in the
                               //!< parent Data3D Structure. Shall be non-negative
     int8_t* isTimeStampInvalid = NULL, //!< Value = 0 if the timeStamp is considered valid, 1 otherwise
-    bool (*pointDataExtension)(ImageFile imf, StructureNode proto, vector<SourceDestBuffer>& sourceBuffers) = NULL);
+    bool (*pointDataExtension)(ImageFile imf, StructureNode proto, std::vector<SourceDestBuffer>& sourceBuffers) = NULL);
 
   //! This funtion writes out the group data
   virtual bool WriteData3DGroupsData(int32_t  dataIndex,       //!< data block index given by the NewData3D

@@ -51,11 +51,8 @@
 #  include <openE57/time_conversion/time_conversion.h>
 #endif
 
-using namespace std;
-using namespace boost;
-
 #ifndef PI
-#  define PI 3.1415926535897932384626433832795
+constexpr double PI{3.1415926535897932384626433832795};
 #endif
 
 namespace e57
@@ -448,19 +445,16 @@ public:
   ustring sensorSoftwareVersion; //!< The version number for the software used for the data collection.
   ustring sensorFirmwareVersion; //!< The version number for the firmware installed in the sensor at the time of data collection.
 
-  float
-        temperature; //!< The ambient temperature, measured at the sensor, at the time of data collection (in degrees Celsius). Shall be ? ?273.15� (absolute zero).
+  float temperature; //!< The ambient temperature, measured at the sensor, at the time of data collection (in degrees Celsius). Shall be ? ?273.15� (absolute zero).
   float relativeHumidity;    //!< The percentage relative humidity, measured at the sensor, at the time of data collection. Shall be in the interval [0, 100].
   float atmosphericPressure; //!< The atmospheric pressure, measured at the sensor, at the time of data collection (in Pascals). Shall be positive.
 
   e57::DateTime acquisitionStart; //!< The start date and time that the data was acquired.
   e57::DateTime acquisitionEnd;   //!< The end date and time that the data was acquired.
 
-  e57::RigidBodyTransform
-                   pose; //!< A rigid body transform that describes the coordinate frame of the 3D imaging system origin in the file-level coordinate system.
+  e57::RigidBodyTransform pose; //!< A rigid body transform that describes the coordinate frame of the 3D imaging system origin in the file-level coordinate system.
   e57::IndexBounds indexBounds; //!< The bounds of the row, column, and return number of all the points in this Data3D.
-  e57::CartesianBounds
-    cartesianBounds; //!< The bounding region (in cartesian coordinates) of all the points in this Data3D (in the local coordinate system of the points).
+  e57::CartesianBounds cartesianBounds; //!< The bounding region (in cartesian coordinates) of all the points in this Data3D (in the local coordinate system of the points).
   e57::SphericalBounds
                        sphericalBounds; //!< The bounding region (in spherical coordinates) of all the points in this Data3D (in the local coordinate system of the points).
   e57::IntensityLimits intensityLimits; //!< The limits for the value of signal intensity that the sensor is capable of producing.
@@ -763,7 +757,7 @@ public:
     double* timeStamp = NULL, //!< pointer to a buffer with the time (in seconds) since the start time for the data, which is given by acquisitionStart in the
                               //!< parent Data3D Structure. Shall be non-negative
     int8_t* isTimeStampInvalid = NULL, //!< Value = 0 if the timeStamp is considered valid, 1 otherwise
-    bool (*pointDataExtension)(ImageFile imf, StructureNode proto, int protoIndex, vector<SourceDestBuffer>& destBuffers) = NULL
+    bool (*pointDataExtension)(ImageFile imf, StructureNode proto, int protoIndex, std::vector<SourceDestBuffer>& destBuffers) = NULL
 
   ) const; //!< @return Return true if sucessful, false otherwise
 
@@ -868,7 +862,7 @@ public:
     double* timeStamp = NULL, //!< pointer to a buffer with the time (in seconds) since the start time for the data, which is given by acquisitionStart in the
                               //!< parent Data3D Structure. Shall be non-negative
     int8_t* isTimeStampInvalid = NULL, //!< Value = 0 if the timeStamp is considered valid, 1 otherwise
-    bool (*pointDataExtension)(ImageFile imf, StructureNode proto, vector<SourceDestBuffer>& sourceBuffers)
+    bool (*pointDataExtension)(ImageFile imf, StructureNode proto, std::vector<SourceDestBuffer>& sourceBuffers)
     = NULL) const; //!< @return Return true if sucessful, false otherwise
 
   //! @brief This funtion writes out the group data
