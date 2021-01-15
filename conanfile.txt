@@ -1,14 +1,10 @@
 [requires]
 icu/68.2
 xerces-c/3.2.3
-boost/1.75.0
 
 [generators]
 cmake
 
 [options]
-boost:multithreading=True
-boost:header_only=True
-boost:shared=False
 xerces-c:shared=False
 icu:shared=False

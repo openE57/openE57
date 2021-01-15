@@ -58,12 +58,9 @@
 #  error "no supported OS platform defined"
 #endif
 
+#include <cstdint>
 #include <sstream>
-//#include <memory> //??? needed?
-#include <cmath>   //??? needed?
-#include <float.h> //??? needed?
-#include <fstream> //??? needed?
-#include <iomanip> //??? needed?
+#include <cmath>   // floor()
 
 #ifdef E57_MAX_VERBOSE
 #  include <iostream>
@@ -73,6 +70,7 @@ using std::endl;
 #endif
 
 #include <openE57/impl/openE57Impl.h>
+
 using namespace e57;
 // using namespace std;
 using std::cerr;
@@ -110,7 +108,7 @@ const XMLCh att_recordCount[]
   = {chLatin_r, chLatin_e, chLatin_c, chLatin_o, chLatin_r, chLatin_d, chLatin_C, chLatin_o, chLatin_u, chLatin_n, chLatin_t, chNull};
 } // namespace
 
-//???using namespace std::tr1;
+//???using namespace std;
 
 ///============================================================================================================
 ///============================================================================================================
@@ -595,7 +593,7 @@ int64_t StructureNodeImpl::childCount()
 std::shared_ptr<NodeImpl> StructureNodeImpl::get(int64_t index)
 {
   checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
-  if (index < 0 || index >= static_cast<boost::int64_t>(children_.size()))
+  if (index < 0 || index >= static_cast<std::int64_t>(children_.size()))
   { // %%% Possible truncation on platforms where size_t = uint64
     throw E57_EXCEPTION2(E57_ERROR_CHILD_INDEX_OUT_OF_BOUNDS,
                          "this->pathName=" + this->pathName() + " index=" + toString(index) + " size=" + toString(children_.size()));
@@ -5021,6 +5019,26 @@ size_t CheckedFile::efficientBufferSize(size_t logicalBytes)
 
 uint32_t CheckedFile::checksum(char* buf, size_t size)
 {
+  uint32_t checksum = 0;
+  #ifdef SAFE_MODE
+  unsigned shift = 0;
+  for (size_t index = 0; index < size; ++index) 
+  {
+    uint32_t ch = buf[index];
+    checksum += (ch << shift);
+    shift += 8;
+    if (shift == 32) 
+    {
+      shift = 0;
+    }
+  }
+  swab(checksum); //!!! inside BIGENDIAN?
+  #endif 
+  return checksum;
+}
+
+/*uint32_t CheckedFile::checksum(char* buf, size_t size)
+{
 #ifdef SAFE_MODE
 #  if 1
   /// Calc CRC32C of given data
@@ -5046,7 +5064,7 @@ uint32_t CheckedFile::checksum(char* buf, size_t size)
   return (crc);
 #  endif
 #endif // SAFE_MODE
-}
+}*/
 
 #ifdef SAFE_MODE
 
@@ -6183,7 +6201,7 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
   dataPacket_.packetType                = E57_DATA_PACKET;
   dataPacket_.packetFlags               = 0;
   dataPacket_.packetLogicalLengthMinus1 = static_cast<uint16_t>(packetLength - 1);           // %%% Truncation
-  dataPacket_.bytestreamCount           = static_cast<boost::uint16_t>(bytestreams_.size()); // %%% Truncation
+  dataPacket_.bytestreamCount           = static_cast<std::uint16_t>(bytestreams_.size()); // %%% Truncation
 
   /// Double check that data packet is well formed
   dataPacket_.verify(packetLength);

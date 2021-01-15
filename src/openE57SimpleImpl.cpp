@@ -47,15 +47,10 @@
 #    include <windows.h>
 //#include <stdint.h>  //if you need this then remove <boost/cstdint.hpp> in E57Foundation.h line 48
 #    pragma warning(disable : 4996)
-#    include <boost/uuid/uuid.hpp>
-#    include <boost/uuid/uuid_generators.hpp>
-#    include <boost/uuid/uuid_io.hpp>
 #  elif defined(__GNUC__)
 #    define _LARGEFILE64_SOURCE
 #    define __LARGE64_FILES
-#    include <boost/uuid/uuid.hpp>
-#    include <boost/uuid/uuid_generators.hpp>
-#    include <boost/uuid/uuid_io.hpp>
+#    include <cstring>
 #    include <fcntl.h>
 #    include <sys/types.h>
 #    include <sys\stat.h>
@@ -66,11 +61,9 @@
 #elif defined(LINUX) || defined(__APPLE__) || defined(__unix__)
 #  define _LARGEFILE64_SOURCE
 #  define __LARGE64_FILES
-#  include <boost/uuid/uuid.hpp>
-#  include <boost/uuid/uuid_generators.hpp>
-#  include <boost/uuid/uuid_io.hpp>
 #  include <sys/types.h>
 #  include <unistd.h>
+#  include <cstring>
 #else
 #  error "no supported OS platform defined"
 #endif
@@ -78,13 +71,49 @@
 #include <openE57/impl/openE57SimpleImpl.h>
 #include <openE57/time_conversion/time_conversion.h>
 #include <sstream>
+#include <random>
 
 using namespace e57;
 using namespace std;
-// using namespace boost;
 
 namespace e57
 {
+
+// inspired by https://stackoverflow.com/a/60198074/2369389
+namespace uuid {
+    static std::random_device              rd;
+    static std::mt19937_64                 gen(rd());
+    static std::uniform_int_distribution<> distribution(0, 15);
+    static std::uniform_int_distribution<> distribution2(8, 11);
+
+    std::string generate_uuid() {
+      std::stringstream ss;
+      int i;
+      ss << std::hex;
+      for (i = 0; i < 8; i++) {
+          ss << distribution(gen);
+      }
+      ss << "-";
+      for (i = 0; i < 4; i++) {
+          ss << distribution(gen);
+      }
+      ss << "-4";
+      for (i = 0; i < 3; i++) {
+          ss << distribution(gen);
+      }
+      ss << "-";
+      ss << distribution2(gen);
+      for (i = 0; i < 3; i++) {
+          ss << distribution(gen);
+      }
+      ss << "-";
+      for (i = 0; i < 12; i++) {
+          ss << distribution(gen);
+      };
+      return ss.str();
+    }
+}
+
 char*  GetNewGuid(void);
 double GetGPSTime(void);
 
@@ -343,11 +372,7 @@ char* e57::GetNewGuid(void)
   wcstombs_s(&converted, fileGuid, wbuffer, 64);
 
 #else
-  boost::uuids::random_generator gen;
-  boost::uuids::uuid             u = gen();
-  std::stringstream              s;
-  s << u;
-  std::string c = s.str();
+  std::string c = e57::uuid::generate_uuid();
 
   fileGuid[0] = '{';
   memcpy(&fileGuid[1], &c[0], 36);
