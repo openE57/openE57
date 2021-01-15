@@ -5019,26 +5019,6 @@ size_t CheckedFile::efficientBufferSize(size_t logicalBytes)
 
 uint32_t CheckedFile::checksum(char* buf, size_t size)
 {
-  uint32_t checksum = 0;
-  #ifdef SAFE_MODE
-  unsigned shift = 0;
-  for (size_t index = 0; index < size; ++index) 
-  {
-    uint32_t ch = buf[index];
-    checksum += (ch << shift);
-    shift += 8;
-    if (shift == 32) 
-    {
-      shift = 0;
-    }
-  }
-  swab(checksum); //!!! inside BIGENDIAN?
-  #endif 
-  return checksum;
-}
-
-/*uint32_t CheckedFile::checksum(char* buf, size_t size)
-{
 #ifdef SAFE_MODE
 #  if 1
   /// Calc CRC32C of given data
@@ -5064,7 +5044,7 @@ uint32_t CheckedFile::checksum(char* buf, size_t size)
   return (crc);
 #  endif
 #endif // SAFE_MODE
-}*/
+}
 
 #ifdef SAFE_MODE
 
