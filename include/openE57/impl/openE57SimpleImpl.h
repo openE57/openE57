@@ -47,7 +47,6 @@
 #ifndef E57SIMPLEIMPL_H_INCLUDED
 #define E57SIMPLEIMPL_H_INCLUDED
 
-#include <boost/crc.hpp> // for boost::crc_optimal
 #include <iomanip>
 #include <iostream>
 #include <set>
