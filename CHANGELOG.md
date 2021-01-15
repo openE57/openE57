@@ -1,5 +1,11 @@
 # openE57
 
+## [1.4.1] - 2021-01-15
+
+### Changed
+- Updated dependencies: Boost 1.75, Xerces 3.2.3, ICU 68.2
+  
+
 ## [1.4.0] - 2020-07-16
 ### Added
 - `clang-format` as CMake target
