@@ -8,6 +8,7 @@ cmake
 
 [options]
 boost:multithreading=True
+boost:header_only=True
 boost:shared=False
 xerces-c:shared=False
 icu:shared=False

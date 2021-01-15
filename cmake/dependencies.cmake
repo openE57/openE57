@@ -6,24 +6,11 @@ find_package(Threads REQUIRED)
     set(Boost_USE_STATIC_LIBS ON)
     set(Boost_USE_STATIC_RUNTIME ON)
     set(Boost_USE_MULTITHREADED ON)
-    find_package(Boost 1.73.0 COMPONENTS program_options system thread filesystem
-                                         QUIET)
-    if(NOT Boost_FOUND)
-      set(BOOST_ROOT CACHE PATH "Location of the boost root directory")
-      message(FATAL_ERROR "Unable to find boost library.
-      Please set the BOOST_ROOT to point to the boost distribution files.")
-    endif(NOT Boost_FOUND)
+    find_package(Boost 1.70.0 REQUIRED)
   
     set(Xerces_USE_STATIC_LIBS On)
-    find_package(Xerces 3.2.2 QUIET)
-    if(NOT Xerces_FOUND)
-      set(XERCES_ROOT CACHE PATH "Location of the xerces library")
-      message(
-        FATAL_ERROR
-          "Unable to find xerces library.
-      Please set the the XERCES_ROOT to point to the root of the xerces directory."
-      )
-    endif(NOT Xerces_FOUND)
+    find_package(Xerces 3.2 REQUIRED)
+    
   
     set(XML_LIBRARIES ${Xerces_LIBRARY})
     set(XML_INCLUDE_DIRS ${Xerces_INCLUDE_DIR})
