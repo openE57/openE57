@@ -1,28 +1,28 @@
-find_package(Threads REQUIRED)
-
 # Find the Xerces libraries
-if(NOT EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-  set(Xerces_USE_STATIC_LIBS On)
-  find_package(Xerces 3.2 REQUIRED)
-
-  set(XML_LIBRARIES ${Xerces_LIBRARY})
-  set(XML_INCLUDE_DIRS ${Xerces_INCLUDE_DIR})
-  list(APPEND compiler_definitions XERCES_STATIC_LIBRARY)
-else()
-    set(XML_LIBRARIES CONAN_PKG::xerces-c)
-    set(XML_INCLUDE_DIRS ${CONAN_INCLUDE_DIRS_XERCES-C})
-endif()
+set(Xerces_USE_STATIC_LIBS ON)
+find_package(XercesC 3.2 REQUIRED)
+set(XML_LIBRARIES ${XercesC_LIBRARIES})
+set(XML_INCLUDE_DIRS ${XercesC_INCLUDE_DIRS})
+list(APPEND compiler_definitions XERCES_STATIC_LIBRARY)
   
-if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+# Add ICU in Linux Systems
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux" OR ${CMAKE_SYSTEM_NAME} STREQUAL "Apple")
   list(APPEND compiler_definitions LINUX)
-  if(NOT EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-    find_package(ICU 67.1 REQUIRED)
-    set(XML_LIBRARIES ${XML_LIBRARIES} ${ICU_LIBRARIES})
-    set(XML_INCLUDE_DIRS ${XML_INCLUDE_DIRS} ${ICU_INCLUDE_DIRS})
-  else()
-    set(XML_LIBRARIES ${XML_LIBRARIES} CONAN_PKG::icu)
-    set(XML_INCLUDE_DIRS ${XML_INCLUDE_DIRS} ${CONAN_INCLUDE_DIRS_ICU})
-  endif()
+  find_package(ICU REQUIRED)
+  set(XML_LIBRARIES ${XML_LIBRARIES} ${ICU_LIBRARIES})
+  set(XML_INCLUDE_DIRS ${XML_INCLUDE_DIRS} ${ICU_INCLUDE_DIRS})
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
- list(APPEND compiler_definitions WINDOWS)
+  list(APPEND compiler_definitions WINDOWS)
+endif()
+
+# Find Boost (Required by Tools and Examples)
+if(BUILD_TOOLS OR BUILD_EXAMPLES)
+  set(Boost_USE_STATIC_LIBS ON)
+  set(Boost_USE_STATIC_RUNTIME ON)
+  set(Boost_USE_MULTITHREADED ON)
+  find_package(Boost 1.70.0 COMPONENTS program_options system thread filesystem REQUIRED)
+  list(APPEND compiler_definitions
+      BOOST_ALL_NO_LIB
+      $<$<CONFIG:RELWITHDEBINFO>:${Boost_LIB_DIAGNOSTIC_DEFINITIONS}>
+      $<$<CONFIG:DEBUG>:${Boost_LIB_DIAGNOSTIC_DEFINITIONS}>)
 endif()
