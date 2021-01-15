@@ -198,14 +198,8 @@ DEALINGS IN THE SOFTWARE.
 //! @file openE57.cpp
 
 #include <openE57/impl/openE57Impl.h>
-using namespace e57;
-// using namespace std;
-using std::endl;
 
-// using namespace boost;
-using boost::dynamic_pointer_cast;
-using std::shared_ptr;
-using std::weak_ptr;
+using namespace e57;
 
 //=====================================================================================
 /*================*/ /*!
@@ -1903,7 +1897,7 @@ bool Node::operator!=(Node n2) const
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-Node::Node(shared_ptr<NodeImpl> ni) : impl_(ni) {}
+Node::Node(std::shared_ptr<NodeImpl> ni) : impl_(ni) {}
 //! @endcond
 
 //=====================================================================================
@@ -2126,7 +2120,7 @@ void StructureNode::dump(int indent, std::ostream& os) const {}
 */ /*================*/
 StructureNode::operator Node() const
 {
-  /// Implicitly upcast from shared_ptr<StructureNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
+  /// Implicitly upcast from std::shared_ptr<StructureNodeImpl> to std::shared_ptr<NodeImpl> and construct a Node object
   CHECK_INVARIANCE_RETURN(Node, Node(impl_));
 }
 
@@ -2142,19 +2136,19 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 */ /*================*/
 StructureNode::StructureNode(const Node& n)
 {
-  /// Downcast from shared_ptr<NodeImpl> to shared_ptr<StructureNodeImpl>
-  shared_ptr<StructureNodeImpl> ni(dynamic_pointer_cast<StructureNodeImpl>(n.impl()));
+  /// Downcast from std::shared_ptr<NodeImpl> to std::shared_ptr<StructureNodeImpl>
+  std::shared_ptr<StructureNodeImpl> ni(std::dynamic_pointer_cast<StructureNodeImpl>(n.impl()));
   if (!ni)
     throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
 
-  /// Set our shared_ptr to the downcast shared_ptr
+  /// Set our std::shared_ptr to the downcast std::shared_ptr
   impl_ = ni;
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
 StructureNode::StructureNode(std::weak_ptr<ImageFileImpl> fileParent) : impl_(new StructureNodeImpl(fileParent)) {}
 
-StructureNode::StructureNode(shared_ptr<StructureNodeImpl> ni) : impl_(ni) {}
+StructureNode::StructureNode(std::shared_ptr<StructureNodeImpl> ni) : impl_(ni) {}
 //! @endcond
 
 //=====================================================================================
@@ -2394,7 +2388,7 @@ void VectorNode::dump(int indent, std::ostream& os) const {}
 */ /*================*/
 VectorNode::operator Node() const
 {
-  /// Implicitly upcast from shared_ptr<VectorNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
+  /// Implicitly upcast from std::shared_ptr<VectorNodeImpl> to std::shared_ptr<NodeImpl> and construct a Node object
   CHECK_INVARIANCE_RETURN(Node, Node(impl_));
 }
 
@@ -2410,17 +2404,17 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 */ /*================*/
 VectorNode::VectorNode(const Node& n)
 {
-  /// Downcast from shared_ptr<NodeImpl> to shared_ptr<VectorNodeImpl>
-  shared_ptr<VectorNodeImpl> ni(dynamic_pointer_cast<VectorNodeImpl>(n.impl()));
+  /// Downcast from std::shared_ptr<NodeImpl> to std::shared_ptr<VectorNodeImpl>
+  std::shared_ptr<VectorNodeImpl> ni(std::dynamic_pointer_cast<VectorNodeImpl>(n.impl()));
   if (!ni)
     throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
 
-  /// Set our shared_ptr to the downcast shared_ptr
+  /// Set our std::shared_ptr to the downcast std::shared_ptr
   impl_ = ni;
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-VectorNode::VectorNode(shared_ptr<VectorNodeImpl> ni) : impl_(ni) {}
+VectorNode::VectorNode(std::shared_ptr<VectorNodeImpl> ni) : impl_(ni) {}
 //! @endcond
 
 //=====================================================================================
@@ -2752,7 +2746,7 @@ user. The following C++ code checks externally visible state for consistency and
 */
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-CompressedVectorReader::CompressedVectorReader(shared_ptr<CompressedVectorReaderImpl> ni) : impl_(ni) {}
+CompressedVectorReader::CompressedVectorReader(std::shared_ptr<CompressedVectorReaderImpl> ni) : impl_(ni) {}
 //! @endcond
 
 /*================*/ /*!
@@ -2957,7 +2951,7 @@ user. The following C++ code checks externally visible state for consistency and
 */
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-CompressedVectorWriter::CompressedVectorWriter(shared_ptr<CompressedVectorWriterImpl> ni) : impl_(ni) {}
+CompressedVectorWriter::CompressedVectorWriter(std::shared_ptr<CompressedVectorWriterImpl> ni) : impl_(ni) {}
 //! @endcond
 
 /*================*/ /*!
@@ -3195,7 +3189,7 @@ Since currently only one codec is supported (bitPackCodec), and it is the defaul
 CompressedVectorNode::CompressedVectorNode(ImageFile destImageFile, Node prototype, VectorNode codecs)
 : impl_(new CompressedVectorNodeImpl(destImageFile.impl()))
 {
-  /// Because of shared_ptr quirks, can't set prototype,codecs in CompressedVectorNodeImpl(), so set it afterwards
+  /// Because of std::shared_ptr quirks, can't set prototype,codecs in CompressedVectorNodeImpl(), so set it afterwards
   impl_->setPrototype(prototype.impl());
   impl_->setCodecs(codecs.impl());
   CHECK_THIS_INVARIANCE()
@@ -3307,7 +3301,7 @@ void CompressedVectorNode::dump(int indent, std::ostream& os) const {}
 */ /*================*/
 CompressedVectorNode::operator Node() const
 {
-  /// Implicitly upcast from shared_ptr<CompressedVectorNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
+  /// Implicitly upcast from std::shared_ptr<CompressedVectorNodeImpl> to std::shared_ptr<NodeImpl> and construct a Node object
   CHECK_INVARIANCE_RETURN(Node, Node(impl_));
 }
 
@@ -3323,17 +3317,17 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 */ /*================*/
 CompressedVectorNode::CompressedVectorNode(const Node& n)
 {
-  /// Downcast from shared_ptr<NodeImpl> to shared_ptr<CompressedVectorNodeImpl>
-  shared_ptr<CompressedVectorNodeImpl> ni(dynamic_pointer_cast<CompressedVectorNodeImpl>(n.impl()));
+  /// Downcast from std::shared_ptr<NodeImpl> to std::shared_ptr<CompressedVectorNodeImpl>
+  std::shared_ptr<CompressedVectorNodeImpl> ni(std::dynamic_pointer_cast<CompressedVectorNodeImpl>(n.impl()));
   if (!ni)
     throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
 
-  /// Set our shared_ptr to the downcast shared_ptr
+  /// Set our std::shared_ptr to the downcast std::shared_ptr
   impl_ = ni;
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-CompressedVectorNode::CompressedVectorNode(shared_ptr<CompressedVectorNodeImpl> ni) : impl_(ni) {}
+CompressedVectorNode::CompressedVectorNode(std::shared_ptr<CompressedVectorNodeImpl> ni) : impl_(ni) {}
 //! @endcond
 
 /*================*/ /*!
@@ -3569,7 +3563,7 @@ void IntegerNode::dump(int indent, std::ostream& os) const {}
 */ /*================*/
 IntegerNode::operator Node() const
 {
-  /// Upcast from shared_ptr<IntegerNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
+  /// Upcast from std::shared_ptr<IntegerNodeImpl> to std::shared_ptr<NodeImpl> and construct a Node object
   CHECK_INVARIANCE_RETURN(Node, Node(impl_));
 }
 
@@ -3585,17 +3579,17 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 */ /*================*/
 IntegerNode::IntegerNode(const Node& n)
 {
-  /// Downcast from shared_ptr<NodeImpl> to shared_ptr<IntegerNodeImpl>
-  shared_ptr<IntegerNodeImpl> ni(dynamic_pointer_cast<IntegerNodeImpl>(n.impl()));
+  /// Downcast from std::shared_ptr<NodeImpl> to std::shared_ptr<IntegerNodeImpl>
+  std::shared_ptr<IntegerNodeImpl> ni(std::dynamic_pointer_cast<IntegerNodeImpl>(n.impl()));
   if (!ni)
     throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
 
-  /// Set our shared_ptr to the downcast shared_ptr
+  /// Set our std::shared_ptr to the downcast std::shared_ptr
   impl_ = ni;
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-IntegerNode::IntegerNode(shared_ptr<IntegerNodeImpl> ni) : impl_(ni) {}
+IntegerNode::IntegerNode(std::shared_ptr<IntegerNodeImpl> ni) : impl_(ni) {}
 //! @endcond
 
 //=====================================================================================
@@ -3870,7 +3864,7 @@ void ScaledIntegerNode::dump(int indent, std::ostream& os) const {}
 */ /*================*/
 ScaledIntegerNode::operator Node() const
 {
-  /// Upcast from shared_ptr<ScaledIntegerNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
+  /// Upcast from std::shared_ptr<ScaledIntegerNodeImpl> to std::shared_ptr<NodeImpl> and construct a Node object
   CHECK_INVARIANCE_RETURN(Node, Node(impl_));
 }
 
@@ -3886,17 +3880,17 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 */ /*================*/
 ScaledIntegerNode::ScaledIntegerNode(const Node& n)
 {
-  /// Downcast from shared_ptr<NodeImpl> to shared_ptr<ScaledIntegerNodeImpl>
-  shared_ptr<ScaledIntegerNodeImpl> ni(dynamic_pointer_cast<ScaledIntegerNodeImpl>(n.impl()));
+  /// Downcast from std::shared_ptr<NodeImpl> to std::shared_ptr<ScaledIntegerNodeImpl>
+  std::shared_ptr<ScaledIntegerNodeImpl> ni(std::dynamic_pointer_cast<ScaledIntegerNodeImpl>(n.impl()));
   if (!ni)
     throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
 
-  /// Set our shared_ptr to the downcast shared_ptr
+  /// Set our std::shared_ptr to the downcast std::shared_ptr
   impl_ = ni;
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-ScaledIntegerNode::ScaledIntegerNode(shared_ptr<ScaledIntegerNodeImpl> ni) : impl_(ni) {}
+ScaledIntegerNode::ScaledIntegerNode(std::shared_ptr<ScaledIntegerNodeImpl> ni) : impl_(ni) {}
 //! @endcond
 
 //=====================================================================================
@@ -4101,7 +4095,7 @@ void FloatNode::dump(int indent, std::ostream& os) const {}
 */ /*================*/
 FloatNode::operator Node() const
 {
-  /// Upcast from shared_ptr<FloatNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
+  /// Upcast from std::shared_ptr<FloatNodeImpl> to std::shared_ptr<NodeImpl> and construct a Node object
   CHECK_INVARIANCE_RETURN(Node, Node(impl_));
 }
 
@@ -4117,17 +4111,17 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 */ /*================*/
 FloatNode::FloatNode(const Node& n)
 {
-  /// Downcast from shared_ptr<NodeImpl> to shared_ptr<FloatNodeImpl>
-  shared_ptr<FloatNodeImpl> ni(dynamic_pointer_cast<FloatNodeImpl>(n.impl()));
+  /// Downcast from std::shared_ptr<NodeImpl> to std::shared_ptr<FloatNodeImpl>
+  std::shared_ptr<FloatNodeImpl> ni(std::dynamic_pointer_cast<FloatNodeImpl>(n.impl()));
   if (!ni)
     throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
 
-  /// Set our shared_ptr to the downcast shared_ptr
+  /// Set our std::shared_ptr to the downcast std::shared_ptr
   impl_ = ni;
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-FloatNode::FloatNode(shared_ptr<FloatNodeImpl> ni) : impl_(ni) {}
+FloatNode::FloatNode(std::shared_ptr<FloatNodeImpl> ni) : impl_(ni) {}
 //! @endcond
 
 //=====================================================================================
@@ -4256,7 +4250,7 @@ void StringNode::dump(int indent, std::ostream& os) const {}
 */ /*================*/
 StringNode::operator Node() const
 {
-  /// Upcast from shared_ptr<StringNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
+  /// Upcast from std::shared_ptr<StringNodeImpl> to std::shared_ptr<NodeImpl> and construct a Node object
   CHECK_INVARIANCE_RETURN(Node, Node(impl_));
 }
 
@@ -4272,17 +4266,17 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 */ /*================*/
 StringNode::StringNode(const Node& n)
 {
-  /// Downcast from shared_ptr<NodeImpl> to shared_ptr<StringNodeImpl>
-  shared_ptr<StringNodeImpl> ni(dynamic_pointer_cast<StringNodeImpl>(n.impl()));
+  /// Downcast from std::shared_ptr<NodeImpl> to std::shared_ptr<StringNodeImpl>
+  std::shared_ptr<StringNodeImpl> ni(std::dynamic_pointer_cast<StringNodeImpl>(n.impl()));
   if (!ni)
     throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
 
-  /// Set our shared_ptr to the downcast shared_ptr
+  /// Set our std::shared_ptr to the downcast std::shared_ptr
   impl_ = ni;
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-StringNode::StringNode(shared_ptr<StringNodeImpl> ni) : impl_(ni) {}
+StringNode::StringNode(std::shared_ptr<StringNodeImpl> ni) : impl_(ni) {}
 //! @endcond
 
 //=====================================================================================
@@ -4505,7 +4499,7 @@ void BlobNode::dump(int indent, std::ostream& os) const {}
 */ /*================*/
 BlobNode::operator Node() const
 {
-  /// Upcast from shared_ptr<StringNodeImpl> to shared_ptr<NodeImpl> and construct a Node object
+  /// Upcast from std::shared_ptr<StringNodeImpl> to std::shared_ptr<NodeImpl> and construct a Node object
   CHECK_INVARIANCE_RETURN(Node, Node(impl_));
 }
 
@@ -4521,19 +4515,19 @@ This function must be explicitly called (c++ compiler cannot insert it automatic
 */ /*================*/
 BlobNode::BlobNode(const Node& n)
 {
-  /// Downcast from shared_ptr<NodeImpl> to shared_ptr<BlobNodeImpl>
-  shared_ptr<BlobNodeImpl> ni(dynamic_pointer_cast<BlobNodeImpl>(n.impl()));
+  /// Downcast from std::shared_ptr<NodeImpl> to std::shared_ptr<BlobNodeImpl>
+  std::shared_ptr<BlobNodeImpl> ni(std::dynamic_pointer_cast<BlobNodeImpl>(n.impl()));
   if (!ni)
     throw E57_EXCEPTION2(E57_ERROR_BAD_NODE_DOWNCAST, "nodeType=" + toString(n.type()));
 
-  /// Set our shared_ptr to the downcast shared_ptr
+  /// Set our std::shared_ptr to the downcast std::shared_ptr
   impl_ = ni;
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
 BlobNode::BlobNode(ImageFile destImageFile, int64_t fileOffset, int64_t length) : impl_(new BlobNodeImpl(destImageFile.impl(), fileOffset, length)) {}
 
-BlobNode::BlobNode(shared_ptr<BlobNodeImpl> ni) : impl_(ni) {}
+BlobNode::BlobNode(std::shared_ptr<BlobNodeImpl> ni) : impl_(ni) {}
 //! @endcond
 
 //=====================================================================================
@@ -5003,7 +4997,7 @@ bool ImageFile::operator!=(ImageFile imf2) const
 }
 
 //! @cond documentNonPublic   The following isn't part of the API, and isn't documented.
-ImageFile::ImageFile(shared_ptr<ImageFileImpl> imfi) : impl_(imfi) {}
+ImageFile::ImageFile(std::shared_ptr<ImageFileImpl> imfi) : impl_(imfi) {}
 //! @endcond
 
 //=====================================================================================
@@ -5077,18 +5071,18 @@ The amount of information printed to output stream may depend on whether the E57
 */ /*================*/
 void E57Exception::report(const char* reportingFileName, int reportingLineNumber, const char* reportingFunctionName, std::ostream& os) const
 {
-  os << "**** Got an e57 exception: " << E57Utilities().errorCodeToString(errorCode()) << endl;
+  os << "**** Got an e57 exception: " << E57Utilities().errorCodeToString(errorCode()) << std::endl;
 #ifdef E57_DEBUG
-  os << "  Debug info: " << endl;
-  os << "    context: " << context_ << endl;
-  os << "    sourceFunctionName: " << sourceFunctionName_ << endl;
+  os << "  Debug info: " << std::endl;
+  os << "    context: " << context_ << std::endl;
+  os << "    sourceFunctionName: " << sourceFunctionName_ << std::endl;
   if (reportingFunctionName != NULL)
-    os << "    reportingFunctionName: " << reportingFunctionName << endl;
+    os << "    reportingFunctionName: " << reportingFunctionName << std::endl;
 
   /*** Add a line in error message that a smart editor (gnu emacs) can interpret as a link to the source code: */
-  os << sourceFileName_ << "(" << sourceLineNumber_ << ") : error C" << errorCode_ << ":  <--- occurred on" << endl;
+  os << sourceFileName_ << "(" << sourceLineNumber_ << ") : error C" << errorCode_ << ":  <--- occurred on" << std::endl;
   if (reportingFileName != NULL)
-    os << reportingFileName << "(" << reportingLineNumber << ") : error C0:  <--- reported on" << endl;
+    os << reportingFileName << "(" << reportingLineNumber << ") : error C0:  <--- reported on" << std::endl;
 #endif
 }
 

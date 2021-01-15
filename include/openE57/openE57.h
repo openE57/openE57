@@ -40,9 +40,7 @@
 #endif
 
 #include <boost/cstdint.hpp> // for int8_t, int16_t, int32_t, etc...
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
+#include <memory>
 #include <float.h>
 #include <iostream>
 #include <string>
