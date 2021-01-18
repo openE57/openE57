@@ -123,6 +123,7 @@ const int32_t  E57_INT32_MIN  = std::numeric_limits<int32_t>::lowest();
 const int32_t  E57_INT32_MAX  = std::numeric_limits<int32_t>::max();
 const int64_t  E57_INT64_MIN  = std::numeric_limits<int64_t>::lowest();
 const int64_t  E57_INT64_MAX  = std::numeric_limits<int64_t>::max();
+
 const uint8_t  E57_UINT8_MIN  = std::numeric_limits<uint8_t>::lowest();
 const uint8_t  E57_UINT8_MAX  = std::numeric_limits<uint8_t>::max();
 const uint16_t E57_UINT16_MIN = std::numeric_limits<uint16_t>::lowest();

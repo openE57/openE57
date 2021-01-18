@@ -11,6 +11,7 @@ if(MSVC)
   list(APPEND compiler_definitions
     _UNICODE
     WINDOWS
+    NOMINMAX # conflicts with std::numeric_limits
     $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:RELWITHDEBINFO>,$<CONFIG:MINSIZEREL>>:NDEBUG>
     $<$<CONFIG:DEBUG>:_DEBUG>)
 
