@@ -12,7 +12,10 @@ foreach(EXAMPLE ${EXAMPLES})
   target_compile_definitions(${EXAMPLE}  PUBLIC ${compiler_definitions})
   target_link_options(${EXAMPLE}  PUBLIC ${linker_flags})
 
-  target_include_directories(${EXAMPLE} PRIVATE ${CMAKE_SOURCE_DIR}/include)
+  target_include_directories(${EXAMPLE} PRIVATE 
+    ${CMAKE_SOURCE_DIR}/include 
+    ${XML_INCLUDE_DIRS} 
+    ${Boost_INCLUDE_DIR})
   target_link_libraries(${EXAMPLE} 
     PRIVATE 
       ${PROJECT_NAME} 

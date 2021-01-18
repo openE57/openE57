@@ -39,12 +39,9 @@
 #  include <stdlib.h>
 #endif
 
-#include <boost/cstdint.hpp> // for int8_t, int16_t, int32_t, etc...
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
-#include <float.h>
 #include <iostream>
+#include <limits> // standard integers definition and numeric limits
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -53,15 +50,15 @@ namespace e57
 {
 #endif
 
-// Use Boost type names for signed/unsigned integers in various witdths
-using boost::int16_t;
-using boost::int32_t;
-using boost::int64_t;
-using boost::int8_t;
-using boost::uint16_t;
-using boost::uint32_t;
-using boost::uint64_t;
-using boost::uint8_t;
+// Use std type names for signed/unsigned integers in various witdths
+using std::int16_t;
+using std::int32_t;
+using std::int64_t;
+using std::int8_t;
+using std::uint16_t;
+using std::uint32_t;
+using std::uint64_t;
+using std::uint8_t;
 
 // Shorthand for unicode string
 //! @brief UTF-8 encodeded Unicode string
@@ -116,27 +113,30 @@ const int E57_FOUNDATION_API_MINOR = 51;
 
 //! @cond documentNonPublic   The following aren't documented
 // Minimum and maximum values for integers
-const int8_t   E57_INT8_MIN   = -128;
-const int8_t   E57_INT8_MAX   = 127;
-const int16_t  E57_INT16_MIN  = -32768;
-const int16_t  E57_INT16_MAX  = 32767;
-const int32_t  E57_INT32_MIN  = -2147483647 - 1;
-const int32_t  E57_INT32_MAX  = 2147483647;
-const int64_t  E57_INT64_MIN  = -9223372036854775807LL - 1;
-const int64_t  E57_INT64_MAX  = 9223372036854775807LL;
-const uint8_t  E57_UINT8_MIN  = 0U;
-const uint8_t  E57_UINT8_MAX  = 0xffU; /* 255U */
-const uint16_t E57_UINT16_MIN = 0U;
-const uint16_t E57_UINT16_MAX = 0xffffU; /* 65535U */
-const uint32_t E57_UINT32_MIN = 0U;
-const uint32_t E57_UINT32_MAX = 0xffffffffU; /* 4294967295U */
-const uint64_t E57_UINT64_MIN = 0ULL;
-const uint64_t E57_UINT64_MAX = 0xffffffffffffffffULL; /* 18446744073709551615ULL */
+// see https://en.cppreference.com/w/cpp/types/numeric_limits
 
-const float  E57_FLOAT_MIN  = -FLT_MAX;
-const float  E57_FLOAT_MAX  = FLT_MAX;
-const double E57_DOUBLE_MIN = -DBL_MAX;
-const double E57_DOUBLE_MAX = DBL_MAX;
+const int8_t   E57_INT8_MIN   = std::numeric_limits<int8_t>::lowest();
+const int8_t   E57_INT8_MAX   = std::numeric_limits<int8_t>::max();
+const int16_t  E57_INT16_MIN  = std::numeric_limits<int16_t>::lowest();
+const int16_t  E57_INT16_MAX  = std::numeric_limits<int16_t>::max();
+const int32_t  E57_INT32_MIN  = std::numeric_limits<int32_t>::lowest();
+const int32_t  E57_INT32_MAX  = std::numeric_limits<int32_t>::max();
+const int64_t  E57_INT64_MIN  = std::numeric_limits<int64_t>::lowest();
+const int64_t  E57_INT64_MAX  = std::numeric_limits<int64_t>::max();
+
+const uint8_t  E57_UINT8_MIN  = std::numeric_limits<uint8_t>::lowest();
+const uint8_t  E57_UINT8_MAX  = std::numeric_limits<uint8_t>::max();
+const uint16_t E57_UINT16_MIN = std::numeric_limits<uint16_t>::lowest();
+const uint16_t E57_UINT16_MAX = std::numeric_limits<uint16_t>::max();
+const uint32_t E57_UINT32_MIN = std::numeric_limits<uint32_t>::lowest();
+const uint32_t E57_UINT32_MAX = std::numeric_limits<uint32_t>::max();
+const uint64_t E57_UINT64_MIN = std::numeric_limits<uint64_t>::lowest();
+const uint64_t E57_UINT64_MAX = std::numeric_limits<uint64_t>::max();
+
+const float  E57_FLOAT_MIN  = std::numeric_limits<float>::lowest();
+const float  E57_FLOAT_MAX  = std::numeric_limits<float>::max();
+const double E57_DOUBLE_MIN = std::numeric_limits<double>::lowest();
+const double E57_DOUBLE_MAX = std::numeric_limits<double>::max();
 //! @endcond
 
 // Forward references to classes in this header

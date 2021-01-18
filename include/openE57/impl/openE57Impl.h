@@ -32,7 +32,6 @@
 #define E57FOUNDATIONIMPL_H_INCLUDED
 
 #include <algorithm>
-#include <boost/crc.hpp> // for boost::crc_optimal
 #include <iomanip>
 #include <iostream>
 #include <set>
@@ -362,14 +361,6 @@ private:
   int      fd_;
   bool     readOnly_;
   uint64_t logicalLength_;
-  boost::crc_optimal<32,         // bits
-                     0x1EDC6F41, // truncated polynomial, iSCSI
-                     0xFFFFFFFF, // initial remainder
-                     0xFFFFFFFF, // final xor value
-                     true,       // reflect input
-                     true        // reflect remainder
-                     >
-    crcCalculator_;
 
 #ifdef SAFE_MODE
   void     getCurrentPageAndOffset(uint64_t& page, size_t& pageOffset, OffsetMode omode = logical);
@@ -1659,20 +1650,20 @@ struct IndexPacket
 { /// Note this is whole packet, not just header
   static const unsigned MAX_ENTRIES = 2048;
 
-  boost::uint8_t  packetType;  // = E57_INDEX_PACKET
-  boost::uint8_t  packetFlags; // flag bitfields
-  boost::uint16_t packetLogicalLengthMinus1;
-  boost::uint16_t entryCount;
-  boost::uint8_t  indexLevel;
-  boost::uint8_t  reserved1[9]; // must be zero
+  std::uint8_t  packetType;  // = E57_INDEX_PACKET
+  std::uint8_t  packetFlags; // flag bitfields
+  std::uint16_t packetLogicalLengthMinus1;
+  std::uint16_t entryCount;
+  std::uint8_t  indexLevel;
+  std::uint8_t  reserved1[9]; // must be zero
   struct IndexPacketEntry
   {
-    boost::uint64_t chunkRecordNumber;
-    boost::uint64_t chunkPhysicalOffset;
+    std::uint64_t chunkRecordNumber;
+    std::uint64_t chunkPhysicalOffset;
   } entries[MAX_ENTRIES];
 
   IndexPacket();
-  void verify(unsigned bufferLength = 0, boost::uint64_t totalRecordCount = 0, boost::uint64_t fileSize = 0);
+  void verify(unsigned bufferLength = 0, std::uint64_t totalRecordCount = 0, std::uint64_t fileSize = 0);
 #ifdef E57_BIGENDIAN
   void swab(bool toLittleEndian);
 #else

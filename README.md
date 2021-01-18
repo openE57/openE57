@@ -8,6 +8,7 @@ The library is compiled as C++17, since some of following language intrinsics an
 
 * constexpr values
 * enum classes
+* random (replaces boost::uuid)
 * filesystem (replaces boost::filesystem)
 * thread (replaces boost::thread)
 * memory (replaces boost::shared_ptr and std::auto_ptr)
@@ -20,7 +21,7 @@ You need the following tools to build this library:
 
 * A C++17 compiler (MSVC 2017+, gcc 7+, clang 7+)
 * A recent version of CMake (3.15+)
-* A recent version of conan (1.25+)
+* A recent version of conan (1.28+)
 
 ## How to build it
 

@@ -1,13 +1,13 @@
 [requires]
+boost/1.75.0
 icu/68.2
 xerces-c/3.2.3
-boost/1.75.0
 
 [generators]
-cmake
+cmake_find_package
 
 [options]
 boost:multithreading=True
 boost:shared=False
-xerces-c:shared=False
 icu:shared=False
+xerces-c:shared=False

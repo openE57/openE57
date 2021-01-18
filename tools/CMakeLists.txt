@@ -18,6 +18,8 @@ foreach(TOOL ${TOOLS})
     PRIVATE 
       $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
       ${CMAKE_SOURCE_DIR}/include
+      ${XML_INCLUDE_DIRS}
+      ${Boost_INCLUDE_DIR}
   )
 
   target_link_libraries(${TOOL} 
@@ -43,6 +45,8 @@ target_include_directories(las2e57
   PRIVATE 
     $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
     ${CMAKE_SOURCE_DIR}/include
+    ${XML_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIR}
 )
 
 target_link_libraries(las2e57 
@@ -51,6 +55,7 @@ target_link_libraries(las2e57
       LASReader 
       time_conversion 
       ${XML_LIBRARIES}
+      ${Boost_LIBRARIES}
       ${CMAKE_THREAD_LIBS_INIT}
 )
 

@@ -58,12 +58,9 @@
 #  error "no supported OS platform defined"
 #endif
 
+#include <cstdint>
 #include <sstream>
-//#include <memory> //??? needed?
-#include <cmath>   //??? needed?
-#include <float.h> //??? needed?
-#include <fstream> //??? needed?
-#include <iomanip> //??? needed?
+#include <cmath>   // floor()
 
 #ifdef E57_MAX_VERBOSE
 #  include <iostream>
@@ -73,6 +70,10 @@ using std::endl;
 #endif
 
 #include <openE57/impl/openE57Impl.h>
+#include <openE57/impl/crc.h>
+
+const auto CRC32C_LOOKUP_TABLE = CRC::CRC_32_C().MakeTable();
+
 using namespace e57;
 // using namespace std;
 using std::cerr;
@@ -88,11 +89,6 @@ using std::string;
 using std::stringstream;
 using std::unique_ptr;
 using std::vector;
-
-// using namespace boost;
-using boost::dynamic_pointer_cast;
-using std::shared_ptr;
-using std::weak_ptr;
 
 #include <xercesc/util/TransService.hpp>
 
@@ -115,7 +111,7 @@ const XMLCh att_recordCount[]
   = {chLatin_r, chLatin_e, chLatin_c, chLatin_o, chLatin_r, chLatin_d, chLatin_C, chLatin_o, chLatin_u, chLatin_n, chLatin_t, chNull};
 } // namespace
 
-//???using namespace std::tr1;
+//???using namespace std;
 
 ///============================================================================================================
 ///============================================================================================================
@@ -183,7 +179,7 @@ void BlobSectionHeader::dump(int indent, std::ostream& os)
 ///================================================================
 ///================================================================
 
-NodeImpl::NodeImpl(weak_ptr<ImageFileImpl> destImageFile) : destImageFile_(destImageFile), isAttached_(false)
+NodeImpl::NodeImpl(std::weak_ptr<ImageFileImpl> destImageFile) : destImageFile_(destImageFile), isAttached_(false)
 {
   checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__); // does checking for all node type ctors
 }
@@ -191,7 +187,7 @@ NodeImpl::NodeImpl(weak_ptr<ImageFileImpl> destImageFile) : destImageFile_(destI
 void NodeImpl::checkImageFileOpen(const char* srcFileName, int srcLineNumber, const char* srcFunctionName)
 {
   /// Throw an exception if destImageFile (destImageFile_) isn't open
-  shared_ptr<ImageFileImpl> destImageFile(destImageFile_);
+  std::shared_ptr<ImageFileImpl> destImageFile(destImageFile_);
   if (!destImageFile->isOpen())
   {
     throw E57Exception(E57_ERROR_IMAGEFILE_NOT_OPEN, "fileName=" + destImageFile->fileName(), srcFileName, srcLineNumber, srcFunctionName);
@@ -226,7 +222,7 @@ ustring NodeImpl::pathName()
     return ("/");
   else
   {
-    shared_ptr<NodeImpl> p(parent_);
+    std::shared_ptr<NodeImpl> p(parent_);
     if (p->isRoot())
       return ("/" + elementName_);
     else
@@ -234,7 +230,7 @@ ustring NodeImpl::pathName()
   }
 }
 
-ustring NodeImpl::relativePathName(shared_ptr<NodeImpl> origin, ustring childPathName)
+ustring NodeImpl::relativePathName(std::shared_ptr<NodeImpl> origin, ustring childPathName)
 {
   checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
   if (origin == shared_from_this())
@@ -246,7 +242,7 @@ ustring NodeImpl::relativePathName(shared_ptr<NodeImpl> origin, ustring childPat
   else
   {
     /// Assemble relativePathName from right to left, recursively
-    shared_ptr<NodeImpl> p(parent_);
+    std::shared_ptr<NodeImpl> p(parent_);
     if (childPathName == "")
       return (p->relativePathName(origin, elementName_));
     else
@@ -260,10 +256,10 @@ ustring NodeImpl::elementName()
   return (elementName_);
 }
 
-shared_ptr<ImageFileImpl> NodeImpl::destImageFile()
+std::shared_ptr<ImageFileImpl> NodeImpl::destImageFile()
 {
   /// don't checkImageFileOpen
-  shared_ptr<ImageFileImpl> imf(destImageFile_);
+  std::shared_ptr<ImageFileImpl> imf(destImageFile_);
   return (imf);
 }
 
@@ -282,11 +278,11 @@ void NodeImpl::setAttachedRecursive()
 ustring NodeImpl::imageFileName()
 {
   /// don't checkImageFileOpen
-  shared_ptr<ImageFileImpl> imf(destImageFile_);
+  std::shared_ptr<ImageFileImpl> imf(destImageFile_);
   return (imf->fileName());
 }
 
-void NodeImpl::setParent(shared_ptr<NodeImpl> parent, const ustring& elementName)
+void NodeImpl::setParent(std::shared_ptr<NodeImpl> parent, const ustring& elementName)
 {
   /// don't checkImageFileOpen
   /// First check if our parent_ is already set, throw E57_ERROR_ALREADY_HAS_PARENT
@@ -308,12 +304,12 @@ void NodeImpl::setParent(shared_ptr<NodeImpl> parent, const ustring& elementName
     setAttachedRecursive();
 }
 
-shared_ptr<NodeImpl> NodeImpl::getRoot()
+std::shared_ptr<NodeImpl> NodeImpl::getRoot()
 {
   /// don't checkImageFileOpen
-  shared_ptr<NodeImpl> p(shared_from_this());
+  std::shared_ptr<NodeImpl> p(shared_from_this());
   while (!p->isRoot())
-    p = shared_ptr<NodeImpl>(p->parent_); //??? check if bad ptr?
+    p = std::shared_ptr<NodeImpl>(p->parent_); //??? check if bad ptr?
   return (p);
 }
 
@@ -322,17 +318,17 @@ bool NodeImpl::isTypeConstrained()
 {
   /// don't checkImageFileOpen
   /// A node is type constrained if any of its parents is an homo VECTOR or COMPRESSED_VECTOR with more than one child
-  shared_ptr<NodeImpl> p(shared_from_this());
+  std::shared_ptr<NodeImpl> p(shared_from_this());
   while (!p->isRoot())
   {
     /// We have a parent since we are not root
-    p = shared_ptr<NodeImpl>(p->parent_); //??? check if bad ptr?
+    p = std::shared_ptr<NodeImpl>(p->parent_); //??? check if bad ptr?
 
     switch (p->type())
     {
     case E57_VECTOR: {
-      /// Downcast to shared_ptr<VectorNodeImpl>
-      shared_ptr<VectorNodeImpl> ai(dynamic_pointer_cast<VectorNodeImpl>(p));
+      /// Downcast to std::shared_ptr<VectorNodeImpl>
+      std::shared_ptr<VectorNodeImpl> ai(std::dynamic_pointer_cast<VectorNodeImpl>(p));
       if (!ai) // check if failed
         throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "this->elementName=" + this->elementName() + " elementName=" + p->elementName());
 
@@ -363,7 +359,7 @@ std::shared_ptr<NodeImpl> NodeImpl::get(const ustring& pathName)
   /// Parse to determine if pathName is absolute
   bool                      isRelative;
   vector<ustring>           fields;
-  shared_ptr<ImageFileImpl> imf(destImageFile_);
+  std::shared_ptr<ImageFileImpl> imf(destImageFile_);
   imf->pathNameParse(pathName, isRelative, fields); // throws if bad pathName
 
   /// If not an absolute path name, have error
@@ -371,7 +367,7 @@ std::shared_ptr<NodeImpl> NodeImpl::get(const ustring& pathName)
     throw E57_EXCEPTION2(E57_ERROR_BAD_PATH_NAME, "this->pathName=" + this->pathName() + " pathName=" + pathName);
 
   /// Find root of the tree
-  shared_ptr<NodeImpl> root(shared_from_this()->getRoot());
+  std::shared_ptr<NodeImpl> root(shared_from_this()->getRoot());
 
   /// Check to make sure root node is non-terminal type (otherwise have stack overflow).
   switch (root->type())
@@ -387,7 +383,7 @@ std::shared_ptr<NodeImpl> NodeImpl::get(const ustring& pathName)
   return (root->get(pathName));
 }
 
-void NodeImpl::set(const ustring& pathName, shared_ptr<NodeImpl> ni, bool autoPathCreate)
+void NodeImpl::set(const ustring& pathName, std::shared_ptr<NodeImpl> ni, bool autoPathCreate)
 {
   /// This is common virtual function for terminal E57 element types: Integer, ScaledInteger, Float, Blob.
   /// The non-terminal types override this virtual function.
@@ -398,7 +394,7 @@ void NodeImpl::set(const ustring& pathName, shared_ptr<NodeImpl> ni, bool autoPa
   /// Parse to determine if pathName is absolute
   bool                      isRelative;
   vector<ustring>           fields;
-  shared_ptr<ImageFileImpl> imf(destImageFile_);
+  std::shared_ptr<ImageFileImpl> imf(destImageFile_);
   imf->pathNameParse(pathName, isRelative, fields); // throws if bad pathName
 
   /// If not an absolute path name, have error
@@ -406,7 +402,7 @@ void NodeImpl::set(const ustring& pathName, shared_ptr<NodeImpl> ni, bool autoPa
     throw E57_EXCEPTION2(E57_ERROR_BAD_PATH_NAME, "this->pathName=" + this->pathName() + " pathName=" + pathName);
 
   /// Find root of the tree
-  shared_ptr<NodeImpl> root(shared_from_this()->getRoot());
+  std::shared_ptr<NodeImpl> root(shared_from_this()->getRoot());
 
   /// Check to make sure root node is non-terminal type (otherwise have stack overflow).
   switch (root->type())
@@ -428,7 +424,7 @@ void NodeImpl::set(const std::vector<ustring>& /*fields*/, unsigned /*level*/, s
   throw E57_EXCEPTION1(E57_ERROR_BAD_PATH_NAME); //???
 }
 
-void NodeImpl::checkBuffers(const vector<SourceDestBuffer>& sdbufs, bool allowMissing) //??? convert sdbufs to vector of shared_ptr
+void NodeImpl::checkBuffers(const vector<SourceDestBuffer>& sdbufs, bool allowMissing) //??? convert sdbufs to vector of std::shared_ptr
 {
   /// this node is prototype of CompressedVector
 
@@ -463,7 +459,7 @@ void NodeImpl::checkBuffers(const vector<SourceDestBuffer>& sdbufs, bool allowMi
   }
 }
 
-bool NodeImpl::findTerminalPosition(shared_ptr<NodeImpl> target, uint64_t& countFromLeft)
+bool NodeImpl::findTerminalPosition(std::shared_ptr<NodeImpl> target, uint64_t& countFromLeft)
 {
   /// don't checkImageFileOpen
 
@@ -521,7 +517,7 @@ void NodeImpl::dump(int indent, ostream& os)
 #endif
 
 //================================================================================================
-StructureNodeImpl::StructureNodeImpl(weak_ptr<ImageFileImpl> destImageFile) : NodeImpl(destImageFile)
+StructureNodeImpl::StructureNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile) : NodeImpl(destImageFile)
 {
   checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
 }
@@ -533,7 +529,7 @@ NodeType StructureNodeImpl::type()
 }
 
 //??? use visitor?
-bool StructureNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
+bool StructureNodeImpl::isTypeEquivalent(std::shared_ptr<NodeImpl> ni)
 {
   /// don't checkImageFileOpen
 
@@ -541,8 +537,8 @@ bool StructureNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
   if (ni->type() != E57_STRUCTURE)
     return (false);
 
-  /// Downcast to shared_ptr<StructureNodeImpl>, should succeed
-  shared_ptr<StructureNodeImpl> si(dynamic_pointer_cast<StructureNodeImpl>(ni));
+  /// Downcast to std::shared_ptr<StructureNodeImpl>, should succeed
+  std::shared_ptr<StructureNodeImpl> si(std::dynamic_pointer_cast<StructureNodeImpl>(ni));
   if (!si) // check if failed
     throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "this->pathName=" + this->pathName() + " elementName=" + ni->elementName());
 
@@ -577,7 +573,7 @@ bool StructureNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
 bool StructureNodeImpl::isDefined(const ustring& pathName)
 {
   checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
-  shared_ptr<NodeImpl> ni(lookup(pathName));
+  std::shared_ptr<NodeImpl> ni(lookup(pathName));
   return (ni != 0);
 }
 
@@ -597,10 +593,10 @@ int64_t StructureNodeImpl::childCount()
   return (children_.size());
 }
 
-shared_ptr<NodeImpl> StructureNodeImpl::get(int64_t index)
+std::shared_ptr<NodeImpl> StructureNodeImpl::get(int64_t index)
 {
   checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
-  if (index < 0 || index >= static_cast<boost::int64_t>(children_.size()))
+  if (index < 0 || index >= static_cast<std::int64_t>(children_.size()))
   { // %%% Possible truncation on platforms where size_t = uint64
     throw E57_EXCEPTION2(E57_ERROR_CHILD_INDEX_OUT_OF_BOUNDS,
                          "this->pathName=" + this->pathName() + " index=" + toString(index) + " size=" + toString(children_.size()));
@@ -608,22 +604,22 @@ shared_ptr<NodeImpl> StructureNodeImpl::get(int64_t index)
   return (children_.at(static_cast<unsigned>(index)));
 }
 
-shared_ptr<NodeImpl> StructureNodeImpl::get(const ustring& pathName)
+std::shared_ptr<NodeImpl> StructureNodeImpl::get(const ustring& pathName)
 {
   checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
-  shared_ptr<NodeImpl> ni(lookup(pathName));
+  std::shared_ptr<NodeImpl> ni(lookup(pathName));
   if (!ni)
     throw E57_EXCEPTION2(E57_ERROR_PATH_UNDEFINED, "this->pathName=" + this->pathName() + " pathName=" + pathName);
   return (ni);
 }
 
-shared_ptr<NodeImpl> StructureNodeImpl::lookup(const ustring& pathName)
+std::shared_ptr<NodeImpl> StructureNodeImpl::lookup(const ustring& pathName)
 {
   /// don't checkImageFileOpen
   //??? use lookup(fields, level) instead, for speed.
   bool                      isRelative;
   vector<ustring>           fields;
-  shared_ptr<ImageFileImpl> imf(destImageFile_);
+  std::shared_ptr<ImageFileImpl> imf(destImageFile_);
   imf->pathNameParse(pathName, isRelative, fields); // throws if bad pathName
 
   if (isRelative || isRoot())
@@ -631,11 +627,11 @@ shared_ptr<NodeImpl> StructureNodeImpl::lookup(const ustring& pathName)
     if (fields.size() == 0)
       if (isRelative)
       {
-        return (shared_ptr<NodeImpl>()); /// empty pointer
+        return (std::shared_ptr<NodeImpl>()); /// empty pointer
       }
       else
       {
-        shared_ptr<NodeImpl> root(getRoot());
+        std::shared_ptr<NodeImpl> root(getRoot());
         return (root);
       }
     else
@@ -648,7 +644,7 @@ shared_ptr<NodeImpl> StructureNodeImpl::lookup(const ustring& pathName)
           break;
       }
       if (i == children_.size())
-        return (shared_ptr<NodeImpl>()); /// empty pointer
+        return (std::shared_ptr<NodeImpl>()); /// empty pointer
       if (fields.size() == 1)
       {
         return (children_.at(i));
@@ -667,14 +663,14 @@ shared_ptr<NodeImpl> StructureNodeImpl::lookup(const ustring& pathName)
   else
   { /// Absolute pathname and we aren't at the root
     /// Find root of the tree
-    shared_ptr<NodeImpl> root(getRoot());
+    std::shared_ptr<NodeImpl> root(getRoot());
 
     /// Call lookup on root
     return (root->lookup(pathName));
   }
 }
 
-void StructureNodeImpl::set(int64_t index64, shared_ptr<NodeImpl> ni)
+void StructureNodeImpl::set(int64_t index64, std::shared_ptr<NodeImpl> ni)
 {
   checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
   unsigned index = static_cast<unsigned>(index64);
@@ -693,8 +689,8 @@ void StructureNodeImpl::set(int64_t index64, shared_ptr<NodeImpl> ni)
   }
 
   /// Verify that child is destined for same ImageFile as this is
-  shared_ptr<ImageFileImpl> thisDest(destImageFile());
-  shared_ptr<ImageFileImpl> niDest(ni->destImageFile());
+  std::shared_ptr<ImageFileImpl> thisDest(destImageFile());
+  std::shared_ptr<ImageFileImpl> niDest(ni->destImageFile());
   if (thisDest != niDest)
   {
     throw E57_EXCEPTION2(E57_ERROR_DIFFERENT_DEST_IMAGEFILE, "this->destImageFile" + thisDest->fileName() + " ni->destImageFile" + niDest->fileName());
@@ -712,7 +708,7 @@ void StructureNodeImpl::set(int64_t index64, shared_ptr<NodeImpl> ni)
   children_.push_back(ni);
 }
 
-void StructureNodeImpl::set(const ustring& pathName, shared_ptr<NodeImpl> ni, bool autoPathCreate)
+void StructureNodeImpl::set(const ustring& pathName, std::shared_ptr<NodeImpl> ni, bool autoPathCreate)
 {
   checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
   //??? parse pathName! throw if impossible, absolute and multi-level paths...
@@ -726,7 +722,7 @@ void StructureNodeImpl::set(const ustring& pathName, shared_ptr<NodeImpl> ni, bo
   vector<ustring> fields;
 
   /// Path may be absolute or relative with several levels.  Break string into individual levels.
-  shared_ptr<ImageFileImpl> imf(destImageFile_);
+  std::shared_ptr<ImageFileImpl> imf(destImageFile_);
   imf->pathNameParse(pathName, isRelative, fields); // throws if bad pathName
   if (isRelative)
   {
@@ -740,7 +736,7 @@ void StructureNodeImpl::set(const ustring& pathName, shared_ptr<NodeImpl> ni, bo
   }
 }
 
-void StructureNodeImpl::set(const vector<ustring>& fields, unsigned level, shared_ptr<NodeImpl> ni, bool autoPathCreate)
+void StructureNodeImpl::set(const vector<ustring>& fields, unsigned level, std::shared_ptr<NodeImpl> ni, bool autoPathCreate)
 {
 #ifdef E57_MAX_VERBOSE
   cout << "StructureNodeImpl::set: level=" << level << endl;
@@ -796,10 +792,10 @@ void StructureNodeImpl::set(const vector<ustring>& fields, unsigned level, share
     //??? what if extra fields are numbers?
 
     /// Do autoPathCreate: Create nested Struct objects for extra field names in path
-    shared_ptr<NodeImpl> parent(shared_from_this());
+    std::shared_ptr<NodeImpl> parent(shared_from_this());
     for (; level != fields.size() - 1; level++)
     {
-      shared_ptr<StructureNodeImpl> child(new StructureNodeImpl(destImageFile_));
+      std::shared_ptr<StructureNodeImpl> child(new StructureNodeImpl(destImageFile_));
       parent->set(fields.at(level), child);
       parent = child;
     }
@@ -808,7 +804,7 @@ void StructureNodeImpl::set(const vector<ustring>& fields, unsigned level, share
   }
 }
 
-void StructureNodeImpl::append(shared_ptr<NodeImpl> ni)
+void StructureNodeImpl::append(std::shared_ptr<NodeImpl> ni)
 {
   /// don't checkImageFileOpen, set() will do it
 
@@ -817,7 +813,7 @@ void StructureNodeImpl::append(shared_ptr<NodeImpl> ni)
 }
 
 //??? use visitor?
-void StructureNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, shared_ptr<NodeImpl> origin)
+void StructureNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin)
 {
   /// don't checkImageFileOpen
 
@@ -896,7 +892,7 @@ void StructureNodeImpl::dump(int indent, ostream& os)
 #endif
 
 //=============================================================================
-VectorNodeImpl::VectorNodeImpl(weak_ptr<ImageFileImpl> destImageFile, bool allowHeteroChildren)
+VectorNodeImpl::VectorNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, bool allowHeteroChildren)
 : StructureNodeImpl(destImageFile), allowHeteroChildren_(allowHeteroChildren)
 {
   /// don't checkImageFileOpen, StructNodeImpl() will do it
@@ -908,7 +904,7 @@ NodeType VectorNodeImpl::type()
   return (E57_VECTOR);
 }
 
-bool VectorNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
+bool VectorNodeImpl::isTypeEquivalent(std::shared_ptr<NodeImpl> ni)
 {
   /// don't checkImageFileOpen
 
@@ -916,8 +912,8 @@ bool VectorNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
   if (ni->type() != E57_VECTOR)
     return (false);
 
-  /// Downcast to shared_ptr<VectorNodeImpl>
-  shared_ptr<VectorNodeImpl> ai(dynamic_pointer_cast<VectorNodeImpl>(ni));
+  /// Downcast to std::shared_ptr<VectorNodeImpl>
+  std::shared_ptr<VectorNodeImpl> ai(std::dynamic_pointer_cast<VectorNodeImpl>(ni));
   if (!ai) // check if failed
     throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "this->elementName=" + this->elementName() + " elementName=" + ni->elementName());
 
@@ -946,7 +942,7 @@ bool VectorNodeImpl::allowHeteroChildren()
   return (allowHeteroChildren_);
 }
 
-void VectorNodeImpl::set(int64_t index64, shared_ptr<NodeImpl> ni)
+void VectorNodeImpl::set(int64_t index64, std::shared_ptr<NodeImpl> ni)
 {
   checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
   if (!allowHeteroChildren_)
@@ -996,7 +992,7 @@ void VectorNodeImpl::dump(int indent, ostream& os)
 #endif
 
 //=====================================================================================
-SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, int8_t* base, const size_t capacity,
+SourceDestBufferImpl::SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, int8_t* base, const size_t capacity,
                                            bool doConversion, bool doScaling, size_t stride)
 : destImageFile_(destImageFile), pathName_(pathName), memoryRepresentation_(E57_INT8), base_(reinterpret_cast<char*>(base)), capacity_(capacity),
   doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(0)
@@ -1005,7 +1001,7 @@ SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile
   checkState_();
 }
 
-SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, uint8_t* base, const size_t capacity,
+SourceDestBufferImpl::SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, uint8_t* base, const size_t capacity,
                                            bool doConversion, bool doScaling, size_t stride)
 : destImageFile_(destImageFile), pathName_(pathName), memoryRepresentation_(E57_UINT8), base_(reinterpret_cast<char*>(base)), capacity_(capacity),
   doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(0)
@@ -1014,7 +1010,7 @@ SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile
   checkState_();
 }
 
-SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, int16_t* base, const size_t capacity,
+SourceDestBufferImpl::SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, int16_t* base, const size_t capacity,
                                            bool doConversion, bool doScaling, size_t stride)
 : destImageFile_(destImageFile), pathName_(pathName), memoryRepresentation_(E57_INT16), base_(reinterpret_cast<char*>(base)), capacity_(capacity),
   doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(0)
@@ -1023,7 +1019,7 @@ SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile
   checkState_();
 }
 
-SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, uint16_t* base, const size_t capacity,
+SourceDestBufferImpl::SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, uint16_t* base, const size_t capacity,
                                            bool doConversion, bool doScaling, size_t stride)
 : destImageFile_(destImageFile), pathName_(pathName), memoryRepresentation_(E57_UINT16), base_(reinterpret_cast<char*>(base)), capacity_(capacity),
   doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(0)
@@ -1032,7 +1028,7 @@ SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile
   checkState_();
 }
 
-SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, int32_t* base, const size_t capacity,
+SourceDestBufferImpl::SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, int32_t* base, const size_t capacity,
                                            bool doConversion, bool doScaling, size_t stride)
 : destImageFile_(destImageFile), pathName_(pathName), memoryRepresentation_(E57_INT32), base_(reinterpret_cast<char*>(base)), capacity_(capacity),
   doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(0)
@@ -1041,7 +1037,7 @@ SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile
   checkState_();
 }
 
-SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, uint32_t* base, const size_t capacity,
+SourceDestBufferImpl::SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, uint32_t* base, const size_t capacity,
                                            bool doConversion, bool doScaling, size_t stride)
 : destImageFile_(destImageFile), pathName_(pathName), memoryRepresentation_(E57_UINT32), base_(reinterpret_cast<char*>(base)), capacity_(capacity),
   doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(0)
@@ -1050,7 +1046,7 @@ SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile
   checkState_();
 }
 
-SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, int64_t* base, const size_t capacity,
+SourceDestBufferImpl::SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, int64_t* base, const size_t capacity,
                                            bool doConversion, bool doScaling, size_t stride)
 : destImageFile_(destImageFile), pathName_(pathName), memoryRepresentation_(E57_INT64), base_(reinterpret_cast<char*>(base)), capacity_(capacity),
   doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(0)
@@ -1059,7 +1055,7 @@ SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile
   checkState_();
 }
 
-SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, bool* base, const size_t capacity, bool doConversion,
+SourceDestBufferImpl::SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, bool* base, const size_t capacity, bool doConversion,
                                            bool doScaling, size_t stride)
 : destImageFile_(destImageFile), pathName_(pathName), memoryRepresentation_(E57_BOOL), base_(reinterpret_cast<char*>(base)), capacity_(capacity),
   doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(0)
@@ -1068,7 +1064,7 @@ SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile
   checkState_();
 }
 
-SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, float* base, const size_t capacity, bool doConversion,
+SourceDestBufferImpl::SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, float* base, const size_t capacity, bool doConversion,
                                            bool doScaling, size_t stride)
 : destImageFile_(destImageFile), pathName_(pathName), memoryRepresentation_(E57_REAL32), base_(reinterpret_cast<char*>(base)), capacity_(capacity),
   doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(0)
@@ -1077,7 +1073,7 @@ SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile
   checkState_();
 }
 
-SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, double* base, const size_t capacity,
+SourceDestBufferImpl::SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, double* base, const size_t capacity,
                                            bool doConversion, bool doScaling, size_t stride)
 : destImageFile_(destImageFile), pathName_(pathName), memoryRepresentation_(E57_REAL64), base_(reinterpret_cast<char*>(base)), capacity_(capacity),
   doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(0)
@@ -1086,7 +1082,7 @@ SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile
   checkState_();
 }
 
-SourceDestBufferImpl::SourceDestBufferImpl(weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, vector<ustring>* b)
+SourceDestBufferImpl::SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, vector<ustring>* b)
 : destImageFile_(destImageFile), pathName_(pathName), memoryRepresentation_(E57_USTRING), base_(0), capacity_(0 /*updated below*/), doConversion_(false),
   doScaling_(false), stride_(0), nextIndex_(0), ustrings_(b)
 {
@@ -1107,12 +1103,12 @@ void SourceDestBufferImpl::checkState_()
 {
   /// Implement checkImageFileOpen functionality for SourceDestBufferImpl ctors
   /// Throw an exception if destImageFile (destImageFile_) isn't open
-  shared_ptr<ImageFileImpl> destImageFile(destImageFile_);
+  std::shared_ptr<ImageFileImpl> destImageFile(destImageFile_);
   if (!destImageFile->isOpen())
     throw E57_EXCEPTION2(E57_ERROR_IMAGEFILE_NOT_OPEN, "fileName=" + destImageFile->fileName());
 
   /// Check pathName is well formed (can't verify path is defined until associate sdbuffer with CompressedVector later)
-  shared_ptr<ImageFileImpl> imf(destImageFile_);
+  std::shared_ptr<ImageFileImpl> imf(destImageFile_);
   imf->pathNameCheckWellFormed(pathName_);
 
   if (memoryRepresentation_ != E57_USTRING)
@@ -1796,7 +1792,7 @@ void SourceDestBufferImpl::setNextString(const ustring& value)
   nextIndex_++;
 }
 
-void SourceDestBufferImpl::checkCompatible(shared_ptr<SourceDestBufferImpl> newBuf)
+void SourceDestBufferImpl::checkCompatible(std::shared_ptr<SourceDestBufferImpl> newBuf)
 {
   if (pathName_ != newBuf->pathName())
   {
@@ -1882,7 +1878,7 @@ void SourceDestBufferImpl::dump(int indent, ostream& os)
 #endif
 
 //=============================================================================
-CompressedVectorNodeImpl::CompressedVectorNodeImpl(weak_ptr<ImageFileImpl> destImageFile) : NodeImpl(destImageFile)
+CompressedVectorNodeImpl::CompressedVectorNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile) : NodeImpl(destImageFile)
 {
   // don't checkImageFileOpen, NodeImpl() will do it
 
@@ -1896,7 +1892,7 @@ NodeType CompressedVectorNodeImpl::type()
   return (E57_COMPRESSED_VECTOR);
 }
 
-void CompressedVectorNodeImpl::setPrototype(shared_ptr<NodeImpl> prototype)
+void CompressedVectorNodeImpl::setPrototype(std::shared_ptr<NodeImpl> prototype)
 {
   // don't checkImageFileOpen, ctor did it
 
@@ -1914,8 +1910,8 @@ void CompressedVectorNodeImpl::setPrototype(shared_ptr<NodeImpl> prototype)
   }
 
   /// Verify that prototype is destined for same ImageFile as this is
-  shared_ptr<ImageFileImpl> thisDest(destImageFile());
-  shared_ptr<ImageFileImpl> prototypeDest(prototype->destImageFile());
+  std::shared_ptr<ImageFileImpl> thisDest(destImageFile());
+  std::shared_ptr<ImageFileImpl> prototypeDest(prototype->destImageFile());
   if (thisDest != prototypeDest)
   {
     throw E57_EXCEPTION2(E57_ERROR_DIFFERENT_DEST_IMAGEFILE,
@@ -1929,13 +1925,13 @@ void CompressedVectorNodeImpl::setPrototype(shared_ptr<NodeImpl> prototype)
   /// This means that prototype is a root node (has no parent).
 }
 
-shared_ptr<NodeImpl> CompressedVectorNodeImpl::getPrototype()
+std::shared_ptr<NodeImpl> CompressedVectorNodeImpl::getPrototype()
 {
   checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
   return (prototype_); //??? check defined
 }
 
-void CompressedVectorNodeImpl::setCodecs(shared_ptr<VectorNodeImpl> codecs)
+void CompressedVectorNodeImpl::setCodecs(std::shared_ptr<VectorNodeImpl> codecs)
 {
   // don't checkImageFileOpen, ctor did it
 
@@ -1952,8 +1948,8 @@ void CompressedVectorNodeImpl::setCodecs(shared_ptr<VectorNodeImpl> codecs)
   }
 
   /// Verify that codecs is destined for same ImageFile as this is
-  shared_ptr<ImageFileImpl> thisDest(destImageFile());
-  shared_ptr<ImageFileImpl> codecsDest(codecs->destImageFile());
+  std::shared_ptr<ImageFileImpl> thisDest(destImageFile());
+  std::shared_ptr<ImageFileImpl> codecsDest(codecs->destImageFile());
   if (thisDest != codecsDest)
   {
     throw E57_EXCEPTION2(E57_ERROR_DIFFERENT_DEST_IMAGEFILE, "this->destImageFile" + thisDest->fileName() + " codecs->destImageFile" + codecsDest->fileName());
@@ -1965,13 +1961,13 @@ void CompressedVectorNodeImpl::setCodecs(shared_ptr<VectorNodeImpl> codecs)
   /// This means that codecs is a root node (has no parent).
 }
 
-shared_ptr<VectorNodeImpl> CompressedVectorNodeImpl::getCodecs()
+std::shared_ptr<VectorNodeImpl> CompressedVectorNodeImpl::getCodecs()
 {
   checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
   return (codecs_); //??? check defined
 }
 
-bool CompressedVectorNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
+bool CompressedVectorNodeImpl::isTypeEquivalent(std::shared_ptr<NodeImpl> ni)
 {
   // don't checkImageFileOpen
 
@@ -1981,8 +1977,8 @@ bool CompressedVectorNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
   if (ni->type() != E57_COMPRESSED_VECTOR)
     return (false);
 
-  /// Downcast to shared_ptr<CompressedVectorNodeImpl>
-  shared_ptr<CompressedVectorNodeImpl> cvi(dynamic_pointer_cast<CompressedVectorNodeImpl>(ni));
+  /// Downcast to std::shared_ptr<CompressedVectorNodeImpl>
+  std::shared_ptr<CompressedVectorNodeImpl> cvi(std::dynamic_pointer_cast<CompressedVectorNodeImpl>(ni));
   if (!cvi) // check if failed
     throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "this->elementName=" + this->elementName() + " elementName=" + ni->elementName());
 
@@ -2025,7 +2021,7 @@ int64_t CompressedVectorNodeImpl::childCount()
   return (recordCount_);
 }
 
-void CompressedVectorNodeImpl::checkLeavesInSet(const std::set<ustring>& /*pathNames*/, shared_ptr<NodeImpl> /*origin*/)
+void CompressedVectorNodeImpl::checkLeavesInSet(const std::set<ustring>& /*pathNames*/, std::shared_ptr<NodeImpl> /*origin*/)
 {
   // don't checkImageFileOpen
 
@@ -2081,11 +2077,11 @@ void CompressedVectorNodeImpl::dump(int indent, ostream& os)
 }
 #endif
 
-shared_ptr<CompressedVectorWriterImpl> CompressedVectorNodeImpl::writer(vector<SourceDestBuffer> sbufs)
+std::shared_ptr<CompressedVectorWriterImpl> CompressedVectorNodeImpl::writer(vector<SourceDestBuffer> sbufs)
 {
   checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
 
-  shared_ptr<ImageFileImpl> destImageFile(destImageFile_);
+  std::shared_ptr<ImageFileImpl> destImageFile(destImageFile_);
 
   /// Check don't have any writers/readers open for this ImageFile
   if (destImageFile->writerCount() > 0)
@@ -2109,24 +2105,24 @@ shared_ptr<CompressedVectorWriterImpl> CompressedVectorNodeImpl::writer(vector<S
   if (!isAttached())
     throw E57_EXCEPTION2(E57_ERROR_NODE_UNATTACHED, "fileName=" + destImageFile->fileName());
 
-  /// Get pointer to me (really shared_ptr<CompressedVectorNodeImpl>)
-  shared_ptr<NodeImpl> ni(shared_from_this());
+  /// Get pointer to me (really std::shared_ptr<CompressedVectorNodeImpl>)
+  std::shared_ptr<NodeImpl> ni(shared_from_this());
 
   /// Downcast pointer to right type
-  shared_ptr<CompressedVectorNodeImpl> cai(dynamic_pointer_cast<CompressedVectorNodeImpl>(ni));
+  std::shared_ptr<CompressedVectorNodeImpl> cai(std::dynamic_pointer_cast<CompressedVectorNodeImpl>(ni));
   if (!cai) // check if failed
     throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "this->elementName=" + this->elementName() + " elementName=" + ni->elementName());
 
-  /// Return a shared_ptr to new object
-  shared_ptr<CompressedVectorWriterImpl> cvwi(new CompressedVectorWriterImpl(cai, sbufs));
+  /// Return a std::shared_ptr to new object
+  std::shared_ptr<CompressedVectorWriterImpl> cvwi(new CompressedVectorWriterImpl(cai, sbufs));
   return (cvwi);
 }
 
-shared_ptr<CompressedVectorReaderImpl> CompressedVectorNodeImpl::reader(vector<SourceDestBuffer> dbufs)
+std::shared_ptr<CompressedVectorReaderImpl> CompressedVectorNodeImpl::reader(vector<SourceDestBuffer> dbufs)
 {
   checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
 
-  shared_ptr<ImageFileImpl> destImageFile(destImageFile_);
+  std::shared_ptr<ImageFileImpl> destImageFile(destImageFile_);
 
   /// Check don't have any writers/readers open for this ImageFile
   if (destImageFile->writerCount() > 0)
@@ -2148,28 +2144,28 @@ shared_ptr<CompressedVectorReaderImpl> CompressedVectorNodeImpl::reader(vector<S
   if (!isAttached())
     throw E57_EXCEPTION2(E57_ERROR_NODE_UNATTACHED, "fileName=" + destImageFile->fileName());
 
-  /// Get pointer to me (really shared_ptr<CompressedVectorNodeImpl>)
-  shared_ptr<NodeImpl> ni(shared_from_this());
+  /// Get pointer to me (really std::shared_ptr<CompressedVectorNodeImpl>)
+  std::shared_ptr<NodeImpl> ni(shared_from_this());
 #ifdef E57_MAX_VERBOSE
   // cout << "constructing CAReader, ni:" << endl;
   // ni->dump(4);
 #endif
 
   /// Downcast pointer to right type
-  shared_ptr<CompressedVectorNodeImpl> cai(dynamic_pointer_cast<CompressedVectorNodeImpl>(ni));
+  std::shared_ptr<CompressedVectorNodeImpl> cai(std::dynamic_pointer_cast<CompressedVectorNodeImpl>(ni));
   if (!cai) // check if failed
     throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "this->elementName=" + this->elementName() + " elementName=" + ni->elementName());
 #ifdef E57_MAX_VERBOSE
     // cout<<"constructing CAReader, cai:"<<endl;
     // cai->dump(4);
 #endif
-  /// Return a shared_ptr to new object
-  shared_ptr<CompressedVectorReaderImpl> cvri(new CompressedVectorReaderImpl(cai, dbufs));
+  /// Return a std::shared_ptr to new object
+  std::shared_ptr<CompressedVectorReaderImpl> cvri(new CompressedVectorReaderImpl(cai, dbufs));
   return (cvri);
 }
 
 //=====================================================================
-IntegerNodeImpl::IntegerNodeImpl(weak_ptr<ImageFileImpl> destImageFile, int64_t value, int64_t minimum, int64_t maximum)
+IntegerNodeImpl::IntegerNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, int64_t value, int64_t minimum, int64_t maximum)
 : NodeImpl(destImageFile), value_(value), minimum_(minimum), maximum_(maximum)
 {
   // don't checkImageFileOpen, NodeImpl() will do it
@@ -2188,7 +2184,7 @@ NodeType IntegerNodeImpl::type()
   return (E57_INTEGER);
 }
 
-bool IntegerNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
+bool IntegerNodeImpl::isTypeEquivalent(std::shared_ptr<NodeImpl> ni)
 {
   // don't checkImageFileOpen
 
@@ -2196,8 +2192,8 @@ bool IntegerNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
   if (ni->type() != E57_INTEGER)
     return (false);
 
-  /// Downcast to shared_ptr<IntegerNodeImpl>
-  shared_ptr<IntegerNodeImpl> ii(dynamic_pointer_cast<IntegerNodeImpl>(ni));
+  /// Downcast to std::shared_ptr<IntegerNodeImpl>
+  std::shared_ptr<IntegerNodeImpl> ii(std::dynamic_pointer_cast<IntegerNodeImpl>(ni));
   if (!ii) // check if failed
     throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "this->elementName=" + this->elementName() + " elementName=" + ni->elementName());
 
@@ -2241,7 +2237,7 @@ int64_t IntegerNodeImpl::maximum()
   return (maximum_);
 }
 
-void IntegerNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, shared_ptr<NodeImpl> origin)
+void IntegerNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin)
 {
   // don't checkImageFileOpen
 
@@ -2289,7 +2285,7 @@ void IntegerNodeImpl::dump(int indent, ostream& os)
 #endif
 
 //=============================================================================
-ScaledIntegerNodeImpl::ScaledIntegerNodeImpl(weak_ptr<ImageFileImpl> destImageFile, int64_t rawValue, int64_t minimum, int64_t maximum, double scale,
+ScaledIntegerNodeImpl::ScaledIntegerNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, int64_t rawValue, int64_t minimum, int64_t maximum, double scale,
                                              double offset)
 : NodeImpl(destImageFile), value_(rawValue), minimum_(minimum), maximum_(maximum), scale_(scale), offset_(offset)
 {
@@ -2303,7 +2299,7 @@ ScaledIntegerNodeImpl::ScaledIntegerNodeImpl(weak_ptr<ImageFileImpl> destImageFi
   }
 }
 //=============================================================================		Added by SC
-ScaledIntegerNodeImpl::ScaledIntegerNodeImpl(weak_ptr<ImageFileImpl> destImageFile, double scaledValue, double scaledMinimum, double scaledMaximum,
+ScaledIntegerNodeImpl::ScaledIntegerNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, double scaledValue, double scaledMinimum, double scaledMaximum,
                                              double scale, double offset)
 : NodeImpl(destImageFile), value_((int64_t)floor((scaledValue - offset) / scale + .5)), minimum_((int64_t)floor((scaledMinimum - offset) / scale + .5)),
   maximum_((int64_t)floor((scaledMaximum - offset) / scale + .5)), scale_(scale), offset_(offset)
@@ -2323,7 +2319,7 @@ NodeType ScaledIntegerNodeImpl::type()
   return (E57_SCALED_INTEGER);
 }
 
-bool ScaledIntegerNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
+bool ScaledIntegerNodeImpl::isTypeEquivalent(std::shared_ptr<NodeImpl> ni)
 {
   // don't checkImageFileOpen
 
@@ -2331,8 +2327,8 @@ bool ScaledIntegerNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
   if (ni->type() != E57_SCALED_INTEGER)
     return (false);
 
-  /// Downcast to shared_ptr<ScaledIntegerNodeImpl>
-  shared_ptr<ScaledIntegerNodeImpl> ii(dynamic_pointer_cast<ScaledIntegerNodeImpl>(ni));
+  /// Downcast to std::shared_ptr<ScaledIntegerNodeImpl>
+  std::shared_ptr<ScaledIntegerNodeImpl> ii(std::dynamic_pointer_cast<ScaledIntegerNodeImpl>(ni));
   if (!ii) // check if failed
     throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "this->elementName=" + this->elementName() + " elementName=" + ni->elementName());
 
@@ -2412,7 +2408,7 @@ double ScaledIntegerNodeImpl::offset()
   return (offset_);
 }
 
-void ScaledIntegerNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, shared_ptr<NodeImpl> origin)
+void ScaledIntegerNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin)
 {
   // don't checkImageFileOpen
 
@@ -2467,7 +2463,7 @@ void ScaledIntegerNodeImpl::dump(int indent, ostream& os)
 
 //=============================================================================
 
-FloatNodeImpl::FloatNodeImpl(weak_ptr<ImageFileImpl> destImageFile, double value, FloatPrecision precision, double minimum, double maximum)
+FloatNodeImpl::FloatNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, double value, FloatPrecision precision, double minimum, double maximum)
 : NodeImpl(destImageFile), value_(value), precision_(precision), minimum_(minimum), maximum_(maximum)
 {
   // don't checkImageFileOpen, NodeImpl() will do it
@@ -2496,7 +2492,7 @@ NodeType FloatNodeImpl::type()
   return (E57_FLOAT);
 }
 
-bool FloatNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
+bool FloatNodeImpl::isTypeEquivalent(std::shared_ptr<NodeImpl> ni)
 {
   // don't checkImageFileOpen
 
@@ -2504,8 +2500,8 @@ bool FloatNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
   if (ni->type() != E57_FLOAT)
     return (false);
 
-  /// Downcast to shared_ptr<FloatNodeImpl>
-  shared_ptr<FloatNodeImpl> fi(dynamic_pointer_cast<FloatNodeImpl>(ni));
+  /// Downcast to std::shared_ptr<FloatNodeImpl>
+  std::shared_ptr<FloatNodeImpl> fi(std::dynamic_pointer_cast<FloatNodeImpl>(ni));
   if (!fi) // check if failed
     throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "this->elementName=" + this->elementName() + " elementName=" + ni->elementName());
 
@@ -2559,7 +2555,7 @@ double FloatNodeImpl::maximum()
   return (maximum_);
 }
 
-void FloatNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, shared_ptr<NodeImpl> origin)
+void FloatNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin)
 {
   // don't checkImageFileOpen
 
@@ -2642,7 +2638,7 @@ void FloatNodeImpl::dump(int indent, ostream& os)
 
 //=============================================================================
 
-StringNodeImpl::StringNodeImpl(weak_ptr<ImageFileImpl> destImageFile, const ustring value) : NodeImpl(destImageFile), value_(value)
+StringNodeImpl::StringNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring value) : NodeImpl(destImageFile), value_(value)
 {
   // don't checkImageFileOpen, NodeImpl() will do it
 }
@@ -2653,7 +2649,7 @@ NodeType StringNodeImpl::type()
   return (E57_STRING);
 }
 
-bool StringNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
+bool StringNodeImpl::isTypeEquivalent(std::shared_ptr<NodeImpl> ni)
 {
   // don't checkImageFileOpen
 
@@ -2681,7 +2677,7 @@ ustring StringNodeImpl::value()
   return (value_);
 }
 
-void StringNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, shared_ptr<NodeImpl> origin)
+void StringNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin)
 {
   // don't checkImageFileOpen
 
@@ -2752,11 +2748,11 @@ void StringNodeImpl::dump(int indent, ostream& os)
 
 //=============================================================================
 
-BlobNodeImpl::BlobNodeImpl(weak_ptr<ImageFileImpl> destImageFile, int64_t byteCount) : NodeImpl(destImageFile)
+BlobNodeImpl::BlobNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, int64_t byteCount) : NodeImpl(destImageFile)
 {
   // don't checkImageFileOpen, NodeImpl() will do it
 
-  shared_ptr<ImageFileImpl> imf(destImageFile);
+  std::shared_ptr<ImageFileImpl> imf(destImageFile);
 
   /// This what caller thinks blob length is
   blobLogicalLength_ = byteCount;
@@ -2785,13 +2781,13 @@ BlobNodeImpl::BlobNodeImpl(weak_ptr<ImageFileImpl> destImageFile, int64_t byteCo
   imf->file_->write(reinterpret_cast<char*>(&header), sizeof(header));
 }
 
-BlobNodeImpl::BlobNodeImpl(weak_ptr<ImageFileImpl> destImageFile, int64_t fileOffset, int64_t length) : NodeImpl(destImageFile)
+BlobNodeImpl::BlobNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, int64_t fileOffset, int64_t length) : NodeImpl(destImageFile)
 {
   /// Init blob object that already exists in E57 file currently reading.
 
   // don't checkImageFileOpen, NodeImpl() will do it
 
-  shared_ptr<ImageFileImpl> imf(destImageFile);
+  std::shared_ptr<ImageFileImpl> imf(destImageFile);
 
   /// Init state from values read from XML
   blobLogicalLength_          = length;
@@ -2805,7 +2801,7 @@ NodeType BlobNodeImpl::type()
   return (E57_BLOB);
 }
 
-bool BlobNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
+bool BlobNodeImpl::isTypeEquivalent(std::shared_ptr<NodeImpl> ni)
 {
   // don't checkImageFileOpen, NodeImpl() will do it
 
@@ -2813,8 +2809,8 @@ bool BlobNodeImpl::isTypeEquivalent(shared_ptr<NodeImpl> ni)
   if (ni->type() != E57_BLOB)
     return (false);
 
-  /// Downcast to shared_ptr<BlobNodeImpl>
-  shared_ptr<BlobNodeImpl> bi(dynamic_pointer_cast<BlobNodeImpl>(ni));
+  /// Downcast to std::shared_ptr<BlobNodeImpl>
+  std::shared_ptr<BlobNodeImpl> bi(std::dynamic_pointer_cast<BlobNodeImpl>(ni));
   if (!bi) // check if failed
     throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "this->elementName=" + this->elementName() + " elementName=" + ni->elementName());
 
@@ -2854,7 +2850,7 @@ void BlobNodeImpl::read(uint8_t* buf, int64_t start, size_t count)
     throw E57_EXCEPTION2(E57_ERROR_BAD_API_ARGUMENT, "this->pathName=" + this->pathName() + " start=" + toString(start) + " count=" + toString(count)
                                                        + " length=" + toString(blobLogicalLength_));
   }
-  shared_ptr<ImageFileImpl> imf(destImageFile_);
+  std::shared_ptr<ImageFileImpl> imf(destImageFile_);
   imf->file_->seek(binarySectionLogicalStart_ + sizeof(BlobSectionHeader) + start);
   imf->file_->read(reinterpret_cast<char*>(buf), static_cast<size_t>(count)); //??? arg1 void* ?
 }
@@ -2864,7 +2860,7 @@ void BlobNodeImpl::write(uint8_t* buf, int64_t start, size_t count)
   //??? check start not negative
   checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
 
-  shared_ptr<ImageFileImpl> destImageFile(destImageFile_);
+  std::shared_ptr<ImageFileImpl> destImageFile(destImageFile_);
 
   if (!destImageFile->isWriter())
     throw E57_EXCEPTION2(E57_ERROR_FILE_IS_READ_ONLY, "fileName=" + destImageFile->fileName());
@@ -2877,12 +2873,12 @@ void BlobNodeImpl::write(uint8_t* buf, int64_t start, size_t count)
                                                        + " length=" + toString(blobLogicalLength_));
   }
 
-  shared_ptr<ImageFileImpl> imf(destImageFile_);
+  std::shared_ptr<ImageFileImpl> imf(destImageFile_);
   imf->file_->seek(binarySectionLogicalStart_ + sizeof(BlobSectionHeader) + start);
   imf->file_->write(reinterpret_cast<char*>(buf), static_cast<size_t>(count)); //??? arg1 void* ?
 }
 
-void BlobNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, shared_ptr<NodeImpl> origin)
+void BlobNodeImpl::checkLeavesInSet(const std::set<ustring>& pathNames, std::shared_ptr<NodeImpl> origin)
 {
   // don't checkImageFileOpen
 
@@ -3091,7 +3087,7 @@ private:
     ustring        childText;                  // used by all types, accumlates all child text between tags
 
     /// Holds node for Structure, Vector, and CompressedVector so can append child elements
-    shared_ptr<NodeImpl> container_ni;
+    std::shared_ptr<NodeImpl> container_ni;
 
     ParseInfo(); // default ctor
     void dump(int indent = 0, std::ostream& os = std::cout);
@@ -3423,7 +3419,7 @@ void E57XmlParser::startElement(const XMLCh* const uri, const XMLCh* const local
     }
 
     /// Create container now, so can hold children
-    shared_ptr<StructureNodeImpl> s_ni(new StructureNodeImpl(imf_));
+    std::shared_ptr<StructureNodeImpl> s_ni(new StructureNodeImpl(imf_));
     pi.container_ni = s_ni;
 
     /// After have Structure, check again if E57Root, if so mark attached so all children will be attached when added
@@ -3467,7 +3463,7 @@ void E57XmlParser::startElement(const XMLCh* const uri, const XMLCh* const local
     }
 
     /// Create container now, so can hold children
-    shared_ptr<VectorNodeImpl> v_ni(new VectorNodeImpl(imf_, pi.allowHeterogeneousChildren));
+    std::shared_ptr<VectorNodeImpl> v_ni(new VectorNodeImpl(imf_, pi.allowHeterogeneousChildren));
     pi.container_ni = v_ni;
 
     /// Push info so far onto stack
@@ -3501,7 +3497,7 @@ void E57XmlParser::startElement(const XMLCh* const uri, const XMLCh* const local
 #endif
 
     /// Create container now, so can hold children
-    shared_ptr<CompressedVectorNodeImpl> cv_ni(new CompressedVectorNodeImpl(imf_));
+    std::shared_ptr<CompressedVectorNodeImpl> cv_ni(new CompressedVectorNodeImpl(imf_));
     cv_ni->setRecordCount(pi.recordCount);
     cv_ni->setBinarySectionLogicalStart(imf_->file_->physicalToLogical(pi.fileOffset)); //??? what if file_ is NULL?
     pi.container_ni = cv_ni;
@@ -3533,7 +3529,7 @@ void E57XmlParser::endElement(const XMLCh* const uri, const XMLCh* const localNa
 #endif
 
   /// We should now have all the info we need to create the node
-  shared_ptr<NodeImpl> current_ni;
+  std::shared_ptr<NodeImpl> current_ni;
   switch (pi.nodeType)
   {
   case E57_STRUCTURE:
@@ -3560,7 +3556,7 @@ void E57XmlParser::endElement(const XMLCh* const uri, const XMLCh* const localNa
     }
     else
       intValue = 0;
-    shared_ptr<IntegerNodeImpl> i_ni(new IntegerNodeImpl(imf_, intValue, pi.minimum, pi.maximum));
+    std::shared_ptr<IntegerNodeImpl> i_ni(new IntegerNodeImpl(imf_, intValue, pi.minimum, pi.maximum));
     current_ni = i_ni;
   }
   break;
@@ -3579,7 +3575,7 @@ void E57XmlParser::endElement(const XMLCh* const uri, const XMLCh* const localNa
     }
     else
       intValue = 0;
-    shared_ptr<ScaledIntegerNodeImpl> si_ni(new ScaledIntegerNodeImpl(imf_, intValue, pi.minimum, pi.maximum, pi.scale, pi.offset));
+    std::shared_ptr<ScaledIntegerNodeImpl> si_ni(new ScaledIntegerNodeImpl(imf_, intValue, pi.minimum, pi.maximum, pi.scale, pi.offset));
     current_ni = si_ni;
   }
   break;
@@ -3590,17 +3586,17 @@ void E57XmlParser::endElement(const XMLCh* const uri, const XMLCh* const localNa
       floatValue = atof(pi.childText.c_str());
     else
       floatValue = 0.0;
-    shared_ptr<FloatNodeImpl> f_ni(new FloatNodeImpl(imf_, floatValue, pi.precision, pi.floatMinimum, pi.floatMaximum));
+    std::shared_ptr<FloatNodeImpl> f_ni(new FloatNodeImpl(imf_, floatValue, pi.precision, pi.floatMinimum, pi.floatMaximum));
     current_ni = f_ni;
   }
   break;
   case E57_STRING: {
-    shared_ptr<StringNodeImpl> s_ni(new StringNodeImpl(imf_, pi.childText));
+    std::shared_ptr<StringNodeImpl> s_ni(new StringNodeImpl(imf_, pi.childText));
     current_ni = s_ni;
   }
   break;
   case E57_BLOB: {
-    shared_ptr<BlobNodeImpl> b_ni(new BlobNodeImpl(imf_, pi.fileOffset, pi.length));
+    std::shared_ptr<BlobNodeImpl> b_ni(new BlobNodeImpl(imf_, pi.fileOffset, pi.length));
     current_ni = b_ni;
   }
   break;
@@ -3621,12 +3617,12 @@ void E57XmlParser::endElement(const XMLCh* const uri, const XMLCh* const localNa
       throw E57_EXCEPTION2(E57_ERROR_BAD_XML_FORMAT, "currentType=" + toString(current_ni->type()) + " fileName=" + imf_->fileName() + " uri=" + toUString(uri)
                                                        + " localName=" + toUString(localName) + " qName=" + toUString(qName));
     }
-    imf_->root_ = dynamic_pointer_cast<StructureNodeImpl>(current_ni);
+    imf_->root_ = std::dynamic_pointer_cast<StructureNodeImpl>(current_ni);
     return;
   }
 
   /// Get next level up node (when entered function), which should be a container.
-  shared_ptr<NodeImpl> parent_ni = stack_.top().container_ni;
+  std::shared_ptr<NodeImpl> parent_ni = stack_.top().container_ni;
   if (!parent_ni)
   {
     throw E57_EXCEPTION2(E57_ERROR_BAD_XML_FORMAT,
@@ -3637,21 +3633,21 @@ void E57XmlParser::endElement(const XMLCh* const uri, const XMLCh* const localNa
   switch (parent_ni->type())
   {
   case E57_STRUCTURE: {
-    shared_ptr<StructureNodeImpl> struct_ni = dynamic_pointer_cast<StructureNodeImpl>(parent_ni);
+    std::shared_ptr<StructureNodeImpl> struct_ni = std::dynamic_pointer_cast<StructureNodeImpl>(parent_ni);
 
     /// Add named child to structure
     struct_ni->set(toUString(qName), current_ni);
   }
   break;
   case E57_VECTOR: {
-    shared_ptr<VectorNodeImpl> vector_ni = dynamic_pointer_cast<VectorNodeImpl>(parent_ni);
+    std::shared_ptr<VectorNodeImpl> vector_ni = std::dynamic_pointer_cast<VectorNodeImpl>(parent_ni);
 
     /// Add unnamed child to vector
     vector_ni->append(current_ni);
   }
   break;
   case E57_COMPRESSED_VECTOR: {
-    shared_ptr<CompressedVectorNodeImpl> cv_ni  = dynamic_pointer_cast<CompressedVectorNodeImpl>(parent_ni);
+    std::shared_ptr<CompressedVectorNodeImpl> cv_ni  = std::dynamic_pointer_cast<CompressedVectorNodeImpl>(parent_ni);
     ustring                              uQName = toUString(qName);
 
     /// n can be either prototype or codecs
@@ -3664,7 +3660,7 @@ void E57XmlParser::endElement(const XMLCh* const uri, const XMLCh* const localNa
         throw E57_EXCEPTION2(E57_ERROR_BAD_XML_FORMAT, "currentType=" + toString(current_ni->type()) + " fileName=" + imf_->fileName()
                                                          + " uri=" + toUString(uri) + " localName=" + toUString(localName) + " qName=" + toUString(qName));
       }
-      shared_ptr<VectorNodeImpl> vi = dynamic_pointer_cast<VectorNodeImpl>(current_ni);
+      std::shared_ptr<VectorNodeImpl> vi = std::dynamic_pointer_cast<VectorNodeImpl>(current_ni);
 
       /// Check VectorNode is hetero
       if (!vi->allowHeteroChildren())
@@ -3791,12 +3787,12 @@ void ImageFileImpl::construct2(const ustring& fileName, const ustring& mode, con
   unusedLogicalStart_ = sizeof(E57FileHeader); // Added by SC
   fileName_           = fileName;
 
-  /// Get shared_ptr to this object
-  shared_ptr<ImageFileImpl> imf = shared_from_this();
+  /// Get std::shared_ptr to this object
+  std::shared_ptr<ImageFileImpl> imf = shared_from_this();
 
   // Removed by SC
   //    file_ = reinterpret_cast<CheckedFile*>(-1); // yes, really! Work around a strange invariant check <rs 2010-06-16> //todo: FIXME
-  //    shared_ptr<StructureNodeImpl> root(new StructureNodeImpl(imf));
+  //    std::shared_ptr<StructureNodeImpl> root(new StructureNodeImpl(imf));
   //    file_ = 0;
   //    root_ = root; //??? ok?
   /// Mark the root as attached to an ImageFile (this one)
@@ -3819,7 +3815,7 @@ void ImageFileImpl::construct2(const ustring& fileName, const ustring& mode, con
       /// Open file for reading.
       file_ = new CheckedFile(fileName_, CheckedFile::readOnly);
 
-      shared_ptr<StructureNodeImpl> root(new StructureNodeImpl(imf)); // Added by SC
+      std::shared_ptr<StructureNodeImpl> root(new StructureNodeImpl(imf)); // Added by SC
       root_ = root;
       root_->setAttachedRecursive();
 
@@ -3904,7 +3900,7 @@ void ImageFileImpl::construct2(const ustring& fileName, const ustring& mode, con
       /// Open file for writing, truncate if already exists.
       file_ = new CheckedFile(fileName_, CheckedFile::writeCreate);
 
-      shared_ptr<StructureNodeImpl> root(new StructureNodeImpl(imf)); // Added by SC
+      std::shared_ptr<StructureNodeImpl> root(new StructureNodeImpl(imf)); // Added by SC
       root_ = root;
       root_->setAttachedRecursive();
 
@@ -4004,7 +4000,7 @@ void ImageFileImpl::decrReaderCount()
 #endif
 }
 
-shared_ptr<StructureNodeImpl> ImageFileImpl::root()
+std::shared_ptr<StructureNodeImpl> ImageFileImpl::root()
 {
   checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
   return (root_);
@@ -5026,31 +5022,9 @@ size_t CheckedFile::efficientBufferSize(size_t logicalBytes)
 
 uint32_t CheckedFile::checksum(char* buf, size_t size)
 {
-#ifdef SAFE_MODE
-#  if 1
-  /// Calc CRC32C of given data
-  crcCalculator_.reset();
-  crcCalculator_.process_bytes(buf, size);
-  uint32_t crc = crcCalculator_.checksum();
+  std::uint32_t crc = CRC::Calculate(buf, size, CRC32C_LOOKUP_TABLE);
   swab(crc); //!!! inside BIGENDIAN?
-  return (crc);
-#  else
-  /// For page size performance testing purposes, approximate the computation time for
-  /// computing checksum on a multiple of shorter blocks in the page.
-  /// This doesn't produce a legal file format, but approximates the processing time of smaller pages.
-  const int blocksPerPage = 1;
-  int       bytesPerBlock = size / blocksPerPage;
-  uint32_t  crc;
-  for (int block = 0; block < blocksPerPage; block++)
-  {
-    crcCalculator_.reset();
-    crcCalculator_.process_bytes(&buf[block * bytesPerBlock], bytesPerBlock);
-    crc = crcCalculator_.checksum();
-    swab(crc);
-  }
-  return (crc);
-#  endif
-#endif // SAFE_MODE
+  return crc;
 }
 
 #ifdef SAFE_MODE
@@ -5728,13 +5702,13 @@ void EmptyPacketHeader::dump(int indent, std::ostream& os)
 
 struct SortByBytestreamNumber
 {
-  bool operator()(shared_ptr<Encoder> lhs, shared_ptr<Encoder> rhs) const
+  bool operator()(std::shared_ptr<Encoder> lhs, std::shared_ptr<Encoder> rhs) const
   {
     return (lhs->bytestreamNumber() < rhs->bytestreamNumber());
   }
 };
 
-CompressedVectorWriterImpl::CompressedVectorWriterImpl(shared_ptr<CompressedVectorNodeImpl> ni, vector<SourceDestBuffer>& sbufs)
+CompressedVectorWriterImpl::CompressedVectorWriterImpl(std::shared_ptr<CompressedVectorNodeImpl> ni, vector<SourceDestBuffer>& sbufs)
 : isOpen_(false),            // set to true when succeed below
   cVector_(ni), seekIndex_() /// Init seek index for random access to beginning of chunks
 {
@@ -5765,7 +5739,7 @@ CompressedVectorWriterImpl::CompressedVectorWriterImpl(shared_ptr<CompressedVect
     ustring codecPath = sbufs_.at(i).pathName();
 
     /// Calc which stream the given path belongs to.  This depends on position of the node in the proto tree.
-    shared_ptr<NodeImpl> readNode         = proto_->get(sbufs.at(i).pathName());
+    std::shared_ptr<NodeImpl> readNode         = proto_->get(sbufs.at(i).pathName());
     uint64_t             bytestreamNumber = 0;
     if (!proto_->findTerminalPosition(readNode, bytestreamNumber))
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "sbufIndex=" + toString(i));
@@ -5787,7 +5761,7 @@ CompressedVectorWriterImpl::CompressedVectorWriterImpl(shared_ptr<CompressedVect
   }
 #endif
 
-  shared_ptr<ImageFileImpl> imf(ni->destImageFile_);
+  std::shared_ptr<ImageFileImpl> imf(ni->destImageFile_);
 
   /// Reserve space for CompressedVector binary section header, record location so can save to when writer closes.
   /// Request that file be extended with zeros since we will write to it at a later time (when writer closes).
@@ -5829,7 +5803,7 @@ void CompressedVectorWriterImpl::close()
 #ifdef E57_MAX_VERBOSE
   cout << "CompressedVectorWriterImpl::close() called" << endl; //???
 #endif
-  shared_ptr<ImageFileImpl> imf(cVector_->destImageFile_);
+  std::shared_ptr<ImageFileImpl> imf(cVector_->destImageFile_);
 
   /// Before anything that can throw, decrement writer count
   imf->decrWriterCount();
@@ -5916,8 +5890,8 @@ void CompressedVectorWriterImpl::setBuffers(vector<SourceDestBuffer>& sbufs)
     }
     for (size_t i = 0; i < sbufs_.size(); i++)
     {
-      shared_ptr<SourceDestBufferImpl> oldbuf = sbufs_[i].impl();
-      shared_ptr<SourceDestBufferImpl> newBuf = sbufs[i].impl();
+      std::shared_ptr<SourceDestBufferImpl> oldbuf = sbufs_[i].impl();
+      std::shared_ptr<SourceDestBufferImpl> newBuf = sbufs[i].impl();
 
       /// Throw exception if old and new not compatible
       oldbuf->checkCompatible(newBuf);
@@ -6108,7 +6082,7 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
 #endif
 
   /// Get smart pointer to ImageFileImpl from associated CompressedVector
-  shared_ptr<ImageFileImpl> imf(cVector_->destImageFile_);
+  std::shared_ptr<ImageFileImpl> imf(cVector_->destImageFile_);
 
   /// Use temp buf in object (is 64KBytes long) instead of allocating each time here
   char* packet = reinterpret_cast<char*>(&dataPacket_);
@@ -6188,7 +6162,7 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
   dataPacket_.packetType                = E57_DATA_PACKET;
   dataPacket_.packetFlags               = 0;
   dataPacket_.packetLogicalLengthMinus1 = static_cast<uint16_t>(packetLength - 1);           // %%% Truncation
-  dataPacket_.bytestreamCount           = static_cast<boost::uint16_t>(bytestreams_.size()); // %%% Truncation
+  dataPacket_.bytestreamCount           = static_cast<std::uint16_t>(bytestreams_.size()); // %%% Truncation
 
   /// Double check that data packet is well formed
   dataPacket_.verify(packetLength);
@@ -6233,10 +6207,10 @@ void CompressedVectorWriterImpl::checkImageFileOpen(const char* /*srcFileName*/,
 #if 0
 !!! how get destImageFile?
     /// Throw an exception if destImageFile (destImageFile_) isn't open
-    shared_ptr<CompressedVectorNodeImpl> cv(cVector_);
+    std::shared_ptr<CompressedVectorNodeImpl> cv(cVector_);
 
 !!! how get destImageFile?
-    shared_ptr<ImageFileImpl> destImageFile(destImageFile_);
+    std::shared_ptr<ImageFileImpl> destImageFile(destImageFile_);
     if (!destImageFile->isOpen()) {
         throw E57Exception(E57_ERROR_IMAGEFILE_NOT_OPEN,
                            "fileName=" + destImageFile->fileName(),
@@ -6304,7 +6278,7 @@ void CompressedVectorWriterImpl::dump(int indent, std::ostream& os)
 ///================================================================
 ///================================================================
 
-CompressedVectorReaderImpl::CompressedVectorReaderImpl(shared_ptr<CompressedVectorNodeImpl> cvi, vector<SourceDestBuffer>& dbufs)
+CompressedVectorReaderImpl::CompressedVectorReaderImpl(std::shared_ptr<CompressedVectorNodeImpl> cvi, vector<SourceDestBuffer>& dbufs)
 : isOpen_(false), // set to true when succeed below
   cVector_(cvi)
 {
@@ -6336,10 +6310,10 @@ CompressedVectorReaderImpl::CompressedVectorReaderImpl(shared_ptr<CompressedVect
     vector<SourceDestBuffer> theDbuf;
     theDbuf.push_back(dbufs.at(i));
 
-    shared_ptr<Decoder> decoder = Decoder::DecoderFactory(i, cVector_, theDbuf, ustring());
+    std::shared_ptr<Decoder> decoder = Decoder::DecoderFactory(i, cVector_, theDbuf, ustring());
 
     /// Calc which stream the given path belongs to.  This depends on position of the node in the proto tree.
-    shared_ptr<NodeImpl> readNode         = proto_->get(dbufs.at(i).pathName());
+    std::shared_ptr<NodeImpl> readNode         = proto_->get(dbufs.at(i).pathName());
     uint64_t             bytestreamNumber = 0;
     if (!proto_->findTerminalPosition(readNode, bytestreamNumber))
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "dbufIndex=" + toString(i));
@@ -6352,7 +6326,7 @@ CompressedVectorReaderImpl::CompressedVectorReaderImpl(shared_ptr<CompressedVect
   /// Get how many records are actually defined
   maxRecordCount_ = cvi->childCount();
 
-  shared_ptr<ImageFileImpl> imf(cVector_->destImageFile_);
+  std::shared_ptr<ImageFileImpl> imf(cVector_->destImageFile_);
 
   //??? what if fault in this constructor?
   cache_ = new PacketReadCache(imf->file_, 4 /*???*/);
@@ -6444,8 +6418,8 @@ void CompressedVectorReaderImpl::setBuffers(vector<SourceDestBuffer>& dbufs)
     }
     for (size_t i = 0; i < dbufs_.size(); i++)
     {
-      shared_ptr<SourceDestBufferImpl> oldBuf = dbufs_[i].impl();
-      shared_ptr<SourceDestBufferImpl> newBuf = dbufs[i].impl();
+      std::shared_ptr<SourceDestBufferImpl> oldBuf = dbufs_[i].impl();
+      std::shared_ptr<SourceDestBufferImpl> newBuf = dbufs[i].impl();
 
       /// Throw exception if old and new not compatible
       oldBuf->checkCompatible(newBuf);
@@ -6716,7 +6690,7 @@ std::shared_ptr<CompressedVectorNodeImpl> CompressedVectorReaderImpl::compressed
 void CompressedVectorReaderImpl::close()
 {
   /// Before anything that can throw, decrement reader count
-  shared_ptr<ImageFileImpl> imf(cVector_->destImageFile_);
+  std::shared_ptr<ImageFileImpl> imf(cVector_->destImageFile_);
   imf->decrReaderCount();
 
   checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
@@ -6739,10 +6713,10 @@ void CompressedVectorReaderImpl::checkImageFileOpen(const char* /*srcFileName*/,
 #if 0
 !!! how get destImageFile?
     /// Throw an exception if destImageFile (destImageFile_) isn't open
-    shared_ptr<CompressedVectorNodeImpl> cv(cVector_);
+    std::shared_ptr<CompressedVectorNodeImpl> cv(cVector_);
 
 !!! how get destImageFile?
-    shared_ptr<ImageFileImpl> destImageFile(destImageFile_);
+    std::shared_ptr<ImageFileImpl> destImageFile(destImageFile_);
     if (!destImageFile->isOpen()) {
         throw E57Exception(E57_ERROR_IMAGEFILE_NOT_OPEN,
                            "fileName=" + destImageFile->fileName());
@@ -6794,7 +6768,7 @@ void CompressedVectorReaderImpl::dump(int indent, std::ostream& os)
 //================================================================
 //================================================================
 
-shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber, shared_ptr<CompressedVectorNodeImpl> cVector, vector<SourceDestBuffer>& sbufs,
+std::shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber, std::shared_ptr<CompressedVectorNodeImpl> cVector, vector<SourceDestBuffer>& sbufs,
                                             ustring& /*codecPath*/)
 {
   //??? For now, only handle one input
@@ -6803,9 +6777,9 @@ shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber, shared_pt
   SourceDestBuffer sbuf = sbufs.at(0);
 
   /// Get node we are going to encode from the CompressedVector's prototype
-  shared_ptr<NodeImpl> prototype  = cVector->getPrototype();
+  std::shared_ptr<NodeImpl> prototype  = cVector->getPrototype();
   ustring              path       = sbuf.pathName();
-  shared_ptr<NodeImpl> encodeNode = prototype->get(path);
+  std::shared_ptr<NodeImpl> encodeNode = prototype->get(path);
 
 #ifdef E57_MAX_VERBOSE
   cout << "Node to encode:" << endl; //???
@@ -6814,12 +6788,12 @@ shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber, shared_pt
   switch (encodeNode->type())
   {
   case E57_INTEGER: {
-    shared_ptr<IntegerNodeImpl> ini = dynamic_pointer_cast<IntegerNodeImpl>(encodeNode); // downcast to correct type
+    std::shared_ptr<IntegerNodeImpl> ini = std::dynamic_pointer_cast<IntegerNodeImpl>(encodeNode); // downcast to correct type
     if (!ini)                                                                            // check if failed
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "elementName=" + encodeNode->elementName());
 
     /// Get pointer to parent ImageFileImpl, to call bitsNeeded()
-    shared_ptr<ImageFileImpl> imf(encodeNode->destImageFile_); //??? should be function for this,  imf->parentFile()  --> ImageFile?
+    std::shared_ptr<ImageFileImpl> imf(encodeNode->destImageFile_); //??? should be function for this,  imf->parentFile()  --> ImageFile?
 
     unsigned bitsPerRecord = imf->bitsNeeded(ini->minimum(), ini->maximum());
 
@@ -6827,41 +6801,41 @@ shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber, shared_pt
     /// Constuct Integer encoder with appropriate register size, based on number of bits stored.
     if (bitsPerRecord == 0)
     {
-      shared_ptr<Encoder> encoder(new ConstantIntegerEncoder(bytestreamNumber, sbuf, ini->minimum()));
+      std::shared_ptr<Encoder> encoder(new ConstantIntegerEncoder(bytestreamNumber, sbuf, ini->minimum()));
       return (encoder);
     }
     else if (bitsPerRecord <= 8)
     {
-      shared_ptr<Encoder> encoder(
+      std::shared_ptr<Encoder> encoder(
         new BitpackIntegerEncoder<uint8_t>(false, bytestreamNumber, sbuf, E57_DATA_PACKET_MAX /*!!!*/, ini->minimum(), ini->maximum(), 1.0, 0.0));
       return (encoder);
     }
     else if (bitsPerRecord <= 16)
     {
-      shared_ptr<Encoder> encoder(
+      std::shared_ptr<Encoder> encoder(
         new BitpackIntegerEncoder<uint16_t>(false, bytestreamNumber, sbuf, E57_DATA_PACKET_MAX /*!!!*/, ini->minimum(), ini->maximum(), 1.0, 0.0));
       return (encoder);
     }
     else if (bitsPerRecord <= 32)
     {
-      shared_ptr<Encoder> encoder(
+      std::shared_ptr<Encoder> encoder(
         new BitpackIntegerEncoder<uint32_t>(false, bytestreamNumber, sbuf, E57_DATA_PACKET_MAX /*!!!*/, ini->minimum(), ini->maximum(), 1.0, 0.0));
       return (encoder);
     }
     else
     {
-      shared_ptr<Encoder> encoder(
+      std::shared_ptr<Encoder> encoder(
         new BitpackIntegerEncoder<uint64_t>(false, bytestreamNumber, sbuf, E57_DATA_PACKET_MAX /*!!!*/, ini->minimum(), ini->maximum(), 1.0, 0.0));
       return (encoder);
     }
   }
   case E57_SCALED_INTEGER: {
-    shared_ptr<ScaledIntegerNodeImpl> sini = dynamic_pointer_cast<ScaledIntegerNodeImpl>(encodeNode); // downcast to correct type
+    std::shared_ptr<ScaledIntegerNodeImpl> sini = std::dynamic_pointer_cast<ScaledIntegerNodeImpl>(encodeNode); // downcast to correct type
     if (!sini)                                                                                        // check if failed
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "elementName=" + encodeNode->elementName());
 
     /// Get pointer to parent ImageFileImpl, to call bitsNeeded()
-    shared_ptr<ImageFileImpl> imf(encodeNode->destImageFile_); //??? should be function for this,  imf->parentFile()  --> ImageFile?
+    std::shared_ptr<ImageFileImpl> imf(encodeNode->destImageFile_); //??? should be function for this,  imf->parentFile()  --> ImageFile?
 
     unsigned bitsPerRecord = imf->bitsNeeded(sini->minimum(), sini->maximum());
 
@@ -6869,45 +6843,45 @@ shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber, shared_pt
     /// Constuct ScaledInteger encoder with appropriate register size, based on number of bits stored.
     if (bitsPerRecord == 0)
     {
-      shared_ptr<Encoder> encoder(new ConstantIntegerEncoder(bytestreamNumber, sbuf, sini->minimum()));
+      std::shared_ptr<Encoder> encoder(new ConstantIntegerEncoder(bytestreamNumber, sbuf, sini->minimum()));
       return (encoder);
     }
     else if (bitsPerRecord <= 8)
     {
-      shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint8_t>(true, bytestreamNumber, sbuf, E57_DATA_PACKET_MAX /*!!!*/, sini->minimum(),
+      std::shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint8_t>(true, bytestreamNumber, sbuf, E57_DATA_PACKET_MAX /*!!!*/, sini->minimum(),
                                                                      sini->maximum(), sini->scale(), sini->offset()));
       return (encoder);
     }
     else if (bitsPerRecord <= 16)
     {
-      shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint16_t>(true, bytestreamNumber, sbuf, E57_DATA_PACKET_MAX /*!!!*/, sini->minimum(),
+      std::shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint16_t>(true, bytestreamNumber, sbuf, E57_DATA_PACKET_MAX /*!!!*/, sini->minimum(),
                                                                       sini->maximum(), sini->scale(), sini->offset()));
       return (encoder);
     }
     else if (bitsPerRecord <= 32)
     {
-      shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint32_t>(true, bytestreamNumber, sbuf, E57_DATA_PACKET_MAX /*!!!*/, sini->minimum(),
+      std::shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint32_t>(true, bytestreamNumber, sbuf, E57_DATA_PACKET_MAX /*!!!*/, sini->minimum(),
                                                                       sini->maximum(), sini->scale(), sini->offset()));
       return (encoder);
     }
     else
     {
-      shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint64_t>(true, bytestreamNumber, sbuf, E57_DATA_PACKET_MAX /*!!!*/, sini->minimum(),
+      std::shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint64_t>(true, bytestreamNumber, sbuf, E57_DATA_PACKET_MAX /*!!!*/, sini->minimum(),
                                                                       sini->maximum(), sini->scale(), sini->offset()));
       return (encoder);
     }
   }
   case E57_FLOAT: {
-    shared_ptr<FloatNodeImpl> fni = dynamic_pointer_cast<FloatNodeImpl>(encodeNode); // downcast to correct type
+    std::shared_ptr<FloatNodeImpl> fni = std::dynamic_pointer_cast<FloatNodeImpl>(encodeNode); // downcast to correct type
     if (!fni)                                                                        // check if failed
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "elementName=" + encodeNode->elementName());
 
     //!!! need to pick smarter channel buffer sizes, here and elsewhere
-    shared_ptr<Encoder> encoder(new BitpackFloatEncoder(bytestreamNumber, sbuf, E57_DATA_PACKET_MAX /*!!!*/, fni->precision()));
+    std::shared_ptr<Encoder> encoder(new BitpackFloatEncoder(bytestreamNumber, sbuf, E57_DATA_PACKET_MAX /*!!!*/, fni->precision()));
     return (encoder);
   }
   case E57_STRING: {
-    shared_ptr<Encoder> encoder(new BitpackStringEncoder(bytestreamNumber, sbuf, E57_DATA_PACKET_MAX /*!!!*/));
+    std::shared_ptr<Encoder> encoder(new BitpackStringEncoder(bytestreamNumber, sbuf, E57_DATA_PACKET_MAX /*!!!*/));
     return (encoder);
   }
   default:
@@ -7311,15 +7285,15 @@ void BitpackStringEncoder::dump(int indent, std::ostream& os)
 
 //================================================================
 
-shared_ptr<Decoder> Decoder::DecoderFactory(unsigned                             bytestreamNumber, //!!! name ok?
-                                            shared_ptr<CompressedVectorNodeImpl> cVector, vector<SourceDestBuffer>& dbufs, const ustring& /*codecPath*/)
+std::shared_ptr<Decoder> Decoder::DecoderFactory(unsigned                             bytestreamNumber, //!!! name ok?
+                                            std::shared_ptr<CompressedVectorNodeImpl> cVector, vector<SourceDestBuffer>& dbufs, const ustring& /*codecPath*/)
 {
   //!!! verify single dbuf
 
   /// Get node we are going to decode from the CompressedVector's prototype
-  shared_ptr<NodeImpl> prototype  = cVector->getPrototype();
+  std::shared_ptr<NodeImpl> prototype  = cVector->getPrototype();
   ustring              path       = dbufs.at(0).pathName();
-  shared_ptr<NodeImpl> decodeNode = prototype->get(path);
+  std::shared_ptr<NodeImpl> decodeNode = prototype->get(path);
 
 #ifdef E57_MAX_VERBOSE
   cout << "Node to decode:" << endl; //???
@@ -7331,12 +7305,12 @@ shared_ptr<Decoder> Decoder::DecoderFactory(unsigned                            
   switch (decodeNode->type())
   {
   case E57_INTEGER: {
-    shared_ptr<IntegerNodeImpl> ini = dynamic_pointer_cast<IntegerNodeImpl>(decodeNode); // downcast to correct type
+    std::shared_ptr<IntegerNodeImpl> ini = std::dynamic_pointer_cast<IntegerNodeImpl>(decodeNode); // downcast to correct type
     if (!ini)                                                                            // check if failed
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "elementName=" + decodeNode->elementName());
 
     /// Get pointer to parent ImageFileImpl, to call bitsNeeded()
-    shared_ptr<ImageFileImpl> imf(decodeNode->destImageFile_); //??? should be function for this,  imf->parentFile()  --> ImageFile?
+    std::shared_ptr<ImageFileImpl> imf(decodeNode->destImageFile_); //??? should be function for this,  imf->parentFile()  --> ImageFile?
 
     unsigned bitsPerRecord = imf->bitsNeeded(ini->minimum(), ini->maximum());
 
@@ -7344,41 +7318,41 @@ shared_ptr<Decoder> Decoder::DecoderFactory(unsigned                            
     /// Constuct Integer decoder with appropriate register size, based on number of bits stored.
     if (bitsPerRecord == 0)
     {
-      shared_ptr<Decoder> decoder(new ConstantIntegerDecoder(false, bytestreamNumber, dbufs.at(0), ini->minimum(), 1.0, 0.0, maxRecordCount));
+      std::shared_ptr<Decoder> decoder(new ConstantIntegerDecoder(false, bytestreamNumber, dbufs.at(0), ini->minimum(), 1.0, 0.0, maxRecordCount));
       return (decoder);
     }
     else if (bitsPerRecord <= 8)
     {
-      shared_ptr<Decoder> decoder(
+      std::shared_ptr<Decoder> decoder(
         new BitpackIntegerDecoder<uint8_t>(false, bytestreamNumber, dbufs.at(0), ini->minimum(), ini->maximum(), 1.0, 0.0, maxRecordCount));
       return (decoder);
     }
     else if (bitsPerRecord <= 16)
     {
-      shared_ptr<Decoder> decoder(
+      std::shared_ptr<Decoder> decoder(
         new BitpackIntegerDecoder<uint16_t>(false, bytestreamNumber, dbufs.at(0), ini->minimum(), ini->maximum(), 1.0, 0.0, maxRecordCount));
       return (decoder);
     }
     else if (bitsPerRecord <= 32)
     {
-      shared_ptr<Decoder> decoder(
+      std::shared_ptr<Decoder> decoder(
         new BitpackIntegerDecoder<uint32_t>(false, bytestreamNumber, dbufs.at(0), ini->minimum(), ini->maximum(), 1.0, 0.0, maxRecordCount));
       return (decoder);
     }
     else
     {
-      shared_ptr<Decoder> decoder(
+      std::shared_ptr<Decoder> decoder(
         new BitpackIntegerDecoder<uint64_t>(false, bytestreamNumber, dbufs.at(0), ini->minimum(), ini->maximum(), 1.0, 0.0, maxRecordCount));
       return (decoder);
     }
   }
   case E57_SCALED_INTEGER: {
-    shared_ptr<ScaledIntegerNodeImpl> sini = dynamic_pointer_cast<ScaledIntegerNodeImpl>(decodeNode); // downcast to correct type
+    std::shared_ptr<ScaledIntegerNodeImpl> sini = std::dynamic_pointer_cast<ScaledIntegerNodeImpl>(decodeNode); // downcast to correct type
     if (!sini)                                                                                        // check if failed
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "elementName=" + decodeNode->elementName());
 
     /// Get pointer to parent ImageFileImpl, to call bitsNeeded()
-    shared_ptr<ImageFileImpl> imf(decodeNode->destImageFile_); //??? should be function for this,  imf->parentFile()  --> ImageFile?
+    std::shared_ptr<ImageFileImpl> imf(decodeNode->destImageFile_); //??? should be function for this,  imf->parentFile()  --> ImageFile?
 
     unsigned bitsPerRecord = imf->bitsNeeded(sini->minimum(), sini->maximum());
 
@@ -7386,45 +7360,45 @@ shared_ptr<Decoder> Decoder::DecoderFactory(unsigned                            
     /// Constuct ScaledInteger dencoder with appropriate register size, based on number of bits stored.
     if (bitsPerRecord == 0)
     {
-      shared_ptr<Decoder> decoder(
+      std::shared_ptr<Decoder> decoder(
         new ConstantIntegerDecoder(true, bytestreamNumber, dbufs.at(0), sini->minimum(), sini->scale(), sini->offset(), maxRecordCount));
       return (decoder);
     }
     else if (bitsPerRecord <= 8)
     {
-      shared_ptr<Decoder> decoder(new BitpackIntegerDecoder<uint8_t>(true, bytestreamNumber, dbufs.at(0), sini->minimum(), sini->maximum(), sini->scale(),
+      std::shared_ptr<Decoder> decoder(new BitpackIntegerDecoder<uint8_t>(true, bytestreamNumber, dbufs.at(0), sini->minimum(), sini->maximum(), sini->scale(),
                                                                      sini->offset(), maxRecordCount));
       return (decoder);
     }
     else if (bitsPerRecord <= 16)
     {
-      shared_ptr<Decoder> decoder(new BitpackIntegerDecoder<uint16_t>(true, bytestreamNumber, dbufs.at(0), sini->minimum(), sini->maximum(), sini->scale(),
+      std::shared_ptr<Decoder> decoder(new BitpackIntegerDecoder<uint16_t>(true, bytestreamNumber, dbufs.at(0), sini->minimum(), sini->maximum(), sini->scale(),
                                                                       sini->offset(), maxRecordCount));
       return (decoder);
     }
     else if (bitsPerRecord <= 32)
     {
-      shared_ptr<Decoder> decoder(new BitpackIntegerDecoder<uint32_t>(true, bytestreamNumber, dbufs.at(0), sini->minimum(), sini->maximum(), sini->scale(),
+      std::shared_ptr<Decoder> decoder(new BitpackIntegerDecoder<uint32_t>(true, bytestreamNumber, dbufs.at(0), sini->minimum(), sini->maximum(), sini->scale(),
                                                                       sini->offset(), maxRecordCount));
       return (decoder);
     }
     else
     {
-      shared_ptr<Decoder> decoder(new BitpackIntegerDecoder<uint64_t>(true, bytestreamNumber, dbufs.at(0), sini->minimum(), sini->maximum(), sini->scale(),
+      std::shared_ptr<Decoder> decoder(new BitpackIntegerDecoder<uint64_t>(true, bytestreamNumber, dbufs.at(0), sini->minimum(), sini->maximum(), sini->scale(),
                                                                       sini->offset(), maxRecordCount));
       return (decoder);
     }
   }
   case E57_FLOAT: {
-    shared_ptr<FloatNodeImpl> fni = dynamic_pointer_cast<FloatNodeImpl>(decodeNode); // downcast to correct type
+    std::shared_ptr<FloatNodeImpl> fni = std::dynamic_pointer_cast<FloatNodeImpl>(decodeNode); // downcast to correct type
     if (!fni)                                                                        // check if failed
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "elementName=" + decodeNode->elementName());
 
-    shared_ptr<Decoder> decoder(new BitpackFloatDecoder(bytestreamNumber, dbufs.at(0), fni->precision(), maxRecordCount));
+    std::shared_ptr<Decoder> decoder(new BitpackFloatDecoder(bytestreamNumber, dbufs.at(0), fni->precision(), maxRecordCount));
     return (decoder);
   }
   case E57_STRING: {
-    shared_ptr<Decoder> decoder(new BitpackStringDecoder(bytestreamNumber, dbufs.at(0), maxRecordCount));
+    std::shared_ptr<Decoder> decoder(new BitpackStringDecoder(bytestreamNumber, dbufs.at(0), maxRecordCount));
     return (decoder);
   }
   default:
@@ -8143,7 +8117,7 @@ void PacketReadCache::dump(int indent, std::ostream& os)
 
 //================================================================
 
-DecodeChannel::DecodeChannel(SourceDestBuffer dbuf_arg, shared_ptr<Decoder> decoder_arg, unsigned bytestreamNumber_arg, uint64_t maxRecordCount_arg)
+DecodeChannel::DecodeChannel(SourceDestBuffer dbuf_arg, std::shared_ptr<Decoder> decoder_arg, unsigned bytestreamNumber_arg, uint64_t maxRecordCount_arg)
 : dbuf(dbuf_arg), decoder(decoder_arg), bytestreamNumber(bytestreamNumber_arg)
 {
   maxRecordCount                = maxRecordCount_arg;
@@ -8201,7 +8175,7 @@ BitpackIntegerEncoder<RegisterT>::BitpackIntegerEncoder(bool isScaledInteger, un
 : BitpackEncoder(bytestreamNumber, sbuf, outputMaxSize, sizeof(RegisterT))
 {
   /// Get pointer to parent ImageFileImpl
-  shared_ptr<ImageFileImpl> imf(sbuf.impl()->destImageFile_); //??? should be function for this,  imf->parentFile()  --> ImageFile?
+  std::shared_ptr<ImageFileImpl> imf(sbuf.impl()->destImageFile_); //??? should be function for this,  imf->parentFile()  --> ImageFile?
 
   isScaledInteger_  = isScaledInteger;
   minimum_          = minimum;
@@ -8505,7 +8479,7 @@ BitpackIntegerDecoder<RegisterT>::BitpackIntegerDecoder(bool isScaledInteger, un
 : BitpackDecoder(bytestreamNumber, dbuf, sizeof(RegisterT), maxRecordCount)
 {
   /// Get pointer to parent ImageFileImpl
-  shared_ptr<ImageFileImpl> imf(dbuf.impl()->destImageFile_); //??? should be function for this,  imf->parentFile()  --> ImageFile?
+  std::shared_ptr<ImageFileImpl> imf(dbuf.impl()->destImageFile_); //??? should be function for this,  imf->parentFile()  --> ImageFile?
 
   isScaledInteger_ = isScaledInteger;
   minimum_         = minimum;

@@ -28,9 +28,6 @@
 //  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 //  DEALINGS IN THE SOFTWARE.
 //
-//	The Boost license Vestion 1.0 - August 17th, 2003 is discussed in
-//	http://www.boost.org/users/license.html.
-//
 //  This source code is only intended as a supplement to promote the
 //	ASTM E57.04 3D Imaging System File Format standard for interoperability
 //	of Lidar Data.  See http://www.libe57.org.
@@ -803,8 +800,6 @@ DEALINGS IN THE SOFTWARE.
 #include <openE57/impl/openE57SimpleImpl.h>
 
 using namespace e57;
-using namespace std;
-using namespace boost;
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -1194,7 +1189,7 @@ CompressedVectorReader Reader ::SetUpData3DPointsData(
   double* timeStamp, //!< pointer to a buffer with the time (in seconds) since the start time for the data, which is given by acquisitionStart in the parent
                      //!< Data3D Structure. Shall be non-negative
   int8_t* isTimeStampInvalid, //!< Value = 0 if the timeStamp is considered valid, 1 otherwise
-  bool (*pointDataExtension)(ImageFile imf, StructureNode proto, int protoIndex, vector<SourceDestBuffer>& destBuffers)
+  bool (*pointDataExtension)(ImageFile imf, StructureNode proto, int protoIndex, std::vector<SourceDestBuffer>& destBuffers)
 
 ) const
 {
@@ -1305,7 +1300,7 @@ CompressedVectorWriter Writer ::SetUpData3DPointsData(
   double* timeStamp, //!< pointer to a buffer with the time (in seconds) since the start time for the data, which is given by acquisitionStart in the parent
                      //!< Data3D Structure. Shall be non-negative
   int8_t* isTimeStampInvalid, //!< Value = 0 if the timeStamp is considered valid, 1 otherwise
-  bool (*pointDataExtension)(ImageFile imf, StructureNode proto, vector<SourceDestBuffer>& sourceBuffers)) const
+  bool (*pointDataExtension)(ImageFile imf, StructureNode proto, std::vector<SourceDestBuffer>& sourceBuffers)) const
 {
   return impl_->SetUpData3DPointsData(dataIndex, pointCount, cartesianX, cartesianY, cartesianZ, cartesianInvalidState, intensity, isIntensityInvalid, colorRed,
                                       colorGreen, colorBlue, isColorInvalid, sphericalRange, sphericalAzimuth, sphericalElevation, sphericalInvalidState,

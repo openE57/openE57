@@ -42,7 +42,7 @@ cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
 # Enables the MSVC_RUNTIME_LIBRARY property on targets
 cmake_policy(SET CMP0091 NEW)
 
-project(openE57 VERSION 1.4.0 LANGUAGES C CXX DESCRIPTION "openE57 is a library for handling e57 files")
+project(openE57 VERSION 1.5.0 LANGUAGES C CXX DESCRIPTION "openE57 is a library for handling e57 files")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
@@ -74,7 +74,8 @@ if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 endif()
 
 # Set a private module find path
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR} ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+set(CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR} ${CMAKE_PREFIX_PATH})
 
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
