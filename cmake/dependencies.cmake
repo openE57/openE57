@@ -16,13 +16,13 @@ elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 endif()
 
 # Find Boost (Required by Tools and Examples)
-#if(BUILD_TOOLS OR BUILD_EXAMPLES)
-set(Boost_USE_STATIC_LIBS ON)
-set(Boost_USE_STATIC_RUNTIME ON)
-set(Boost_USE_MULTITHREADED ON)
-find_package(Boost 1.70.0 COMPONENTS program_options system thread filesystem REQUIRED)
-list(APPEND compiler_definitions
-    BOOST_ALL_NO_LIB
-    $<$<CONFIG:RELWITHDEBINFO>:${Boost_LIB_DIAGNOSTIC_DEFINITIONS}>
-    $<$<CONFIG:DEBUG>:${Boost_LIB_DIAGNOSTIC_DEFINITIONS}>)
-#endif()
+if(BUILD_TOOLS OR BUILD_EXAMPLES)
+  set(Boost_USE_STATIC_LIBS ON)
+  set(Boost_USE_STATIC_RUNTIME ON)
+  set(Boost_USE_MULTITHREADED ON)
+  find_package(Boost 1.70.0 COMPONENTS program_options system thread filesystem REQUIRED)
+  list(APPEND compiler_definitions
+      BOOST_ALL_NO_LIB
+      $<$<CONFIG:RELWITHDEBINFO>:${Boost_LIB_DIAGNOSTIC_DEFINITIONS}>
+      $<$<CONFIG:DEBUG>:${Boost_LIB_DIAGNOSTIC_DEFINITIONS}>)
+endif()
