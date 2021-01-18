@@ -1,5 +1,5 @@
 [requires]
-boost/1.75.0
+boost/1.70.0
 icu/68.2
 xerces-c/3.2.3
 
