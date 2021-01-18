@@ -70,6 +70,7 @@ using std::endl;
 #endif
 
 #include <openE57/impl/openE57Impl.h>
+#include <openE57/impl/crc.h>
 
 using namespace e57;
 // using namespace std;
@@ -5019,31 +5020,34 @@ size_t CheckedFile::efficientBufferSize(size_t logicalBytes)
 
 uint32_t CheckedFile::checksum(char* buf, size_t size)
 {
-#ifdef SAFE_MODE
-#  if 1
-  /// Calc CRC32C of given data
-  crcCalculator_.reset();
-  crcCalculator_.process_bytes(buf, size);
-  uint32_t crc = crcCalculator_.checksum();
-  swab(crc); //!!! inside BIGENDIAN?
-  return (crc);
-#  else
-  /// For page size performance testing purposes, approximate the computation time for
-  /// computing checksum on a multiple of shorter blocks in the page.
-  /// This doesn't produce a legal file format, but approximates the processing time of smaller pages.
-  const int blocksPerPage = 1;
-  int       bytesPerBlock = size / blocksPerPage;
-  uint32_t  crc;
-  for (int block = 0; block < blocksPerPage; block++)
-  {
-    crcCalculator_.reset();
-    crcCalculator_.process_bytes(&buf[block * bytesPerBlock], bytesPerBlock);
-    crc = crcCalculator_.checksum();
-    swab(crc);
-  }
-  return (crc);
-#  endif
-#endif // SAFE_MODE
+  std::uint32_t crc = CRC::Calculate(buf, size, CRC::CRC_32_C());
+  swab(crc);
+  return crc;
+// #ifdef SAFE_MODE
+// #  if 1
+//   /// Calc CRC32C of given data
+//   crcCalculator_.reset();
+//   crcCalculator_.process_bytes(buf, size);
+//   uint32_t crc = crcCalculator_.checksum();
+//   swab(crc); //!!! inside BIGENDIAN?
+//   return (crc);
+// #  else
+//   /// For page size performance testing purposes, approximate the computation time for
+//   /// computing checksum on a multiple of shorter blocks in the page.
+//   /// This doesn't produce a legal file format, but approximates the processing time of smaller pages.
+//   const int blocksPerPage = 1;
+//   int       bytesPerBlock = size / blocksPerPage;
+//   uint32_t  crc;
+//   for (int block = 0; block < blocksPerPage; block++)
+//   {
+//     crcCalculator_.reset();
+//     crcCalculator_.process_bytes(&buf[block * bytesPerBlock], bytesPerBlock);
+//     crc = crcCalculator_.checksum();
+//     swab(crc);
+//   }
+//   return (crc);
+// #  endif
+// #endif // SAFE_MODE
 }
 
 #ifdef SAFE_MODE
