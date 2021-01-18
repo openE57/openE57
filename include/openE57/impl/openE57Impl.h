@@ -38,7 +38,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include <boost/crc.hpp>
+#include <boost/crc.hpp> // for boost::crc_optimal
 
 // Define the following symbol adds some functions to the API for implementation purposes.
 // These functions are not available to a normal API user.

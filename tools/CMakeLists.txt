@@ -19,6 +19,7 @@ foreach(TOOL ${TOOLS})
       $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
       ${CMAKE_SOURCE_DIR}/include
       ${XML_INCLUDE_DIRS}
+      ${Boost_INCLUDE_DIR}
   )
 
   target_link_libraries(${TOOL} 
@@ -45,6 +46,7 @@ target_include_directories(las2e57
     $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
     ${CMAKE_SOURCE_DIR}/include
     ${XML_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIR}
 )
 
 target_link_libraries(las2e57 
