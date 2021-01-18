@@ -72,6 +72,8 @@ using std::endl;
 #include <openE57/impl/openE57Impl.h>
 #include <openE57/impl/crc.h>
 
+const auto CRC32C_LOOKUP_TABLE = CRC::CRC_32_C().MakeTable();
+
 using namespace e57;
 // using namespace std;
 using std::cerr;
@@ -5020,7 +5022,7 @@ size_t CheckedFile::efficientBufferSize(size_t logicalBytes)
 
 uint32_t CheckedFile::checksum(char* buf, size_t size)
 {
-  std::uint32_t crc = CRC::Calculate(buf, size, CRC::CRC_32_C());
+  std::uint32_t crc = CRC::Calculate(buf, size, CRC32C_LOOKUP_TABLE);
   swab(crc); //!!! inside BIGENDIAN?
   return crc;
 }
