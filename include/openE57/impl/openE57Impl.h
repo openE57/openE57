@@ -38,7 +38,6 @@
 #include <sstream>
 #include <string>
 #include <vector>
-//#include <boost/crc.hpp> // for boost::crc_optimal
 
 // Define the following symbol adds some functions to the API for implementation purposes.
 // These functions are not available to a normal API user.
@@ -362,14 +361,6 @@ private:
   int      fd_;
   bool     readOnly_;
   uint64_t logicalLength_;
-  // boost::crc_optimal<32,         // bits
-  //                    0x1EDC6F41, // truncated polynomial, iSCSI
-  //                    0xFFFFFFFF, // initial remainder
-  //                    0xFFFFFFFF, // final xor value
-  //                    true,       // reflect input
-  //                    true        // reflect remainder
-  //                    >
-  //   crcCalculator_;
 
 #ifdef SAFE_MODE
   void     getCurrentPageAndOffset(uint64_t& page, size_t& pageOffset, OffsetMode omode = logical);
