@@ -1,6 +1,6 @@
 [requires]
-boost/1.76.0
-icu/69.1
+boost/1.77.0
+icu/70.1
 xerces-c/3.2.3
 
 [generators]
