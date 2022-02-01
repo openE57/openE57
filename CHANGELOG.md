@@ -1,5 +1,25 @@
 # openE57
 
+## [1.5.1] - 2021-12-09
+
+## Changed
+- Updated Boost to 1.77.0
+- Updated ICU to 70.1
+
+## [1.5.0] - 2021-01-18
+
+## Changed
+- Removed the dependency of Boost in the core library, keeping it only in tools and examples.
+- Converted boost smart pointers with STL ones
+- Converted boost standard integers to STL ones
+- Using std::numeric_limits max/lower instead of hardcoded magic values
+- Switched CRC32-Castagnoli implementation from boost::crc_optimal to Daniel Bahr's one (https://github.com/d-bahr/CRCpp)
+- Made Boost required only for tools and examples, switched to the newer conan cmake_find_package resolution method with conan
+
+## Removed
+- macos from CI pipeline, since Boost library from conan fails to build
+
+
 ## [1.4.1] - 2021-01-15
 
 ### Changed

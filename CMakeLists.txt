@@ -3,7 +3,7 @@
 # management easier and reproducible on all the supported platforms
 #
 # Original   work Copyright 2010-2012   Roland Schwarz, Riegl LMS GmbH
-# Modified work Copyright 2020         Michele Adduci <adduci@tutanota.com>
+# Modified work Copyright 2020-2022     Michele Adduci <adduci@tutanota.com>
 #
 # Permission is hereby granted, free of charge, to any person or organization
 # obtaining a copy of the software and accompanying documentation covered by
@@ -42,7 +42,7 @@ cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
 # Enables the MSVC_RUNTIME_LIBRARY property on targets
 cmake_policy(SET CMP0091 NEW)
 
-project(openE57 VERSION 1.5.0 LANGUAGES C CXX DESCRIPTION "openE57 is a library for handling e57 files")
+project(openE57 VERSION 1.5.1 LANGUAGES C CXX DESCRIPTION "openE57 is a library for handling E57 files")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
