@@ -11,7 +11,7 @@ class ConanFileDefault(ConanFile):
     url = "https://github.com/openE57/openE57"
     homepage = "https://github.com/openE57/openE57"
     license = ("MIT", "E57 Software Licenses")
-    exports_sources = ["CMakeLists.txt", "cmake/*.cmake", "LICENSE*", "*.md", "*.txt"]
+    exports_sources = ["CMakeLists.txt", "cmake/*.cmake", "LICENSE*", "*.md", "*.txt", "include/*", "src/*", "tools/*", "examples/*"]
     generators = "cmake", "cmake_find_package"
     short_paths = True
     _cmake = None
@@ -27,22 +27,20 @@ class ConanFileDefault(ConanFile):
     settings = "os", "arch", "compiler", "build_type"
     options = {"with_examples": [True, False],
                "with_tools": [True, False],
+               'with_tests': [True, False],
                "mt": [True, False],
                "shared": [True, False]}
 
     default_options = {
         'with_examples': False,
         'with_tools': False,
-        'with_tests': True,
+        'with_tests': False,
         'mt': False,
         'shared': False}
 
     def validate(self):
-        if sself.options.shared == True:
+        if self.options.shared == True:
             raise ConanInvalidConfiguration("OpenE57 cannot be built as shared library yet")
-
-    def source(self):
-        tools.get(**self.conan_data["sources"][self.version], destination=self._source_subfolder, strip_root=True)
 
     def build(self):
         cmake = self._configure_cmake()
@@ -73,6 +71,7 @@ class ConanFileDefault(ConanFile):
         self._cmake.definitions["BUILD_TESTS"] = self.options.with_tests
         self._cmake.definitions["BUILD_WITH_MT"] = self.options.mt
         self._cmake.definitions["BUILD_SHARED_LIBS"] = self.options.shared
+        self._cmake.definitions["CMAKE_INSTALL_PREFIX"] = self.package_folder
         self._cmake.configure(build_folder=self._build_subfolder)
         return self._cmake
 
@@ -82,7 +81,7 @@ class ConanFileDefault(ConanFile):
 
         if self.options.mt:
             defines.append("BUILD_WITH_MT")
-        if self.options.with_cookies:
+
         self.cpp_info.defines = defines
 
     def package(self):
@@ -90,4 +89,3 @@ class ConanFileDefault(ConanFile):
         self.copy(pattern="LICENSE.libE57", dst="licenses", src=self._source_subfolder)
         cmake = self._configure_cmake()
         cmake.install()
-        shutil.move(os.path.join(self.package_folder, 'import'), os.path.join(self.package_folder, 'bin', 'import'))
