@@ -1,14 +1,12 @@
 // $Id: e57unpack.cpp 338 2013-09-03 12:36:09Z roland_schwarz $
-#include <config.h>
-
 #define PROGRAM_NAME "e57unpack"
 #define PROGRAM_VERSION "1.0"
-#ifndef SVN_VERSION
-#  define SVN_VERSION unknown
+#ifndef E57_REFIMPL_REVISION_ID
+#  define E57_REFIMPL_REVISION_ID unknown
 #endif
 #define STRING_HELPER2(a) #a
 #define STRING_HELPER1(a) STRING_HELPER2(a)
-#define BUILD_VERSION STRING_HELPER1(SVN_VERSION)
+#define BUILD_VERSION STRING_HELPER1(E57_REFIMPL_REVISION_ID)
 
 #include <openE57/openE57.h>
 using e57::BlobNode;

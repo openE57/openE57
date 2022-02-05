@@ -44,10 +44,6 @@
 #  include <openE57/openE57.h>
 #endif
 
-#ifndef _C_TIMECONV_H_
-#  include <openE57/time_conversion/time_conversion.h>
-#endif
-
 #ifndef PI
 constexpr double PI{3.1415926535897932384626433832795};
 #endif

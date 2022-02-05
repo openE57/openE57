@@ -44,9 +44,9 @@ SUCH DAMAGE.
 */
 
 #include <math.h> /* for fmod() */
-#include <openE57/time_conversion/constants.h>
-#include <openE57/time_conversion/gnss_error.h>
-#include <openE57/time_conversion/time_conversion.h>
+#include <constants.h>
+#include <gnss_error.h>
+#include <time_conversion.h>
 #include <sys/timeb.h>
 #include <time.h>
 

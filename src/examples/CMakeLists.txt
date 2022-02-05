@@ -13,7 +13,7 @@ foreach(EXAMPLE ${EXAMPLES})
   target_link_options(${EXAMPLE}  PUBLIC ${linker_flags})
 
   target_include_directories(${EXAMPLE} PRIVATE 
-    ${CMAKE_SOURCE_DIR}/include 
+    ${CMAKE_SOURCE_DIR}/src/lib/include 
     ${XML_INCLUDE_DIRS} )
   target_link_libraries(${EXAMPLE} 
     PRIVATE 

@@ -28,7 +28,7 @@
  */
 #include <openE57/LAS/openE57las.h>
 #include <openE57/openE57.h>
-#include <openE57/time_conversion/time_conversion.h> // code from Essential GNSS Project
+#include <time_conversion/time_conversion.h> // code from Essential GNSS Project
 
 #include <fstream> // std::ifstream
 #include <iomanip>

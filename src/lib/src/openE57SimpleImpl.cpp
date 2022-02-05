@@ -65,7 +65,6 @@
 #endif
 
 #include <openE57/impl/openE57SimpleImpl.h>
-#include <openE57/time_conversion/time_conversion.h>
 #include <sstream>
 #include <random>
 
@@ -158,15 +157,14 @@ double e57::GetGPSTime(void)
 
   TIMECONV_GetSystemTime(&utc_year, &utc_month, &utc_day, &utc_hour, &utc_minute, &utc_seconds, &utc_offset, &julian_date, &gps_week, &gps_tow);
 
-  double gpsTime = (gps_week * 604800.) + gps_tow;
+  return (gps_week * 604800.) + gps_tow;
 
 #elif defined(WIN32)
   SYSTEMTIME currentSystemTime;
   GetSystemTime(&currentSystemTime); // current UTC Time
-  double     gpsTime = e57::GetGPSDateTimeFromSystemTime(currentSystemTime);
+  return e57::GetGPSDateTimeFromSystemTime(currentSystemTime);
 #endif
 
-  return gpsTime;
 }
 #if defined(WIN32)
 ////////////////////////////////////////////////////////////////////
@@ -288,7 +286,7 @@ double e57::GetGPSDateTimeFromUTC(int   utc_year,   //!< The year 1900-9999
 
   TIMECONV_GetGPSTimeFromJulianDate(julian_date, utc_offset, &gps_week, &gps_tow);
 
-  double gpsTime = (gps_week * 604800.) + gps_tow;
+  return (gps_week * 604800.) + gps_tow;
 
 #elif defined(WIN32)
   SYSTEMTIME sysTim;
@@ -301,9 +299,8 @@ double e57::GetGPSDateTimeFromUTC(int   utc_year,   //!< The year 1900-9999
   sysTim.wSecond       = (WORD)(floor(utc_seconds));
   sysTim.wMilliseconds = (WORD)((utc_seconds - t.wSecond) * 1000);
 
-  double     gpsTime = e57::GetGPSDateTimeFromSystemTime(sysTim);
+  return e57::GetGPSDateTimeFromSystemTime(sysTim);
 #endif
-  return gpsTime;
 }
 ////////////////////////////////////////////////////////////////////
 //

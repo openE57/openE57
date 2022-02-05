@@ -1,4 +1,4 @@
-# This is an update version of  the CMake project file for the libe57 reference
+# This is an update version of the CMake project file for the libe57 reference
 # implementation, with support for Conan targets, to make the dependency
 # management easier and reproducible on all the supported platforms
 #
@@ -42,7 +42,7 @@ cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
 # Enables the MSVC_RUNTIME_LIBRARY property on targets
 cmake_policy(SET CMP0091 NEW)
 
-project(openE57 VERSION 1.5.2 LANGUAGES C CXX DESCRIPTION "openE57 is a library for handling E57 files")
+project(openE57 VERSION 1.6.0 LANGUAGES C CXX DESCRIPTION "openE57 is a library for handling E57 files")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
@@ -72,116 +72,11 @@ if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
   conan_basic_setup(TARGETS)
 endif()
 
-# Set a private module find path
-set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR} ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
-set(CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR} ${CMAKE_PREFIX_PATH})
-
-include(GNUInstallDirs)
-include(CMakePackageConfigHelpers)
-include(InstallRequiredSystemLibraries)
-include(GenerateExportHeader)
-include(${CMAKE_SOURCE_DIR}/cmake/compiler_options.cmake)
-include(${CMAKE_SOURCE_DIR}/cmake/dependencies.cmake)
-
-
-set(CONFIG_PACKAGE_INSTALL_DIR lib/cmake/${PROJECT_NAME})
-
-list(APPEND compiler_definitions
-  E57_REFIMPL_REVISION_ID=${PROJECT_NAME}-${PROJECT_VERSION})
-
-configure_file("${PROJECT_SOURCE_DIR}/include/config.h.in"
-               "${PROJECT_BINARY_DIR}/include/config.h")
-
-#
-# The main library 
-#
-add_library(
-  ${PROJECT_NAME} ${LIBRARY_TYPE}
-  ${CMAKE_SOURCE_DIR}/src/openE57Simple.cpp
-  ${CMAKE_SOURCE_DIR}/src/openE57SimpleImpl.cpp
-  ${CMAKE_SOURCE_DIR}/src/openE57.cpp
-  ${CMAKE_SOURCE_DIR}/src/openE57Impl.cpp
-  ${CMAKE_SOURCE_DIR}/include/openE57/impl/openE57Impl.h
-  ${CMAKE_SOURCE_DIR}/include/openE57/impl/openE57SimpleImpl.h
-  ${CMAKE_SOURCE_DIR}/include/openE57/openE57.h
-  ${CMAKE_SOURCE_DIR}/include/openE57/openE57Simple.h)
-
-generate_export_header(${PROJECT_NAME})
-set_target_properties(${PROJECT_NAME} PROPERTIES 
-  DEBUG_POSTFIX "-d" 
-  MSVC_RUNTIME_LIBRARY "${MSVC_RUNTIME_TYPE}")
-target_compile_options(${PROJECT_NAME} PUBLIC ${compiler_options})
-target_compile_definitions(${PROJECT_NAME} PUBLIC ${compiler_definitions})
-target_link_options(${PROJECT_NAME} PUBLIC ${linker_flags})
-
-target_include_directories(${PROJECT_NAME}
-    PRIVATE 
-      $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
-      ${CMAKE_SOURCE_DIR}/include
-      ${XML_INCLUDE_DIRS} 
-)
-
-target_link_libraries(${PROJECT_NAME} PUBLIC ${XML_LIBRARIES})
-
-#
-# Library for LAS I/O support
-#
-add_library(${PROJECT_NAME}las ${LIBRARY_TYPE} 
-  ${CMAKE_SOURCE_DIR}/src/LAS/${PROJECT_NAME}las.cpp
-  ${CMAKE_SOURCE_DIR}/include/openE57/LAS/${PROJECT_NAME}las.h)
-
-set_target_properties(${PROJECT_NAME}las PROPERTIES 
-  DEBUG_POSTFIX "-d" 
-  MSVC_RUNTIME_LIBRARY "${MSVC_RUNTIME_TYPE}")
-target_compile_options(${PROJECT_NAME}las PUBLIC ${compiler_options})
-target_compile_definitions(${PROJECT_NAME}las PUBLIC ${compiler_definitions})
-target_link_options(${PROJECT_NAME}las PUBLIC ${linker_flags})
-
-target_include_directories(${PROJECT_NAME}las
-    PRIVATE 
-      $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
-      ${CMAKE_SOURCE_DIR}/include
-      ${XML_INCLUDE_DIRS}
-)
-
-target_link_libraries(${PROJECT_NAME}las PUBLIC ${XML_LIBRARIES})
-
-if(${BUILD_EXAMPLES})
-  add_subdirectory(${CMAKE_SOURCE_DIR}/examples)
-endif()
-
-if(${BUILD_TESTS})
-  add_subdirectory(${CMAKE_SOURCE_DIR}/tests)
-endif()
-
-if(${BUILD_TOOLS})
-  add_subdirectory(${CMAKE_SOURCE_DIR}/tools)
-endif()
-
-
-#
-# Add Clang Format
-#
-include(${CMAKE_SOURCE_DIR}/cmake/clang_format.cmake)
+add_subdirectory(${CMAKE_SOURCE_DIR}/src)
 
 # 
 # Install Artifacts
 #
-install(
-  TARGETS 
-    ${PROJECT_NAME}
-    ${PROJECT_NAME}las
-  RUNTIME DESTINATION bin
-  ARCHIVE DESTINATION lib)
-
-install(
-  FILES 
-    ${CMAKE_SOURCE_DIR}/include/openE57/openE57.h
-    ${CMAKE_SOURCE_DIR}/include/openE57/openE57Simple.h 
-    ${CMAKE_BINARY_DIR}/opene57_export.h
-  DESTINATION 
-    include/openE57)
-
 install(FILES  
   ${CMAKE_SOURCE_DIR}/CHANGELOG.md
 DESTINATION .)

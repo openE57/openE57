@@ -7,11 +7,11 @@ class ConanFileDefault(ConanFile):
     description = "A C++ library for reading and writing E57 files, " \
                   "fork of the original libE57 (http://libe57.org)"
     topics = ("conan", "openE57", "e57")
-    version = "1.5.2"
+    version = "1.6.0"
     url = "https://github.com/openE57/openE57"
     homepage = "https://github.com/openE57/openE57"
     license = ("MIT", "E57 Software Licenses")
-    exports_sources = ["CMakeLists.txt", "cmake/*.cmake", "LICENSE*", "*.md", "*.txt", "include/*", "src/*", "tools/*", "examples/*"]
+    exports_sources = [ "src/*", "LICENSE*", "CHANGELOG.md", "*.txt"]
     generators = "cmake", "cmake_find_package"
     short_paths = True
     _cmake = None

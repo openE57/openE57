@@ -1,5 +1,17 @@
 # openE57
 
+## [1.6.0] - 2022-02-05
+
+## Changed
+- Added conan packaging support
+- Refactored project structure
+- Renamed LASReader to openE57las 
+- Moved time_conversion to tools folder
+
+## Removed
+- config.h template (definition passed through the compiler)
+- Removed the dependency of time_conversion from openE57
+
 ## [1.5.1] - 2021-12-09
 
 ## Changed

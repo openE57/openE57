@@ -2,11 +2,11 @@
 # Time conversion utilities
 #
 add_library(time_conversion ${LIBRARY_TYPE}
-  ${CMAKE_SOURCE_DIR}/src/time_conversion/time_conversion.c
-  ${CMAKE_SOURCE_DIR}/include/openE57/time_conversion/time_conversion.h
-  ${CMAKE_SOURCE_DIR}/include/openE57/time_conversion/basictypes.h
-  ${CMAKE_SOURCE_DIR}/include/openE57/time_conversion/constants.h
-  ${CMAKE_SOURCE_DIR}/include/openE57/time_conversion/gnss_error.h)
+  ${CMAKE_CURRENT_SOURCE_DIR}/time_conversion/time_conversion.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/time_conversion/time_conversion.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/time_conversion/basictypes.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/time_conversion/constants.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/time_conversion/gnss_error.h)
 
 set_target_properties(time_conversion PROPERTIES 
   DEBUG_POSTFIX "-d" 
@@ -17,8 +17,7 @@ target_link_options(time_conversion PUBLIC ${linker_flags})
 
 target_include_directories(time_conversion 
     PRIVATE 
-        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
-        ${CMAKE_SOURCE_DIR}/include
+      ${CMAKE_CURRENT_SOURCE_DIR}/time_conversion
 )
 
 target_link_libraries(time_conversion 
@@ -51,8 +50,8 @@ foreach(TOOL ${TOOLS})
   target_link_options(${TOOL} PUBLIC ${linker_flags})
   target_include_directories(${TOOL} 
     PRIVATE 
-      $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
-      ${CMAKE_SOURCE_DIR}/include
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+      ${CMAKE_SOURCE_DIR}/src/lib/include
       ${XML_INCLUDE_DIRS}
       ${Boost_INCLUDE_DIR}
   )
@@ -80,8 +79,8 @@ target_link_options(las2e57 PUBLIC ${linker_flags})
 
 target_include_directories(las2e57
   PRIVATE 
-    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
-    ${CMAKE_SOURCE_DIR}/include
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    ${CMAKE_SOURCE_DIR}/src/lib/include
     ${XML_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIR}
 )
