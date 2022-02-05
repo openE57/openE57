@@ -52,7 +52,7 @@ target_include_directories(las2e57
 target_link_libraries(las2e57 
     PRIVATE 
       ${PROJECT_NAME}
-      LASReader 
+      ${PROJECT_NAME}las 
       time_conversion 
       ${XML_LIBRARIES}
       ${Boost_LIBRARIES}

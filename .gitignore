@@ -33,5 +33,7 @@
 
 # Build folders
 build/
+tmp/
 bin/*
+.devcontainer/
 .vscode/

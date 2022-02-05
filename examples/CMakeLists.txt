@@ -14,8 +14,7 @@ foreach(EXAMPLE ${EXAMPLES})
 
   target_include_directories(${EXAMPLE} PRIVATE 
     ${CMAKE_SOURCE_DIR}/include 
-    ${XML_INCLUDE_DIRS} 
-    ${Boost_INCLUDE_DIR})
+    ${XML_INCLUDE_DIRS} )
   target_link_libraries(${EXAMPLE} 
     PRIVATE 
       ${PROJECT_NAME} 

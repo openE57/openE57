@@ -42,7 +42,7 @@ cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
 # Enables the MSVC_RUNTIME_LIBRARY property on targets
 cmake_policy(SET CMP0091 NEW)
 
-project(openE57 VERSION 1.5.1 LANGUAGES C CXX DESCRIPTION "openE57 is a library for handling E57 files")
+project(openE57 VERSION 1.5.2 LANGUAGES C CXX DESCRIPTION "openE57 is a library for handling E57 files")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
@@ -119,34 +119,32 @@ target_include_directories(${PROJECT_NAME}
       $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
       ${CMAKE_SOURCE_DIR}/include
       ${XML_INCLUDE_DIRS} 
-      ${Boost_INCLUDE_DIR}
 )
 
-target_link_libraries(${PROJECT_NAME} PUBLIC ${Boost_LIBRARY_DIRS} ${XML_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${XML_LIBRARIES})
 
 #
 # Library for LAS I/O support
 #
-add_library(LASReader ${LIBRARY_TYPE} 
-  ${CMAKE_SOURCE_DIR}/src/LAS/LASReader.cpp
-  ${CMAKE_SOURCE_DIR}/include/openE57/LAS/LASReader.h)
+add_library(${PROJECT_NAME}las ${LIBRARY_TYPE} 
+  ${CMAKE_SOURCE_DIR}/src/LAS/${PROJECT_NAME}las.cpp
+  ${CMAKE_SOURCE_DIR}/include/openE57/LAS/${PROJECT_NAME}las.h)
 
-set_target_properties(LASReader PROPERTIES 
+set_target_properties(${PROJECT_NAME}las PROPERTIES 
   DEBUG_POSTFIX "-d" 
   MSVC_RUNTIME_LIBRARY "${MSVC_RUNTIME_TYPE}")
-target_compile_options(LASReader PUBLIC ${compiler_options})
-target_compile_definitions(LASReader PUBLIC ${compiler_definitions})
-target_link_options(LASReader PUBLIC ${linker_flags})
+target_compile_options(${PROJECT_NAME}las PUBLIC ${compiler_options})
+target_compile_definitions(${PROJECT_NAME}las PUBLIC ${compiler_definitions})
+target_link_options(${PROJECT_NAME}las PUBLIC ${linker_flags})
 
-target_include_directories(LASReader
+target_include_directories(${PROJECT_NAME}las
     PRIVATE 
       $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
       ${CMAKE_SOURCE_DIR}/include
       ${XML_INCLUDE_DIRS}
-      ${Boost_INCLUDE_DIR}
 )
 
-target_link_libraries(LASReader PUBLIC ${Boost_LIBRARY_DIRS} ${XML_LIBRARIES})
+target_link_libraries(${PROJECT_NAME}las PUBLIC ${XML_LIBRARIES})
 
 #
 # Time conversion utilities
@@ -204,7 +202,7 @@ include(${CMAKE_SOURCE_DIR}/cmake/clang_format.cmake)
 install(
   TARGETS 
     ${PROJECT_NAME}
-    LASReader
+    ${PROJECT_NAME}las
     time_conversion
   RUNTIME DESTINATION bin
   ARCHIVE DESTINATION lib)
