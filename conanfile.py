@@ -7,7 +7,7 @@ class ConanFileDefault(ConanFile):
     description = "A C++ library for reading and writing E57 files, " \
                   "fork of the original libE57 (http://libe57.org)"
     topics = ("conan", "openE57", "e57")
-    version = "1.51.1"
+    version = "1.5.2"
     url = "https://github.com/openE57/openE57"
     homepage = "https://github.com/openE57/openE57"
     license = ("MIT", "E57 Software Licenses")

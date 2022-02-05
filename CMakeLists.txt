@@ -146,38 +146,6 @@ target_include_directories(${PROJECT_NAME}las
 
 target_link_libraries(${PROJECT_NAME}las PUBLIC ${XML_LIBRARIES})
 
-#
-# Time conversion utilities
-#
-add_library(time_conversion ${LIBRARY_TYPE}
-  ${CMAKE_SOURCE_DIR}/src/time_conversion/time_conversion.c
-  ${CMAKE_SOURCE_DIR}/include/openE57/time_conversion/time_conversion.h
-  ${CMAKE_SOURCE_DIR}/include/openE57/time_conversion/basictypes.h
-  ${CMAKE_SOURCE_DIR}/include/openE57/time_conversion/constants.h
-  ${CMAKE_SOURCE_DIR}/include/openE57/time_conversion/gnss_error.h)
-
-set_target_properties(time_conversion PROPERTIES 
-  DEBUG_POSTFIX "-d" 
-  MSVC_RUNTIME_LIBRARY "${MSVC_RUNTIME_TYPE}")
-target_compile_options(time_conversion PUBLIC ${compiler_options})
-target_compile_definitions(time_conversion PUBLIC ${compiler_definitions})
-target_link_options(time_conversion PUBLIC ${linker_flags})
-
-target_include_directories(time_conversion 
-    PRIVATE 
-        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
-        ${CMAKE_SOURCE_DIR}/include
-)
-
-target_link_libraries(time_conversion 
-  PUBLIC 
-    ${Boost_LIBRARY_DIRS}
-    ${XML_LIBRARIES}
-    $<$<OR:$<C_COMPILER_ID:GNU>,$<C_COMPILER_ID:Clang>>:dl>
-    $<$<OR:$<C_COMPILER_ID:GNU>,$<C_COMPILER_ID:Clang>>:m>
-    $<$<OR:$<C_COMPILER_ID:GNU>,$<C_COMPILER_ID:Clang>>:c>
-)
-
 if(${BUILD_EXAMPLES})
   add_subdirectory(${CMAKE_SOURCE_DIR}/examples)
 endif()
@@ -203,7 +171,6 @@ install(
   TARGETS 
     ${PROJECT_NAME}
     ${PROJECT_NAME}las
-    time_conversion
   RUNTIME DESTINATION bin
   ARCHIVE DESTINATION lib)
 

@@ -1,5 +1,5 @@
 /*
- * lasreader.h - header for simple interface for reading LAS files.
+ * openE57las.h - header for simple interface for reading LAS files.
  *
  * Copyright (c) 2009 - 2010 Kevin Ackley (kackley@gwi.net)
  * Copyright (c) 2020 Michele Adduci (adduci@tutanota.com)
