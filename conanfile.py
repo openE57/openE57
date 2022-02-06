@@ -51,7 +51,7 @@ class ConanFileDefault(ConanFile):
             self.build_requires("openE57/{}".format(self.version))
 
         if self.options.with_tools == True:
-            self.build_requires("boost/1.77.0")
+            self.build_requires("boost/1.78.0")
             self.options["boost"].multithreading = True
             self.options["boost"].shared = True
 

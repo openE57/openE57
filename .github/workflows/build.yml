@@ -33,14 +33,14 @@ jobs:
       - name: Linux build
         if: matrix.os == 'ubuntu-20.04'
         run: |
-            conan create . openE57/stable -o openE57:with_examples=True -o openE57:with_tools=True 
+            conan create . -o openE57:with_examples=True -o openE57:with_tools=True 
             
       - name: Mac build
         if: matrix.os == 'macos-latest'
         run: |
-            conan create . openE57/stable -o openE57:with_examples=True
+            conan create . -o openE57:with_examples=True
             
       - name: Windows build
         if: matrix.os == 'windows-latest'
         run: |
-            conan create . openE57/stable -o openE57:with_examples=True -o openE57:with_tools=True 
+            conan create . -o openE57:with_examples=True -o openE57:with_tools=True 
