@@ -34,7 +34,7 @@ target_link_libraries(time_conversion
 #
 list(APPEND TOOLS
   e57fields
-  e57unpack
+  #e57unpack
   e57validate
   e57xmldump
 )
@@ -99,7 +99,7 @@ install(
   TARGETS 
     e57fields 
     e57xmldump 
-    e57unpack 
+    #e57unpack 
     e57validate 
     las2e57
   RUNTIME DESTINATION bin

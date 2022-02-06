@@ -4,7 +4,6 @@ from conans import ConanFile, CMake, tools
 class TestOpenE57Conan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake", "cmake_find_package"
-    exports_sources = "foo.e57"
 
     def build(self):
         if not tools.cross_building(self):

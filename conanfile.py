@@ -53,7 +53,7 @@ class ConanFileDefault(ConanFile):
         if self.options.with_tools == True:
             self.build_requires("boost/1.78.0")
             self.options["boost"].multithreading = True
-            self.options["boost"].shared = True
+            self.options["boost"].shared = False
 
     def requirements(self):
         self.requires("icu/70.1")
@@ -76,13 +76,9 @@ class ConanFileDefault(ConanFile):
         return self._cmake
 
     def package_info(self):
-        defines = [ "E57_REFIMPL_REVISION_ID={name}-{version}".format(name=self.name, version=self.version) ]
+        self.cpp_info.defines.append("E57_REFIMPL_REVISION_ID={name}-{version}".format(name=self.name, version=self.version))
+        self.cpp_info.defines.append("XERCES_STATIC_LIBRARY")
         self.cpp_info.libs = ["openE57", "openE57las"]
-
-        if self.options.mt:
-            defines.append("BUILD_WITH_MT")
-
-        self.cpp_info.defines = defines
 
     def package(self):
         self.copy(pattern="LICENSE", dst="licenses", src=self._source_subfolder)

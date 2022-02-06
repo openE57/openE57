@@ -13,6 +13,7 @@
 - config.h template (definition passed through the compiler)
 - Removed the dependency of time_conversion from openE57
 - Removed the generation of time_conversion as artifact of openE57 (used only by tools)
+- Disabled building of tool "e57unpack" due to issues with Boost
 
 ## [1.5.1] - 2021-12-09
 
