@@ -13,4 +13,5 @@ class TestOpenE57Conan(ConanFile):
 
     def test(self):
         if not tools.cross_building(self):
-            self.run("openE57_example", run_environment=True)
+            bin_path = os.path.join("bin", "openE57_example")
+            self.run(bin_path, run_environment=True)
