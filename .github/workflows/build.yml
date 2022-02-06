@@ -29,6 +29,7 @@ jobs:
         run: |
             pip install conan --upgrade
             conan profile new default --detect
+            conan profile update settings.compiler.libcxx=libstdc++11 default
                     
       - name: Linux build
         if: matrix.os == 'ubuntu-20.04'
