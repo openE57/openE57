@@ -40,7 +40,7 @@ int main(int /*argc*/, char** /*argv*/)
     StructureNode root = imf.root();
 
     /// Register extension with URI=www.example.com/DemoExtension and prefix=demo
-    imf.extensionsAdd("demo", "http://www.example.com/DemoExtension");
+    imf.extensionsAdd("demo", "http://openE57.github.io/DemoExtension");
 
     /// Set per-file properties.
     /// Path names: "/formatName", "/majorVersion", "/minorVersion", "/coordinateMetadata"

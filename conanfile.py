@@ -76,8 +76,8 @@ class ConanFileDefault(ConanFile):
         return self._cmake
 
     def package_info(self):
-        defines = []
-        self.cpp_info.libs = ["openE57"]
+        defines = [ "E57_REFIMPL_REVISION_ID={name}-{version}".format(name=self.name, version=self.version) ]
+        self.cpp_info.libs = ["openE57", "openE57las"]
 
         if self.options.mt:
             defines.append("BUILD_WITH_MT")
