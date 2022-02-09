@@ -30,11 +30,7 @@ On Linux:
 ```shell
 git clone https://github.com/madduci/openE57.git
 cd open57
-mkdir -p build/linux && cd build/linux
-conan install ../.. --build=missing
-cmake ../.. -DCMAKE_BUILD_TYPE=Release
-cmake --build .
-cmake --install . 
+conan create . --build=missing
 ```
 
 On Windows:
@@ -42,19 +38,15 @@ On Windows:
 ```cmd
 git clone https://github.com/madduci/openE57.git
 cd open57
-md build\windows && cd build\windows
-conan install ..\.. --build=missing
-cmake ..\.. -DCMAKE_BUILD_TYPE=Release
-cmake --build . --config Release
-cmake --install . --config Release
+conan create . --build=missing
 ```
 
-Available CMake options (but disabled by default) are the following onews:
+Available conan options (but disabled by default) are the following ones:
 
-* BUILD_EXAMPLES
-* BUILD_TOOLS
-* BUILD_TESTS
-* BUILD_WITH_MT (MSVC Only)
-* BUILD_SHARED_LIBS (Not supported at the moment - no symbol is exported yet)
+* with_examples
+* with_tools
+* with_tests
+* mt (MSVC Only)
+* shared (Not supported at the moment - no symbol is exported yet)
 
 The dependencies are now managed with conan and integrated in CMake, without the need of compiling the required libraries by yourself.

@@ -8,6 +8,7 @@
 - Renamed LASReader to openE57las
 - Moved time_conversion to tools folder
 - Updated Boost to 1.78.0 (only used if building tools)
+- Fixed WIN32 code path in OpenE57simple
 
 ## Removed
 - config.h template (definition passed through the compiler)
