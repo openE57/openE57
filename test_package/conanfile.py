@@ -13,5 +13,9 @@ class TestOpenE57Conan(ConanFile):
 
     def test(self):
         if not tools.cross_building(self):
-            bin_path = os.path.join("bin", "openE57_example")
+            bin_path=""
+            if self.settings.compiler == "Visual Studio":
+                bin_path = os.path.join("bin", "{}".format(self.settings.build_type), "openE57_example")
+            else:
+                bin_path = os.path.join("bin", "openE57_example")
             self.run(bin_path, run_environment=True)
