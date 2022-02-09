@@ -166,7 +166,7 @@ double e57::GetGPSDateTimeFromSystemTime(SYSTEMTIME sysTim //!< Windows System T
   currentTime.LowPart  = currentFileTime.dwLowDateTime;
   currentTime.HighPart = currentFileTime.dwHighDateTime;
 
-  SYSTEMTIME gpsSystemTime = {1980, 1, 0, 6, 0, 0, 0, 0} // GPS started in Jan. 6, 1980
+  SYSTEMTIME gpsSystemTime = {1980, 1, 0, 6, 0, 0, 0, 0}; // GPS started in Jan. 6, 1980
   FILETIME   gpsFileTime;
   SystemTimeToFileTime(&gpsSystemTime, &gpsFileTime);
 
@@ -190,7 +190,7 @@ void e57::GetSystemTimeFromGPSDateTime(double      gpsTime, //!< GPS Date Time
   gpsTime -= 15.;                                                          // Sub utc offset leap seconds
   gpsTime *= 10000000.;                                                    // convert to 100 nanoseconds;
 
-  SYSTEMTIME gpsSystemTime = {1980, 1, 0, 6, 0, 0, 0, 0} // GPS started in Jan. 6, 1980
+  SYSTEMTIME gpsSystemTime = {1980, 1, 0, 6, 0, 0, 0, 0}; // GPS started in Jan. 6, 1980
   FILETIME   gpsFileTime;
   SystemTimeToFileTime(&gpsSystemTime, &gpsFileTime);
 
@@ -221,14 +221,14 @@ double e57::GetGPSDateTimeFromUTC(int   utc_year,   //!< The year 1900-9999
 {
 #if defined(WIN32)
   SYSTEMTIME sysTim;
-  sysTim.wDayOfWeek    = day_of_week;
+  sysTim.wDayOfWeek    = 1;
   sysTim.wYear         = utc_year;
   sysTim.wMonth        = utc_month;
   sysTim.wDay          = utc_day;
   sysTim.wHour         = utc_hour;
   sysTim.wMinute       = utc_minute;
   sysTim.wSecond       = (WORD)(floor(utc_seconds));
-  sysTim.wMilliseconds = (WORD)((utc_seconds - t.wSecond) * 1000);
+  sysTim.wMilliseconds = (WORD)((utc_seconds) * 1000);
 
   return e57::GetGPSDateTimeFromSystemTime(sysTim);
 #else
@@ -252,11 +252,11 @@ void e57::GetUTCFromGPSDateTime(double gpsTime,    //!< GPS Date Time
   SYSTEMTIME sysTim;
   e57::GetSystemTimeFromGPSDateTime(gpsTime, sysTim);
 
-  utc_year    = sysTim.wYear;   //!< The year 1900-9999
-  utc_month   = sysTim.wMonth;  //!< The month 0-11
-  utc_day     = sysTim.wDay;    //!< The day 1-31
-  utc_hour    = sysTim.wHour;   //!< The hour 0-23
-  utc_minute  = sysTim.wMinute; //!< The minute 0-59
+  utc_Year    = sysTim.wYear;   //!< The year 1900-9999
+  utc_Month   = sysTim.wMonth;  //!< The month 0-11
+  utc_Day     = sysTim.wDay;    //!< The day 1-31
+  utc_Hour    = sysTim.wHour;   //!< The hour 0-23
+  utc_Minute  = sysTim.wMinute; //!< The minute 0-59
   utc_seconds = sysTim.wSecond; //!< The seconds 0.0 - 59.999
   utc_seconds += sysTim.wMilliseconds / 1000;
 #else
