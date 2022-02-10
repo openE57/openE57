@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, windows-latest]
+        os: [ubuntu-20.04, windows-latest, macos-latest]
 
     runs-on: ${{ matrix.os }}
     
@@ -34,24 +34,14 @@ jobs:
         if: matrix.os == 'ubuntu-20.04'
         run: |
             conan profile update settings.compiler.libcxx=libstdc++11 default
-            mkdir -p build && cd build
-            conan install .. --build=missing
-            cmake .. -DBUILD_EXAMPLES=ON -DBUILD_TOOLS=ON -DCMAKE_BUILD_TYPE=Release
-            cmake --build . --config Release --target install
+            conan create . -o openE57:with_examples=True -o openE57:with_tools=True --build=missing
             
       - name: Mac build
         if: matrix.os == 'macos-latest'
         run: |
-            conan profile update settings.compiler.libcxx=libc++ default
-            mkdir -p build && cd build
-            conan install .. --build=missing
-            cmake .. -DBUILD_EXAMPLES=ON -DBUILD_TOOLS=ON -DCMAKE_BUILD_TYPE=Release
-            cmake --build . --config Release --target install
+            conan create . -o openE57:with_examples=True --build=missing
             
       - name: Windows build
         if: matrix.os == 'windows-latest'
         run: |
-            md build && cd build
-            conan install .. --build=missing
-            cmake .. -DBUILD_EXAMPLES=ON -DBUILD_TOOLS=ON -DCMAKE_BUILD_TYPE=Release
-            cmake --build . --config Release --target install
+            conan create . -o openE57:with_examples=True -o openE57:with_tools=True --build=missing
