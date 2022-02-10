@@ -2,7 +2,7 @@
  * openE57las.h - header for simple interface for reading LAS files.
  *
  * Copyright (c) 2009 - 2010 Kevin Ackley (kackley@gwi.net)
- * Copyright (c) 2020 Michele Adduci (adduci@tutanota.com)
+ * Copyright (c) 2020 - 2022 Michele Adduci (adduci@tutanota.com)
  *
  * Permission is hereby granted, free of charge, to any person or organization
  * obtaining a copy of the software and accompanying documentation covered by
