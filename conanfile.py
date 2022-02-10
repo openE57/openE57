@@ -41,6 +41,9 @@ class ConanFileDefault(ConanFile):
     def validate(self):
         if self.options.shared == True:
             raise ConanInvalidConfiguration("OpenE57 cannot be built as shared library yet")
+        
+        if self.options.mt == True and self.settings.compiler != "Visual Studio":
+            raise ConanInvalidConfiguration("The MT compile option is only available for Visual Studio")
 
     def build(self):
         cmake = self._configure_cmake()

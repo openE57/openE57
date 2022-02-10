@@ -74,6 +74,11 @@ using namespace std;
 namespace e57
 {
 
+// inspired by https://stackoverflow.com/a/15764679/2369389
+template <typename T>
+void ignore(T &&)
+{ }
+
 // inspired by https://stackoverflow.com/a/60198074/2369389
 namespace uuid {
     static std::random_device              rd;
@@ -232,6 +237,12 @@ double e57::GetGPSDateTimeFromUTC(int   utc_year,   //!< The year 1900-9999
 
   return e57::GetGPSDateTimeFromSystemTime(sysTim);
 #else
+  ignore(utc_year);
+  ignore(utc_month);
+  ignore(utc_day);
+  ignore(utc_hour);
+  ignore(utc_minute);
+  ignore(utc_seconds);
   return 0;
 #endif
 }
@@ -260,6 +271,7 @@ void e57::GetUTCFromGPSDateTime(double gpsTime,    //!< GPS Date Time
   utc_seconds = sysTim.wSecond; //!< The seconds 0.0 - 59.999
   utc_seconds += sysTim.wMilliseconds / 1000;
 #else
+  ignore(gpsTime);
   utc_Year    = 2022;   //!< The year 1900-9999
   utc_Month   = 1;  //!< The month 0-11
   utc_Day     = 1;    //!< The day 1-31
