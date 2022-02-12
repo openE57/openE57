@@ -35,4 +35,3 @@ endif()
 # Add Clang Format
 #
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/clang_format.cmake)
-

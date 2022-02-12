@@ -1,20 +1,18 @@
 cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
-project(openE57_example CXX)
+project(opene57_example CXX)
 
-set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR} ${CMAKE_MODULE_PATH})
+option(BUILD_WITH_MT "Build with MultiThreaded Runtime" FALSE)
 
-find_package(openE57 REQUIRED)
+if(WIN32)
+    set(MSVC_RUNTIME_TYPE $<IF:$<BOOL:${BUILD_WITH_MT}>,MultiThreaded$<$<CONFIG:Debug>:Debug>,MultiThreaded$<$<CONFIG:Debug>:Debug>>DLL)
+endif()
 
-add_executable(${PROJECT_NAME} 
-    example.cpp
-)
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup(TARGETS)
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${openE57_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} PRIVATE ${openE57_LIBRARIES})
+find_package(opene57 REQUIRED)
 
-set_target_properties( ${PROJECT_NAME} 
-    PROPERTIES
-    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
-)
+add_executable(${PROJECT_NAME} example.cpp)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${opene57_LIBRARIES})
+target_include_directories(${PROJECT_NAME} PRIVATE ${opene57_INCLUDE_DIRS})
+set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
