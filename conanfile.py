@@ -75,7 +75,7 @@ class Opene57Conan(ConanFile):
         self._cmake.definitions["BUILD_EXAMPLES"] = False
         self._cmake.definitions["BUILD_TOOLS"] = self.options.with_tools
         self._cmake.definitions["BUILD_TESTS"] = False
-        self._cmake.definitions["BUILD_WITH_MT"] = "MT" in str(msvc_runtime_flag(self))
+        self._cmake.definitions["BUILD_WITH_MT"] = "MT" in str(msvc_runtime_flag(self)) 
         self._cmake.configure()
         return self._cmake
 
@@ -93,6 +93,7 @@ class Opene57Conan(ConanFile):
         self.cpp_info.libs = [f"openE57{lib_suffix}", f"openE57las{lib_suffix}"]
 
         self.cpp_info.defines.append(f"E57_REFIMPL_REVISION_ID={self.name}-{self.version}")
+        self.cpp_info.defines.append("NOMINMAX")
         if self.options.shared == False:
             self.cpp_info.defines.append("XERCES_STATIC_LIBRARY")
 

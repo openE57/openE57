@@ -70,6 +70,9 @@ endif()
 if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
   include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
   conan_basic_setup(TARGETS)
+  if(MSVC)
+    list(APPEND compiler_definitions NOMINMAX)
+  endif()
 endif()
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/src)
@@ -77,9 +80,8 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/src)
 # 
 # Install Artifacts
 #
-install(FILES  
-  ${CMAKE_SOURCE_DIR}/CHANGELOG.md
-DESTINATION .)
+install(FILES ${CMAKE_SOURCE_DIR}/CHANGELOG.md
+        DESTINATION .)
 
 set(CPACK_PACKAGE_VENDOR "Michele Adduci <adduci@tutanota.com>")
 set(CPACK_PACKAGE_VERSION_MAJOR "${${PROJECT_NAME}_MAJOR_VERSION}")
