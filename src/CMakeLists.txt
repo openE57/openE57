@@ -11,10 +11,10 @@ include(CMakePackageConfigHelpers)
 include(GenerateExportHeader)
 
 # Check if we are building a conan recipe
-if(NOT EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-  include(InstallRequiredSystemLibraries)
-  include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/compiler_options.cmake)
-endif()
+#if(NOT EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+#include(InstallRequiredSystemLibraries)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/compiler_options.cmake)
+#endif()
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dependencies.cmake)
 

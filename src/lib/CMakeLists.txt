@@ -18,7 +18,7 @@ add_library(
 generate_export_header(${PROJECT_NAME})
 set_target_properties(${PROJECT_NAME} PROPERTIES 
   DEBUG_POSTFIX "-d" 
-  MSVC_RUNTIME_LIBRARY "${MSVC_RUNTIME_TYPE}")
+  MSVC_RUNTIME_LIBRARY "${CMAKE_MSVC_RUNTIME_LIBRARY}")
 target_compile_options(${PROJECT_NAME} PUBLIC ${compiler_options})
 target_compile_definitions(${PROJECT_NAME} PUBLIC ${compiler_definitions})
 target_link_options(${PROJECT_NAME} PUBLIC ${linker_flags})
@@ -41,7 +41,7 @@ add_library(${PROJECT_NAME}las ${LIBRARY_TYPE}
 
 set_target_properties(${PROJECT_NAME}las PROPERTIES 
   DEBUG_POSTFIX "-d" 
-  MSVC_RUNTIME_LIBRARY "${MSVC_RUNTIME_TYPE}")
+  MSVC_RUNTIME_LIBRARY "${CMAKE_MSVC_RUNTIME_LIBRARY}")
 target_compile_options(${PROJECT_NAME}las PUBLIC ${compiler_options})
 target_compile_definitions(${PROJECT_NAME}las PUBLIC ${compiler_definitions})
 target_link_options(${PROJECT_NAME}las PUBLIC ${linker_flags})

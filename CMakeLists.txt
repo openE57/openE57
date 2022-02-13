@@ -39,7 +39,7 @@
 
 cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
 
-# Enables the MSVC_RUNTIME_LIBRARY property on targets
+# Enables the CMAKE_MSVC_RUNTIME_LIBRARY property on targets
 cmake_policy(SET CMP0091 NEW)
 
 project(openE57 VERSION 1.6.0 LANGUAGES C CXX DESCRIPTION "openE57 is a library for handling E57 files")
@@ -59,7 +59,6 @@ option(BUILD_EXAMPLES "Build e57 examples" FALSE)
 option(BUILD_TOOLS "Build e57 tools" FALSE)
 option(BUILD_TESTS "Build e57 tests" FALSE)
 option(BUILD_SHARED_LIBS "Build e57 shared libraries" FALSE)
-option(BUILD_WITH_MT "Build e57 libraries as MultiThreaded DLL" FALSE)
 
 if(BUILD_SHARED_LIBS)
   message(FATAL_ERROR "Shared Libraries are not supported due to missing exported symbols")
@@ -67,12 +66,8 @@ else(BUILD_SHARED_LIBS)
   set(LIBRARY_TYPE STATIC)
 endif()
 
-if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-  include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-  conan_basic_setup(TARGETS)
-  if(MSVC)
-    list(APPEND compiler_definitions NOMINMAX)
-  endif()
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE "Release")
 endif()
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/src)

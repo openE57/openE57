@@ -9,7 +9,6 @@ class TestOpene57Conan(ConanFile):
     def build(self):
         if not tools.cross_building(self):
             cmake = CMake(self)
-            cmake.definitions["BUILD_WITH_MT"] = "MT" in str(msvc_runtime_flag(self))
             cmake.configure()
             cmake.build()
 
