@@ -1,0 +1,53 @@
+name: openE57
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: windows-latest
+        build_type: [Release, Debug]
+        runtime_type: [MT, MTd, MD, MTd]
+        exclude:
+          - os: windows-latest
+            build_type: Release
+            runtime_type: MTd
+          - os: windows-latest
+            build_type: Release
+            runtime_type: MDd
+          - os: windows-latest
+            build_type: Debug
+            runtime_type: MT
+          - os: windows-latest
+            build_type: Debug
+            runtime_type: MD
+
+    runs-on: ${{ matrix.os }}
+    
+    env:
+      CONAN_USER_HOME: "${{ github.workspace }}/release"
+      CONAN_USER_HOME_SHORT: "${{ github.workspace }}/release/short"
+      INSTALL_DIR: ${{ github.workspace }}/install/
+      
+    steps:
+      - name: Perform checkout
+        uses: actions/checkout@v2
+        
+      - name: Install Python environment 
+        uses: actions/setup-python@v2
+        
+      - name: Install conan
+        run: |
+            pip install conan --upgrade
+            conan profile new default --detect
+            conan profile update settings.build_type=${{ matrix.build_type }} default
+            conan profile update settings.compiler.runtime=${{ matrix.runtime_type }} default
+                    
+      - name: Windows build
+        if: matrix.os == 'windows-latest'
+        run: |
+            conan create . -o openE57:with_examples=True -o openE57:with_tools=True --build=missing
