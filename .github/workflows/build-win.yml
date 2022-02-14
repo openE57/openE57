@@ -11,7 +11,7 @@ jobs:
       matrix:
         os: [windows-latest]
         build_type: [Release, Debug]
-        runtime_type: [MT, MTd, MD, MTd]
+        runtime_type: [MT, MTd, MD, MDd]
         exclude:
           - os: windows-latest
             build_type: Release
@@ -50,4 +50,4 @@ jobs:
       - name: Windows build
         if: matrix.os == 'windows-latest'
         run: |
-            conan create . -o openE57:with_examples=True -o openE57:with_tools=True --build=missing
+            conan create . -o openE57:with_tools=True --build=missing
