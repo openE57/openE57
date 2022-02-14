@@ -18,8 +18,10 @@ if(MSVC)
   list(APPEND linker_flags
     $<$<BOOL:${BUILD_SHARED_LIBS}>:/LTCG>
   )
-
-  set(CMAKE_MSVC_RUNTIME_LIBRARY $<IF:$<BOOL:${BUILD_WITH_MT}>,"MultiThreaded$<$<CONFIG:Debug>:Debug>","MultiThreaded$<$<CONFIG:Debug>:Debug>DLL">)
+  
+  if(BUILD_WITH_MT)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+  endif()
 
 else(MSVC)
 
