@@ -9,7 +9,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, windows-latest, macos-latest]
+        os: [ubuntu-20.04, macos-latest]
+        build_type: [Debug, Release]
 
     runs-on: ${{ matrix.os }}
     
@@ -29,6 +30,7 @@ jobs:
         run: |
             pip install conan --upgrade
             conan profile new default --detect
+            conan profile update settings.build_type=${{ matrix.build_type }} default
                     
       - name: Linux build
         if: matrix.os == 'ubuntu-20.04'
@@ -41,7 +43,3 @@ jobs:
         run: |
             conan create . opene57/1.6.0@ --build=missing
             
-      - name: Windows build
-        if: matrix.os == 'windows-latest'
-        run: |
-            conan create . opene57/1.6.0@ -o openE57:with_tools=True --build=missing
