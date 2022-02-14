@@ -13,7 +13,7 @@ if(MSVC)
     WINDOWS
     NOMINMAX # conflicts with std::numeric_limits
     $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:RELWITHDEBINFO>,$<CONFIG:MINSIZEREL>>:NDEBUG>
-    $<$<CONFIG:DEBUG>:_DEBUG>)
+  )
 
   list(APPEND linker_flags
     $<$<BOOL:${BUILD_SHARED_LIBS}>:/LTCG>
