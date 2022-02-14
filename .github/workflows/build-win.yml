@@ -43,7 +43,6 @@ jobs:
       - name: Install conan
         run: |
             pip install conan --upgrade
-            conancenter: 
             conan remote clean
             conan remote add conancenter https://center.conan.io True --insert
             conan profile new default --detect
