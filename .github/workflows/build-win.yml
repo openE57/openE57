@@ -52,4 +52,4 @@ jobs:
       - name: Windows build
         if: matrix.os == 'windows-latest'
         run: |
-            conan create . -o openE57:with_tools=True --build=missing
+            conan create . opene57/1.6.0@ -o openE57:with_tools=True --build=missing
