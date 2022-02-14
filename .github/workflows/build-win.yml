@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: windows-latest
+        os: [windows-latest]
         build_type: [Release, Debug]
         runtime_type: [MT, MTd, MD, MTd]
         exclude:
