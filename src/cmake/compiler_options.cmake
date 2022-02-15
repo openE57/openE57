@@ -14,6 +14,7 @@ if(MSVC)
     NOMINMAX # conflicts with std::numeric_limits
     $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:RELWITHDEBINFO>,$<CONFIG:MINSIZEREL>>:NDEBUG>
     $<$<CONFIG:DEBUG>:_DEBUG>
+    $<$<AND:$<CONFIG:DEBUG>,$<NOT:$<BOOL:${BUILD_WITH_MT}>>>:_DLL>
   )
 
   list(APPEND linker_flags

@@ -23,7 +23,7 @@ if(BUILD_TOOLS)
     set(Boost_USE_STATIC_LIBS ON)
     set(Boost_USE_STATIC_RUNTIME ON)
   endif()
-  set(Boost_USE_MULTITHREADED ON)
+  set(Boost_USE_MULTITHREADED $<IF:$<AND:$<BOOL:${MSVC}>,$<NOT:$<BOOL:${BUILD_WITH_MT}>>>,OFF,ON>)
   find_package(Boost 1.70.0 COMPONENTS program_options system thread filesystem REQUIRED)
   list(APPEND compiler_definitions
       BOOST_ALL_NO_LIB
