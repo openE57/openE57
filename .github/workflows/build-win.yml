@@ -45,11 +45,13 @@ jobs:
             pip install conan --upgrade
             conan remote clean
             conan remote add conancenter https://center.conan.io True --insert
-            conan profile new default --detect
-            conan profile update settings.build_type=${{ matrix.build_type }} default
-            conan profile update settings.compiler.runtime=${{ matrix.runtime_type }} default
+            
+      - name: Configure conan profile
+        run: |
+            conan profile new ${{ matrix.build_type }}-${{ matrix.runtime_type }} --detect
+            conan profile update settings.build_type=${{ matrix.build_type }} ${{ matrix.build_type }}-${{ matrix.runtime_type }}
+            conan profile update settings.compiler.runtime=${{ matrix.runtime_type }} ${{ matrix.build_type }}-${{ matrix.runtime_type }}
                     
       - name: Windows build
-        if: matrix.os == 'windows-latest'
         run: |
-            conan create . opene57/1.6.0@ -o openE57:with_tools=True --build=missing
+            conan create . opene57/1.6.0@ -o openE57:with_tools=True --build=missing --profile ${{ matrix.build_type }}-${{ matrix.runtime_type }}
