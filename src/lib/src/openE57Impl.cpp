@@ -1998,7 +1998,6 @@ bool CompressedVectorNodeImpl::isTypeEquivalent(std::shared_ptr<NodeImpl> ni)
 bool CompressedVectorNodeImpl::isDefined(const ustring& pathName)
 {
   throw E57_EXCEPTION2(E57_ERROR_NOT_IMPLEMENTED, "this->pathName=" + this->pathName() + " pathName=" + pathName);
-  return (false);
 }
 
 void CompressedVectorNodeImpl::setAttachedRecursive()

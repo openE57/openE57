@@ -1,0 +1,63 @@
+name: openE57
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+        build_type: [Release, Debug]
+        runtime_type: [MT, MTd, MD, MDd]
+        exclude:
+          - os: windows-latest
+            build_type: Release
+            runtime_type: MTd
+          - os: windows-latest
+            build_type: Release
+            runtime_type: MDd
+          - os: windows-latest
+            build_type: Debug
+            runtime_type: MT
+          - os: windows-latest
+            build_type: Debug
+            runtime_type: MD
+
+    runs-on: ${{ matrix.os }}
+    
+    env:
+      CONAN_USER_HOME: "${{ github.workspace }}/release"
+      CONAN_USER_HOME_SHORT: "${{ github.workspace }}/release/short"
+      INSTALL_DIR: ${{ github.workspace }}/install/
+      
+    steps:
+      - name: Perform checkout
+        uses: actions/checkout@v2
+        
+      - name: Install Python environment 
+        uses: actions/setup-python@v2
+        
+      - name: Install conan
+        run: |
+            pip install conan --upgrade
+            conan remote clean
+            conan remote add conancenter https://center.conan.io True --insert
+            
+      - name: Configure conan profile
+        run: |
+            conan profile new ${{ matrix.build_type }}-${{ matrix.runtime_type }} --detect
+            conan profile update settings.build_type=${{ matrix.build_type }} ${{ matrix.build_type }}-${{ matrix.runtime_type }}
+            conan profile update settings.compiler.runtime=${{ matrix.runtime_type }} ${{ matrix.build_type }}-${{ matrix.runtime_type }}
+                    
+      - name: Windows Release build
+        if: matrix.build_type == 'Release'
+        run: |
+            conan create . -o openE57:with_tools=True --build=missing --profile ${{ matrix.build_type }}-${{ matrix.runtime_type }}
+      
+      - name: Windows Debug build
+        if: matrix.build_type == 'Debug'
+        run: |
+            conan create . --build=missing --profile ${{ matrix.build_type }}-${{ matrix.runtime_type }}

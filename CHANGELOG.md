@@ -1,5 +1,13 @@
 # openE57
 
+## [1.6.1] - 2022-02-16
+
+## Changed
+- Fixed issues on Visual Studio by setting incorrectly CMAKE_MSVC_RUNTIME_TYPE
+- Improved compatibility with conan build process
+- Added option to disable -fPIC on Linux (enabled by default)
+- Updated README.md
+
 ## [1.6.0] - 2022-02-05
 
 ## Changed

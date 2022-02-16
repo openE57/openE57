@@ -10,7 +10,7 @@ add_library(time_conversion ${LIBRARY_TYPE}
 
 set_target_properties(time_conversion PROPERTIES 
   DEBUG_POSTFIX "-d" 
-  MSVC_RUNTIME_LIBRARY "${MSVC_RUNTIME_TYPE}")
+  MSVC_RUNTIME_LIBRARY "${CMAKE_MSVC_RUNTIME_LIBRARY}")
 target_compile_options(time_conversion PUBLIC ${compiler_options})
 target_compile_definitions(time_conversion PUBLIC ${compiler_definitions})
 target_link_options(time_conversion PUBLIC ${linker_flags})
@@ -44,7 +44,7 @@ foreach(TOOL ${TOOLS})
   
   set_target_properties(${TOOL} PROPERTIES 
     DEBUG_POSTFIX "-d" 
-    MSVC_RUNTIME_LIBRARY "${MSVC_RUNTIME_TYPE}")
+    MSVC_RUNTIME_LIBRARY "${CMAKE_MSVC_RUNTIME_LIBRARY}")
   target_compile_options(${TOOL} PUBLIC ${compiler_options})
   target_compile_definitions(${TOOL} PUBLIC ${compiler_definitions})
   target_link_options(${TOOL} PUBLIC ${linker_flags})
@@ -72,7 +72,7 @@ add_executable(las2e57 ${CMAKE_CURRENT_SOURCE_DIR}/las2e57.cpp)
 
 set_target_properties(las2e57 PROPERTIES 
   DEBUG_POSTFIX "-d" 
-  MSVC_RUNTIME_LIBRARY "${MSVC_RUNTIME_TYPE}")
+  MSVC_RUNTIME_LIBRARY "${CMAKE_MSVC_RUNTIME_LIBRARY}")
 target_compile_options(las2e57 PUBLIC ${compiler_options})
 target_compile_definitions(las2e57 PUBLIC ${compiler_definitions})
 target_link_options(las2e57 PUBLIC ${linker_flags})
