@@ -23,6 +23,7 @@ if(MSVC)
   
   if(BUILD_WITH_MT)
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    message(STATUS "Selected MSVC_RUNTIME_LIBRARY: ${CMAKE_MSVC_RUNTIME_LIBRARY}")
   endif()
 
 else(MSVC)
@@ -54,7 +55,7 @@ else(MSVC)
     $<$<AND:$<NOT:$<CXX_COMPILER_ID:AppleClang>>,$<NOT:$<CXX_COMPILER_ID:Clang>>>:-fstack-clash-protection>
     $<$<AND:$<NOT:$<CXX_COMPILER_ID:AppleClang>>,$<NOT:$<CXX_COMPILER_ID:Clang>>>:-fbounds-check>
     -fstack-protector
-    -fPIC
+    $<$<BOOL:${BUILD_WITH_FPIC}>-fPIC>
   )
 
 endif()

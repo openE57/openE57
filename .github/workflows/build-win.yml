@@ -52,6 +52,12 @@ jobs:
             conan profile update settings.build_type=${{ matrix.build_type }} ${{ matrix.build_type }}-${{ matrix.runtime_type }}
             conan profile update settings.compiler.runtime=${{ matrix.runtime_type }} ${{ matrix.build_type }}-${{ matrix.runtime_type }}
                     
-      - name: Windows build
+      - name: Windows Release build
+        if: matrix.build_type == 'Release'
         run: |
-            conan create . opene57/1.6.0@ -o openE57:with_tools=True --build=missing --profile ${{ matrix.build_type }}-${{ matrix.runtime_type }}
+            conan create . -o openE57:with_tools=True --build=missing --profile ${{ matrix.build_type }}-${{ matrix.runtime_type }}
+      
+      - name: Windows Debug build
+        if: matrix.build_type == 'Debug'
+        run: |
+            conan create . --build=missing --profile ${{ matrix.build_type }}-${{ matrix.runtime_type }}

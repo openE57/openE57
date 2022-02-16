@@ -5,6 +5,7 @@ import os
 
 class Opene57Conan(ConanFile):
     name = "opene57"
+    version = "1.6.1"
     description = "A C++ library for reading and writing E57 files, " \
                   "fork of the original libE57 (http://libe57.org)"
     topics = ("conan", "openE57", "e57")
@@ -72,10 +73,14 @@ class Opene57Conan(ConanFile):
         if self._cmake:
             return self._cmake
         self._cmake = CMake(self)
+        self._cmake.definitions["PROJECT_VERSION"] = self.version
         self._cmake.definitions["BUILD_EXAMPLES"] = False
         self._cmake.definitions["BUILD_TOOLS"] = self.options.with_tools
         self._cmake.definitions["BUILD_TESTS"] = False
-        self._cmake.definitions["BUILD_WITH_MT"] = "MT" in str(msvc_runtime_flag(self)) 
+        if self.settings.os == "Windows":
+            self._cmake.definitions["BUILD_WITH_MT"] = "MT" in str(msvc_runtime_flag(self))
+        else:
+            self._cmake.definitions["BUILD_WITH_FPIC"] = self.options.fPIC
         self._cmake.configure()
         return self._cmake
 
