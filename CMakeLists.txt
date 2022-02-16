@@ -59,7 +59,7 @@ option(BUILD_EXAMPLES "Build opene57 examples" FALSE)
 option(BUILD_TOOLS "Build opene57 tools" FALSE)
 option(BUILD_TESTS "Build opene57 tests" FALSE)
 option(BUILD_SHARED_LIBS "Build opene57 shared libraries" FALSE)
-option(BUILD_WITH_MT "Build the project with /MT on Windows" FALSE)
+option(BUILD_WITH_MT "Build the project with /MT when using Visual Studio" FALSE)
 option(BUILD_WITH_FPIC "Build the project with -fPIC on Unix" TRUE)
 
 if(BUILD_SHARED_LIBS)
