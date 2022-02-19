@@ -1,6 +1,6 @@
 # openE57
 
-## [1.6.2] - 
+## [1.6.2] - 2022-02-19
 
 ## Changed
 - Improved Conan recipe, including tools
