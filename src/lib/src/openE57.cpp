@@ -32,7 +32,7 @@
 @mainpage
 
 @section main_Introduction Introduction
-This browser-based document describes the E57 Foundation API (Application Programmer Interface) version 0.51, which is a collection of functions that help a C++
+This browser-based document describes the E57 Foundation API (Application Programmer Interface), which is a collection of functions that help a C++
 programmer read and write ASTM E57 format files. The API acts a documented software connector between an application (above the interface) and an implementation
 of the API (also called an E57 Foundation Implementation, below the interface). There could (and hopefully will be) more than one E57 Foundation Implementation
 of this API (perhaps written by a different programmer, or with different performance characteristics), but initially there is a single implementation: the
@@ -214,14 +214,14 @@ This is because some of the lines have documentation directives (for Doxygen) th
 
 <b>Source line 4</b> includes the @c iostream header because the example uses @c cout.
 The API does not require @c iostream to be included (@c stdio.h could be used, or nothing at all).
-<b>Source line 5</b> includes E57Foundation.h, the E57 Foundation API header file where all the API classes are declared.
-All programs that use the E57 Foundation API must include E57Foundation.h
-It is OK (but wasteful) to include the E57Foundation.h header twice in the same file, as the header has an include guard.
+<b>Source line 5</b> includes openE57.h, the E57 Foundation API header file where all the API classes are declared.
+All programs that use the E57 Foundation API must include openE57.h
+It is OK (but wasteful) to include the openE57.h header twice in the same file, as the header has an include guard.
 
 <b>Source line 6</b> has a @c using directive which allows all the Foundation API classes and functions to be referenced without having to preceed each reference with <tt>e57::</tt> (for example: <tt>e57::StructureNode root = imf.root();</tt>).
-The <tt>using namespace e57;</tt> directive must follow the inclusion of the E57Foundation.h header file.
+The <tt>using namespace e57;</tt> directive must follow the inclusion of the openE57.h header file.
 The entire API is declared in the "e57" namespace to eliminate the risk that in a large application a class name conflicts with an existing type.
-All preprocessor macros defined in E57Foundation.h (which cannot be in a namespace) begin with the prefix @c "E57", so there is low risk of name clashes.
+All preprocessor macros defined in openE57.h (which cannot be in a namespace) begin with the prefix @c "E57", so there is low risk of name clashes.
 For convenience, the @c using directive on <b>source line 7</b> allows all names in the @c std namespace to be used without qualification (e.g. @c cout instead of @c std::cout).
 
 In the @c main function there are two @c try blocks, the first creates a new file on disk, and the second reads the file back.
@@ -554,7 +554,7 @@ See the HelloWorld.cpp example for discussion of the use of include files, const
 
 <b>Source lines 35-38</b> construct the 4 IntegerNodes and attach them with distinct element names to the root node.
 In <b>source line 35</b>, the IntegerNode is constructed with a default value, default minimum, and default maximum.
-The defaults are specified in the E57Foundation.h include file.
+The defaults are specified in the openE57.h include file.
 The default values create a zero value IntegerNode with minimum/maximum range set to the largest values that can be represented by a signed 64 bit number (which is the underlying representation in the reference implementation of the E57 Foundation API).
 <b>Source line 36</b> attaches an IntegerNode with a given value but default min/max.
 <b>Source line 37</b> creates a IntegerNode that can represent all values of an unsigned 10 bit number.
@@ -5225,7 +5225,7 @@ ustring E57Utilities::errorCodeToString(ErrorCode ecode)
   switch (ecode)
   {
   /*
-   * N.B.  *** When changing error strings here, remember to update the Doxygen strings in E57Foundation.h ****
+   * N.B.  *** When changing error strings here, remember to update the Doxygen strings in openE57.h ****
    */
   case E57_SUCCESS:
     return ("operation was successful (E57_SUCCESS)");
@@ -5332,7 +5332,7 @@ ustring E57Utilities::errorCodeToString(ErrorCode ecode)
   case E57_ERROR_INVARIANCE_VIOLATION:
     return ("class invariance constraint violation in debug mode (E57_ERROR_INVARIANCE_VIOLATION)");
   /*
-   * N.B.  *** When changing error strings here, remember to update the Doxygen strings in E57Foundation.h ****
+   * N.B.  *** When changing error strings here, remember to update the Doxygen strings in openE57.h ****
    */
   default:
     return ("<unknown ErrorCode>");

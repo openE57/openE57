@@ -15,11 +15,13 @@ class Opene57Conan(ConanFile):
     exports_sources = [ "src/*", "LICENSE*", "CHANGELOG.md", "*.txt"]
     settings = "os", "compiler", "arch", "build_type"
     options = { "with_tools": [True, False],
+                "with_docs":  [True, False],
                 "shared": [True, False],
                 "fPIC": [True, False]
                }
     default_options = {
                 "with_tools": False,
+                "with_docs":  False,
                 "shared": False,
                 "fPIC": True
                }
@@ -76,6 +78,9 @@ class Opene57Conan(ConanFile):
     def build_requirements(self):
         if self.options.with_tools:
             self.build_requires("boost/1.78.0")
+
+        if self.options.with_docs:
+            self.build_requires("doxygen/1.9.2")
 
     def requirements(self):
         if self.settings.os == "Linux" or tools.is_apple_os(self.settings.os):
