@@ -43,7 +43,7 @@ foreach(TOOL ${TOOLS})
   add_executable(${TOOL} ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.cpp)
   
   set_target_properties(${TOOL} PROPERTIES 
-    DEBUG_POSTFIX "-d" 
+    DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
     MSVC_RUNTIME_LIBRARY "${CMAKE_MSVC_RUNTIME_LIBRARY}")
   target_compile_options(${TOOL} PUBLIC ${compiler_options})
   target_compile_definitions(${TOOL} PUBLIC ${compiler_definitions})
@@ -51,7 +51,7 @@ foreach(TOOL ${TOOLS})
   target_include_directories(${TOOL} 
     PRIVATE 
       $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-      ${CMAKE_SOURCE_DIR}/src/lib/include
+      ${CMAKE_CURRENT_SOURCE_DIR}/../lib/include
       ${XML_INCLUDE_DIRS}
       ${Boost_INCLUDE_DIR}
   )
@@ -71,7 +71,7 @@ endforeach()
 add_executable(las2e57 ${CMAKE_CURRENT_SOURCE_DIR}/las2e57.cpp)
 
 set_target_properties(las2e57 PROPERTIES 
-  DEBUG_POSTFIX "-d" 
+  DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX} 
   MSVC_RUNTIME_LIBRARY "${CMAKE_MSVC_RUNTIME_LIBRARY}")
 target_compile_options(las2e57 PUBLIC ${compiler_options})
 target_compile_definitions(las2e57 PUBLIC ${compiler_definitions})
@@ -80,7 +80,7 @@ target_link_options(las2e57 PUBLIC ${linker_flags})
 target_include_directories(las2e57
   PRIVATE 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    ${CMAKE_SOURCE_DIR}/src/lib/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/../lib/include
     ${XML_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIR}
 )

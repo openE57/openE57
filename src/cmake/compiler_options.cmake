@@ -1,3 +1,7 @@
+if(NOT DEFINED CMAKE_DEBUG_POSTFIX)
+  set(CMAKE_DEBUG_POSTFIX "-d")
+endif()
+
 if(MSVC)
   
   list(APPEND compiler_options 
@@ -55,7 +59,8 @@ else(MSVC)
     $<$<AND:$<NOT:$<CXX_COMPILER_ID:AppleClang>>,$<NOT:$<CXX_COMPILER_ID:Clang>>>:-fstack-clash-protection>
     $<$<AND:$<NOT:$<CXX_COMPILER_ID:AppleClang>>,$<NOT:$<CXX_COMPILER_ID:Clang>>>:-fbounds-check>
     -fstack-protector
-    $<$<BOOL:${BUILD_WITH_FPIC}>-fPIC>
   )
+
+  message(STATUS "Selected CMAKE_POSITION_INDEPENDENT_CODE: ${CMAKE_POSITION_INDEPENDENT_CODE}")
 
 endif()

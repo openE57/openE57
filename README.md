@@ -56,10 +56,12 @@ Available CMake Options are:
 * BUILD_TOOLS
 * BUILD_TESTS - actually unsupported (no tests yet available)
 * BUILD_SHARED_LIBS - actually unsupported (missing exported symbols)
-* BUILD_WITH_MT - activates/disables the `/MT[d]` flag when using Visual Studio
-* BUILD_WITH_FPIC - activates/disables the `-fPIC` flag on gcc/clang compilers on Linux/Mac
+* BUILD_WITH_MT - instructs CMake to set the correct [`CMAKE_MSVC_RUNTIME_LIBRARY`](https://cmake.org/cmake/help/latest/variable/CMAKE_MSVC_RUNTIME_LIBRARY.html?highlight=cmake_msvc_runtime_library) flag for Visual Studio
 
-On Linux:
+Building with Position indipendent code on Unix can be activated with the option [`CMAKE_POSITION_INDEPENDENT_CODE`](https://cmake.org/cmake/help/latest/variable/CMAKE_POSITION_INDEPENDENT_CODE.html?highlight=cmake_position_independent_code).
+
+
+#### On Linux:
 
 ```shell
 git clone https://github.com/madduci/openE57.git
@@ -70,13 +72,13 @@ cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . --config Release --target install
 ```
 
-On Windows:
+#### On Windows:
 
 ```cmd
 git clone https://github.com/madduci/openE57.git
 cd open57
 md build && cd build
-conan create . --build=missing
-cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_MT=[TRUE|FALSE]
+conan install .. --build=missing
+cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_MT=ON
 cmake --build . --config Release --target install
 ```

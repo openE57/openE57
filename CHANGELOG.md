@@ -1,5 +1,14 @@
 # openE57
 
+## [1.6.2] - 
+
+## Changed
+- Improved Conan recipe, including tools
+- Minor improvements in CMake
+
+## Removed
+- Removed custom option to build with PIC on Unix, using CMAKE_POSITION_INDEPENDENT_CODE
+
 ## [1.6.1] - 2022-02-16
 
 ## Changed
