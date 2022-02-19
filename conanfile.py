@@ -5,7 +5,7 @@ import os
 
 class Opene57Conan(ConanFile):
     name = "opene57"
-    version = "1.6.2"
+    version = "1.6.3"
     description = "A C++ library for reading and writing E57 files, " \
                   "fork of the original libE57 (http://libe57.org)"
     topics = ("e57", "libe57", "3d", "astm")
