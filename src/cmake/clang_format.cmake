@@ -15,7 +15,7 @@ function(prefix_clangformat_setup prefix)
       set(CLANGFORMAT_EXECUTABLE ${clangformat_executable_tmp})
       unset(clangformat_executable_tmp)
     else()
-      message(STATUS "clang-format exectuable not found! Ignoring action")
+      message(STATUS "${CLANGFORMAT_EXECUTABLE} executable not found! Ignoring action for ${prefix}")
     endif()
   endif()
 
