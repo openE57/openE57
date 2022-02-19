@@ -58,9 +58,9 @@
 #  error "no supported OS platform defined"
 #endif
 
+#include <cmath> // floor()
 #include <cstdint>
 #include <sstream>
-#include <cmath>   // floor()
 
 #ifdef E57_MAX_VERBOSE
 #  include <iostream>
@@ -69,8 +69,8 @@ using std::cout;
 using std::endl;
 #endif
 
-#include <openE57/impl/openE57Impl.h>
 #include <openE57/impl/crc.h>
+#include <openE57/impl/openE57Impl.h>
 
 const auto CRC32C_LOOKUP_TABLE = CRC::CRC_32_C().MakeTable();
 
@@ -357,8 +357,8 @@ std::shared_ptr<NodeImpl> NodeImpl::get(const ustring& pathName)
   checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
 
   /// Parse to determine if pathName is absolute
-  bool                      isRelative;
-  vector<ustring>           fields;
+  bool                           isRelative;
+  vector<ustring>                fields;
   std::shared_ptr<ImageFileImpl> imf(destImageFile_);
   imf->pathNameParse(pathName, isRelative, fields); // throws if bad pathName
 
@@ -392,8 +392,8 @@ void NodeImpl::set(const ustring& pathName, std::shared_ptr<NodeImpl> ni, bool a
   checkImageFileOpen(__FILE__, __LINE__, __FUNCTION__);
 
   /// Parse to determine if pathName is absolute
-  bool                      isRelative;
-  vector<ustring>           fields;
+  bool                           isRelative;
+  vector<ustring>                fields;
   std::shared_ptr<ImageFileImpl> imf(destImageFile_);
   imf->pathNameParse(pathName, isRelative, fields); // throws if bad pathName
 
@@ -617,8 +617,8 @@ std::shared_ptr<NodeImpl> StructureNodeImpl::lookup(const ustring& pathName)
 {
   /// don't checkImageFileOpen
   //??? use lookup(fields, level) instead, for speed.
-  bool                      isRelative;
-  vector<ustring>           fields;
+  bool                           isRelative;
+  vector<ustring>                fields;
   std::shared_ptr<ImageFileImpl> imf(destImageFile_);
   imf->pathNameParse(pathName, isRelative, fields); // throws if bad pathName
 
@@ -1055,8 +1055,8 @@ SourceDestBufferImpl::SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImag
   checkState_();
 }
 
-SourceDestBufferImpl::SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, bool* base, const size_t capacity, bool doConversion,
-                                           bool doScaling, size_t stride)
+SourceDestBufferImpl::SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, bool* base, const size_t capacity,
+                                           bool doConversion, bool doScaling, size_t stride)
 : destImageFile_(destImageFile), pathName_(pathName), memoryRepresentation_(E57_BOOL), base_(reinterpret_cast<char*>(base)), capacity_(capacity),
   doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(0)
 {
@@ -1064,8 +1064,8 @@ SourceDestBufferImpl::SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImag
   checkState_();
 }
 
-SourceDestBufferImpl::SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, float* base, const size_t capacity, bool doConversion,
-                                           bool doScaling, size_t stride)
+SourceDestBufferImpl::SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring pathName, float* base, const size_t capacity,
+                                           bool doConversion, bool doScaling, size_t stride)
 : destImageFile_(destImageFile), pathName_(pathName), memoryRepresentation_(E57_REAL32), base_(reinterpret_cast<char*>(base)), capacity_(capacity),
   doConversion_(doConversion), doScaling_(doScaling), stride_(stride), nextIndex_(0), ustrings_(0)
 {
@@ -3647,7 +3647,7 @@ void E57XmlParser::endElement(const XMLCh* const uri, const XMLCh* const localNa
   break;
   case E57_COMPRESSED_VECTOR: {
     std::shared_ptr<CompressedVectorNodeImpl> cv_ni  = std::dynamic_pointer_cast<CompressedVectorNodeImpl>(parent_ni);
-    ustring                              uQName = toUString(qName);
+    ustring                                   uQName = toUString(qName);
 
     /// n can be either prototype or codecs
     if (uQName == "prototype")
@@ -5739,7 +5739,7 @@ CompressedVectorWriterImpl::CompressedVectorWriterImpl(std::shared_ptr<Compresse
 
     /// Calc which stream the given path belongs to.  This depends on position of the node in the proto tree.
     std::shared_ptr<NodeImpl> readNode         = proto_->get(sbufs.at(i).pathName());
-    uint64_t             bytestreamNumber = 0;
+    uint64_t                  bytestreamNumber = 0;
     if (!proto_->findTerminalPosition(readNode, bytestreamNumber))
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "sbufIndex=" + toString(i));
 
@@ -6160,7 +6160,7 @@ uint64_t CompressedVectorWriterImpl::packetWrite()
   /// Prepare header in dataPacket_, now that we are sure of packetLength
   dataPacket_.packetType                = E57_DATA_PACKET;
   dataPacket_.packetFlags               = 0;
-  dataPacket_.packetLogicalLengthMinus1 = static_cast<uint16_t>(packetLength - 1);           // %%% Truncation
+  dataPacket_.packetLogicalLengthMinus1 = static_cast<uint16_t>(packetLength - 1);         // %%% Truncation
   dataPacket_.bytestreamCount           = static_cast<std::uint16_t>(bytestreams_.size()); // %%% Truncation
 
   /// Double check that data packet is well formed
@@ -6313,7 +6313,7 @@ CompressedVectorReaderImpl::CompressedVectorReaderImpl(std::shared_ptr<Compresse
 
     /// Calc which stream the given path belongs to.  This depends on position of the node in the proto tree.
     std::shared_ptr<NodeImpl> readNode         = proto_->get(dbufs.at(i).pathName());
-    uint64_t             bytestreamNumber = 0;
+    uint64_t                  bytestreamNumber = 0;
     if (!proto_->findTerminalPosition(readNode, bytestreamNumber))
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "dbufIndex=" + toString(i));
 
@@ -6768,7 +6768,7 @@ void CompressedVectorReaderImpl::dump(int indent, std::ostream& os)
 //================================================================
 
 std::shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber, std::shared_ptr<CompressedVectorNodeImpl> cVector, vector<SourceDestBuffer>& sbufs,
-                                            ustring& /*codecPath*/)
+                                                 ustring& /*codecPath*/)
 {
   //??? For now, only handle one input
   if (sbufs.size() != 1)
@@ -6777,7 +6777,7 @@ std::shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber, std:
 
   /// Get node we are going to encode from the CompressedVector's prototype
   std::shared_ptr<NodeImpl> prototype  = cVector->getPrototype();
-  ustring              path       = sbuf.pathName();
+  ustring                   path       = sbuf.pathName();
   std::shared_ptr<NodeImpl> encodeNode = prototype->get(path);
 
 #ifdef E57_MAX_VERBOSE
@@ -6788,7 +6788,7 @@ std::shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber, std:
   {
   case E57_INTEGER: {
     std::shared_ptr<IntegerNodeImpl> ini = std::dynamic_pointer_cast<IntegerNodeImpl>(encodeNode); // downcast to correct type
-    if (!ini)                                                                            // check if failed
+    if (!ini)                                                                                      // check if failed
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "elementName=" + encodeNode->elementName());
 
     /// Get pointer to parent ImageFileImpl, to call bitsNeeded()
@@ -6830,7 +6830,7 @@ std::shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber, std:
   }
   case E57_SCALED_INTEGER: {
     std::shared_ptr<ScaledIntegerNodeImpl> sini = std::dynamic_pointer_cast<ScaledIntegerNodeImpl>(encodeNode); // downcast to correct type
-    if (!sini)                                                                                        // check if failed
+    if (!sini)                                                                                                  // check if failed
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "elementName=" + encodeNode->elementName());
 
     /// Get pointer to parent ImageFileImpl, to call bitsNeeded()
@@ -6848,31 +6848,31 @@ std::shared_ptr<Encoder> Encoder::EncoderFactory(unsigned bytestreamNumber, std:
     else if (bitsPerRecord <= 8)
     {
       std::shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint8_t>(true, bytestreamNumber, sbuf, E57_DATA_PACKET_MAX /*!!!*/, sini->minimum(),
-                                                                     sini->maximum(), sini->scale(), sini->offset()));
+                                                                          sini->maximum(), sini->scale(), sini->offset()));
       return (encoder);
     }
     else if (bitsPerRecord <= 16)
     {
       std::shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint16_t>(true, bytestreamNumber, sbuf, E57_DATA_PACKET_MAX /*!!!*/, sini->minimum(),
-                                                                      sini->maximum(), sini->scale(), sini->offset()));
+                                                                           sini->maximum(), sini->scale(), sini->offset()));
       return (encoder);
     }
     else if (bitsPerRecord <= 32)
     {
       std::shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint32_t>(true, bytestreamNumber, sbuf, E57_DATA_PACKET_MAX /*!!!*/, sini->minimum(),
-                                                                      sini->maximum(), sini->scale(), sini->offset()));
+                                                                           sini->maximum(), sini->scale(), sini->offset()));
       return (encoder);
     }
     else
     {
       std::shared_ptr<Encoder> encoder(new BitpackIntegerEncoder<uint64_t>(true, bytestreamNumber, sbuf, E57_DATA_PACKET_MAX /*!!!*/, sini->minimum(),
-                                                                      sini->maximum(), sini->scale(), sini->offset()));
+                                                                           sini->maximum(), sini->scale(), sini->offset()));
       return (encoder);
     }
   }
   case E57_FLOAT: {
     std::shared_ptr<FloatNodeImpl> fni = std::dynamic_pointer_cast<FloatNodeImpl>(encodeNode); // downcast to correct type
-    if (!fni)                                                                        // check if failed
+    if (!fni)                                                                                  // check if failed
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "elementName=" + encodeNode->elementName());
 
     //!!! need to pick smarter channel buffer sizes, here and elsewhere
@@ -7284,14 +7284,15 @@ void BitpackStringEncoder::dump(int indent, std::ostream& os)
 
 //================================================================
 
-std::shared_ptr<Decoder> Decoder::DecoderFactory(unsigned                             bytestreamNumber, //!!! name ok?
-                                            std::shared_ptr<CompressedVectorNodeImpl> cVector, vector<SourceDestBuffer>& dbufs, const ustring& /*codecPath*/)
+std::shared_ptr<Decoder> Decoder::DecoderFactory(unsigned                                  bytestreamNumber, //!!! name ok?
+                                                 std::shared_ptr<CompressedVectorNodeImpl> cVector, vector<SourceDestBuffer>& dbufs,
+                                                 const ustring& /*codecPath*/)
 {
   //!!! verify single dbuf
 
   /// Get node we are going to decode from the CompressedVector's prototype
   std::shared_ptr<NodeImpl> prototype  = cVector->getPrototype();
-  ustring              path       = dbufs.at(0).pathName();
+  ustring                   path       = dbufs.at(0).pathName();
   std::shared_ptr<NodeImpl> decodeNode = prototype->get(path);
 
 #ifdef E57_MAX_VERBOSE
@@ -7305,7 +7306,7 @@ std::shared_ptr<Decoder> Decoder::DecoderFactory(unsigned                       
   {
   case E57_INTEGER: {
     std::shared_ptr<IntegerNodeImpl> ini = std::dynamic_pointer_cast<IntegerNodeImpl>(decodeNode); // downcast to correct type
-    if (!ini)                                                                            // check if failed
+    if (!ini)                                                                                      // check if failed
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "elementName=" + decodeNode->elementName());
 
     /// Get pointer to parent ImageFileImpl, to call bitsNeeded()
@@ -7347,7 +7348,7 @@ std::shared_ptr<Decoder> Decoder::DecoderFactory(unsigned                       
   }
   case E57_SCALED_INTEGER: {
     std::shared_ptr<ScaledIntegerNodeImpl> sini = std::dynamic_pointer_cast<ScaledIntegerNodeImpl>(decodeNode); // downcast to correct type
-    if (!sini)                                                                                        // check if failed
+    if (!sini)                                                                                                  // check if failed
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "elementName=" + decodeNode->elementName());
 
     /// Get pointer to parent ImageFileImpl, to call bitsNeeded()
@@ -7366,31 +7367,31 @@ std::shared_ptr<Decoder> Decoder::DecoderFactory(unsigned                       
     else if (bitsPerRecord <= 8)
     {
       std::shared_ptr<Decoder> decoder(new BitpackIntegerDecoder<uint8_t>(true, bytestreamNumber, dbufs.at(0), sini->minimum(), sini->maximum(), sini->scale(),
-                                                                     sini->offset(), maxRecordCount));
+                                                                          sini->offset(), maxRecordCount));
       return (decoder);
     }
     else if (bitsPerRecord <= 16)
     {
       std::shared_ptr<Decoder> decoder(new BitpackIntegerDecoder<uint16_t>(true, bytestreamNumber, dbufs.at(0), sini->minimum(), sini->maximum(), sini->scale(),
-                                                                      sini->offset(), maxRecordCount));
+                                                                           sini->offset(), maxRecordCount));
       return (decoder);
     }
     else if (bitsPerRecord <= 32)
     {
       std::shared_ptr<Decoder> decoder(new BitpackIntegerDecoder<uint32_t>(true, bytestreamNumber, dbufs.at(0), sini->minimum(), sini->maximum(), sini->scale(),
-                                                                      sini->offset(), maxRecordCount));
+                                                                           sini->offset(), maxRecordCount));
       return (decoder);
     }
     else
     {
       std::shared_ptr<Decoder> decoder(new BitpackIntegerDecoder<uint64_t>(true, bytestreamNumber, dbufs.at(0), sini->minimum(), sini->maximum(), sini->scale(),
-                                                                      sini->offset(), maxRecordCount));
+                                                                           sini->offset(), maxRecordCount));
       return (decoder);
     }
   }
   case E57_FLOAT: {
     std::shared_ptr<FloatNodeImpl> fni = std::dynamic_pointer_cast<FloatNodeImpl>(decodeNode); // downcast to correct type
-    if (!fni)                                                                        // check if failed
+    if (!fni)                                                                                  // check if failed
       throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "elementName=" + decodeNode->elementName());
 
     std::shared_ptr<Decoder> decoder(new BitpackFloatDecoder(bytestreamNumber, dbufs.at(0), fni->precision(), maxRecordCount));

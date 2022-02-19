@@ -57,62 +57,68 @@
 #elif defined(LINUX) || defined(__APPLE__) || defined(__unix__)
 #  define _LARGEFILE64_SOURCE
 #  define __LARGE64_FILES
+#  include <cstring>
 #  include <sys/types.h>
 #  include <unistd.h>
-#  include <cstring>
 #else
 #  error "no supported OS platform defined"
 #endif
 
 #include <openE57/impl/openE57SimpleImpl.h>
-#include <sstream>
 #include <random>
+#include <sstream>
 
 using namespace e57;
 using namespace std;
 
 namespace e57
 {
-
 // inspired by https://stackoverflow.com/a/15764679/2369389
 template <typename T>
-void ignore(T &&)
-{ }
+void ignore(T&&)
+{}
 
 // inspired by https://stackoverflow.com/a/60198074/2369389
-namespace uuid {
-    static std::random_device              rd;
-    static std::mt19937_64                 gen(rd());
-    static std::uniform_int_distribution<> distribution(0, 15);
-    static std::uniform_int_distribution<> distribution2(8, 11);
+namespace uuid
+{
+  static std::random_device              rd;
+  static std::mt19937_64                 gen(rd());
+  static std::uniform_int_distribution<> distribution(0, 15);
+  static std::uniform_int_distribution<> distribution2(8, 11);
 
-    std::string generate_uuid() {
-      std::stringstream ss;
-      int i;
-      ss << std::hex;
-      for (i = 0; i < 8; i++) {
-          ss << distribution(gen);
-      }
-      ss << "-";
-      for (i = 0; i < 4; i++) {
-          ss << distribution(gen);
-      }
-      ss << "-4";
-      for (i = 0; i < 3; i++) {
-          ss << distribution(gen);
-      }
-      ss << "-";
-      ss << distribution2(gen);
-      for (i = 0; i < 3; i++) {
-          ss << distribution(gen);
-      }
-      ss << "-";
-      for (i = 0; i < 12; i++) {
-          ss << distribution(gen);
-      };
-      return ss.str();
+  std::string generate_uuid()
+  {
+    std::stringstream ss;
+    int               i;
+    ss << std::hex;
+    for (i = 0; i < 8; i++)
+    {
+      ss << distribution(gen);
     }
-}
+    ss << "-";
+    for (i = 0; i < 4; i++)
+    {
+      ss << distribution(gen);
+    }
+    ss << "-4";
+    for (i = 0; i < 3; i++)
+    {
+      ss << distribution(gen);
+    }
+    ss << "-";
+    ss << distribution2(gen);
+    for (i = 0; i < 3; i++)
+    {
+      ss << distribution(gen);
+    }
+    ss << "-";
+    for (i = 0; i < 12; i++)
+    {
+      ss << distribution(gen);
+    };
+    return ss.str();
+  }
+} // namespace uuid
 
 char*  GetNewGuid(void);
 double GetGPSTime(void);
@@ -154,7 +160,6 @@ double e57::GetGPSTime(void)
 #else
   return 0.0;
 #endif
-
 }
 #if defined(WIN32)
 ////////////////////////////////////////////////////////////////////
@@ -192,8 +197,8 @@ void e57::GetSystemTimeFromGPSDateTime(double      gpsTime, //!< GPS Date Time
                                        SYSTEMTIME& sysTim   //!< Windows System Time
 )
 {
-  gpsTime -= 15.;                                                          // Sub utc offset leap seconds
-  gpsTime *= 10000000.;                                                    // convert to 100 nanoseconds;
+  gpsTime -= 15.;       // Sub utc offset leap seconds
+  gpsTime *= 10000000.; // convert to 100 nanoseconds;
 
   SYSTEMTIME gpsSystemTime = {1980, 1, 0, 6, 0, 0, 0, 0}; // GPS started in Jan. 6, 1980
   FILETIME   gpsFileTime;
@@ -233,7 +238,7 @@ double e57::GetGPSDateTimeFromUTC(int   utc_year,   //!< The year 1900-9999
   sysTim.wHour         = utc_hour;
   sysTim.wMinute       = utc_minute;
   sysTim.wSecond       = (WORD)(floor(utc_seconds));
-  sysTim.wMilliseconds = (WORD)((utc_seconds) * 1000);
+  sysTim.wMilliseconds = (WORD)((utc_seconds)*1000);
 
   return e57::GetGPSDateTimeFromSystemTime(sysTim);
 #else
@@ -272,12 +277,12 @@ void e57::GetUTCFromGPSDateTime(double gpsTime,    //!< GPS Date Time
   utc_seconds += sysTim.wMilliseconds / 1000;
 #else
   ignore(gpsTime);
-  utc_Year    = 2022;   //!< The year 1900-9999
-  utc_Month   = 1;  //!< The month 0-11
-  utc_Day     = 1;    //!< The day 1-31
-  utc_Hour    = 0;   //!< The hour 0-23
-  utc_Minute  = 0; //!< The minute 0-59
-  utc_seconds = 0.0; //!< The seconds 0.0 - 59.999
+  utc_Year      = 2022; //!< The year 1900-9999
+  utc_Month     = 1;    //!< The month 0-11
+  utc_Day       = 1;    //!< The day 1-31
+  utc_Hour      = 0;    //!< The hour 0-23
+  utc_Minute    = 0;    //!< The minute 0-59
+  utc_seconds   = 0.0;  //!< The seconds 0.0 - 59.999
 #endif
 }
 ////////////////////////////////////////////////////////////////////

@@ -27,8 +27,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 #include <iostream>
-#include <openE57/openE57.h>
 #include <openE57/impl/openE57Impl.h> //??? for exceptions, should be in separate file
+#include <openE57/openE57.h>
 using namespace e57;
 using namespace std;
 // using namespace std::tr1; //??? is this really needed, gives error on gcc <roland>

@@ -82,3 +82,11 @@ conan install .. --build=missing
 cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_MT=ON
 cmake --build . --config Release --target install
 ```
+
+#### Autoformatting
+
+The Project offers the possibility to run the auto-formatter (clang-format) on the sources. As prerequisite, you need to install `clang-format` on your machine and then run the following cmake target:
+
+```sh
+cmake --build . --target clangformat
+```

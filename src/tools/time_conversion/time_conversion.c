@@ -43,12 +43,12 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 */
 
-#include <math.h> /* for fmod() */
 #include <constants.h>
 #include <gnss_error.h>
-#include <time_conversion.h>
+#include <math.h> /* for fmod() */
 #include <sys/timeb.h>
 #include <time.h>
+#include <time_conversion.h>
 
 #if 0
 #  ifndef WIN32

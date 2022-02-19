@@ -1,10 +1,13 @@
 # openE57
 
-## [1.6.2] - 
+## [1.6.2] - 2022-02-19
 
 ## Changed
+- Re-enabled e57unpack as tool
 - Improved Conan recipe, including tools
+- Added formatting target with clang-format
 - Minor improvements in CMake
+- Minor improvements in CPack
 
 ## Removed
 - Removed custom option to build with PIC on Unix, using CMAKE_POSITION_INDEPENDENT_CODE

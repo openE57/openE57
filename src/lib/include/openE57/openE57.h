@@ -115,14 +115,14 @@ const int E57_FOUNDATION_API_MINOR = 51;
 // Minimum and maximum values for integers
 // see https://en.cppreference.com/w/cpp/types/numeric_limits
 
-const int8_t   E57_INT8_MIN   = std::numeric_limits<int8_t>::lowest();
-const int8_t   E57_INT8_MAX   = std::numeric_limits<int8_t>::max();
-const int16_t  E57_INT16_MIN  = std::numeric_limits<int16_t>::lowest();
-const int16_t  E57_INT16_MAX  = std::numeric_limits<int16_t>::max();
-const int32_t  E57_INT32_MIN  = std::numeric_limits<int32_t>::lowest();
-const int32_t  E57_INT32_MAX  = std::numeric_limits<int32_t>::max();
-const int64_t  E57_INT64_MIN  = std::numeric_limits<int64_t>::lowest();
-const int64_t  E57_INT64_MAX  = std::numeric_limits<int64_t>::max();
+const int8_t  E57_INT8_MIN  = std::numeric_limits<int8_t>::lowest();
+const int8_t  E57_INT8_MAX  = std::numeric_limits<int8_t>::max();
+const int16_t E57_INT16_MIN = std::numeric_limits<int16_t>::lowest();
+const int16_t E57_INT16_MAX = std::numeric_limits<int16_t>::max();
+const int32_t E57_INT32_MIN = std::numeric_limits<int32_t>::lowest();
+const int32_t E57_INT32_MAX = std::numeric_limits<int32_t>::max();
+const int64_t E57_INT64_MIN = std::numeric_limits<int64_t>::lowest();
+const int64_t E57_INT64_MAX = std::numeric_limits<int64_t>::max();
 
 const uint8_t  E57_UINT8_MIN  = std::numeric_limits<uint8_t>::lowest();
 const uint8_t  E57_UINT8_MAX  = std::numeric_limits<uint8_t>::max();
