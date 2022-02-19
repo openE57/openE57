@@ -28,13 +28,14 @@ target_link_libraries(time_conversion
     $<$<OR:$<C_COMPILER_ID:GNU>,$<C_COMPILER_ID:Clang>>:m>
     $<$<OR:$<C_COMPILER_ID:GNU>,$<C_COMPILER_ID:Clang>>:c>
 )
+target_clangformat_setup(time_conversion)
 
 #
 # Build executables
 #
 list(APPEND TOOLS
   e57fields
-  #e57unpack
+  e57unpack
   e57validate
   e57xmldump
 )
@@ -56,13 +57,14 @@ foreach(TOOL ${TOOLS})
       ${Boost_INCLUDE_DIR}
   )
 
-  target_link_libraries(${TOOL} 
+  target_link_libraries(${TOOL}
     PRIVATE 
       ${PROJECT_NAME} 
       ${XML_LIBRARIES}
       ${Boost_LIBRARIES}
       ${CMAKE_THREAD_LIBS_INIT}
   )
+  target_clangformat_setup(${TOOL})
 endforeach()
 
 #
@@ -95,12 +97,11 @@ target_link_libraries(las2e57
       ${CMAKE_THREAD_LIBS_INIT}
 )
 
+target_clangformat_setup(las2e57)
+
 install(
   TARGETS 
-    e57fields 
-    e57xmldump 
-    #e57unpack 
-    e57validate 
+    ${TOOLS}
     las2e57
   RUNTIME DESTINATION bin
   ARCHIVE DESTINATION lib

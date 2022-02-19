@@ -3,20 +3,16 @@
 #
 
 # Set a private module find path
-set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR} ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/")
-set(CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR} ${CMAKE_PREFIX_PATH})
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/")
+list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 include(GenerateExportHeader)
 
-# Check if we are building a conan recipe
-#if(NOT EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-#include(InstallRequiredSystemLibraries)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/compiler_options.cmake)
-#endif()
-
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dependencies.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/clang_format.cmake)
 
 set(CONFIG_PACKAGE_INSTALL_DIR lib/cmake/${PROJECT_NAME})
 

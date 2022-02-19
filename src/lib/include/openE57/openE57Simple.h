@@ -4,7 +4,7 @@
 //
 //	Copyright (c) 2010 Stan Coleby (scoleby@intelisum.com)
 //  Copyright (c) 2020 - 2022 Michele Adduci (adduci@tutanota.com)
-//  
+//
 //	All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person or organization
@@ -438,16 +438,19 @@ public:
   ustring sensorSoftwareVersion; //!< The version number for the software used for the data collection.
   ustring sensorFirmwareVersion; //!< The version number for the firmware installed in the sensor at the time of data collection.
 
-  float temperature; //!< The ambient temperature, measured at the sensor, at the time of data collection (in degrees Celsius). Shall be ? ?273.15� (absolute zero).
+  float
+        temperature; //!< The ambient temperature, measured at the sensor, at the time of data collection (in degrees Celsius). Shall be ? ?273.15� (absolute zero).
   float relativeHumidity;    //!< The percentage relative humidity, measured at the sensor, at the time of data collection. Shall be in the interval [0, 100].
   float atmosphericPressure; //!< The atmospheric pressure, measured at the sensor, at the time of data collection (in Pascals). Shall be positive.
 
   e57::DateTime acquisitionStart; //!< The start date and time that the data was acquired.
   e57::DateTime acquisitionEnd;   //!< The end date and time that the data was acquired.
 
-  e57::RigidBodyTransform pose; //!< A rigid body transform that describes the coordinate frame of the 3D imaging system origin in the file-level coordinate system.
+  e57::RigidBodyTransform
+                   pose; //!< A rigid body transform that describes the coordinate frame of the 3D imaging system origin in the file-level coordinate system.
   e57::IndexBounds indexBounds; //!< The bounds of the row, column, and return number of all the points in this Data3D.
-  e57::CartesianBounds cartesianBounds; //!< The bounding region (in cartesian coordinates) of all the points in this Data3D (in the local coordinate system of the points).
+  e57::CartesianBounds
+    cartesianBounds; //!< The bounding region (in cartesian coordinates) of all the points in this Data3D (in the local coordinate system of the points).
   e57::SphericalBounds
                        sphericalBounds; //!< The bounding region (in spherical coordinates) of all the points in this Data3D (in the local coordinate system of the points).
   e57::IntensityLimits intensityLimits; //!< The limits for the value of signal intensity that the sensor is capable of producing.

@@ -21,4 +21,5 @@ foreach(EXAMPLE ${EXAMPLES})
       ${XML_LIBRARIES}
       ${CMAKE_THREAD_LIBS_INIT}
   )
+  target_clangformat_setup(${EXAMPLE})
 endforeach()

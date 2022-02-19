@@ -117,13 +117,13 @@ inline std::string toString(bool x)     {std::ostringstream ss; ss << x; return(
 /// printMessage is called when messageCount is < 2 beyond allowed to allow suppression message to be printed.
 #define PRINT_MESSAGE(messageNumber, n, msg, cvp, index)                                                                                                       \
   {                                                                                                                                                            \
-    if constexpr ((messageNumber) >= 0 && (messageNumber) < E57ValidatorOptions::MessageNumberCount)                                                                     \
+    if constexpr ((messageNumber) >= 0 && (messageNumber) < E57ValidatorOptions::MessageNumberCount)                                                           \
     {                                                                                                                                                          \
       messageCount_[(messageNumber)]++;                                                                                                                        \
       if (messageCount_[(messageNumber)] < options_.messagesAllowed[(messageNumber)] + 2)                                                                      \
         printMessage((messageNumber), (n), (msg), (cvp), (index));                                                                                             \
     }                                                                                                                                                          \
-  } 
+  }
 
 //================================================================
 
@@ -1828,7 +1828,7 @@ void E57Validator::validatePointRecordContents(CompressedVectorNode cv, Structur
   BoundingBox indexBounds;
   if (data3D.isDefined("indexBounds"))
   {
-    indexBounds        = BoundingBox(StructureNode(data3D.get("indexBounds")), "indexBounds");
+    indexBounds = BoundingBox(StructureNode(data3D.get("indexBounds")), "indexBounds");
     // cout << "indexBounds:" << endl; //???
     // indexBounds.dump(4); //???
   }
@@ -1990,7 +1990,6 @@ void E57Validator::validatePointRecordContents(CompressedVectorNode cv, Structur
               {
                 PRINT_MESSAGE(1000 /*???*/, proto.get("columnIndex"), "no line group for column number " + toString(lineIndex), &cv, blockStart + i);
               }
-                
             }
           }
 

@@ -31,6 +31,7 @@ target_include_directories(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC ${XML_LIBRARIES})
+target_clangformat_setup(${PROJECT_NAME})
 
 #
 # Extension Library for LAS I/O support
@@ -54,6 +55,7 @@ target_include_directories(${PROJECT_NAME}las
 )
 
 target_link_libraries(${PROJECT_NAME}las PUBLIC ${XML_LIBRARIES})
+target_clangformat_setup(${PROJECT_NAME}las)
 
 # 
 # Install Artifacts

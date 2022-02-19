@@ -796,8 +796,8 @@ DEALINGS IN THE SOFTWARE.
 #  error "no supported OS platform defined"
 #endif
 
-#include <openE57/openE57Simple.h>
 #include <openE57/impl/openE57SimpleImpl.h>
+#include <openE57/openE57Simple.h>
 
 using namespace e57;
 

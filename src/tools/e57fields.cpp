@@ -33,8 +33,8 @@
 #include <memory>
 #include <sstream>
 
-#include <openE57/openE57.h>
 #include <openE57/impl/openE57Impl.h> //??? for exceptions, should be in separate file
+#include <openE57/openE57.h>
 
 #include <boost/math/special_functions/fpclassify.hpp>
 using boost::math::fpclassify;
