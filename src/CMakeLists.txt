@@ -13,6 +13,7 @@ include(GenerateExportHeader)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/compiler_options.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dependencies.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/clang_format.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/doxygen.cmake)
 
 set(CONFIG_PACKAGE_INSTALL_DIR lib/cmake/${PROJECT_NAME})
 

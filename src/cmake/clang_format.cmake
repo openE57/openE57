@@ -16,6 +16,7 @@ function(prefix_clangformat_setup prefix)
       unset(clangformat_executable_tmp)
     else()
       message(STATUS "${CLANGFORMAT_EXECUTABLE} executable not found! Ignoring action for ${prefix}")
+      return()
     endif()
   endif()
 
@@ -24,7 +25,8 @@ function(prefix_clangformat_setup prefix)
     list(APPEND clangformat_sources ${clangformat_source})
   endforeach()
 
-  add_custom_target(${prefix}_clangformat
+  # note the option ALL which allows to build the docs together with the application
+  add_custom_target(${prefix}_clangformat ALL
     COMMAND
       ${CLANGFORMAT_EXECUTABLE}
       -style=file

@@ -90,3 +90,14 @@ The Project offers the possibility to run the auto-formatter (clang-format) on t
 ```sh
 cmake --build . --target clangformat
 ```
+
+#### Building the documentation
+
+It's also possible to build the documentation for the API (still largely outdated), using Doxygen and Graphviz. You'll have to install the required packages for your distribution in order to generate proper documentation files. 
+
+To enerate the documentation, configure the project like:
+
+```sh
+cmake .. -DBUILD_DOCS=ON
+cmake --build . --target doxygen
+```

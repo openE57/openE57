@@ -42,7 +42,7 @@ cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
 # Enables the CMAKE_MSVC_RUNTIME_LIBRARY property on targets
 cmake_policy(SET CMP0091 NEW)
 
-project(openE57 VERSION 1.6.2 LANGUAGES C CXX DESCRIPTION "openE57 is a library for handling E57 files")
+project(openE57 VERSION 1.6.3 LANGUAGES C CXX DESCRIPTION "openE57 is a library for handling E57 files")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
@@ -55,6 +55,7 @@ if("${isSystemDir}" STREQUAL "-1")
     set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 endif("${isSystemDir}" STREQUAL "-1")
 
+option(BUILD_DOCS "Build documentation" FALSE)
 option(BUILD_EXAMPLES "Build opene57 examples" FALSE)
 option(BUILD_TOOLS "Build opene57 tools" FALSE)
 option(BUILD_TESTS "Build opene57 tests" FALSE)
@@ -65,12 +66,6 @@ if(BUILD_SHARED_LIBS)
   message(FATAL_ERROR "Shared Libraries are not supported due to missing exported symbols")
 else(BUILD_SHARED_LIBS)
   set(LIBRARY_TYPE STATIC)
-endif()
-
-# Make it aware of Conan
-if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-  include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-  conan_basic_setup(TARGETS)
 endif()
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -91,7 +86,7 @@ set(CPACK_PACKAGE_CHECKSUM SHA256)
 set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
 set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
-set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-src")
+set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}-${CPACK_SYSTEM_NAME}")
 set(CPACK_GENERATOR "ZIP")
 set(CPACK_STRIP_FILES "TRUE")
 
