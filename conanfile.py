@@ -126,6 +126,8 @@ class Opene57Conan(ConanFile):
 
         self.cpp_info.defines.append(f"E57_REFIMPL_REVISION_ID={self.name}-{self.version}")
         self.cpp_info.defines.append("XERCES_STATIC_LIBRARY")
+        self.cpp_info.defines.append("CRCPP_INCLUDE_ESOTERIC_CRC_DEFINITIONS")
+        self.cpp_info.defines.append("CRCPP_USE_CPP11")
 
         self.cpp_info.set_property("cmake_target_name", "opene57")
         self.cpp_info.set_property("cmake_target_name", "opene57")
