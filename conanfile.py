@@ -96,8 +96,8 @@ class Opene57Conan(ConanFile):
         self._cmake.definitions["BUILD_EXAMPLES"] = False
         self._cmake.definitions["BUILD_TOOLS"] = self.options.with_tools
         self._cmake.definitions["BUILD_TESTS"] = False
-        if self.settings.os == "Windows":
-            self._cmake.definitions["BUILD_WITH_MT"] = "MT" in str(msvc_runtime_flag(self))
+        if self.settings.compiler == "Visual Studio":
+            self._cmake.definitions["BUILD_WITH_MT"] = "MT" in msvc_runtime_flag(self)
         else:
             self._cmake.definitions["CMAKE_POSITION_INDEPENDENT_CODE"] = self.options.get_safe("fPIC", True)
         self._cmake.configure(build_folder=self._build_subfolder)
@@ -129,8 +129,3 @@ class Opene57Conan(ConanFile):
         self.cpp_info.defines.append("CRCPP_INCLUDE_ESOTERIC_CRC_DEFINITIONS")
         self.cpp_info.defines.append("CRCPP_USE_CPP11")
 
-        self.cpp_info.set_property("cmake_target_name", "opene57")
-        self.cpp_info.set_property("cmake_target_name", "opene57")
-        # TODO: To remove in conan v2 once cmake_find_package* generators removed
-        self.cpp_info.names["cmake_find_package"] = "opene57"
-        self.cpp_info.names["cmake_find_package_multi"] = "opene57"
