@@ -5184,16 +5184,6 @@ at compile time.
 */
 
 /*================*/ /*!
-@fn      E57Utilities::E57Utilities(const ustring &)
-@brief   Create an object that allows access to functions that are not associated with an ImageFile.
-@details
-Because the construction of the E57Utilities object may be expensive, it is recommended that an application create and save a single instance of the object to use to access its member functions without constructing a E57Utilites object on every call.
-@return  An object that allows access to functions that are not associated with an ImageFile.
-@throw   ::E57_ERROR_BAD_CONFIGURATION
-@see     Versions.cpp example, ImageFile::ImageFile
-*/ /*================*/
-
-/*================*/ /*!
 @brief   Get the version of ASTM E57 standard that the API implementation supports, and library id string.
 @param   [out] astmMajor    The major version number of the ASTM E57 standard supported.
 @param   [out] astmMinor    The minor version number of the ASTM E57 standard supported.
@@ -5201,14 +5191,26 @@ Because the construction of the E57Utilities object may be expensive, it is reco
 @details
 Since the E57 Foundation Implementation may be dynamically linked underneath the Foundation API, the version string for the implementation and the ASTM version that it supports can't be determined at compile-time.
 This function returns these identifiers from the underlying implementation.
-@throw   No E57Exceptions.
 @see     Versions.cpp example, E57Utilities::E57Utilities
 */ /*================*/
-void E57Utilities::getVersions(int& astmMajor, int& astmMinor, ustring& libraryId)
+void E57Utilities::getVersions(int& astmMajor, int& astmMinor, ustring& libraryId) noexcept
 {
   astmMajor = E57_FORMAT_MAJOR;
   astmMinor = E57_FORMAT_MINOR;
   libraryId = E57_LIBRARY_ID;
+}
+
+/*================*/ /*!
+@brief   Get the version of ASTM E57 standard that the API implementation supports, and library id string.
+@param   [out] VersionInfo  a structure holding information about API implementation supported.
+@details
+Since the E57 Foundation Implementation may be dynamically linked underneath the Foundation API, the version string for the implementation and the ASTM version that it supports can't be determined at compile-time.
+This function returns these identifiers from the underlying implementation.
+@see     Versions.cpp example, E57Utilities::E57Utilities
+*/ /*================*/
+VersionInfo E57Utilities::getVersion() noexcept
+{
+  return VersionInfo{E57_FORMAT_MAJOR, E57_FORMAT_MINOR, E57_LIBRARY_ID};
 }
 
 /*================*/ /*!
@@ -5217,10 +5219,9 @@ void E57Utilities::getVersions(int& astmMajor, int& astmMinor, ustring& libraryI
 @details
 The errorCode is translated into a one-line English string.
 @return  English ustring describing error.
-@throw   No E57Exceptions.
 @see     E57ExceptionsFunctions.cpp example, E57Exception::errorCode, E57Utilities::E57Utilities
 */ /*================*/
-ustring E57Utilities::errorCodeToString(ErrorCode ecode)
+ustring E57Utilities::errorCodeToString(ErrorCode ecode) noexcept
 {
   switch (ecode)
   {

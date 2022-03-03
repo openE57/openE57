@@ -261,40 +261,34 @@ class E57XmlParser;
 class Encoder;
 
 /// Version numbers of ASTM standard that this library supports
-const uint32_t E57_FORMAT_MAJOR = 1; // Changed from 0 to 1 by SC
-const uint32_t E57_FORMAT_MINOR = 0; // Changed from 6 to 0 by SC
+constexpr uint32_t E57_FORMAT_MAJOR = 1; // Changed from 0 to 1 by SC
+constexpr uint32_t E57_FORMAT_MINOR = 0; // Changed from 6 to 0 by SC
 
 /// Version of Reference Implementation, E57_REFIMPL_REVISION_ID should be passed from compiler command line
 /// All this macro trickery because E57_REFIMPL_REVISION_ID might not be numeric (e.g. 27M, or exported).
 
-#define E57_REFIMPL_MAJOR 1 // Changed from 0 to 1 by SC
-#define E57_REFIMPL_MINOR 0 // Changed from 1 to 0 by SC
+constexpr int E57_REFIMPL_MAJOR = 1;
+constexpr int E57_REFIMPL_MINOR = 0;
+
 #ifndef E57_REFIMPL_REVISION_ID
-#  define E57_REFIMPL_REVISION_ID unknown
+constexpr const char* E57_REFIMPL_REVISION_ID = "unknown";
 #endif
 #define STR_VALUE(arg) #arg
 #define DO_QUOTE(name) STR_VALUE(name)
 #define QUOTED_E57_REFIMPL_MAJOR DO_QUOTE(E57_REFIMPL_MAJOR)
 #define QUOTED_E57_REFIMPL_MINOR DO_QUOTE(E57_REFIMPL_MINOR)
 #define QUOTED_E57_REFIMPL_REVISION_ID DO_QUOTE(E57_REFIMPL_REVISION_ID)
-#if 0
-const char E57_LIBRARY_ID[] = "ReferenceImplementation "      \
-                              QUOTED_E57_REFIMPL_MAJOR        \
-                              "."                             \
-                              QUOTED_E57_REFIMPL_MINOR        \
-                              "."                             \
-                              QUOTED_E57_REFIMPL_REVISION_ID;
-#else
+
 const char E57_LIBRARY_ID[] = QUOTED_E57_REFIMPL_REVISION_ID;
-#endif
+
 /// Section types:
-#define E57_BLOB_SECTION 0              // changed from 1 by SC to fit the standard
-#define E57_COMPRESSED_VECTOR_SECTION 1 // changed from 2 by SC to fit the standard
+constexpr int E57_BLOB_SECTION              = 0; // changed from 1 by SC to fit the standard
+constexpr int E57_COMPRESSED_VECTOR_SECTION = 1; // changed from 2 by SC to fit the standard
 
 /// Packet types (in a compressed vector section)
-#define E57_DATA_PACKET 1
-#define E57_INDEX_PACKET 0 // changed from 2 by SC to fit the standard
-#define E57_EMPTY_PACKET 2 // changed from 3 by SC to fit the standard
+constexpr int E57_DATA_PACKET  = 1;
+constexpr int E57_INDEX_PACKET = 0; // changed from 2 by SC to fit the standard
+constexpr int E57_EMPTY_PACKET = 2; // changed from 3 by SC to fit the standard
 
 #ifdef E57_BIGENDIAN
 #  define SWAB(p) swab(p)

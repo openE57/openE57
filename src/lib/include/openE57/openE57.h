@@ -100,16 +100,10 @@ enum MemoryRepresentation
   E57_USTRING = 11  //!< Unicode UTF-8 std::string
 };
 
-//! @brief The major version number of the Foundation API
-const int E57_FOUNDATION_API_MAJOR = 0;
-
-//! @brief The minor version number of the Foundation API
-const int E57_FOUNDATION_API_MINOR = 51;
-
 //! @brief The URI of ASTM E57 v1.0 standard XML namespace
 // Used to identify the standard field names and the grammar that relates them.
 // Will typically be associated with the default namespace in an E57 file.
-#define E57_V1_0_URI "http://www.astm.org/COMMIT/E57/2010-e57-v1.0"
+constexpr const char* E57_V1_0_URI = "http://www.astm.org/COMMIT/E57/2010-e57-v1.0";
 
 //! @cond documentNonPublic   The following aren't documented
 // Minimum and maximum values for integers
@@ -771,17 +765,24 @@ protected:        //=================
   //! \endcond
 };
 
+struct VersionInfo
+{
+  int     major;
+  int     minor;
+  ustring id;
+};
+
 class E57Utilities
 {
 public:
-  // Constructor (does nothing for now)
-  E57Utilities(const ustring& /*configuration*/ = ""){};
-
   // Get latest version of ASTM standard supported, and library id string
-  void getVersions(int& astmMajor, int& astmMinor, ustring& libraryId);
+  void getVersions(int& astmMajor, int& astmMinor, ustring& libraryId) noexcept;
+
+  // Get information about supported standard and library id
+  VersionInfo getVersion() noexcept;
 
   // Error code translation
-  ustring errorCodeToString(ErrorCode ecode);
+  ustring errorCodeToString(ErrorCode ecode) noexcept;
 
   // Direct read of XML representation in E57 file
   int64_t rawXmlLength(const ustring& fname);
