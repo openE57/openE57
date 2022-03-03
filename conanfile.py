@@ -77,10 +77,10 @@ class Opene57Conan(ConanFile):
         
     def requirements(self):
         if self.options.with_tools:
-            self.build_requires("boost/1.78.0")
+            self.requires("boost/1.78.0")
 
         if self.options.with_docs:
-            self.build_requires("doxygen/1.9.2")
+            self.requires("doxygen/1.9.2")
 
         if self.settings.os == "Linux" or tools.is_apple_os(self.settings.os):
             self.requires("icu/70.1")
