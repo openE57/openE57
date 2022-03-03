@@ -1,6 +1,6 @@
 # openE57
 
-## [1.6.3] -
+## [1.6.3] - 2022-03-03
 
 ## Changed
 - Moved documentation on root folder
