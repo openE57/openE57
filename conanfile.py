@@ -49,13 +49,7 @@ class Opene57Conan(ConanFile):
         if self.options.shared:
             del self.options.fPIC
 
-        self.options['xerces-c'].shared = self.options.shared
-
-        if self.settings.os == "Linux" or tools.is_apple_os(self.settings.os):
-            self.options['icu'].shared = self.options.shared
-
         if self.options.with_tools:
-            self.options['boost'].shared = self.options.shared
             self.options['boost'].multithreading = True
 
     def config_options(self):
@@ -75,14 +69,13 @@ class Opene57Conan(ConanFile):
         elif tools.Version(self.settings.compiler.version) < minimum_version:
             raise ConanInvalidConfiguration("C++17 support required, which your compiler does not support.")
         
-    def build_requirements(self):
+    def requirements(self):
         if self.options.with_tools:
-            self.build_requires("boost/1.78.0")
+            self.requires("boost/1.78.0")
 
         if self.options.with_docs:
-            self.build_requires("doxygen/1.9.2")
+            self.requires("doxygen/1.9.2")
 
-    def requirements(self):
         if self.settings.os == "Linux" or tools.is_apple_os(self.settings.os):
             self.requires("icu/70.1")
 
@@ -96,8 +89,8 @@ class Opene57Conan(ConanFile):
         self._cmake.definitions["BUILD_EXAMPLES"] = False
         self._cmake.definitions["BUILD_TOOLS"] = self.options.with_tools
         self._cmake.definitions["BUILD_TESTS"] = False
-        if self.settings.os == "Windows":
-            self._cmake.definitions["BUILD_WITH_MT"] = "MT" in str(msvc_runtime_flag(self))
+        if self.settings.compiler == "Visual Studio":
+            self._cmake.definitions["BUILD_WITH_MT"] = "MT" in msvc_runtime_flag(self)
         else:
             self._cmake.definitions["CMAKE_POSITION_INDEPENDENT_CODE"] = self.options.get_safe("fPIC", True)
         self._cmake.configure(build_folder=self._build_subfolder)
@@ -126,9 +119,6 @@ class Opene57Conan(ConanFile):
 
         self.cpp_info.defines.append(f"E57_REFIMPL_REVISION_ID={self.name}-{self.version}")
         self.cpp_info.defines.append("XERCES_STATIC_LIBRARY")
+        self.cpp_info.defines.append("CRCPP_INCLUDE_ESOTERIC_CRC_DEFINITIONS")
+        self.cpp_info.defines.append("CRCPP_USE_CPP11")
 
-        self.cpp_info.set_property("cmake_target_name", "opene57")
-        self.cpp_info.set_property("cmake_target_name", "opene57")
-        # TODO: To remove in conan v2 once cmake_find_package* generators removed
-        self.cpp_info.names["cmake_find_package"] = "opene57"
-        self.cpp_info.names["cmake_find_package_multi"] = "opene57"

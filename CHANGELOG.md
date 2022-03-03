@@ -6,6 +6,7 @@
 - Moved documentation on root folder
 - Improving build of documentation with CMake
 - Added doxygen as requirements in conan if the build option is activated
+- Updated the CRC32-Castagnoli implementation to newest version
 
 ## [1.6.2] - 2022-02-19
 
