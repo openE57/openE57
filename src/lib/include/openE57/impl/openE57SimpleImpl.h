@@ -3,6 +3,7 @@
 //  E57SimpleImpl.h - private implementation header of E57 format reference implementation.
 //
 //	Copyright (c) 2010 Stan Coleby (scoleby@intelisum.com)
+//  Copyright (c) 2020 - 2022 Michele Adduci (adduci@tutanota.com)
 //	All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person or organization
@@ -31,13 +32,6 @@
 //	ASTM E57.04 3D Imaging System File Format standard for interoperability
 //	of Lidar Data.  See http://www.libe57.org.
 //
-//////////////////////////////////////////////////////////////////////////
-//
-//	New E57SimpleImpl.h
-//	V1	May 18, 2010	Stan Coleby		scoleby@intelisum.com
-//  V6	June 8, 2010	Stan Coleby		scoleby@intelisum.com
-//
-//////////////////////////////////////////////////////////////////////////
 
 //! @file E57SimpleImpl.h
 

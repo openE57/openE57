@@ -109,28 +109,28 @@ constexpr const char* E57_V1_0_URI = "http://www.astm.org/COMMIT/E57/2010-e57-v1
 // Minimum and maximum values for integers
 // see https://en.cppreference.com/w/cpp/types/numeric_limits
 
-const int8_t  E57_INT8_MIN  = std::numeric_limits<int8_t>::lowest();
-const int8_t  E57_INT8_MAX  = std::numeric_limits<int8_t>::max();
-const int16_t E57_INT16_MIN = std::numeric_limits<int16_t>::lowest();
-const int16_t E57_INT16_MAX = std::numeric_limits<int16_t>::max();
-const int32_t E57_INT32_MIN = std::numeric_limits<int32_t>::lowest();
-const int32_t E57_INT32_MAX = std::numeric_limits<int32_t>::max();
-const int64_t E57_INT64_MIN = std::numeric_limits<int64_t>::lowest();
-const int64_t E57_INT64_MAX = std::numeric_limits<int64_t>::max();
+constexpr const int8_t  E57_INT8_MIN  = std::numeric_limits<int8_t>::lowest();
+constexpr const int8_t  E57_INT8_MAX  = std::numeric_limits<int8_t>::max();
+constexpr const int16_t E57_INT16_MIN = std::numeric_limits<int16_t>::lowest();
+constexpr const int16_t E57_INT16_MAX = std::numeric_limits<int16_t>::max();
+constexpr const int32_t E57_INT32_MIN = std::numeric_limits<int32_t>::lowest();
+constexpr const int32_t E57_INT32_MAX = std::numeric_limits<int32_t>::max();
+constexpr const int64_t E57_INT64_MIN = std::numeric_limits<int64_t>::lowest();
+constexpr const int64_t E57_INT64_MAX = std::numeric_limits<int64_t>::max();
 
-const uint8_t  E57_UINT8_MIN  = std::numeric_limits<uint8_t>::lowest();
-const uint8_t  E57_UINT8_MAX  = std::numeric_limits<uint8_t>::max();
-const uint16_t E57_UINT16_MIN = std::numeric_limits<uint16_t>::lowest();
-const uint16_t E57_UINT16_MAX = std::numeric_limits<uint16_t>::max();
-const uint32_t E57_UINT32_MIN = std::numeric_limits<uint32_t>::lowest();
-const uint32_t E57_UINT32_MAX = std::numeric_limits<uint32_t>::max();
-const uint64_t E57_UINT64_MIN = std::numeric_limits<uint64_t>::lowest();
-const uint64_t E57_UINT64_MAX = std::numeric_limits<uint64_t>::max();
+constexpr const uint8_t  E57_UINT8_MIN  = std::numeric_limits<uint8_t>::lowest();
+constexpr const uint8_t  E57_UINT8_MAX  = std::numeric_limits<uint8_t>::max();
+constexpr const uint16_t E57_UINT16_MIN = std::numeric_limits<uint16_t>::lowest();
+constexpr const uint16_t E57_UINT16_MAX = std::numeric_limits<uint16_t>::max();
+constexpr const uint32_t E57_UINT32_MIN = std::numeric_limits<uint32_t>::lowest();
+constexpr const uint32_t E57_UINT32_MAX = std::numeric_limits<uint32_t>::max();
+constexpr const uint64_t E57_UINT64_MIN = std::numeric_limits<uint64_t>::lowest();
+constexpr const uint64_t E57_UINT64_MAX = std::numeric_limits<uint64_t>::max();
 
-const float  E57_FLOAT_MIN  = std::numeric_limits<float>::lowest();
-const float  E57_FLOAT_MAX  = std::numeric_limits<float>::max();
-const double E57_DOUBLE_MIN = std::numeric_limits<double>::lowest();
-const double E57_DOUBLE_MAX = std::numeric_limits<double>::max();
+constexpr const float  E57_FLOAT_MIN  = std::numeric_limits<float>::lowest();
+constexpr const float  E57_FLOAT_MAX  = std::numeric_limits<float>::max();
+constexpr const double E57_DOUBLE_MIN = std::numeric_limits<double>::lowest();
+constexpr const double E57_DOUBLE_MAX = std::numeric_limits<double>::max();
 //! @endcond
 
 // Forward references to classes in this header
