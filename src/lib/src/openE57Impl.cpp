@@ -1578,7 +1578,7 @@ void SourceDestBufferImpl::setNextInt64(int64_t value, double scale, double offs
       throw E57_EXCEPTION2(E57_ERROR_SCALED_VALUE_NOT_REPRESENTABLE, "pathName=" + pathName_ + " scaledValue=" + toString(scaledValue));
     *reinterpret_cast<int32_t*>(p) = static_cast<int32_t>(scaledValue);
     break;
-  case EMemoryRepresentation::57_UINT32:
+  case MemoryRepresentation::E57_UINT32:
     if (scaledValue < E57_UINT32_MIN || E57_UINT32_MAX < scaledValue)
       throw E57_EXCEPTION2(E57_ERROR_SCALED_VALUE_NOT_REPRESENTABLE, "pathName=" + pathName_ + " scaledValue=" + toString(scaledValue));
     *reinterpret_cast<uint32_t*>(p) = static_cast<uint32_t>(scaledValue);
