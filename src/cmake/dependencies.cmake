@@ -30,3 +30,9 @@ if(BUILD_TOOLS)
       $<$<CONFIG:RELWITHDEBINFO>:${Boost_LIB_DIAGNOSTIC_DEFINITIONS}>
       $<$<CONFIG:DEBUG>:${Boost_LIB_DIAGNOSTIC_DEFINITIONS}>)
 endif()
+
+# Find doctest (Required by Tests)
+if(BUILD_TESTING)
+  find_package(doctest REQUIRED)
+  enable_testing()
+endif()

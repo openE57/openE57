@@ -6,12 +6,14 @@ list(APPEND compiler_definitions
 #
 add_library(
   ${PROJECT_NAME} ${LIBRARY_TYPE}
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/api.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/openE57Simple.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/openE57SimpleImpl.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/openE57.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/openE57Impl.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/include/openE57/impl/openE57Impl.h
   ${CMAKE_CURRENT_SOURCE_DIR}/include/openE57/impl/openE57SimpleImpl.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/openE57/api.h
   ${CMAKE_CURRENT_SOURCE_DIR}/include/openE57/openE57.h
   ${CMAKE_CURRENT_SOURCE_DIR}/include/openE57/openE57Simple.h)
 
@@ -74,3 +76,41 @@ install(
     ${CMAKE_CURRENT_BINARY_DIR}/opene57_export.h
   DESTINATION 
     include/openE57)
+
+#
+# Test Targets
+#
+if(BUILD_TESTING)
+
+  list(APPEND TEST_CASES
+    date_time_test
+  )
+
+  foreach(TEST_CASE ${TEST_CASES})
+    add_executable(${TEST_CASE} ${CMAKE_CURRENT_SOURCE_DIR}/test/${TEST_CASE}.cpp)
+    message(STATUS "Adding test case ${TEST_CASE}")
+    add_test(NAME ${TEST_CASE} 
+             COMMAND ${TEST_CASE} 
+             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+    set_target_properties(${TEST_CASE}  PROPERTIES 
+      DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX} 
+      MSVC_RUNTIME_LIBRARY "${CMAKE_MSVC_RUNTIME_LIBRARY}")
+    target_compile_options(${TEST_CASE}  PUBLIC ${compiler_options})
+    target_compile_definitions(${TEST_CASE}  PUBLIC ${compiler_definitions})
+    target_link_options(${TEST_CASE}  PUBLIC ${linker_flags})
+
+    target_include_directories(${TEST_CASE} PRIVATE 
+      ${CMAKE_CURRENT_SOURCE_DIR}/include 
+      ${XML_INCLUDE_DIRS}
+      ${doctest_INCLUDE_DIRS} )
+
+    target_link_libraries(${TEST_CASE} 
+      PRIVATE 
+        ${PROJECT_NAME} 
+        ${XML_LIBRARIES}
+        ${CMAKE_THREAD_LIBS_INIT}
+    )
+    target_clangformat_setup(${TEST_CASE})
+  endforeach(TEST_CASE ${TEST_CASES})
+
+endif()

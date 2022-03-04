@@ -22,15 +22,11 @@ set(CONFIG_PACKAGE_INSTALL_DIR lib/cmake/${PROJECT_NAME})
 #
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lib)
 
-if(${BUILD_EXAMPLES})
+if(BUILD_EXAMPLES)
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/examples)
 endif()
 
-if(${BUILD_TESTS})
-  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests)
-endif()
-
-if(${BUILD_TOOLS})
+if(BUILD_TOOLS)
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tools)
 endif()
 

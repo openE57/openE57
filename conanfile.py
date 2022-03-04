@@ -23,12 +23,14 @@ class Opene57Conan(ConanFile):
     exports_sources = [ "src/*", "LICENSE*", "CHANGELOG.md", "*.txt"]
     settings = "os", "compiler", "arch", "build_type"
     options = { "with_tools": [True, False],
+                "with_tests": [True, False],
                 "with_docs":  [True, False],
                 "shared": [True, False],
                 "fPIC": [True, False]
                }
     default_options = {
                 "with_tools": False,
+                "with_tests": False,
                 "with_docs":  False,
                 "shared": False,
                 "fPIC": True
@@ -77,6 +79,9 @@ class Opene57Conan(ConanFile):
             raise ConanInvalidConfiguration("C++17 support required, which your compiler does not support.")
         
     def requirements(self):
+        if self.options.with_tests:
+            self.requires("doctest/2.4.8")
+
         if self.options.with_tools:
             self.requires("boost/1.84.0")
 
