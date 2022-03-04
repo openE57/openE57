@@ -134,23 +134,7 @@ std::string toString(T x)
   ss << x;
   return (ss.str());
 }
-#if 0 // <rs> 2011-10-03 below definition gives problems if intXX_t type equal to native type
-inline std::string toString(uint64_t x) {std::ostringstream ss; ss << x; return(ss.str());}
-inline std::string toString(uint32_t x) {std::ostringstream ss; ss << x; return(ss.str());}
-inline std::string toString(uint16_t x) {std::ostringstream ss; ss << x; return(ss.str());}
-inline std::string toString(uint8_t x)  {std::ostringstream ss; ss << x; return(ss.str());}
-inline std::string toString(int64_t x)  {std::ostringstream ss; ss << x; return(ss.str());}
-inline std::string toString(int32_t x)  {std::ostringstream ss; ss << x; return(ss.str());}
-inline std::string toString(int16_t x)  {std::ostringstream ss; ss << x; return(ss.str());}
-inline std::string toString(int8_t x)   {std::ostringstream ss; ss << x; return(ss.str());}
-#  ifndef __GNUC__
-inline std::string toString(int x)      {std::ostringstream ss; ss << x; return(ss.str());}
-inline std::string toString(unsigned x) {std::ostringstream ss; ss << x; return(ss.str());}
-#  endif
-inline std::string toString(float x)    {std::ostringstream ss; ss << x; return(ss.str());}
-inline std::string toString(double x)   {std::ostringstream ss; ss << x; return(ss.str());}
-inline std::string toString(bool x)     {std::ostringstream ss; ss << x; return(ss.str());}
-#endif
+
 inline std::string hexString(uint64_t x)
 {
   std::ostringstream ss;
@@ -765,8 +749,8 @@ protected: //=================
 class FloatNodeImpl : public NodeImpl
 {
 public:
-  FloatNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, double value = 0, FloatPrecision precision = E57_DOUBLE, double minimum = E57_DOUBLE_MIN,
-                double maximum = E57_DOUBLE_MAX);
+  FloatNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, double value = 0, FloatPrecision precision = FloatPrecision::E57_DOUBLE,
+                double minimum = E57_DOUBLE_MIN, double maximum = E57_DOUBLE_MAX);
   virtual ~FloatNodeImpl(){};
 
   virtual NodeType type();

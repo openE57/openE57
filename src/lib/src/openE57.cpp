@@ -1109,7 +1109,7 @@ void Node::checkInvariant(bool doRecurse, bool doDowncast)
     }
 
     // Non-root nodes must be children of either a VectorNode or StructureNode
-    if (parent().type() == E57_VECTOR)
+    if (parent().type() == NodeType::E57_VECTOR)
     {
       VectorNode v = static_cast<VectorNode>(parent());
 
@@ -1121,7 +1121,7 @@ void Node::checkInvariant(bool doRecurse, bool doDowncast)
       if (v.get(elementName()) != *this)
         throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
     }
-    else if (parent().type() == E57_STRUCTURE)
+    else if (parent().type() == NodeType::E57_STRUCTURE)
     {
       StructureNode s = static_cast<StructureNode>(parent());
 
@@ -1163,42 +1163,42 @@ void Node::checkInvariant(bool doRecurse, bool doDowncast)
   {
     switch (type())
     {
-    case E57_STRUCTURE: {
+    case NodeType::E57_STRUCTURE: {
       StructureNode s(*this);
       s.checkInvariant(doRecurse, false);
     }
     break;
-    case E57_VECTOR: {
+    case NodeType::E57_VECTOR: {
       VectorNode v(*this);
       v.checkInvariant(doRecurse, false);
     }
     break;
-    case E57_COMPRESSED_VECTOR: {
+    case NodeType::E57_COMPRESSED_VECTOR: {
       CompressedVectorNode cv(*this);
       cv.checkInvariant(doRecurse, false);
     }
     break;
-    case E57_INTEGER: {
+    case NodeType::E57_INTEGER: {
       IntegerNode i(*this);
       i.checkInvariant(doRecurse, false);
     }
     break;
-    case E57_SCALED_INTEGER: {
+    case NodeType::E57_SCALED_INTEGER: {
       ScaledIntegerNode si(*this);
       si.checkInvariant(doRecurse, false);
     }
     break;
-    case E57_FLOAT: {
+    case NodeType::E57_FLOAT: {
       FloatNode f(*this);
       f.checkInvariant(doRecurse, false);
     }
     break;
-    case E57_STRING: {
+    case NodeType::E57_STRING: {
       StringNode s(*this);
       s.checkInvariant(doRecurse, false);
     }
     break;
-    case E57_BLOB: {
+    case NodeType::E57_BLOB: {
       BlobNode b(*this);
       b.checkInvariant(doRecurse, false);
     }
@@ -1453,7 +1453,7 @@ void FloatNode::checkInvariant(bool /*doRecurse*/, bool doUpcast)
   if (doUpcast)
     static_cast<Node>(*this).checkInvariant(false, false);
 
-  if (precision() == E57_SINGLE)
+  if (precision() == FloatPrecision::E57_SINGLE)
   {
     if (minimum() < E57_FLOAT_MIN || maximum() > E57_FLOAT_MAX)
       throw E57_EXCEPTION1(E57_ERROR_INVARIANCE_VIOLATION);
@@ -1663,37 +1663,37 @@ void SourceDestBuffer::checkInvariant(bool /*doRecurse*/)
   size_t min_stride = 0;
   switch (memoryRepresentation())
   {
-  case E57_INT8:
+  case MemoryRepresentation::E57_INT8:
     min_stride = 1;
     break;
-  case E57_UINT8:
+  case MemoryRepresentation::E57_UINT8:
     min_stride = 1;
     break;
-  case E57_INT16:
+  case MemoryRepresentation::E57_INT16:
     min_stride = 2;
     break;
-  case E57_UINT16:
+  case MemoryRepresentation::E57_UINT16:
     min_stride = 2;
     break;
-  case E57_INT32:
+  case MemoryRepresentation::E57_INT32:
     min_stride = 4;
     break;
-  case E57_UINT32:
+  case MemoryRepresentation::E57_UINT32:
     min_stride = 4;
     break;
-  case E57_INT64:
+  case MemoryRepresentation::E57_INT64:
     min_stride = 8;
     break;
-  case E57_BOOL:
+  case MemoryRepresentation::E57_BOOL:
     min_stride = 1;
     break;
-  case E57_REAL32:
+  case MemoryRepresentation::E57_REAL32:
     min_stride = 4;
     break;
-  case E57_REAL64:
+  case MemoryRepresentation::E57_REAL64:
     min_stride = 8;
     break;
-  case E57_USTRING:
+  case MemoryRepresentation::E57_USTRING:
     min_stride = sizeof(ustring);
     break;
   default:

@@ -26,8 +26,8 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-#ifndef E57FOUNDATION_H_INCLUDED
-#define E57FOUNDATION_H_INCLUDED
+#ifndef OPENE57_H_INCLUDED
+#define OPENE57_H_INCLUDED
 
 //! @file  openE57.h header file for the E57 Foundation API
 
@@ -64,40 +64,46 @@ using std::uint8_t;
 //! @brief UTF-8 encodeded Unicode string
 typedef std::string ustring;
 
-//! @brief Identifiers for types of E57 elements
+/** @enum e57::NodeType
+ *  @brief Identifiers for types of E57 elements
+ */
 enum NodeType
 {
-  E57_STRUCTURE         = 1, //!< StructureNode class
-  E57_VECTOR            = 2, //!< VectorNode class
-  E57_COMPRESSED_VECTOR = 3, //!< CompressedVectorNode class
-  E57_INTEGER           = 4, //!< IntegerNode class
-  E57_SCALED_INTEGER    = 5, //!< ScaledIntegerNode class
-  E57_FLOAT             = 6, //!< FloatNode class
-  E57_STRING            = 7, //!< StringNode class
-  E57_BLOB              = 8  //!< BlobNode class
+  E57_STRUCTURE         = 1, /**< StructureNode class, coded as std::int8_t of value 1 */
+  E57_VECTOR            = 2, /**< VectorNode class, coded as std::int8_t of value 2 */
+  E57_COMPRESSED_VECTOR = 3, /**< CompressedVectorNode class, coded as std::int8_t of value 3 */
+  E57_INTEGER           = 4, /**< IntegerNode class, coded as std::int8_t of value 4 */
+  E57_SCALED_INTEGER    = 5, /**< ScaledIntegerNode class, coded as std::int8_t of value 5 */
+  E57_FLOAT             = 6, /**< FloatNode class, coded as std::int8_t of value 6 */
+  E57_STRING            = 7, /**< StringNode class, coded as std::int8_t of value 7 */
+  E57_BLOB              = 8  /**< BlobNode class, coded as std::int8_t of value 8 */
 };
 
-//! @brief The IEEE floating point number precisions supported
+/** @enum e57::FloatPrecision
+ *  @brief The IEEE floating point number precisions supported
+ */
 enum FloatPrecision
 {
-  E57_SINGLE = 1, //!< 32 bit IEEE floating point number format
-  E57_DOUBLE = 2  //!< 64 bit IEEE floating point number format
+  E57_SINGLE = 1, /**< 32 bit IEEE floating point number format, coded as std::int8_t of value 1 */
+  E57_DOUBLE = 2  /**< 64 bit IEEE floating point number format, coded as std::int8_t of value 1 */
 };
 
-//! @brief Identifies the representations of memory elements API can transfer data to/from
+/** @enum e57::MemoryRepresentation
+ *  @brief Identifies the representations of memory elements API can transfer data to/from
+ */
 enum MemoryRepresentation
 {
-  E57_INT8    = 1,  //!< 8 bit signed integer
-  E57_UINT8   = 2,  //!< 8 bit unsigned integer
-  E57_INT16   = 3,  //!< 16 bit signed integer
-  E57_UINT16  = 4,  //!< 16 bit unsigned integer
-  E57_INT32   = 5,  //!< 32 bit signed integer
-  E57_UINT32  = 6,  //!< 32 bit unsigned integer
-  E57_INT64   = 7,  //!< 64 bit signed integer
-  E57_BOOL    = 8,  //!< C++ boolean type
-  E57_REAL32  = 9,  //!< C++ float type
-  E57_REAL64  = 10, //!< C++ double type
-  E57_USTRING = 11  //!< Unicode UTF-8 std::string
+  E57_INT8    = 1,  /**< 8 bit signed integer, coded as std::int8_t of value 1 */
+  E57_UINT8   = 2,  /**< 8 bit unsigned integer, coded as std::int8_t of value 2 */
+  E57_INT16   = 3,  /**< 16 bit signed integer, coded as std::int8_t of value 3 */
+  E57_UINT16  = 4,  /**< 16 bit unsigned integer, coded as std::int8_t of value 4 */
+  E57_INT32   = 5,  /**< 32 bit signed integer, coded as std::int8_t of value 5 */
+  E57_UINT32  = 6,  /**< 32 bit unsigned integer, coded as std::int8_t of value 6 */
+  E57_INT64   = 7,  /**< 64 bit signed integer, coded as std::int8_t of value 7 */
+  E57_BOOL    = 8,  /**< C++ boolean type, coded as std::int8_t of value 8 */
+  E57_REAL32  = 9,  /**< C++ float type, coded as std::int8_t of value 9 */
+  E57_REAL64  = 10, /**< C++ double type, coded as std::int8_t of value 10 */
+  E57_USTRING = 11  /**< Unicode UTF-8 std::string, coded as std::int8_t of value 11 */
 };
 
 //! @brief The URI of ASTM E57 v1.0 standard XML namespace
@@ -512,7 +518,7 @@ protected:                                                      //==============
 class FloatNode
 {
 public:
-  explicit FloatNode(ImageFile destImageFile, double value = 0.0, FloatPrecision precision = E57_DOUBLE, double minimum = E57_DOUBLE_MIN,
+  explicit FloatNode(ImageFile destImageFile, double value = 0.0, FloatPrecision precision = FloatPrecision::E57_DOUBLE, double minimum = E57_DOUBLE_MIN,
                      double maximum = E57_DOUBLE_MAX);
 
   double         value() const;
@@ -793,4 +799,4 @@ public:
 } // end namespace e57
 #endif
 
-#endif // E57FOUNDATION_H_INCLUDED
+#endif // OPENE57_H_INCLUDED
