@@ -11,16 +11,16 @@ constexpr double PI{3.1415926535897932384626433832795}; // from C++20, use <numb
 
 namespace e57
 {
-namespace definitions
+namespace core
 {
   /**
    * @brief The Translation structure defines a rigid body translation in Cartesian coordinates.
    */
   struct Translation
   {
-    double x; //!< The X coordinate of the translation (in meters)
-    double y; //!< The Y coordinate of the translation (in meters)
-    double z; //!< The Z coordinate of the translation (in meters)
+    double x{0.0}; //!< The X coordinate of the translation (in meters)
+    double y{0.0}; //!< The Y coordinate of the translation (in meters)
+    double z{0.0}; //!< The Z coordinate of the translation (in meters)
   };
 
   /**
@@ -29,10 +29,10 @@ namespace definitions
    */
   struct Quaternion
   {
-    double w; //!< The real part of the quaternion. Shall be nonnegative
-    double x; //!< The i coefficient of the quaternion
-    double y; //!< The j coefficient of the quaternion
-    double z; //!< The k coefficient of the quaternion
+    double w{0.0}; //!< The real part of the quaternion. Shall be nonnegative
+    double x{0.0}; //!< The i coefficient of the quaternion
+    double y{0.0}; //!< The j coefficient of the quaternion
+    double z{0.0}; //!< The k coefficient of the quaternion
   };
 
   /**
@@ -40,8 +40,8 @@ namespace definitions
    */
   struct RigidBodyTransform
   {
-    Quaternion  rotation;    //!< A unit quaternion representing the rotation, R, of the transform
-    Translation translation; //!< The translation point vector, t, of the transform
+    Quaternion  rotation{};    //!< A unit quaternion representing the rotation, R, of the transform
+    Translation translation{}; //!< The translation point vector, t, of the transform
   };
 
   /**
@@ -49,12 +49,12 @@ namespace definitions
    */
   struct CartesianBounds
   {
-    double xMinimum; //!< The minimum extent of the bounding box in the X direction
-    double xMaximum; //!< The maximum extent of the bounding box in the X direction
-    double yMinimum; //!< The minimum extent of the bounding box in the Y direction
-    double yMaximum; //!< The maximum extent of the bounding box in the Y direction
-    double zMinimum; //!< The minimum extent of the bounding box in the Z direction
-    double zMaximum; //!< The maximum extent of the bounding box in the Z direction
+    double xMinimum{0.0}; //!< The minimum extent of the bounding box in the X direction
+    double xMaximum{0.0}; //!< The maximum extent of the bounding box in the X direction
+    double yMinimum{0.0}; //!< The minimum extent of the bounding box in the Y direction
+    double yMaximum{0.0}; //!< The maximum extent of the bounding box in the Y direction
+    double zMinimum{0.0}; //!< The minimum extent of the bounding box in the Z direction
+    double zMaximum{0.0}; //!< The maximum extent of the bounding box in the Z direction
   };
 
   /**
@@ -62,12 +62,12 @@ namespace definitions
    */
   struct SphericalBounds
   {
-    double rangeMinimum;     //!< The minimum extent of the bounding region in the r direction
-    double rangeMaximum;     //!< The maximum extent of the bounding region in the r direction
-    double elevationMinimum; //!< The minimum extent of the bounding region from the horizontal plane
-    double elevationMaximum; //!< The maximum extent of the bounding region from the horizontal plane
-    double azimuthStart;     //!< The starting azimuth angle defining the extent of the bounding region around the z axis
-    double azimuthEnd;       //!< The ending azimuth angle defining the extent of the bounding region around the z axix
+    double rangeMinimum{0.0};     //!< The minimum extent of the bounding region in the r direction
+    double rangeMaximum{0.0};     //!< The maximum extent of the bounding region in the r direction
+    double elevationMinimum{0.0}; //!< The minimum extent of the bounding region from the horizontal plane
+    double elevationMaximum{0.0}; //!< The maximum extent of the bounding region from the horizontal plane
+    double azimuthStart{0.0};     //!< The starting azimuth angle defining the extent of the bounding region around the z axis
+    double azimuthEnd{0.0};       //!< The ending azimuth angle defining the extent of the bounding region around the z axix
   };
 
   /**
@@ -75,12 +75,12 @@ namespace definitions
    */
   struct IndexBounds
   {
-    int64_t rowMinimum;    //!< The minimum rowIndex value of any point represented by this IndexBounds object.
-    int64_t rowMaximum;    //!< The maximum rowIndex value of any point represented by this IndexBounds object.
-    int64_t columnMinimum; //!< The minimum columnIndex value of any point represented by this IndexBounds object.
-    int64_t columnMaximum; //!< The maximum columnIndex value of any point represented by this IndexBounds object.
-    int64_t returnMinimum; //!< The minimum returnIndex value of any point represented by this IndexBounds object.
-    int64_t returnMaximum; //!< The maximum returnIndex value of any point represented by this IndexBounds object.
+    int64_t rowMinimum{0};    //!< The minimum rowIndex value of any point represented by this IndexBounds object.
+    int64_t rowMaximum{0};    //!< The maximum rowIndex value of any point represented by this IndexBounds object.
+    int64_t columnMinimum{0}; //!< The minimum columnIndex value of any point represented by this IndexBounds object.
+    int64_t columnMaximum{0}; //!< The maximum columnIndex value of any point represented by this IndexBounds object.
+    int64_t returnMinimum{0}; //!< The minimum returnIndex value of any point represented by this IndexBounds object.
+    int64_t returnMaximum{0}; //!< The maximum returnIndex value of any point represented by this IndexBounds object.
   };
 
   /**
@@ -88,8 +88,8 @@ namespace definitions
    */
   struct IntensityLimits
   {
-    double intensityMinimum; //!< The minimum producible intensity value. Unit is unspecified.
-    double intensityMaximum; //!< The maximum producible intensity value. Unit is unspecified.
+    double intensityMinimum{0.0}; //!< The minimum producible intensity value. Unit is unspecified.
+    double intensityMaximum{0.0}; //!< The maximum producible intensity value. Unit is unspecified.
   };
 
   /**
@@ -97,12 +97,12 @@ namespace definitions
    */
   struct ColorLimits
   {
-    double colorRedMinimum;   //!< The minimum producible red color value. Unit is unspecified.
-    double colorRedMaximum;   //!< The maximum producible red color value. Unit is unspecified.
-    double colorGreenMinimum; //!< The minimum producible green color value. Unit is unspecified.
-    double colorGreenMaximum; //!< The maximum producible green color value. Unit is unspecified.
-    double colorBlueMinimum;  //!< The minimum producible blue color value. Unit is unspecified.
-    double colorBlueMaximum;  //!< The maximum producible blue color value. Unit is unspecified.
+    double colorRedMinimum{0.0};   //!< The minimum producible red color value. Unit is unspecified.
+    double colorRedMaximum{0.0};   //!< The maximum producible red color value. Unit is unspecified.
+    double colorGreenMinimum{0.0}; //!< The minimum producible green color value. Unit is unspecified.
+    double colorGreenMaximum{0.0}; //!< The maximum producible green color value. Unit is unspecified.
+    double colorBlueMinimum{0.0};  //!< The minimum producible blue color value. Unit is unspecified.
+    double colorBlueMaximum{0.0};  //!< The maximum producible blue color value. Unit is unspecified.
   };
 
   /**
@@ -117,47 +117,50 @@ namespace definitions
     uint32_t minute{0};     //!< The minute 0-59
     float    seconds{0.0f}; //!< The seconds 0.0 - 59.999
   };
-} // namespace definitions
+} // namespace core
 
-/**
- * @brief The DateTimeEncoder is a structure for encoding date and time.
- * @details The date and time is encoded using a single
- * 562 floating point number, stored as an E57 Float element which is based on the Global Positioning
- * 563 System (GPS) time scale.
- */
-class DateTimeEncoder
+namespace utils
 {
-public:
   /**
    * @brief This function returns the current time as double.
    *
    * @return the current Date/Time as double
    */
-  [[nodiscard]] double getCurrentDateTimeAsDouble() const noexcept;
+  [[nodiscard]] double current_date_time_number() noexcept;
 
   /**
-   * @brief This function returns the current time as definitions::DateTime.
+   * @brief This function returns the current time as core::DateTime.
+   * @details The date and time is encoded using a single
+   * floating point number, stored as an E57 Float element which is based on the Global Positioning
+   * System (GPS) time scale.
    *
-   * @return the current Date/Time as definitions::DateTime
+   * @return the current Date/Time as core::DateTime
    */
-  [[nodiscard]] definitions::DateTime getCurrentDateTime() const noexcept;
+  [[nodiscard]] core::DateTime current_date_time() noexcept;
 
   /**
    * @brief This function converts the date and time from the double dateTimeValue.
+   * @details The date and time is encoded using a single
+   * floating point number, stored as an E57 Float element which is based on the Global Positioning
+   * System (GPS) time scale.
    *
    * @param dateTimeValue the value holding the GPS Date/Time value in double format
-   * @return the Date/Time as definitions::DateTime
+   * @return the Date/Time as core::DateTime
    */
-  [[nodiscard]] definitions::DateTime convertFromDouble(const double dateTimeValue);
+  [[nodiscard]] core::DateTime date_time_from_number(const double dateTimeValue);
 
   /**
-   * @brief This function converts the date and time from the structure definitions::DateTime dateTimeValue.
+   * @brief This function converts the date and time from the structure core::DateTime dateTimeValue.
+   * @details The date and time is encoded using a single
+   * floating point number, stored as an E57 Float element which is based on the Global Positioning
+   * System (GPS) time scale.
    *
-   * @param dateTimeValue the value holding the GPS Date/Time value as definitions::DateTime structure
+   * @param dateTimeValue the value holding the GPS Date/Time value as core::DateTime structure
    * @return the Date/Time as double
    */
-  [[nodiscard]] double convertFromDateTime(const definitions::DateTime& dateTimeValue);
-};
+  [[nodiscard]] double date_time_number_from_value(const core::DateTime& dateTimeValue);
+
+} // namespace utils
 
 } // namespace e57
 

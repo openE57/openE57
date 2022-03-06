@@ -60,6 +60,12 @@ using std::uint32_t;
 using std::uint64_t;
 using std::uint8_t;
 
+template <class E, class T = typename std::underlying_type<E>::type>
+T printable(E val)
+{
+  return T(val);
+}
+
 // Shorthand for unicode string
 //! @brief UTF-8 encodeded Unicode string
 typedef std::string ustring;

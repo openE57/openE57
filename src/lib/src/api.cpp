@@ -2,22 +2,22 @@
 
 using namespace e57;
 
-[[nodiscard]] double DateTimeEncoder::getCurrentDateTimeAsDouble() const noexcept
+[[nodiscard]] double utils::current_date_time_number() noexcept
 {
   return 0.0;
 }
 
-[[nodiscard]] definitions::DateTime DateTimeEncoder::getCurrentDateTime() const noexcept
+[[nodiscard]] core::DateTime utils::current_date_time() noexcept
 {
-  return definitions::DateTime{};
+  return core::DateTime{};
 }
 
-[[nodiscard]] definitions::DateTime DateTimeEncoder::convertFromDouble(const double dateTimeValue)
+[[nodiscard]] core::DateTime utils::date_time_from_number(const double coreValue)
 {
-  return definitions::DateTime{};
+  return core::DateTime{};
 }
 
-[[nodiscard]] double DateTimeEncoder::convertFromDateTime(const definitions::DateTime& dateTimeValue)
+[[nodiscard]] double utils::date_time_number_from_value(const core::DateTime& coreValue)
 {
   return 0.0;
 }

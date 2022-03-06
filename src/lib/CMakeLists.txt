@@ -11,8 +11,10 @@ add_library(
   ${CMAKE_CURRENT_SOURCE_DIR}/src/openE57SimpleImpl.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/openE57.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/openE57Impl.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/time_conversion.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/include/openE57/impl/openE57Impl.h
   ${CMAKE_CURRENT_SOURCE_DIR}/include/openE57/impl/openE57SimpleImpl.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/openE57/impl/time_conversion.h
   ${CMAKE_CURRENT_SOURCE_DIR}/include/openE57/api.h
   ${CMAKE_CURRENT_SOURCE_DIR}/include/openE57/openE57.h
   ${CMAKE_CURRENT_SOURCE_DIR}/include/openE57/openE57Simple.h)
