@@ -17,11 +17,29 @@
     }                                                                                                                                                          \
   }
 
+// Julian Date Offsets
+constexpr const double JULIAN_DATE_OFFSET_1980 = 2444244.5000; // Jan 06 1980 00:00:00.0
+constexpr const double JULIAN_DATE_OFFSET_1981 = 2444786.5000; // Jul 01 1981 00:00:00.0
+constexpr const double JULIAN_DATE_OFFSET_1982 = 2445151.5000; // Jul 01 1982 00:00:00.0
+constexpr const double JULIAN_DATE_OFFSET_1983 = 2445516.5000; // Jul 01 1983 00:00:00.0
+constexpr const double JULIAN_DATE_OFFSET_1985 = 2446247.5000; // Jul 01 1985 00:00:00.0
+constexpr const double JULIAN_DATE_OFFSET_1988 = 2447161.5000; // Jan 01 1988 00:00:00.0
+constexpr const double JULIAN_DATE_OFFSET_1990 = 2447892.5000; // Jan 01 1990 00:00:00.0
+constexpr const double JULIAN_DATE_OFFSET_1991 = 2448257.5000; // Jan 01 1991 00:00:00.0
+constexpr const double JULIAN_DATE_OFFSET_1992 = 2448804.5000; // Jul 01 1992 00:00:00.0
+constexpr const double JULIAN_DATE_OFFSET_1993 = 2449169.5000; // Jul 01 1993 00:00:00.0
+constexpr const double JULIAN_DATE_OFFSET_1994 = 2449534.5000; // Jul 01 1994 00:00:00.0
+constexpr const double JULIAN_DATE_OFFSET_1996 = 2450083.5000; // Jan 01 1996 00:00:00.0
+constexpr const double JULIAN_DATE_OFFSET_1997 = 2450630.5000; // Jul 01 1997 00:00:00.0
+constexpr const double JULIAN_DATE_OFFSET_1999 = 2451179.5000; // Jan 01 1999 00:00:00.0
+constexpr const double JULIAN_DATE_OFFSET_2006 = 2453736.5000; // Jan 01 2006 00:00:00.0
+constexpr const double JULIAN_DATE_OFFSET_2009 = 2454832.5000; // Jan 01 2009 00:00:00.0
+
 // Constants definition
 constexpr const double SECONDS_IN_A_DAY              = 86400.0;
-constexpr const double SECONDS_IN_A_WEEK             = SECONDS_IN_A_DAY * 7;
-constexpr const double JULIAN_DATE_START_OF_GPS_TIME = 2444244.5; // [days]
-constexpr const double JULIAN_DATE_START_OF_PC_TIME  = 2440587.5; // [days]
+constexpr const double SECONDS_IN_A_WEEK             = SECONDS_IN_A_DAY * 7;    // 604800.0
+constexpr const double JULIAN_DATE_START_OF_GPS_TIME = JULIAN_DATE_OFFSET_1980; // [days]
+constexpr const double JULIAN_DATE_START_OF_PC_TIME  = 2440587.5;               // [days]
 constexpr const int    DAYS_IN_JAN                   = 31;
 constexpr const int    DAYS_IN_MAR                   = 31;
 constexpr const int    DAYS_IN_APR                   = 30;
@@ -59,7 +77,7 @@ bool e57::utils::current_system_time(
   if (_ftime_s(&timebuffer) != 0)
   {
     GNSS_ERROR_MSG("if( _ftime_s( &timebuffer ) != 0 )");
-    return FALSE;
+    return false;
   }
 #else
 
@@ -259,7 +277,7 @@ bool e57::utils::utc_time_from_julian_date(const double    julian_date, //!< Num
     return false;
   }
 
-  unsigned char  days_in_month = 0;
+  unsigned char days_in_month = 0;
 
   // temporary values
   const int32_t a = static_cast<int32_t>(julian_date + 0.5);
@@ -284,8 +302,8 @@ bool e57::utils::utc_time_from_julian_date(const double    julian_date, //!< Num
   td *= 60.0;
   float seconds = td;
 
-  unsigned char month   = static_cast<unsigned char>(e - 1 - 12 * static_cast<int>(e / 14));
-  unsigned short year    = static_cast<unsigned short>(c - 4715 - static_cast<int>((7.0 + static_cast<double>(month)) / 10.0));
+  unsigned char  month = static_cast<unsigned char>(e - 1 - 12 * static_cast<int>(e / 14));
+  unsigned short year  = static_cast<unsigned short>(c - 4715 - static_cast<int>((7.0 + static_cast<double>(month)) / 10.0));
 
   // check for rollover issues
   if (seconds >= 60.0)
@@ -301,7 +319,7 @@ bool e57::utils::utc_time_from_julian_date(const double    julian_date, //!< Num
         hour -= 24;
         day++;
 
-        bool result = number_days_in_month(year, month, days_in_month);
+        bool result = e57::utils::number_days_in_month(year, month, days_in_month);
         if (!result)
         {
           GNSS_ERROR_MSG("number_days_in_month returned false.");
@@ -328,6 +346,415 @@ bool e57::utils::utc_time_from_julian_date(const double    julian_date, //!< Num
   utc_hour    = hour;
   utc_minute  = minute;
   utc_seconds = (float)seconds;
+
+  return true;
+}
+
+bool e57::utils::gps_time_from_utc_time(const unsigned short utc_year,    //!< Universal Time Coordinated    [year]
+                                        const unsigned char  utc_month,   //!< Universal Time Coordinated    [1-12 months]
+                                        const unsigned char  utc_day,     //!< Universal Time Coordinated    [1-31 days]
+                                        const unsigned char  utc_hour,    //!< Universal Time Coordinated    [hours]
+                                        const unsigned char  utc_minute,  //!< Universal Time Coordinated    [minutes]
+                                        const float          utc_seconds, //!< Universal Time Coordinated    [s]
+                                        unsigned short&      gps_week,    //!< GPS week (0-1024+)            [week]
+                                        double&              gps_tow      //!< GPS time of week (0-604800.0) [s]
+)
+{
+  double        julian_date{0.0};
+  unsigned char utc_offset{0};
+
+  // Check the input.
+  if (!e57::utils::is_utc_time_valid(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
+  {
+    GNSS_ERROR_MSG("is_utc_time_valid returned false.");
+    return false;
+  }
+
+  if (!e57::utils::julian_date_from_utc_time(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds, julian_date))
+  {
+    GNSS_ERROR_MSG("julian_date_from_utc_time returned false.");
+    return false;
+  }
+
+  if (!e57::utils::determine_utc_offset(julian_date, utc_offset))
+  {
+    GNSS_ERROR_MSG("determine_utc_offset returned false.");
+    return false;
+  }
+
+  if (!e57::utils::gps_time_from_julian_date(julian_date, utc_offset, gps_week, gps_tow))
+  {
+    GNSS_ERROR_MSG("gps_time_from_julian_date returned false.");
+    return false;
+  }
+
+  return true;
+}
+
+bool e57::utils::gps_time_from_rinex_time(const unsigned short utc_year,    //!< Universal Time Coordinated    [year]
+                                          const unsigned char  utc_month,   //!< Universal Time Coordinated    [1-12 months]
+                                          const unsigned char  utc_day,     //!< Universal Time Coordinated    [1-31 days]
+                                          const unsigned char  utc_hour,    //!< Universal Time Coordinated    [hours]
+                                          const unsigned char  utc_minute,  //!< Universal Time Coordinated    [minutes]
+                                          const float          utc_seconds, //!< Universal Time Coordinated    [s]
+                                          unsigned short&      gps_week,    //!< GPS week (0-1024+)            [week]
+                                          double&              gps_tow      //!< GPS time of week (0-604800.0) [s]
+)
+{
+  double        julian_date{0.0};
+  unsigned char utc_offset{0};
+
+  // Check the input.
+  if (!e57::utils::is_utc_time_valid(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
+  {
+    GNSS_ERROR_MSG("is_utc_time_valid returned false.");
+    return false;
+  }
+
+  if (!e57::utils::julian_date_from_utc_time(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds, julian_date))
+  {
+    GNSS_ERROR_MSG("julian_date_from_utc_time returned false.");
+    return false;
+  }
+
+  if (!e57::utils::gps_time_from_julian_date(julian_date, utc_offset, gps_week, gps_tow))
+  {
+    GNSS_ERROR_MSG("GetGPSTimeFromJulianDate returned false.");
+    return false;
+  }
+
+  return true;
+}
+
+bool e57::utils::utc_time_from_gps_time(const unsigned short gps_week,   //!< GPS week (0-1024+)            [week]
+                                        const double         gps_tow,    //!< GPS time of week (0-604800.0) [s]
+                                        unsigned short&      utc_year,   //!< Universal Time Coordinated    [year]
+                                        unsigned char&       utc_month,  //!< Universal Time Coordinated    [1-12 months]
+                                        unsigned char&       utc_day,    //!< Universal Time Coordinated    [1-31 days]
+                                        unsigned char&       utc_hour,   //!< Universal Time Coordinated    [hours]
+                                        unsigned char&       utc_minute, //!< Universal Time Coordinated    [minutes]
+                                        float&               utc_seconds //!< Universal Time Coordinated    [s]
+)
+{
+  double        julian_date{0.0};
+  unsigned char utc_offset{0};
+  int           i{0};
+
+  if (gps_tow < 0.0 || gps_tow > SECONDS_IN_A_WEEK)
+  {
+    GNSS_ERROR_MSG("if( gps_tow < 0.0 || gps_tow > 604800.0 )");
+    return false;
+  }
+
+  // iterate to get the right utc offset
+  for (i = 0; i < 4; i++)
+  {
+    if (!e57::utils::julian_date_from_gps_time(gps_week, gps_tow, utc_offset, julian_date))
+    {
+      GNSS_ERROR_MSG("julian_date_from_gps_time returned false.");
+      return false;
+    }
+
+    if (!e57::utils::determine_utc_offset(julian_date, utc_offset))
+    {
+      GNSS_ERROR_MSG("determine_utc_offset returned false.");
+      return false;
+    }
+  }
+
+  if (!e57::utils::utc_time_from_julian_date(julian_date, utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
+  {
+    GNSS_ERROR_MSG("utc_time_from_julian_date returned false.");
+    return false;
+  }
+
+  return true;
+}
+
+bool e57::utils::determine_utc_offset(
+  const double   julian_date, //!< Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
+  unsigned char& utc_offset   //!< Integer seconds that GPS is ahead of UTC time, always positive             [s], obtained from a look up table
+  ) noexcept
+{
+  if (julian_date < 0.0)
+  {
+    GNSS_ERROR_MSG("julian_date is negative");
+    return false;
+  }
+
+  if (julian_date < JULIAN_DATE_OFFSET_1981)
+    utc_offset = 0;
+  else if (julian_date < JULIAN_DATE_OFFSET_1982)
+    utc_offset = 1;
+  else if (julian_date < JULIAN_DATE_OFFSET_1983)
+    utc_offset = 2;
+  else if (julian_date < JULIAN_DATE_OFFSET_1985)
+    utc_offset = 3;
+  else if (julian_date < JULIAN_DATE_OFFSET_1988)
+    utc_offset = 4;
+  else if (julian_date < JULIAN_DATE_OFFSET_1990)
+    utc_offset = 5;
+  else if (julian_date < JULIAN_DATE_OFFSET_1991)
+    utc_offset = 6;
+  else if (julian_date < JULIAN_DATE_OFFSET_1992)
+    utc_offset = 7;
+  else if (julian_date < JULIAN_DATE_OFFSET_1993)
+    utc_offset = 8;
+  else if (julian_date < JULIAN_DATE_OFFSET_1994)
+    utc_offset = 9;
+  else if (julian_date < JULIAN_DATE_OFFSET_1996)
+    utc_offset = 10;
+  else if (julian_date < JULIAN_DATE_OFFSET_1997)
+    utc_offset = 11;
+  else if (julian_date < JULIAN_DATE_OFFSET_1999)
+    utc_offset = 12;
+  else if (julian_date < JULIAN_DATE_OFFSET_2006)
+    utc_offset = 13;
+  else if (julian_date < JULIAN_DATE_OFFSET_2009)
+    utc_offset = 14;
+  else
+    utc_offset = 15;
+  /*
+   * 12/Sep/2009 (KA): The following program will print out the required julian date for the next leap second (after editting year/month).
+   * #include <iostream>
+   * #include <iomanip>
+   * #include "time_conversion.h"
+   * void main() {
+   *     double julianDate;
+   *     if (GetJulianDateFromUTCTime(2008, 12, 31, 23, 59, 60.0, &julianDate))
+   *         std::cout << "utc:2008-12-31 23:59:60 --> julian:" << std::setprecision(12) << julianDate << std::endl;
+   * }
+   */
+
+  return true;
+}
+
+bool e57::utils::number_days_in_month(const unsigned short year,         //!< Universal Time Coordinated    [year]
+                                      const unsigned char  month,        //!< Universal Time Coordinated    [1-12 months]
+                                      unsigned char&       days_in_month //!< Days in the specified month   [1-28|29|30|31 days]
+                                      ) noexcept
+{
+  const bool    is_a_leapyear = e57::utils::is_leap_year(year);
+  unsigned char utmp{0};
+
+  switch (month)
+  {
+  case 1:
+    utmp = DAYS_IN_JAN;
+    break;
+  case 2:
+    if (is_a_leapyear)
+    {
+      utmp = 29;
+    }
+    else
+    {
+      utmp = 28;
+    }
+    break;
+  case 3:
+    utmp = DAYS_IN_MAR;
+    break;
+  case 4:
+    utmp = DAYS_IN_APR;
+    break;
+  case 5:
+    utmp = DAYS_IN_MAY;
+    break;
+  case 6:
+    utmp = DAYS_IN_JUN;
+    break;
+  case 7:
+    utmp = DAYS_IN_JUL;
+    break;
+  case 8:
+    utmp = DAYS_IN_AUG;
+    break;
+  case 9:
+    utmp = DAYS_IN_SEP;
+    break;
+  case 10:
+    utmp = DAYS_IN_OCT;
+    break;
+  case 11:
+    utmp = DAYS_IN_NOV;
+    break;
+  case 12:
+    utmp = DAYS_IN_DEC;
+    break;
+  default: {
+    GNSS_ERROR_MSG("unexpected default case.");
+    return false;
+    break;
+  }
+  }
+
+  days_in_month = utmp;
+
+  return true;
+}
+
+bool e57::utils::is_leap_year(const unsigned short year) noexcept
+{
+  bool is_a_leap_year{false};
+
+  if ((year % 4) == 0)
+  {
+    is_a_leap_year = true;
+    if ((year % 100) == 0)
+    {
+      if ((year % 400) == 0)
+      {
+        is_a_leap_year = true;
+      }
+      else
+      {
+        is_a_leap_year = false;
+      }
+    }
+  }
+
+  if (is_a_leap_year)
+  {
+    return true;
+  }
+
+  return false;
+}
+
+bool e57::utils::day_of_year(const unsigned short utc_year,  // Universal Time Coordinated           [year]
+                             const unsigned char  utc_month, // Universal Time Coordinated           [1-12 months]
+                             const unsigned char  utc_day,   // Universal Time Coordinated           [1-31 days]
+                             unsigned short&      dayofyear  // number of days into the year (1-366) [days]
+                             ) noexcept
+{
+  unsigned char days_in_feb{0};
+  if (!e57::utils::number_days_in_month(utc_year, 2, days_in_feb))
+  {
+    GNSS_ERROR_MSG("number_days_in_month returned false.");
+    return false;
+  }
+
+  switch (utc_month)
+  {
+  case 1:
+    dayofyear = utc_day;
+    break;
+  case 2:
+    dayofyear = (unsigned short)(DAYS_IN_JAN + utc_day);
+    break;
+  case 3:
+    dayofyear = (unsigned short)(DAYS_IN_JAN + days_in_feb + utc_day);
+    break;
+  case 4:
+    dayofyear = (unsigned short)(62 + days_in_feb + utc_day);
+    break;
+  case 5:
+    dayofyear = (unsigned short)(92 + days_in_feb + utc_day);
+    break;
+  case 6:
+    dayofyear = (unsigned short)(123 + days_in_feb + utc_day);
+    break;
+  case 7:
+    dayofyear = (unsigned short)(153 + days_in_feb + utc_day);
+    break;
+  case 8:
+    dayofyear = (unsigned short)(184 + days_in_feb + utc_day);
+    break;
+  case 9:
+    dayofyear = (unsigned short)(215 + days_in_feb + utc_day);
+    break;
+  case 10:
+    dayofyear = (unsigned short)(245 + days_in_feb + utc_day);
+    break;
+  case 11:
+    dayofyear = (unsigned short)(276 + days_in_feb + utc_day);
+    break;
+  case 12:
+    dayofyear = (unsigned short)(306 + days_in_feb + utc_day);
+    break;
+  default: {
+    GNSS_ERROR_MSG("unexpected default case.");
+    return false;
+    break;
+  }
+  }
+
+  return true;
+}
+
+bool e57::utils::gps_time_from_year_and_day_of_year(const unsigned short year,      // The year [year]
+                                                    const unsigned short dayofyear, // The number of days into the year (1-366) [days]
+                                                    unsigned short&      gps_week,  //!< GPS week (0-1024+)            [week]
+                                                    double&              gps_tow    //!< GPS time of week (0-604800.0) [s]
+                                                    ) noexcept
+{
+  double julian_date{0.0};
+
+  if (dayofyear < 1 || dayofyear > 366)
+  {
+    GNSS_ERROR_MSG("invalid date of year");
+    return false;
+  }
+
+  if (!e57::utils::julian_date_from_utc_time(year, 1, 1, 0, 0, 0, julian_date))
+  {
+    GNSS_ERROR_MSG("julian_date_from_utc_time returned false.");
+    return false;
+  }
+
+  julian_date += dayofyear - 1; // at the start of the day so -1.
+
+  if (!gps_time_from_julian_date(julian_date, 0, gps_week, gps_tow))
+  {
+    GNSS_ERROR_MSG("gps_time_from_julian_date returned false.");
+    return false;
+  }
+
+  return true;
+}
+
+bool e57::utils::is_utc_time_valid(const unsigned short utc_year,   //!< Universal Time Coordinated  [year]
+                                   const unsigned char  utc_month,  //!< Universal Time Coordinated  [1-12 months]
+                                   const unsigned char  utc_day,    //!< Universal Time Coordinated  [1-31 days]
+                                   const unsigned char  utc_hour,   //!< Universal Time Coordinated  [hours]
+                                   const unsigned char  utc_minute, //!< Universal Time Coordinated  [minutes]
+                                   const float          utc_seconds //!< Universal Time Coordinated  [s]
+                                   ) noexcept
+{
+  unsigned char daysInMonth;
+  if (utc_month == 0 || utc_month > 12)
+  {
+    GNSS_ERROR_MSG("invalid utc_month value");
+    return false;
+  }
+  if (utc_hour > 23)
+  {
+    GNSS_ERROR_MSG("invalid utc_hour value");
+    return false;
+  }
+  if (utc_minute > 59)
+  {
+    GNSS_ERROR_MSG("invalid utc_minute value");
+    return false;
+  }
+  if (utc_seconds > 60)
+  {
+    GNSS_ERROR_MSG("invalid utc_seconds value");
+    return false;
+  }
+
+  if (!e57::utils::number_days_in_month(utc_year, utc_month, daysInMonth))
+  {
+    GNSS_ERROR_MSG("number_days_in_month returned false.");
+    return false;
+  }
+
+  if (utc_day == 0 || utc_day > daysInMonth)
+  {
+    GNSS_ERROR_MSG("if( utc_day == 0 || utc_day > daysInMonth )");
+    return false;
+  }
 
   return true;
 }
