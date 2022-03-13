@@ -99,28 +99,25 @@ bool e57::utils::current_system_time(
   // convert to julian date
   julian_date = JULIAN_DATE_START_OF_PC_TIME + timebuffer_time_in_days;
 
-  bool result = e57::utils::determine_utc_offset(julian_date, utc_offset);
-  if (!result)
+  if (!e57::utils::determine_utc_offset(julian_date, utc_offset))
   {
     GNSS_ERROR_MSG("determine_utc_offset returned false.");
-    return result;
+    return false;
   }
 
-  result = e57::utils::gps_time_from_julian_date(julian_date, utc_offset, gps_week, gps_tow);
-  if (!result)
+  if (!e57::utils::gps_time_from_julian_date(julian_date, utc_offset, gps_week, gps_tow))
   {
     GNSS_ERROR_MSG("gps_time_from_julian_date returned false.");
-    return result;
+    return false;
   }
 
-  result = e57::utils::utc_time_from_julian_date(julian_date, utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds);
-  if (!result)
+  if (!e57::utils::utc_time_from_julian_date(julian_date, utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
   {
     GNSS_ERROR_MSG("utc_time_from_julian_date returned false");
-    return result;
+    return false;
   }
 
-  return result;
+  return true;
 }
 
 bool e57::utils::day_of_week_from_julian_date(const double   julian_date, //!< Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
@@ -207,11 +204,10 @@ bool e57::utils::julian_date_from_utc_time(const unsigned short utc_year,    //!
   double m{0.0}; // temp for month
 
   // Check the input.
-  bool result = e57::utils::is_utc_time_valid(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds);
-  if (!result)
+  if (!e57::utils::is_utc_time_valid(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
   {
     GNSS_ERROR_MSG("is_utc_time_valid returned false.");
-    return result;
+    return false;
   }
 
   if (utc_month <= 2)
@@ -225,8 +221,9 @@ bool e57::utils::julian_date_from_utc_time(const unsigned short utc_year,    //!
     m = utc_month;
   }
 
-  julian_date = (int)(365.25 * y) + (int)(30.6001 * (m + 1.0)) + utc_day + utc_hour / 24.0 + utc_minute / 1440.0 + utc_seconds / SECONDS_IN_A_DAY + 1720981.5;
-  return result;
+  julian_date = static_cast<int32_t>(365.25 * y) + static_cast<int32_t>(30.6001 * (m + 1.0)) + utc_day + utc_hour / 24.0 + utc_minute / 1440.0
+                + utc_seconds / SECONDS_IN_A_DAY + 1720981.5;
+  return true;
 }
 
 bool e57::utils::gps_time_from_julian_date(const double julian_date, //!< Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
@@ -319,11 +316,10 @@ bool e57::utils::utc_time_from_julian_date(const double    julian_date, //!< Num
         hour -= 24;
         day++;
 
-        bool result = e57::utils::number_days_in_month(year, month, days_in_month);
-        if (!result)
+        if (!e57::utils::number_days_in_month(year, month, days_in_month))
         {
           GNSS_ERROR_MSG("number_days_in_month returned false.");
-          return result;
+          return false;
         }
 
         if (day > days_in_month)
@@ -345,7 +341,7 @@ bool e57::utils::utc_time_from_julian_date(const double    julian_date, //!< Num
   utc_day     = day;
   utc_hour    = hour;
   utc_minute  = minute;
-  utc_seconds = (float)seconds;
+  utc_seconds = static_cast<float>(seconds);
 
   return true;
 }

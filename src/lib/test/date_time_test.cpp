@@ -1,7 +1,7 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 
 #include <doctest/doctest.h>
-#include <openE57/api.h>
+#include <openE57/impl/time_conversion.h>
 
 using namespace e57;
 
@@ -9,24 +9,28 @@ TEST_SUITE("DateTime Tests")
 {
   TEST_CASE("Testings that current date time isn't zero")
   {
-    CHECK(0.0 != utils::current_date_time_number());
-  }
+    unsigned short utc_year;
+    unsigned char  utc_month;
+    unsigned char  utc_day;
+    unsigned char  utc_hour;
+    unsigned char  utc_minute;
+    float          utc_seconds;
+    unsigned char  utc_offset;
+    double         julian_date;
+    unsigned short gps_week;
+    double         gps_tow;
 
-  TEST_CASE("Tests that current date time isn't 1/1/1970")
-  {
-    const auto dateTime = utils::current_date_time();
-    CHECK(1970 != dateTime.year);
-  }
+    const bool result = utils::current_system_time(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds, utc_offset, julian_date, gps_week, gps_tow);
 
-  TEST_CASE("Testing Number to DateTime conversion")
-  {
-    const auto dateTime = utils::date_time_from_number(0.0);
-    CHECK(1970 != dateTime.year);
-  }
-
-  TEST_CASE("Testing DateTime to Number conversion")
-  {
-    constexpr core::DateTime dateTime{2022, 3, 6};
-    CHECK(0.0 != utils::date_time_number_from_value(dateTime));
+    REQUIRE_EQ(true, result);
+    REQUIRE(utc_year >= 2022);
+    REQUIRE(utc_month >= 1);
+    REQUIRE(utc_day >= 1);
+    REQUIRE(utc_hour >= 0);
+    REQUIRE(utc_minute >= 0);
+    REQUIRE(utc_seconds >= 0);
+    REQUIRE(julian_date >= 0);
+    REQUIRE(gps_week >= 0);
+    REQUIRE(gps_tow >= 0);
   }
 }
