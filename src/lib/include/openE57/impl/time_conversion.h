@@ -21,7 +21,7 @@ namespace utils
    *
    * @return true if successful, false otherwise
    */
-  bool current_system_time(
+  [[nodiscard]] bool current_system_time(
     unsigned short& utc_year,    //!< Universal Time Coordinated    [year]
     unsigned char&  utc_month,   //!< Universal Time Coordinated    [1-12 months]
     unsigned char&  utc_day,     //!< Universal Time Coordinated    [1-31 days]
@@ -32,7 +32,7 @@ namespace utils
     double&         julian_date, //!< Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
     unsigned short& gps_week,    //!< GPS week (0-1024+)            [week]
     double&         gps_tow      //!< GPS time of week (0-604800.0) [s]
-  );
+    ) noexcept;
 
   /**
    * @brief Computes the day of the week from the Julian date.
@@ -40,9 +40,10 @@ namespace utils
    *
    * @return true if successful, false otherwise
    */
-  bool day_of_week_from_julian_date(const double   julian_date, //!< Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
-                                    unsigned char& day_of_week  //!< 0-Sunday, 1-Monday, 2-Tuesday, 3-Wednesday, 4-Thursday, 5-Friday, 6-Saturday [].
-  );
+  [[nodiscard]] bool day_of_week_from_julian_date(
+    const double   julian_date, //!< Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
+    unsigned char& day_of_week  //!< 0-Sunday, 1-Monday, 2-Tuesday, 3-Wednesday, 4-Thursday, 5-Friday, 6-Saturday [].
+    ) noexcept;
 
   /**
    * @brief Computes the Julian date from GPS time
@@ -51,11 +52,11 @@ namespace utils
    *
    * @return true if successful, false otherwise
    */
-  bool julian_date_from_gps_time(const unsigned short gps_week,   //!< GPS week (0-1024+)             [week]
-                                 const double         gps_tow,    //!< GPS time of week (0-604800.0)  [s]
-                                 const unsigned char  utc_offset, //!< Integer seconds that GPS is ahead of UTC time, always positive [s]
-                                 double&              julian_date //!< Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
-  );
+  [[nodiscard]] bool julian_date_from_gps_time(const unsigned short gps_week,   //!< GPS week (0-1024+)             [week]
+                                               const double         gps_tow,    //!< GPS time of week (0-604800.0)  [s]
+                                               const unsigned char  utc_offset, //!< Integer seconds that GPS is ahead of UTC time, always positive [s]
+                                               double& julian_date //!< Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
+                                               ) noexcept;
 
   /**
    * @brief Computes the Julian date from UTC time
@@ -67,14 +68,14 @@ namespace utils
    *
    * @return true if successful, false otherwise
    */
-  bool julian_date_from_utc_time(const unsigned short utc_year,    //!< Universal Time Coordinated  [year]
-                                 const unsigned char  utc_month,   //!< Universal Time Coordinated  [1-12 months]
-                                 const unsigned char  utc_day,     //!< Universal Time Coordinated  [1-31 days]
-                                 const unsigned char  utc_hour,    //!< Universal Time Coordinated  [hours]
-                                 const unsigned char  utc_minute,  //!< Universal Time Coordinated  [minutes]
-                                 const float          utc_seconds, //!< Universal Time Coordinated  [s]
-                                 double&              julian_date  //!< Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
-  );
+  [[nodiscard]] bool julian_date_from_utc_time(const unsigned short utc_year,    //!< Universal Time Coordinated  [year]
+                                               const unsigned char  utc_month,   //!< Universal Time Coordinated  [1-12 months]
+                                               const unsigned char  utc_day,     //!< Universal Time Coordinated  [1-31 days]
+                                               const unsigned char  utc_hour,    //!< Universal Time Coordinated  [hours]
+                                               const unsigned char  utc_minute,  //!< Universal Time Coordinated  [minutes]
+                                               const float          utc_seconds, //!< Universal Time Coordinated  [s]
+                                               double& julian_date //!< Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
+                                               ) noexcept;
 
   /**
    * @brief Computes GPS time from the Julian date
@@ -83,11 +84,11 @@ namespace utils
    *
    * @return true if successful, false otherwise
    */
-  bool gps_time_from_julian_date(const double        julian_date, //!< Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
-                                 const unsigned char utc_offset,  //!< Integer seconds that GPS is ahead of UTC time, always positive [s]
-                                 unsigned short&     gps_week,    //!< GPS week (0-1024+)            [week]
-                                 double&             gps_tow      //!< GPS time of week [s]
-  );
+  [[nodiscard]] bool gps_time_from_julian_date(const double julian_date, //!< Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
+                                               const unsigned char utc_offset, //!< Integer seconds that GPS is ahead of UTC time, always positive [s]
+                                               unsigned short&     gps_week,   //!< GPS week (0-1024+)            [week]
+                                               double&             gps_tow     //!< GPS time of week [s]
+                                               ) noexcept;
 
   /**
    * @brief Computes UTC time from the Julian date
@@ -96,14 +97,14 @@ namespace utils
    *
    * @return true if successful, false otherwise
    */
-  bool utc_time_from_julian_date(const double    julian_date, //!< Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
-                                 unsigned short& utc_year,    //!< Universal Time Coordinated    [year]
-                                 unsigned char&  utc_month,   //!< Universal Time Coordinated    [1-12 months]
-                                 unsigned char&  utc_day,     //!< Universal Time Coordinated    [1-31 days]
-                                 unsigned char&  utc_hour,    //!< Universal Time Coordinated    [hours]
-                                 unsigned char&  utc_minute,  //!< Universal Time Coordinated    [minutes]
-                                 float&          utc_seconds  //!< Universal Time Coordinated    [s]
-  );
+  [[nodiscard]] bool utc_time_from_julian_date(const double julian_date,  //!< Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
+                                               unsigned short& utc_year,  //!< Universal Time Coordinated    [year]
+                                               unsigned char&  utc_month, //!< Universal Time Coordinated    [1-12 months]
+                                               unsigned char&  utc_day,   //!< Universal Time Coordinated    [1-31 days]
+                                               unsigned char&  utc_hour,  //!< Universal Time Coordinated    [hours]
+                                               unsigned char&  utc_minute, //!< Universal Time Coordinated    [minutes]
+                                               float&          utc_seconds //!< Universal Time Coordinated    [s]
+                                               ) noexcept;
 
   /**
    * @brief Computes GPS time from UTC time
@@ -113,15 +114,15 @@ namespace utils
    *
    * @return true if successful, false otherwise
    */
-  bool gps_time_from_utc_time(const unsigned short utc_year,    //!< Universal Time Coordinated    [year]
-                              const unsigned char  utc_month,   //!< Universal Time Coordinated    [1-12 months]
-                              const unsigned char  utc_day,     //!< Universal Time Coordinated    [1-31 days]
-                              const unsigned char  utc_hour,    //!< Universal Time Coordinated    [hours]
-                              const unsigned char  utc_minute,  //!< Universal Time Coordinated    [minutes]
-                              const float          utc_seconds, //!< Universal Time Coordinated    [s]
-                              unsigned short&      gps_week,    //!< GPS week (0-1024+)            [week]
-                              double&              gps_tow      //!< GPS time of week (0-604800.0) [s]
-  );
+  [[nodiscard]] bool gps_time_from_utc_time(const unsigned short utc_year,    //!< Universal Time Coordinated    [year]
+                                            const unsigned char  utc_month,   //!< Universal Time Coordinated    [1-12 months]
+                                            const unsigned char  utc_day,     //!< Universal Time Coordinated    [1-31 days]
+                                            const unsigned char  utc_hour,    //!< Universal Time Coordinated    [hours]
+                                            const unsigned char  utc_minute,  //!< Universal Time Coordinated    [minutes]
+                                            const float          utc_seconds, //!< Universal Time Coordinated    [s]
+                                            unsigned short&      gps_week,    //!< GPS week (0-1024+)            [week]
+                                            double&              gps_tow      //!< GPS time of week (0-604800.0) [s]
+                                            ) noexcept;
 
   /**
    * @brief Computes GPS time from RINEX time. RINEX time looks like UTC but it is GPS time in year, month, day, hours, minutes, seconds.
@@ -132,15 +133,15 @@ namespace utils
    *
    * @return true if successful, false otherwise
    */
-  bool gps_time_from_rinex_time(const unsigned short utc_year,    //!< Universal Time Coordinated    [year]
-                                const unsigned char  utc_month,   //!< Universal Time Coordinated    [1-12 months]
-                                const unsigned char  utc_day,     //!< Universal Time Coordinated    [1-31 days]
-                                const unsigned char  utc_hour,    //!< Universal Time Coordinated    [hours]
-                                const unsigned char  utc_minute,  //!< Universal Time Coordinated    [minutes]
-                                const float          utc_seconds, //!< Universal Time Coordinated    [s]
-                                unsigned short&      gps_week,    //!< GPS week (0-1024+)            [week]
-                                double&              gps_tow      //!< GPS time of week (0-604800.0) [s]
-  );
+  [[nodiscard]] bool gps_time_from_rinex_time(const unsigned short utc_year,    //!< Universal Time Coordinated    [year]
+                                              const unsigned char  utc_month,   //!< Universal Time Coordinated    [1-12 months]
+                                              const unsigned char  utc_day,     //!< Universal Time Coordinated    [1-31 days]
+                                              const unsigned char  utc_hour,    //!< Universal Time Coordinated    [hours]
+                                              const unsigned char  utc_minute,  //!< Universal Time Coordinated    [minutes]
+                                              const float          utc_seconds, //!< Universal Time Coordinated    [s]
+                                              unsigned short&      gps_week,    //!< GPS week (0-1024+)            [week]
+                                              double&              gps_tow      //!< GPS time of week (0-604800.0) [s]
+                                              ) noexcept;
 
   /**
    * @brief Computes UTC time from GPS time.
@@ -150,15 +151,15 @@ namespace utils
    *
    * @return true if successful, false otherwise
    */
-  bool utc_time_from_gps_time(const unsigned short gps_week,   //!< GPS week (0-1024+)            [week]
-                              const double         gps_tow,    //!< GPS time of week (0-604800.0) [s]
-                              unsigned short&      utc_year,   //!< Universal Time Coordinated    [year]
-                              unsigned char&       utc_month,  //!< Universal Time Coordinated    [1-12 months]
-                              unsigned char&       utc_day,    //!< Universal Time Coordinated    [1-31 days]
-                              unsigned char&       utc_hour,   //!< Universal Time Coordinated    [hours]
-                              unsigned char&       utc_minute, //!< Universal Time Coordinated    [minutes]
-                              float&               utc_seconds //!< Universal Time Coordinated    [s]
-  );
+  [[nodiscard]] bool utc_time_from_gps_time(const unsigned short gps_week,   //!< GPS week (0-1024+)            [week]
+                                            const double         gps_tow,    //!< GPS time of week (0-604800.0) [s]
+                                            unsigned short&      utc_year,   //!< Universal Time Coordinated    [year]
+                                            unsigned char&       utc_month,  //!< Universal Time Coordinated    [1-12 months]
+                                            unsigned char&       utc_day,    //!< Universal Time Coordinated    [1-31 days]
+                                            unsigned char&       utc_hour,   //!< Universal Time Coordinated    [hours]
+                                            unsigned char&       utc_minute, //!< Universal Time Coordinated    [minutes]
+                                            float&               utc_seconds //!< Universal Time Coordinated    [s]
+                                            ) noexcept;
 
   /**
    * @brief This function is a look up table to determine the UTC offset from the Julian Date.
@@ -186,7 +187,7 @@ namespace utils
    *
    * @return true if successful, false otherwise
    */
-  bool determine_utc_offset(
+  [[nodiscard]] bool determine_utc_offset(
     const double   julian_date, //!< Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
     unsigned char& utc_offset   //!< Integer seconds that GPS is ahead of UTC time, always positive             [s], obtained from a look up table
     ) noexcept;
@@ -198,10 +199,10 @@ namespace utils
    *
    * @return true if successful, false otherwise
    */
-  bool number_days_in_month(const unsigned short year,         //!< Universal Time Coordinated    [year]
-                            const unsigned char  month,        //!< Universal Time Coordinated    [1-12 months]
-                            unsigned char&       days_in_month //!< Days in the specified month   [1-28|29|30|31 days]
-                            ) noexcept;
+  [[nodiscard]] bool number_days_in_month(const unsigned short year,         //!< Universal Time Coordinated    [year]
+                                          const unsigned char  month,        //!< Universal Time Coordinated    [1-12 months]
+                                          unsigned char&       days_in_month //!< Days in the specified month   [1-28|29|30|31 days]
+                                          ) noexcept;
 
   /**
    * @brief Determines if the given year is a leap year
@@ -210,7 +211,7 @@ namespace utils
    *
    * @return true if successful, false otherwise
    */
-  bool is_leap_year(const unsigned short year) noexcept;
+  [[nodiscard]] bool is_leap_year(const unsigned short year) noexcept;
 
   /**
    * @brief Determines the day of year given the year, month, and day
@@ -218,35 +219,35 @@ namespace utils
    *
    * @return true if successful, false otherwise
    */
-  bool day_of_year(const unsigned short utc_year,  // Universal Time Coordinated           [year]
-                   const unsigned char  utc_month, // Universal Time Coordinated           [1-12 months]
-                   const unsigned char  utc_day,   // Universal Time Coordinated           [1-31 days]
-                   unsigned short&      dayofyear  // number of days into the year (1-366) [days]
-                   ) noexcept;
+  [[nodiscard]] bool day_of_year(const unsigned short utc_year,  // Universal Time Coordinated           [year]
+                                 const unsigned char  utc_month, // Universal Time Coordinated           [1-12 months]
+                                 const unsigned char  utc_day,   // Universal Time Coordinated           [1-31 days]
+                                 unsigned short&      dayofyear  // number of days into the year (1-366) [days]
+                                 ) noexcept;
 
   /**
    * @brief Determines the GPS time of the start of a day from the day of year and the year.
    *
    * @return true if successful, false otherwise
    */
-  bool gps_time_from_year_and_day_of_year(const unsigned short year,      // The year [year]
-                                          const unsigned short dayofyear, // The number of days into the year (1-366) [days]
-                                          unsigned short&      gps_week,  //!< GPS week (0-1024+)            [week]
-                                          double&              gps_tow    //!< GPS time of week (0-604800.0) [s]
-                                          ) noexcept;
+  [[nodiscard]] bool gps_time_from_year_and_day_of_year(const unsigned short year,      // The year [year]
+                                                        const unsigned short dayofyear, // The number of days into the year (1-366) [days]
+                                                        unsigned short&      gps_week,  //!< GPS week (0-1024+)            [week]
+                                                        double&              gps_tow    //!< GPS time of week (0-604800.0) [s]
+                                                        ) noexcept;
 
   /**
    * @brief Determines if the UTC input values are valid.
    *
    * @return true if successful, false otherwise
    */
-  bool is_utc_time_valid(const unsigned short utc_year,   //!< Universal Time Coordinated  [year]
-                         const unsigned char  utc_month,  //!< Universal Time Coordinated  [1-12 months]
-                         const unsigned char  utc_day,    //!< Universal Time Coordinated  [1-31 days]
-                         const unsigned char  utc_hour,   //!< Universal Time Coordinated  [hours]
-                         const unsigned char  utc_minute, //!< Universal Time Coordinated  [minutes]
-                         const float          utc_seconds //!< Universal Time Coordinated  [s]
-                         ) noexcept;
+  [[nodiscard]] bool is_utc_time_valid(const unsigned short utc_year,   //!< Universal Time Coordinated  [year]
+                                       const unsigned char  utc_month,  //!< Universal Time Coordinated  [1-12 months]
+                                       const unsigned char  utc_day,    //!< Universal Time Coordinated  [1-31 days]
+                                       const unsigned char  utc_hour,   //!< Universal Time Coordinated  [hours]
+                                       const unsigned char  utc_minute, //!< Universal Time Coordinated  [minutes]
+                                       const float          utc_seconds //!< Universal Time Coordinated  [s]
+                                       ) noexcept;
 } // namespace utils
 
 } // namespace e57
