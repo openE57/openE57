@@ -623,10 +623,10 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   return false;
 }
 
-[[nodiscard]] bool e57::utils::day_of_year(const unsigned short utc_year,  // Universal Time Coordinated           [year]
-                                           const unsigned char  utc_month, // Universal Time Coordinated           [1-12 months]
-                                           const unsigned char  utc_day,   // Universal Time Coordinated           [1-31 days]
-                                           unsigned short&      dayofyear  // number of days into the year (1-366) [days]
+[[nodiscard]] bool e57::utils::day_of_year(const unsigned short utc_year,   // Universal Time Coordinated           [year]
+                                           const unsigned char  utc_month,  // Universal Time Coordinated           [1-12 months]
+                                           const unsigned char  utc_day,    // Universal Time Coordinated           [1-31 days]
+                                           unsigned short&      day_of_year // the day of the year (1-366) [days]
                                            ) noexcept
 {
   unsigned char days_in_feb{0};
@@ -639,40 +639,40 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   switch (utc_month)
   {
   case 1:
-    dayofyear = utc_day;
+    day_of_year = utc_day;
     break;
   case 2:
-    dayofyear = (unsigned short)(DAYS_IN_JAN + utc_day);
+    day_of_year = (unsigned short)(DAYS_IN_JAN + utc_day);
     break;
   case 3:
-    dayofyear = (unsigned short)(DAYS_IN_JAN + days_in_feb + utc_day);
+    day_of_year = (unsigned short)(DAYS_IN_JAN + days_in_feb + utc_day);
     break;
   case 4:
-    dayofyear = (unsigned short)(62 + days_in_feb + utc_day);
+    day_of_year = (unsigned short)(62 + days_in_feb + utc_day);
     break;
   case 5:
-    dayofyear = (unsigned short)(92 + days_in_feb + utc_day);
+    day_of_year = (unsigned short)(92 + days_in_feb + utc_day);
     break;
   case 6:
-    dayofyear = (unsigned short)(123 + days_in_feb + utc_day);
+    day_of_year = (unsigned short)(123 + days_in_feb + utc_day);
     break;
   case 7:
-    dayofyear = (unsigned short)(153 + days_in_feb + utc_day);
+    day_of_year = (unsigned short)(153 + days_in_feb + utc_day);
     break;
   case 8:
-    dayofyear = (unsigned short)(184 + days_in_feb + utc_day);
+    day_of_year = (unsigned short)(184 + days_in_feb + utc_day);
     break;
   case 9:
-    dayofyear = (unsigned short)(215 + days_in_feb + utc_day);
+    day_of_year = (unsigned short)(215 + days_in_feb + utc_day);
     break;
   case 10:
-    dayofyear = (unsigned short)(245 + days_in_feb + utc_day);
+    day_of_year = (unsigned short)(245 + days_in_feb + utc_day);
     break;
   case 11:
-    dayofyear = (unsigned short)(276 + days_in_feb + utc_day);
+    day_of_year = (unsigned short)(276 + days_in_feb + utc_day);
     break;
   case 12:
-    dayofyear = (unsigned short)(306 + days_in_feb + utc_day);
+    day_of_year = (unsigned short)(306 + days_in_feb + utc_day);
     break;
   default: {
     GNSS_ERROR_MSG("unexpected default case.");
@@ -684,15 +684,15 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   return true;
 }
 
-[[nodiscard]] bool e57::utils::gps_time_from_year_and_day_of_year(const unsigned short year,      // The year [year]
-                                                                  const unsigned short dayofyear, // The number of days into the year (1-366) [days]
-                                                                  unsigned short&      gps_week,  //!< GPS week (0-1024+)            [week]
-                                                                  double&              gps_tow    //!< GPS time of week (0-604800.0) [s]
+[[nodiscard]] bool e57::utils::gps_time_from_year_and_day_of_year(const unsigned short year,        // The year [year]
+                                                                  const unsigned short day_of_year, // The number of days into the year (1-366) [days]
+                                                                  unsigned short&      gps_week,    //!< GPS week (0-1024+)            [week]
+                                                                  double&              gps_tow      //!< GPS time of week (0-604800.0) [s]
                                                                   ) noexcept
 {
   double julian_date{0.0};
 
-  if (dayofyear < 1 || dayofyear > 366)
+  if (day_of_year < 1 || day_of_year > 366)
   {
     GNSS_ERROR_MSG("invalid date of year");
     return false;
@@ -704,7 +704,7 @@ constexpr const int    DAYS_IN_DEC                   = 31;
     return false;
   }
 
-  julian_date += dayofyear - 1; // at the start of the day so -1.
+  julian_date += day_of_year - 1; // at the start of the day so -1.
 
   if (!gps_time_from_julian_date(julian_date, 0, gps_week, gps_tow))
   {

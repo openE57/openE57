@@ -214,15 +214,15 @@ namespace utils
   [[nodiscard]] bool is_leap_year(const unsigned short year) noexcept;
 
   /**
-   * @brief Determines the day of year given the year, month, and day
+   * @brief Determines the number of day in year given the year, month, and day
    * @remarks Performed independant comparison with http://www.mbari.org/staff/coletti/doytable.html
    *
    * @return true if successful, false otherwise
    */
-  [[nodiscard]] bool day_of_year(const unsigned short utc_year,  // Universal Time Coordinated           [year]
-                                 const unsigned char  utc_month, // Universal Time Coordinated           [1-12 months]
-                                 const unsigned char  utc_day,   // Universal Time Coordinated           [1-31 days]
-                                 unsigned short&      dayofyear  // number of days into the year (1-366) [days]
+  [[nodiscard]] bool day_of_year(const unsigned short utc_year,   // Universal Time Coordinated           [year]
+                                 const unsigned char  utc_month,  // Universal Time Coordinated           [1-12 months]
+                                 const unsigned char  utc_day,    // Universal Time Coordinated           [1-31 days]
+                                 unsigned short&      day_of_year // number of days into the year (1-366) [days]
                                  ) noexcept;
 
   /**
@@ -230,10 +230,10 @@ namespace utils
    *
    * @return true if successful, false otherwise
    */
-  [[nodiscard]] bool gps_time_from_year_and_day_of_year(const unsigned short year,      // The year [year]
-                                                        const unsigned short dayofyear, // The number of days into the year (1-366) [days]
-                                                        unsigned short&      gps_week,  //!< GPS week (0-1024+)            [week]
-                                                        double&              gps_tow    //!< GPS time of week (0-604800.0) [s]
+  [[nodiscard]] bool gps_time_from_year_and_day_of_year(const unsigned short year,        // The year [year]
+                                                        const unsigned short day_of_year, // The number of days into the year (1-366) [days]
+                                                        unsigned short&      gps_week,    //!< GPS week (0-1024+)            [week]
+                                                        double&              gps_tow      //!< GPS time of week (0-604800.0) [s]
                                                         ) noexcept;
 
   /**
