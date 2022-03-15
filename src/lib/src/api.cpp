@@ -5,18 +5,10 @@ using namespace e57;
 
 [[nodiscard]] core::GpsTime utils::current_gps_time() noexcept
 {
-  unsigned short utc_year{};
-  unsigned char  utc_month{};
-  unsigned char  utc_day{};
-  unsigned char  utc_hour{};
-  unsigned char  utc_minute{};
-  float          utc_seconds{};
-  unsigned char  utc_offset{};
-  double         julian_date{};
-  unsigned short gps_week{};
-  double         gps_tow{};
+  uint16_t gps_week{};
+  double   gps_tow{};
 
-  if (!utils::current_system_time(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds, utc_offset, julian_date, gps_week, gps_tow))
+  if (!utils::current_gps_time(gps_week, gps_tow))
   {
     return core::GpsTime{};
   }

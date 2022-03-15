@@ -123,7 +123,7 @@ namespace core
    */
   struct GpsTime
   {
-    uint32_t gps_week{0};  //!< GPS week (0-1024+)
+    uint16_t gps_week{0};  //!< GPS week (0-1024+)
     double   gps_tow{0.0}; //!< GPS time of week (0-604800.0)
   };
 } // namespace core
