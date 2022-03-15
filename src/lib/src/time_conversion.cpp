@@ -690,7 +690,8 @@ constexpr const int    DAYS_IN_DEC                   = 31;
                                                                   double&              gps_tow      //!< GPS time of week (0-604800.0) [s]
                                                                   ) noexcept
 {
-  double julian_date{0.0};
+  double        julian_date{0.0};
+  unsigned char utc_offset{};
 
   if (day_of_year < 1 || day_of_year > 366)
   {
@@ -704,9 +705,15 @@ constexpr const int    DAYS_IN_DEC                   = 31;
     return false;
   }
 
+  if (!e57::utils::determine_utc_offset(julian_date, utc_offset))
+  {
+    GNSS_ERROR_MSG("determine_utc_offset returned false.");
+    return false;
+  }
+
   julian_date += day_of_year - 1; // at the start of the day so -1.
 
-  if (!gps_time_from_julian_date(julian_date, 0, gps_week, gps_tow))
+  if (!e57::utils::gps_time_from_julian_date(julian_date, utc_offset, gps_week, gps_tow))
   {
     GNSS_ERROR_MSG("gps_time_from_julian_date returned false.");
     return false;

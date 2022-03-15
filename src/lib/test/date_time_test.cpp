@@ -175,7 +175,6 @@ TEST_SUITE("DateTime Tests")
     unsigned short gps_week{};
     double         gps_tow{};
 
-    //TODO: utc_offset must be computed here
     REQUIRE_EQ(true, utils::gps_time_from_year_and_day_of_year(2022, 2, gps_week, gps_tow));
 
     REQUIRE_EQ(2191, gps_week);
