@@ -122,11 +122,11 @@ namespace core
 namespace utils
 {
   /**
-   * @brief This function returns the current time as double.
+   * @brief This function returns the current GPS time as double.
    *
-   * @return the current Date/Time as double
+   * @return the current GPS Time as double
    */
-  [[nodiscard]] double current_date_time_number() noexcept;
+  [[nodiscard]] double current_gps_time() noexcept;
 
   /**
    * @brief This function returns the current time as core::DateTime.

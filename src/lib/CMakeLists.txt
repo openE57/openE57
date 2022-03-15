@@ -85,7 +85,7 @@ install(
 if(BUILD_TESTING)
 
   list(APPEND TEST_CASES
-    date_time_test
+    time_conversion_test
   )
 
   foreach(TEST_CASE ${TEST_CASES})

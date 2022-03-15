@@ -1,8 +1,9 @@
 #include <openE57/api.h>
+#include <openE57/impl/time_conversion.h>
 
 using namespace e57;
 
-[[nodiscard]] double utils::current_date_time_number() noexcept
+[[nodiscard]] double utils::current_gps_time() noexcept
 {
   return 0.0;
 }
