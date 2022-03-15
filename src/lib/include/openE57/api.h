@@ -106,9 +106,9 @@ namespace core
   };
 
   /**
-   * @brief The DateTime structure defines a valid GPS Date Time representation.
+   * @brief The UtcTime structure defines a valid UTC Date Time representation.
    */
-  struct DateTime
+  struct UtcTime
   {
     uint32_t year{1970};    //!< The year 1900-9999
     uint32_t month{1};      //!< The month 0-11
@@ -117,26 +117,35 @@ namespace core
     uint32_t minute{0};     //!< The minute 0-59
     float    seconds{0.0f}; //!< The seconds 0.0 - 59.999
   };
+
+  /**
+   * @brief The GpsTime structure defines a valid GPS Time representation.
+   */
+  struct GpsTime
+  {
+    uint32_t gps_week{0};  //!< GPS week (0-1024+)
+    double   gps_tow{0.0}; //!< GPS time of week (0-604800.0)
+  };
 } // namespace core
 
 namespace utils
 {
   /**
-   * @brief This function returns the current GPS time as double.
+   * @brief This function returns the current GPS time as core::GpsTime.
    *
-   * @return the current GPS Time as double
+   * @return the current GPS Time as core::GpsTime
    */
-  [[nodiscard]] double current_gps_time() noexcept;
+  [[nodiscard]] core::GpsTime current_gps_time() noexcept;
 
   /**
-   * @brief This function returns the current time as core::DateTime.
+   * @brief This function returns the current UTC time as core::UtcTime.
    * @details The date and time is encoded using a single
    * floating point number, stored as an E57 Float element which is based on the Global Positioning
    * System (GPS) time scale.
    *
-   * @return the current Date/Time as core::DateTime
+   * @return the current Date/Time as core::UtcTime
    */
-  [[nodiscard]] core::DateTime current_date_time() noexcept;
+  [[nodiscard]] core::UtcTime current_utc_time() noexcept;
 
   /**
    * @brief This function converts the date and time from the double dateTimeValue.
@@ -145,20 +154,20 @@ namespace utils
    * System (GPS) time scale.
    *
    * @param dateTimeValue the value holding the GPS Date/Time value in double format
-   * @return the Date/Time as core::DateTime
+   * @return the Date/Time as core::UtcTime
    */
-  [[nodiscard]] core::DateTime date_time_from_number(const double dateTimeValue);
+  [[nodiscard]] core::UtcTime date_time_from_number(const double dateTimeValue);
 
   /**
-   * @brief This function converts the date and time from the structure core::DateTime dateTimeValue.
+   * @brief This function converts the date and time from the structure core::UtcTime dateTimeValue.
    * @details The date and time is encoded using a single
    * floating point number, stored as an E57 Float element which is based on the Global Positioning
    * System (GPS) time scale.
    *
-   * @param dateTimeValue the value holding the GPS Date/Time value as core::DateTime structure
+   * @param dateTimeValue the value holding the GPS Date/Time value as core::UtcTime structure
    * @return the Date/Time as double
    */
-  [[nodiscard]] double date_time_number_from_value(const core::DateTime& dateTimeValue);
+  [[nodiscard]] double date_time_number_from_value(const core::UtcTime& dateTimeValue);
 
 } // namespace utils
 

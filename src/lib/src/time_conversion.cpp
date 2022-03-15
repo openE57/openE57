@@ -4,7 +4,7 @@
 #include <sys/timeb.h>
 #include <time.h>
 
-#define GNSS_ERROR_MSG(msg)                                                                                                                                    \
+#define ERROR_MESSAGE(msg)                                                                                                                                     \
   {                                                                                                                                                            \
     const char* themsg = msg;                                                                                                                                  \
     if (themsg != NULL)                                                                                                                                        \
@@ -65,55 +65,126 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   double&         gps_tow      //!< GPS time of week (0-604800.0) [s]
   ) noexcept
 {
-#if defined(WIN32) && !defined(__GNUC__)
-  struct _timeb timebuffer; // found in <sys/timeb.h>
-#else
-  struct timeb timebuffer;
-#endif
-  double timebuffer_time_in_days;
-  double timebuffer_time_in_seconds;
-
-#ifdef _CRT_SECURE_NO_DEPRECATE
-  if (_ftime_s(&timebuffer) != 0)
+  if (!e57::utils::current_julian_date(julian_date))
   {
-    GNSS_ERROR_MSG("if( _ftime_s( &timebuffer ) != 0 )");
+    ERROR_MESSAGE("current_julian_date returned false.");
     return false;
   }
-#else
-
-#  if defined(WIN32) && !defined(__GNUC__)
-  _ftime64_s(&timebuffer);
-#  else
-  ftime(&timebuffer);
-#  endif
-
-#endif
-  timebuffer_time_in_seconds = timebuffer.time + timebuffer.millitm / 1000.0; // [s] with ms resolution
-
-  // timebuffer_time_in_seconds is the time in seconds since midnight (00:00:00), January 1, 1970,
-  // coordinated universal time (UTC). Julian date for (00:00:00), January 1, 1970 is: 2440587.5 [days]
-
-  // convert timebuffer.time from seconds to days
-  timebuffer_time_in_days = timebuffer_time_in_seconds / SECONDS_IN_A_DAY; // days since julian date 2440587.5000000 [days]
-
-  // convert to julian date
-  julian_date = JULIAN_DATE_START_OF_PC_TIME + timebuffer_time_in_days;
 
   if (!e57::utils::determine_utc_offset(julian_date, utc_offset))
   {
-    GNSS_ERROR_MSG("determine_utc_offset returned false.");
+    ERROR_MESSAGE("determine_utc_offset returned false.");
     return false;
   }
 
   if (!e57::utils::gps_time_from_julian_date(julian_date, utc_offset, gps_week, gps_tow))
   {
-    GNSS_ERROR_MSG("gps_time_from_julian_date returned false.");
+    ERROR_MESSAGE("gps_time_from_julian_date returned false.");
     return false;
   }
 
   if (!e57::utils::utc_time_from_julian_date(julian_date, utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
   {
-    GNSS_ERROR_MSG("utc_time_from_julian_date returned false");
+    ERROR_MESSAGE("utc_time_from_julian_date returned false");
+    return false;
+  }
+
+  return true;
+}
+
+[[nodiscard]] bool e57::utils::current_julian_date(double& julian_date //!< Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
+                                                   ) noexcept
+{
+#if defined(WIN32) && !defined(__GNUC__)
+  struct _timeb timebuffer; // found in <sys/timeb.h>
+#else
+  struct timeb timebuffer;
+#endif
+
+#ifdef _CRT_SECURE_NO_DEPRECATE
+  if (_ftime_s(&timebuffer) != 0)
+  {
+    ERROR_MESSAGE("if( _ftime_s( &timebuffer ) != 0 )");
+    return false;
+  }
+#else
+
+#  if defined(WIN32) && !defined(__GNUC__)
+  if (_ftime64_s(&timebuffer); != 0)
+  {
+    ERROR_MESSAGE("ftime returned a non-zero result code");
+    return false;
+  };
+#  else
+  if (ftime(&timebuffer) != 0)
+  {
+    ERROR_MESSAGE("ftime returned a non-zero result code");
+    return false;
+  };
+#  endif
+
+#endif
+  const double timebuffer_time_in_seconds = timebuffer.time + timebuffer.millitm / 1000.0; // [s] with ms resolution
+
+  // timebuffer_time_in_seconds is the time in seconds since midnight (00:00:00), January 1, 1970,
+  // coordinated universal time (UTC). Julian date for (00:00:00), January 1, 1970 is: 2440587.5 [days]
+
+  // convert timebuffer.time from seconds to days
+  const double timebuffer_time_in_days = timebuffer_time_in_seconds / SECONDS_IN_A_DAY; // days since julian date 2440587.5000000 [days]
+
+  // convert to julian date
+  julian_date = JULIAN_DATE_START_OF_PC_TIME + timebuffer_time_in_days;
+
+  return true;
+}
+
+[[nodiscard]] bool e57::utils::current_gps_time(unsigned short& gps_week, //!< GPS week (0-1024+)            [week]
+                                                double&         gps_tow   //!< GPS time of week (0-604800.0) [s]
+                                                ) noexcept
+{
+  double        julian_date{};
+  unsigned char utc_offset{};
+
+  if (!e57::utils::current_julian_date(julian_date))
+  {
+    ERROR_MESSAGE("current_julian_date returned false.");
+    return false;
+  }
+
+  if (!e57::utils::determine_utc_offset(julian_date, utc_offset))
+  {
+    ERROR_MESSAGE("determine_utc_offset returned false.");
+    return false;
+  }
+
+  if (!e57::utils::gps_time_from_julian_date(julian_date, utc_offset, gps_week, gps_tow))
+  {
+    ERROR_MESSAGE("gps_time_from_julian_date returned false.");
+    return false;
+  }
+
+  return true;
+}
+
+[[nodiscard]] bool e57::utils::current_utc_time(unsigned short& utc_year,   //!< Universal Time Coordinated    [year]
+                                                unsigned char&  utc_month,  //!< Universal Time Coordinated    [1-12 months]
+                                                unsigned char&  utc_day,    //!< Universal Time Coordinated    [1-31 days]
+                                                unsigned char&  utc_hour,   //!< Universal Time Coordinated    [hours]
+                                                unsigned char&  utc_minute, //!< Universal Time Coordinated    [minutes]
+                                                float&          utc_seconds //!< Universal Time Coordinated    [s]
+                                                ) noexcept
+{
+  double julian_date{};
+
+  if (!e57::utils::current_julian_date(julian_date))
+  {
+    ERROR_MESSAGE("current_julian_date returned false.");
+    return false;
+  }
+
+  if (!e57::utils::utc_time_from_julian_date(julian_date, utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
+  {
+    ERROR_MESSAGE("utc_time_from_julian_date returned false");
     return false;
   }
 
@@ -184,7 +255,7 @@ constexpr const int    DAYS_IN_DEC                   = 31;
 {
   if (gps_tow < 0.0 || gps_tow > SECONDS_IN_A_WEEK)
   {
-    GNSS_ERROR_MSG("if( gps_tow < 0.0  || gps_tow > 604800.0 )");
+    ERROR_MESSAGE("if( gps_tow < 0.0  || gps_tow > 604800.0 )");
     return false;
   }
 
@@ -209,7 +280,7 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   // Check the input.
   if (!e57::utils::is_utc_time_valid(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
   {
-    GNSS_ERROR_MSG("is_utc_time_valid returned false.");
+    ERROR_MESSAGE("is_utc_time_valid returned false.");
     return false;
   }
 
@@ -239,7 +310,7 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   // Check the input.
   if (julian_date < 0.0)
   {
-    GNSS_ERROR_MSG("julian_date is negative");
+    ERROR_MESSAGE("julian_date is negative");
     return false;
   }
 
@@ -275,7 +346,7 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   // Check the input.
   if (julian_date < 0.0)
   {
-    GNSS_ERROR_MSG("julian_date is negative");
+    ERROR_MESSAGE("julian_date is negative");
     return false;
   }
 
@@ -323,7 +394,7 @@ constexpr const int    DAYS_IN_DEC                   = 31;
 
         if (!e57::utils::number_days_in_month(year, month, days_in_month))
         {
-          GNSS_ERROR_MSG("number_days_in_month returned false.");
+          ERROR_MESSAGE("number_days_in_month returned false.");
           return false;
         }
 
@@ -367,25 +438,25 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   // Check the input.
   if (!e57::utils::is_utc_time_valid(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
   {
-    GNSS_ERROR_MSG("is_utc_time_valid returned false.");
+    ERROR_MESSAGE("is_utc_time_valid returned false.");
     return false;
   }
 
   if (!e57::utils::julian_date_from_utc_time(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds, julian_date))
   {
-    GNSS_ERROR_MSG("julian_date_from_utc_time returned false.");
+    ERROR_MESSAGE("julian_date_from_utc_time returned false.");
     return false;
   }
 
   if (!e57::utils::determine_utc_offset(julian_date, utc_offset))
   {
-    GNSS_ERROR_MSG("determine_utc_offset returned false.");
+    ERROR_MESSAGE("determine_utc_offset returned false.");
     return false;
   }
 
   if (!e57::utils::gps_time_from_julian_date(julian_date, utc_offset, gps_week, gps_tow))
   {
-    GNSS_ERROR_MSG("gps_time_from_julian_date returned false.");
+    ERROR_MESSAGE("gps_time_from_julian_date returned false.");
     return false;
   }
 
@@ -408,19 +479,19 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   // Check the input.
   if (!e57::utils::is_utc_time_valid(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
   {
-    GNSS_ERROR_MSG("is_utc_time_valid returned false.");
+    ERROR_MESSAGE("is_utc_time_valid returned false.");
     return false;
   }
 
   if (!e57::utils::julian_date_from_utc_time(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds, julian_date))
   {
-    GNSS_ERROR_MSG("julian_date_from_utc_time returned false.");
+    ERROR_MESSAGE("julian_date_from_utc_time returned false.");
     return false;
   }
 
   if (!e57::utils::gps_time_from_julian_date(julian_date, utc_offset, gps_week, gps_tow))
   {
-    GNSS_ERROR_MSG("GetGPSTimeFromJulianDate returned false.");
+    ERROR_MESSAGE("GetGPSTimeFromJulianDate returned false.");
     return false;
   }
 
@@ -443,7 +514,7 @@ constexpr const int    DAYS_IN_DEC                   = 31;
 
   if (gps_tow < 0.0 || gps_tow > SECONDS_IN_A_WEEK)
   {
-    GNSS_ERROR_MSG("if( gps_tow < 0.0 || gps_tow > 604800.0 )");
+    ERROR_MESSAGE("if( gps_tow < 0.0 || gps_tow > 604800.0 )");
     return false;
   }
 
@@ -452,20 +523,20 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   {
     if (!e57::utils::julian_date_from_gps_time(gps_week, gps_tow, utc_offset, julian_date))
     {
-      GNSS_ERROR_MSG("julian_date_from_gps_time returned false.");
+      ERROR_MESSAGE("julian_date_from_gps_time returned false.");
       return false;
     }
 
     if (!e57::utils::determine_utc_offset(julian_date, utc_offset))
     {
-      GNSS_ERROR_MSG("determine_utc_offset returned false.");
+      ERROR_MESSAGE("determine_utc_offset returned false.");
       return false;
     }
   }
 
   if (!e57::utils::utc_time_from_julian_date(julian_date, utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
   {
-    GNSS_ERROR_MSG("utc_time_from_julian_date returned false.");
+    ERROR_MESSAGE("utc_time_from_julian_date returned false.");
     return false;
   }
 
@@ -479,7 +550,7 @@ constexpr const int    DAYS_IN_DEC                   = 31;
 {
   if (julian_date < 0.0)
   {
-    GNSS_ERROR_MSG("julian_date is negative");
+    ERROR_MESSAGE("julian_date is negative");
     return false;
   }
 
@@ -584,7 +655,7 @@ constexpr const int    DAYS_IN_DEC                   = 31;
     utmp = DAYS_IN_DEC;
     break;
   default: {
-    GNSS_ERROR_MSG("unexpected default case.");
+    ERROR_MESSAGE("unexpected default case.");
     return false;
     break;
   }
@@ -632,7 +703,7 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   unsigned char days_in_feb{0};
   if (!e57::utils::number_days_in_month(utc_year, 2, days_in_feb))
   {
-    GNSS_ERROR_MSG("number_days_in_month returned false.");
+    ERROR_MESSAGE("number_days_in_month returned false.");
     return false;
   }
 
@@ -675,7 +746,7 @@ constexpr const int    DAYS_IN_DEC                   = 31;
     day_of_year = (unsigned short)(306 + days_in_feb + utc_day);
     break;
   default: {
-    GNSS_ERROR_MSG("unexpected default case.");
+    ERROR_MESSAGE("unexpected default case.");
     return false;
     break;
   }
@@ -695,19 +766,19 @@ constexpr const int    DAYS_IN_DEC                   = 31;
 
   if (day_of_year < 1 || day_of_year > 366)
   {
-    GNSS_ERROR_MSG("invalid date of year");
+    ERROR_MESSAGE("invalid date of year");
     return false;
   }
 
   if (!e57::utils::julian_date_from_utc_time(year, 1, 1, 0, 0, 0, julian_date))
   {
-    GNSS_ERROR_MSG("julian_date_from_utc_time returned false.");
+    ERROR_MESSAGE("julian_date_from_utc_time returned false.");
     return false;
   }
 
   if (!e57::utils::determine_utc_offset(julian_date, utc_offset))
   {
-    GNSS_ERROR_MSG("determine_utc_offset returned false.");
+    ERROR_MESSAGE("determine_utc_offset returned false.");
     return false;
   }
 
@@ -715,7 +786,7 @@ constexpr const int    DAYS_IN_DEC                   = 31;
 
   if (!e57::utils::gps_time_from_julian_date(julian_date, utc_offset, gps_week, gps_tow))
   {
-    GNSS_ERROR_MSG("gps_time_from_julian_date returned false.");
+    ERROR_MESSAGE("gps_time_from_julian_date returned false.");
     return false;
   }
 
@@ -733,34 +804,34 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   unsigned char daysInMonth;
   if (utc_month == 0 || utc_month > 12)
   {
-    GNSS_ERROR_MSG("invalid utc_month value");
+    ERROR_MESSAGE("invalid utc_month value");
     return false;
   }
   if (utc_hour > 23)
   {
-    GNSS_ERROR_MSG("invalid utc_hour value");
+    ERROR_MESSAGE("invalid utc_hour value");
     return false;
   }
   if (utc_minute > 59)
   {
-    GNSS_ERROR_MSG("invalid utc_minute value");
+    ERROR_MESSAGE("invalid utc_minute value");
     return false;
   }
   if (utc_seconds > 60)
   {
-    GNSS_ERROR_MSG("invalid utc_seconds value");
+    ERROR_MESSAGE("invalid utc_seconds value");
     return false;
   }
 
   if (!e57::utils::number_days_in_month(utc_year, utc_month, daysInMonth))
   {
-    GNSS_ERROR_MSG("number_days_in_month returned false.");
+    ERROR_MESSAGE("number_days_in_month returned false.");
     return false;
   }
 
   if (utc_day == 0 || utc_day > daysInMonth)
   {
-    GNSS_ERROR_MSG("if( utc_day == 0 || utc_day > daysInMonth )");
+    ERROR_MESSAGE("if( utc_day == 0 || utc_day > daysInMonth )");
     return false;
   }
 

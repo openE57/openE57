@@ -35,6 +35,36 @@ namespace utils
     ) noexcept;
 
   /**
+   * @brief Obtains the Julian date from PC system time.
+   *
+   * @return true if successful, false otherwise
+   */
+  [[nodiscard]] bool current_julian_date(double& julian_date //!< Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
+                                         ) noexcept;
+
+  /**
+   * @brief Obtains the GPS time from PC system time.
+   *
+   * @return true if successful, false otherwise
+   */
+  [[nodiscard]] bool current_gps_time(unsigned short& gps_week, //!< GPS week (0-1024+)            [week]
+                                      double&         gps_tow   //!< GPS time of week (0-604800.0) [s]
+                                      ) noexcept;
+
+  /**
+   * @brief Obtains the UTC time from PC system time.
+   *
+   * @return true if successful, false otherwise
+   */
+  [[nodiscard]] bool current_utc_time(unsigned short& utc_year,   //!< Universal Time Coordinated    [year]
+                                      unsigned char&  utc_month,  //!< Universal Time Coordinated    [1-12 months]
+                                      unsigned char&  utc_day,    //!< Universal Time Coordinated    [1-31 days]
+                                      unsigned char&  utc_hour,   //!< Universal Time Coordinated    [hours]
+                                      unsigned char&  utc_minute, //!< Universal Time Coordinated    [minutes]
+                                      float&          utc_seconds //!< Universal Time Coordinated    [s]
+                                      ) noexcept;
+
+  /**
    * @brief Computes the day of the week from the Julian date.
    * @details http://en.wikipedia.org/wiki/Julian_day
    *
