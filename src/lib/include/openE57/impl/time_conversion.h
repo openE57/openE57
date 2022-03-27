@@ -278,6 +278,27 @@ namespace utils
                                        const unsigned char  utc_minute, //!< Universal Time Coordinated  [minutes]
                                        const float          utc_seconds //!< Universal Time Coordinated  [s]
                                        ) noexcept;
+
+  /**
+   * @brief Converts the GPS Time information into a single double value.
+   *
+   * @return true if successful, false otherwise
+   */
+  [[nodiscard]] bool gps_time_to_value(const unsigned short gps_week, //!< GPS week (0-1024+)            [week]
+                                       const double         gps_tow,  //!< GPS time of week (0-604800.0) [s])
+                                       double&              gps_time  //!< GPS time expressed as a single double value)
+                                       ) noexcept;
+
+  /**
+   * @brief Converts the GPS Time information from a single double value to week and tow.
+   *
+   * @return true if successful, false otherwise
+   */
+  [[nodiscard]] bool gps_time_from_value(const double    gps_time, //!< GPS time expressed as a single double value)
+                                         unsigned short& gps_week, //!< GPS week (0-1024+)            [week]
+                                         double&         gps_tow   //!< GPS time of week (0-604800.0) [s])
+                                         ) noexcept;
+
 } // namespace utils
 
 } // namespace e57

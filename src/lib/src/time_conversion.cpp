@@ -837,3 +837,35 @@ constexpr const int    DAYS_IN_DEC                   = 31;
 
   return true;
 }
+
+[[nodiscard]] bool e57::utils::gps_time_to_value(const unsigned short gps_week, //!< GPS week (0-1024+)            [week]
+                                                 const double         gps_tow,  //!< GPS time of week (0-604800.0) [s])
+                                                 double&              gps_time  //!< GPS time expressed as a single double value)
+                                                 ) noexcept
+{
+  if (gps_tow < 0.0 || gps_tow > SECONDS_IN_A_WEEK)
+  {
+    ERROR_MESSAGE("if( gps_tow < 0.0  || gps_tow > 604800.0 )");
+    return false;
+  }
+
+  gps_time = (gps_week * SECONDS_IN_A_WEEK) + gps_tow;
+
+  return true;
+}
+
+[[nodiscard]] bool gps_time_from_value(const double    gps_time, //!< GPS time expressed as a single double value)
+                                       unsigned short& gps_week, //!< GPS week (0-1024+)            [week]
+                                       double&         gps_tow   //!< GPS time of week (0-604800.0) [s])
+                                       ) noexcept
+{
+  if (gps_time <= 0.0)
+  {
+    ERROR_MESSAGE("if( gps_time <= 0.0");
+    return false;
+  }
+
+  gps_week = static_cast<int32_t>(floor(gps_time)) / SECONDS_IN_A_WEEK;
+  gps_tow  = gps_time - gps_week * SECONDS_IN_A_WEEK;
+  return true;
+}

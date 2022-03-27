@@ -178,8 +178,8 @@ public:
 //
 //! @brief The e57::DateTime is a structure for encoding date and time.
 /*! @details The date and time is encoded using a single
-  562 floating point number, stored as an E57 Float element which is based on the Global Positioning
-  563 System (GPS) time scale. */
+  floating point number, stored as an E57 Float element which is based on the Global Positioning
+  System (GPS) time scale. */
 
 class DateTime
 {

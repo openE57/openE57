@@ -123,8 +123,24 @@ namespace core
    */
   struct GpsTime
   {
-    uint16_t gps_week{0};  //!< GPS week (0-1024+)
-    double   gps_tow{0.0}; //!< GPS time of week (0-604800.0)
+    uint16_t week{0};   //!< GPS week (0-1024+)
+    double   tow{0.0};  //!< GPS time of week (0-604800.0)
+    double   time{0.0}; //!< The time, in seconds, since GPS time was zero. This time specification may include fractions of a second.
+
+    /**
+     * @brief Default Constructor
+     */
+    GpsTime() = default;
+
+    /**
+     * @brief Creates a new GpsTime structure by its gps time. The week and tow are computed internally.
+     */
+    GpsTime(const double gps_time);
+
+    /**
+     * @brief Creates a new GpsTime structure by its gps week and tow. The gps time value is computed internally.
+     */
+    GpsTime(const uint16_t gps_week, const double gps_tow);
   };
 } // namespace core
 
@@ -153,10 +169,10 @@ namespace utils
    * floating point number, stored as an E57 Float element which is based on the Global Positioning
    * System (GPS) time scale.
    *
-   * @param dateTimeValue the value holding the GPS Date/Time value in double format
-   * @return the Date/Time as core::UtcTime
+   * @param gps_time the value holding the GPS Date/Time value as core::GpsTime structure
+   * @return the UTC Date/Time as core::UtcTime
    */
-  [[nodiscard]] core::UtcTime date_time_from_number(const double dateTimeValue);
+  [[nodiscard]] core::UtcTime utc_time_from_gps_time(const core::GpsTime& gps_time);
 
   /**
    * @brief This function converts the date and time from the structure core::UtcTime dateTimeValue.
@@ -164,10 +180,10 @@ namespace utils
    * floating point number, stored as an E57 Float element which is based on the Global Positioning
    * System (GPS) time scale.
    *
-   * @param dateTimeValue the value holding the GPS Date/Time value as core::UtcTime structure
-   * @return the Date/Time as double
+   * @param utc_time the value holding the UTC Date/Time value as core::UtcTime structure
+   * @return the GPS Date/Time as core::GpsTime
    */
-  [[nodiscard]] double date_time_number_from_value(const core::UtcTime& dateTimeValue);
+  [[nodiscard]] core::GpsTime gps_time_from_utc_time(const core::UtcTime& utc_time);
 
 } // namespace utils
 
