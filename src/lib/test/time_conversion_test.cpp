@@ -5,7 +5,7 @@
 
 using namespace e57;
 
-TEST_SUITE("DateTime Tests")
+TEST_SUITE("Date/Time Conversion Tests")
 {
   TEST_CASE("Tests that current system time function works as expected")
   {

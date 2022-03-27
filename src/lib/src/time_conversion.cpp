@@ -854,10 +854,10 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   return true;
 }
 
-[[nodiscard]] bool gps_time_from_value(const double    gps_time, //!< GPS time expressed as a single double value)
-                                       unsigned short& gps_week, //!< GPS week (0-1024+)            [week]
-                                       double&         gps_tow   //!< GPS time of week (0-604800.0) [s])
-                                       ) noexcept
+[[nodiscard]] bool e57::utils::gps_time_from_value(const double    gps_time, //!< GPS time expressed as a single double value)
+                                                   unsigned short& gps_week, //!< GPS week (0-1024+)            [week]
+                                                   double&         gps_tow   //!< GPS time of week (0-604800.0) [s])
+                                                   ) noexcept
 {
   if (gps_time <= 0.0)
   {

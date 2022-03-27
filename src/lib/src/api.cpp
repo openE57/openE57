@@ -5,8 +5,8 @@ using namespace e57;
 
 core::GpsTime::GpsTime(const double gps_time) : time{gps_time}
 {
-  uint16_t gps_week{};
-  double   gps_tow{};
+  unsigned short gps_week{};
+  double         gps_tow{};
 
   if (!utils::gps_time_from_value(gps_time, gps_week, gps_tow))
   {
@@ -44,10 +44,10 @@ core::GpsTime::GpsTime(const uint16_t gps_week, const double gps_tow) : week{gps
 
   if (!utils::gps_time_to_value(gps_week, gps_tow, gps_time))
   {
-    return core::GpsTime{0.0};
+    return core::GpsTime(0.0);
   }
 
-  return core::GpsTime{gps_time};
+  return core::GpsTime(gps_time);
 }
 
 [[nodiscard]] core::UtcTime utils::current_utc_time() noexcept
@@ -94,5 +94,5 @@ core::GpsTime::GpsTime(const uint16_t gps_week, const double gps_tow) : week{gps
     return core::GpsTime{};
   }
 
-  return core::GpsTime{gps_week, gps_tow};
+  return core::GpsTime(gps_week, gps_tow);
 }

@@ -86,6 +86,7 @@ if(BUILD_TESTING)
 
   list(APPEND TEST_CASES
     time_conversion_test
+    api_time_conversion_test
   )
 
   foreach(TEST_CASE ${TEST_CASES})
