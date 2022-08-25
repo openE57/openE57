@@ -80,7 +80,7 @@ class Opene57Conan(ConanFile):
         
     def requirements(self):
         if self.options.with_tests:
-            self.requires("doctest/2.4.8")
+            self.requires("doctest/2.4.9")
 
         if self.options.with_tools:
             self.requires("boost/1.84.0")
