@@ -48,7 +48,7 @@ jobs:
             
       - name: Configure conan profile
         run: |
-            conan profile new ${{ matrix.build_type }}-${{ matrix.runtime_type }} --detect
+            conan profile detect --force
             conan profile update settings.build_type=${{ matrix.build_type }} ${{ matrix.build_type }}-${{ matrix.runtime_type }}
             conan profile update settings.compiler.runtime=${{ matrix.runtime_type }} ${{ matrix.build_type }}-${{ matrix.runtime_type }}
                     
