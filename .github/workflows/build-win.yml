@@ -43,21 +43,14 @@ jobs:
       - name: Install conan
         run: |
             pip install conan --upgrade
-            conan remote clean
-            conan remote add conancenter https://center.conan.io True --insert
-            
-      - name: Configure conan profile
-        run: |
             conan profile detect --force
-            conan profile update settings.build_type=${{ matrix.build_type }} ${{ matrix.build_type }}-${{ matrix.runtime_type }}
-            conan profile update settings.compiler.runtime=${{ matrix.runtime_type }} ${{ matrix.build_type }}-${{ matrix.runtime_type }}
-                    
+            
       - name: Windows Release build
         if: matrix.build_type == 'Release'
         run: |
-            conan create . -o openE57:with_tools=True --build=missing --profile ${{ matrix.build_type }}-${{ matrix.runtime_type }}
+            conan create . -o openE57:with_tools=True --build=missing -s build_type=${{ matrix.build_type }} -s compiler.runtime=${{ matrix.runtime_type }}
       
       - name: Windows Debug build
         if: matrix.build_type == 'Debug'
         run: |
-            conan create . --build=missing --profile ${{ matrix.build_type }}-${{ matrix.runtime_type }}
+            conan create . --build=missing -s build_type=${{ matrix.build_type }} -s compiler.runtime=${{ matrix.runtime_type }}
