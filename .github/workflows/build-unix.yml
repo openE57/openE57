@@ -34,10 +34,10 @@ jobs:
       - name: Linux build
         if: matrix.os == 'ubuntu-20.04'
         run: |
-            conan create . -o openE57/*:with_tools=True -s build_type=${{ matrix.build_type }} --build=missing
+            conan create . -o openE57/*:with_tools=True -s build_type=${{ matrix.build_type }} -s compiler.cppstd=17 --build=missing
             
       - name: Mac build
         if: matrix.os == 'macos-latest'
         run: |
-            conan create . -s build_type=${{ matrix.build_type }} --build=missing
+            conan create . -s build_type=${{ matrix.build_type }} -s compiler.cppstd=17 --build=missing
             

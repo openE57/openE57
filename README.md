@@ -21,7 +21,7 @@ You need the following tools to build this library:
 
 * A C++17 compiler (MSVC 2017+, gcc 7+, clang 7+)
 * A recent version of CMake (3.15+)
-* A recent version of conan (1.28+)
+* A recent version of conan (2.0+)
 
 ## Build Instructions
 
