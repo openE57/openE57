@@ -81,7 +81,7 @@ class Opene57Conan(ConanFile):
         if self.options.with_docs:
             self.requires("doxygen/1.9.4")
 
-        if self.settings.os == "Linux" or tools.is_apple_os(self.settings.os):
+        if self.settings.os != "Windows":
             self.requires("icu/74.1")
 
         self.requires("xerces-c/3.2.4")
