@@ -29,7 +29,7 @@ jobs:
       - name: Install conan
         run: |
             pip install conan --upgrade
-            conan profile new default --detect
+            conan profile detect --force
                     
       - name: Linux build
         if: matrix.os == 'ubuntu-20.04'
