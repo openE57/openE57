@@ -48,7 +48,7 @@ jobs:
       - name: Windows Release build
         if: matrix.build_type == 'Release'
         run: |
-            conan create . -o openE57:with_tools=True --build=missing -s build_type=${{ matrix.build_type }} -s compiler.runtime=${{ matrix.runtime_type }}
+            conan create . -o openE57/*:with_tools=True --build=missing -s build_type=${{ matrix.build_type }} -s compiler.runtime=${{ matrix.runtime_type }}
       
       - name: Windows Debug build
         if: matrix.build_type == 'Debug'
