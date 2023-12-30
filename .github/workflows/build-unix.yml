@@ -1,4 +1,4 @@
-name: openE57
+name: openE57-unix
 
 on:
   push:
