@@ -11,20 +11,7 @@ jobs:
       matrix:
         os: [windows-latest]
         build_type: [Release, Debug]
-        runtime_type: [MT, MTd, MD, MDd]
-        exclude:
-          - os: windows-latest
-            build_type: Release
-            runtime_type: MTd
-          - os: windows-latest
-            build_type: Release
-            runtime_type: MDd
-          - os: windows-latest
-            build_type: Debug
-            runtime_type: MT
-          - os: windows-latest
-            build_type: Debug
-            runtime_type: MD
+        runtime_type: [static, dynamic]
 
     runs-on: ${{ matrix.os }}
     
