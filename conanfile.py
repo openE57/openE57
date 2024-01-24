@@ -1,11 +1,18 @@
-from conans import ConanFile, tools, CMake
-from conan.tools.microsoft import msvc_runtime_flag
-from conans.errors import ConanInvalidConfiguration
 import os
+
+from conan import ConanFile
+from conan.errors import ConanInvalidConfiguration
+from conan.tools.build import check_min_cppstd
+from conan.tools.cmake import CMake, CMakeDeps, CMakeToolchain, cmake_layout
+from conan.tools.files import copy, export_conandata_patches, get, replace_in_file
+from conan.tools.microsoft import is_msvc, is_msvc_static_runtime
+from conan.tools.scm import Version
+
+required_conan_version = ">=2.0.0"
 
 class Opene57Conan(ConanFile):
     name = "opene57"
-    version = "1.6.3"
+    version = "1.6.5"
     description = "A C++ library for reading and writing E57 files, " \
                   "fork of the original libE57 (http://libe57.org)"
     topics = ("e57", "libe57", "3d", "astm")
@@ -25,8 +32,6 @@ class Opene57Conan(ConanFile):
                 "shared": False,
                 "fPIC": True
                }
-    generators = "cmake", "cmake_find_package"
-    _cmake = None
 
     @property
     def _source_subfolder(self):
@@ -39,9 +44,9 @@ class Opene57Conan(ConanFile):
     @property
     def _minimum_compilers_version(self):
         return {
-            "Visual Studio": "15",
-            "gcc": "7",
-            "clang": "6",
+            "msvc": "15",
+            "gcc": "8",
+            "clang": "8",
             "apple-clang": "10",
         }
 
@@ -61,52 +66,50 @@ class Opene57Conan(ConanFile):
             raise ConanInvalidConfiguration("OpenE57 cannot be built as shared library yet")
             
         if self.settings.compiler.get_safe("cppstd"):
-            tools.check_min_cppstd(self, 17)
+            check_min_cppstd(self, 17)
 
         minimum_version = self._minimum_compilers_version.get(str(self.settings.compiler), False)
         if not minimum_version:
             self.output.warn("C++17 support required. Your compiler is unknown. Assuming it supports C++17.")
-        elif tools.Version(self.settings.compiler.version) < minimum_version:
+        elif Version(self.settings.compiler.version) < minimum_version:
             raise ConanInvalidConfiguration("C++17 support required, which your compiler does not support.")
         
     def requirements(self):
         if self.options.with_tools:
-            self.requires("boost/1.80.0")
+            self.requires("boost/1.83.0")
 
         if self.options.with_docs:
             self.requires("doxygen/1.9.4")
 
-        if self.settings.os == "Linux" or tools.is_apple_os(self.settings.os):
-            self.requires("icu/72.1")
+        if self.settings.os != "Windows":
+            self.requires("icu/74.1")
 
         self.requires("xerces-c/3.2.4")
 
-    def _configure_cmake(self):
-        if self._cmake:
-            return self._cmake
-        self._cmake = CMake(self)
-        self._cmake.definitions["PROJECT_VERSION"] = self.version
-        self._cmake.definitions["BUILD_EXAMPLES"] = False
-        self._cmake.definitions["BUILD_TOOLS"] = self.options.with_tools
-        self._cmake.definitions["BUILD_TESTS"] = False
-        if self.settings.compiler == "Visual Studio":
-            self._cmake.definitions["BUILD_WITH_MT"] = "MT" in msvc_runtime_flag(self)
-        else:
-            self._cmake.definitions["CMAKE_POSITION_INDEPENDENT_CODE"] = self.options.get_safe("fPIC", True)
-        self._cmake.configure(build_folder=self._build_subfolder)
-        return self._cmake
+    def generate(self):
+        tc = CMakeToolchain(self)
+        tc.variables["PROJECT_VERSION"] = self.version
+        tc.variables["BUILD_EXAMPLES"] = False
+        tc.variables["BUILD_TOOLS"] = self.options.with_tools
+        tc.variables["BUILD_TESTS"] = False
+        if is_msvc(self):
+            tc.variables["BUILD_WITH_MT"] = is_msvc_static_runtime(self)
+        tc.variables["CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS"] = self.options.shared
+        tc.generate()
+        deps = CMakeDeps(self)
+        deps.generate()
 
     def build(self):
-        cmake = self._configure_cmake()
+        cmake = CMake(self)
+        cmake.configure()
         cmake.build()
 
     def package(self):
-        self.copy(pattern="LICENSE", dst="licenses", src=self._source_subfolder)
-        self.copy(pattern="LICENSE.libE57", dst="licenses", src=self._source_subfolder)
-        cmake = self._configure_cmake()
+        copy(self, "LICENSE", dst=os.path.join(self.package_folder, "licenses"), src=self.source_folder)
+        copy(self, "LICENSE.libE57", dst=os.path.join(self.package_folder, "licenses"), src=self.source_folder)
+        cmake = CMake(self)
         cmake.install()
         os.remove(os.path.join(self.package_folder, "CHANGELOG.md"))
-        tools.remove_files_by_mask(os.path.join(self.package_folder, "bin"), "*.dll")
 
     def package_info(self):
         if self.options.with_tools:

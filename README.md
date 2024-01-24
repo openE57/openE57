@@ -1,6 +1,7 @@
 # openE57
 
-![openE57](https://github.com/madduci/openE57/workflows/openE57/badge.svg)
+[![openE57-windows](https://github.com/openE57/openE57/actions/workflows/build-win.yml/badge.svg?branch=master)](https://github.com/openE57/openE57/actions/workflows/build-win.yml)
+[![openE57-unix](https://github.com/openE57/openE57/actions/workflows/build-unix.yml/badge.svg?branch=master)](https://github.com/openE57/openE57/actions/workflows/build-unix.yml)
 
 openE57 is a forked version of the original LibE57 (http://www.libe57.org) project, with the intent to refine and optimize the source code in a modern C++ idiomatic way and remove unnecessary dependencies (e.g. Boost) in favour of the C++ Standard Library.
 
@@ -19,9 +20,9 @@ At the current state, Boost is still required when building the tools as in the 
 
 You need the following tools to build this library:
 
-* A C++17 compiler (MSVC 2017+, gcc 7+, clang 7+)
+* A C++17 compiler (MSVC 2017+, gcc 8+, clang 8+)
 * A recent version of CMake (3.15+)
-* A recent version of conan (1.28+)
+* A recent version of conan (2.0+)
 
 ## Build Instructions
 
