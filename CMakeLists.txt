@@ -3,7 +3,7 @@
 # management easier and reproducible on all the supported platforms
 #
 # Original   work Copyright 2010-2012   Roland Schwarz, Riegl LMS GmbH
-# Modified work Copyright 2020-2022     Michele Adduci <adduci@tutanota.com>
+# Modified work Copyright 2020-2024     Michele Adduci <adduci@tutanota.com>
 #
 # Permission is hereby granted, free of charge, to any person or organization
 # obtaining a copy of the software and accompanying documentation covered by

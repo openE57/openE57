@@ -1,5 +1,20 @@
 # openE57
 
+## [1.6.5] - 2024-01-24
+
+## Changed
+- Updated support for Conan 2.0
+- Updated Boost Libraries to 1.83.0
+- Updated ICU to 74.1
+
+## [1.6.4] - 2022-11-28
+
+## Changed
+- Updated Boost Libraries to 1.80.0
+- Updated Xerces-C to 3.2.4
+- Updated ICU to 72.1
+- Updated Doxygen to 1.9.4
+
 ## [1.6.3] - 2022-03-03
 
 ## Changed
