@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, macos-latest]
+        os: [ubuntu-22.04, macos-latest]
         build_type: [Debug, Release]
 
     runs-on: ${{ matrix.os }}
@@ -26,15 +26,18 @@ jobs:
       - name: Install Python environment 
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: '3.12'
         
       - name: Install conan
         run: |
             pip install conan --upgrade
+
+      - name: Create default profile
+        run: |
             conan profile detect --force
                     
       - name: Linux build
-        if: matrix.os == 'ubuntu-20.04'
+        if: matrix.os == 'ubuntu-22.04'
         run: |
             conan create . -o openE57/*:with_tools=True -s build_type=${{ matrix.build_type }} -s compiler.cppstd=17 --build=missing
             

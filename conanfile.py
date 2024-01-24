@@ -44,9 +44,9 @@ class Opene57Conan(ConanFile):
     @property
     def _minimum_compilers_version(self):
         return {
-            "Visual Studio": "15",
-            "gcc": "7",
-            "clang": "6",
+            "msvc": "15",
+            "gcc": "8",
+            "clang": "8",
             "apple-clang": "10",
         }
 

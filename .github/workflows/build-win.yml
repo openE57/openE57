@@ -27,11 +27,14 @@ jobs:
       - name: Install Python environment 
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: '3.12'
         
       - name: Install conan
         run: |
             pip install conan --upgrade
+      
+      - name: Create default profile
+        run: |
             conan profile detect --force
             
       - name: Windows Release build
