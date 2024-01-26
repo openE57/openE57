@@ -8,7 +8,8 @@ from conan.tools.files import copy, export_conandata_patches, get, replace_in_fi
 from conan.tools.microsoft import is_msvc, is_msvc_static_runtime
 from conan.tools.scm import Version
 
-required_conan_version = ">=2.0.0"
+required_conan_version = ">=1.54.0"
+
 
 class Opene57Conan(ConanFile):
     name = "opene57"
@@ -44,9 +45,10 @@ class Opene57Conan(ConanFile):
     @property
     def _minimum_compilers_version(self):
         return {
-            "msvc": "15",
-            "gcc": "8",
-            "clang": "8",
+            "Visual Studio": "15",
+            "msvc": "191",
+            "gcc": "7",
+            "clang": "6",
             "apple-clang": "10",
         }
 
@@ -76,7 +78,7 @@ class Opene57Conan(ConanFile):
         
     def requirements(self):
         if self.options.with_tools:
-            self.requires("boost/1.83.0")
+            self.requires("boost/1.84.0")
 
         if self.options.with_docs:
             self.requires("doxygen/1.9.4")
@@ -92,8 +94,11 @@ class Opene57Conan(ConanFile):
         tc.variables["BUILD_EXAMPLES"] = False
         tc.variables["BUILD_TOOLS"] = self.options.with_tools
         tc.variables["BUILD_TESTS"] = False
+        tc.variables["BUILD_DOCS"] = self.options.with_docs
+
         if is_msvc(self):
             tc.variables["BUILD_WITH_MT"] = is_msvc_static_runtime(self)
+
         tc.variables["CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS"] = self.options.shared
         tc.generate()
         deps = CMakeDeps(self)
@@ -124,4 +129,3 @@ class Opene57Conan(ConanFile):
         self.cpp_info.defines.append("XERCES_STATIC_LIBRARY")
         self.cpp_info.defines.append("CRCPP_INCLUDE_ESOTERIC_CRC_DEFINITIONS")
         self.cpp_info.defines.append("CRCPP_USE_CPP11")
-

@@ -1,5 +1,10 @@
 # openE57
 
+## [master] - 2024-XX-XX
+
+## Changed
+- Updated Boost Libraries to 1.84.0
+
 ## [1.6.5] - 2024-01-24
 
 ## Changed
