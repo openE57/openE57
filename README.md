@@ -56,7 +56,7 @@ Available CMake Options are:
 * BUILD_DOCS - builds the Doxygen documentation (requires Doxygen and Graphviz)
 * BUILD_EXAMPLES - builds the API examples
 * BUILD_TOOLS - builds the binary tools to validate and dump E57 files
-* BUILD_TESTS - actually unsupported (no tests yet available)
+* BUILD_TESTS - builds tests
 * BUILD_SHARED_LIBS - actually unsupported (missing exported symbols)
 * BUILD_WITH_MT - instructs CMake to set the correct [`CMAKE_MSVC_RUNTIME_LIBRARY`](https://cmake.org/cmake/help/latest/variable/CMAKE_MSVC_RUNTIME_LIBRARY.html?highlight=cmake_msvc_runtime_library) flag for Visual Studio
 

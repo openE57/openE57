@@ -58,7 +58,7 @@ endif("${isSystemDir}" STREQUAL "-1")
 option(BUILD_DOCS "Build documentation" FALSE)
 option(BUILD_EXAMPLES "Build opene57 examples" FALSE)
 option(BUILD_TOOLS "Build opene57 tools" FALSE)
-option(BUILD_TESTING "Build opene57 tests" FALSE)
+option(BUILD_TESTS "Build opene57 tests" FALSE)
 option(BUILD_SHARED_LIBS "Build opene57 shared libraries" FALSE)
 option(BUILD_WITH_MT "Build the project with /MT when using Visual Studio" FALSE)
 

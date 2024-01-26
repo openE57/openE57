@@ -32,7 +32,7 @@ if(BUILD_TOOLS)
 endif()
 
 # Find doctest (Required by Tests)
-if(BUILD_TESTING)
+if(BUILD_TESTS)
   find_package(doctest REQUIRED)
   enable_testing()
 endif()

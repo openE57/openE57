@@ -82,7 +82,7 @@ install(
 #
 # Test Targets
 #
-if(BUILD_TESTING)
+if(BUILD_TESTS)
 
   list(APPEND TEST_CASES
     time_conversion_test

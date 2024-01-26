@@ -24,6 +24,7 @@ class Opene57Conan(ConanFile):
     settings = "os", "compiler", "arch", "build_type"
     options = { "with_tools": [True, False],
                 "with_tests": [True, False],
+                "with_examples": [True, False],
                 "with_docs":  [True, False],
                 "shared": [True, False],
                 "fPIC": [True, False]
@@ -31,6 +32,7 @@ class Opene57Conan(ConanFile):
     default_options = {
                 "with_tools": False,
                 "with_tests": False,
+                "with_examples": False,
                 "with_docs":  False,
                 "shared": False,
                 "fPIC": True
@@ -96,9 +98,9 @@ class Opene57Conan(ConanFile):
     def generate(self):
         tc = CMakeToolchain(self)
         tc.variables["PROJECT_VERSION"] = self.version
-        tc.variables["BUILD_EXAMPLES"] = False
+        tc.variables["BUILD_EXAMPLES"] = self.options.with_examples
         tc.variables["BUILD_TOOLS"] = self.options.with_tools
-        tc.variables["BUILD_TESTS"] = False
+        tc.variables["BUILD_TESTS"] = self.options.with_tests
         tc.variables["BUILD_DOCS"] = self.options.with_docs
 
         if is_msvc(self):
