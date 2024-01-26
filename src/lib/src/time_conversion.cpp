@@ -101,7 +101,7 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   struct timeb timebuffer;
 #endif
 
-#ifdef _CRT_SECURE_NO_DEPRECATE
+#if defined(_CRT_SECURE_NO_DEPRECATE)
   if (_ftime_s(&timebuffer) != 0)
   {
     ERROR_MESSAGE("if( _ftime_s( &timebuffer ) != 0 )");
@@ -109,19 +109,19 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   }
 #else
 
-#  if defined(WIN32) && !defined(__GNUC__)
-  if (_ftime64_s(&timebuffer); != 0)
+#if defined(WIN32) && !defined(__GNUC__)
+  if (_ftime64_s(&timebuffer) != 0)
   {
     ERROR_MESSAGE("ftime returned a non-zero result code");
     return false;
   };
-#  else
+#else
   if (ftime(&timebuffer) != 0)
   {
     ERROR_MESSAGE("ftime returned a non-zero result code");
     return false;
   };
-#  endif
+#endif
 
 #endif
   const double timebuffer_time_in_seconds = timebuffer.time + timebuffer.millitm / 1000.0; // [s] with ms resolution

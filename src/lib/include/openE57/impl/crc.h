@@ -1,11 +1,11 @@
 /**
     @file CRC.h
     @author Daniel Bahr
-    @version 1.1.0.0
+    @version 1.2.0.0
     @copyright
     @parblock
         CRC++
-        Copyright (c) 2021, Daniel Bahr
+        Copyright (c) 2022, Daniel Bahr
         All rights reserved.
 
         Redistribution and use in source and binary forms, with or without
@@ -127,6 +127,12 @@
 #   define crcpp_constexpr const
 #endif
 
+#if defined(WIN32) || defined(_WIN32) || defined(WINCE)
+/* Disable warning C4127: conditional expression is constant. */
+#pragma warning(push)
+#pragma warning(disable : 4127)
+#endif
+
 #ifdef CRCPP_USE_NAMESPACE
 namespace CRCPP
 {
@@ -230,6 +236,7 @@ public:
     static const Parameters< crcpp_uint8,  8> & CRC_8();
 #ifdef CRCPP_INCLUDE_ESOTERIC_CRC_DEFINITIONS
     static const Parameters< crcpp_uint8,  8> & CRC_8_EBU();
+    static const Parameters< crcpp_uint8,  8> & CRC_8_HDLC();
     static const Parameters< crcpp_uint8,  8> & CRC_8_MAXIM();
     static const Parameters< crcpp_uint8,  8> & CRC_8_WCDMA();
     static const Parameters< crcpp_uint8,  8> & CRC_8_LTE();
@@ -1217,6 +1224,24 @@ inline const CRC::Parameters<crcpp_uint8, 8> & CRC::CRC_8_EBU()
 }
 
 /**
+    @brief Returns a set of parameters for CRC-8 HDLC (ISO/IEC 13239:2002).
+    @note The parameters are static and are delayed-constructed to reduce memory footprint.
+    @note CRC-8 HDLC has the following parameters and check value:
+        - polynomial     = 0x07
+        - initial value  = 0xFF
+        - final XOR      = 0xFF
+        - reflect input  = true
+        - reflect output = true
+        - check value    = 0x2F
+    @return CRC-8 HDLC parameters
+*/
+inline const CRC::Parameters<crcpp_uint8, 8> & CRC::CRC_8_HDLC()
+{
+    static const Parameters<crcpp_uint8, 8> parameters = { 0x07, 0xFF, 0xFF, true, true };
+    return parameters;
+}
+
+/**
     @brief Returns a set of parameters for CRC-8 MAXIM (aka CRC-8 DOW-CRC).
     @note The parameters are static and are delayed-constructed to reduce memory footprint.
     @note CRC-8 MAXIM has the following parameters and check value:
@@ -2080,6 +2105,10 @@ inline const CRC::Parameters<crcpp_uint64, 64> & CRC::CRC_64()
 
 #ifdef CRCPP_USE_NAMESPACE
 }
+#endif
+
+#if defined(WIN32) || defined(_WIN32) || defined(WINCE)
+#pragma warning(pop)
 #endif
 
 #endif // CRCPP_CRC_H_

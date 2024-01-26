@@ -69,7 +69,7 @@ Building with Position indipendent code on Unix can be activated with the option
 git clone https://github.com/madduci/openE57.git
 cd open57
 mkdir build && cd build
-conan install .. --build=missing
+conan install --output-folder . --build=missing -o with_tests=True -o with_tools=True -o with_docs=True .. 
 cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . --config Release --target install
 ```
@@ -80,7 +80,7 @@ cmake --build . --config Release --target install
 git clone https://github.com/madduci/openE57.git
 cd open57
 md build && cd build
-conan install .. --build=missing
+conan install --output-folder . --build=missing -o with_tests=True -o with_tools=True -o with_docs=True .. 
 cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_MT=ON
 cmake --build . --config Release --target install
 ```
