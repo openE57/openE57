@@ -35,8 +35,6 @@ constexpr const double JULIAN_DATE_OFFSET_2006 = 2453736.5000; // Jan 01 2006 00
 constexpr const double JULIAN_DATE_OFFSET_2009 = 2454832.5000; // Jan 01 2009 00:00:00.0
 
 // Constants definition
-constexpr const double SECONDS_IN_A_DAY              = 86400.0;
-constexpr const double SECONDS_IN_A_WEEK             = SECONDS_IN_A_DAY * 7;    // 604800.0
 constexpr const double JULIAN_DATE_START_OF_GPS_TIME = JULIAN_DATE_OFFSET_1980; // [days]
 constexpr const double JULIAN_DATE_START_OF_PC_TIME  = 2440587.5;               // [days]
 constexpr const int    DAYS_IN_JAN                   = 31;

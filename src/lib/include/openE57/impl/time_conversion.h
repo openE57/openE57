@@ -16,6 +16,9 @@ namespace e57
 {
 namespace utils
 {
+  // Constants definition
+  constexpr const double SECONDS_IN_A_DAY  = 86400.0;
+  constexpr const double SECONDS_IN_A_WEEK = SECONDS_IN_A_DAY * 7; // 604800.0
   /**
    * @brief Obtains the UTC time, GPS time, and Julian date from PC system time.
    *

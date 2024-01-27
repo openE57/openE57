@@ -72,6 +72,11 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
 endif()
 
+if(BUILD_TESTS)
+  message(STATUS "Enabling tests")
+  enable_testing()
+endif()
+
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 # 

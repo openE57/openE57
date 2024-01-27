@@ -28,13 +28,12 @@
  */
 #include <openE57/LAS/openE57las.h>
 #include <openE57/openE57.h>
-#include <time_conversion/time_conversion.h> // code from Essential GNSS Project
+//#include <time_conversion/time_conversion.h> // code from Essential GNSS Project
 
 #include <fstream> // std::ifstream
 #include <iomanip>
 #include <iostream>
 #include <map>
-#include <math.h>
 #include <sstream>
 
 #if 0
@@ -1119,9 +1118,9 @@ void copyPerScanData(CommandLineOptions& options, LASReader& lasf, ImageFile imf
     unsigned short dayOfYear = static_cast<unsigned short>(hdr.fileCreationDayOfYear);
     unsigned short gpsWeek   = 0;
     double         gpsTOW    = 0.0;
-    if (!TIMECONV_GetGPSTimeFromYearAndDayOfYear(year, dayOfYear, &gpsWeek, &gpsTOW))
+    if (!utils::gps_time_from_year_and_day_of_year(year, dayOfYear, gpsWeek, gpsTOW))
       throw EXCEPTION("bad year,day");
-    double        acquisitionStartGpsTime = gpsWeek * SECONDS_IN_WEEK + gpsTOW;
+    double        acquisitionStartGpsTime = gpsWeek * utils::SECONDS_IN_A_WEEK + gpsTOW;
     StructureNode dateTimeStruct          = StructureNode(imf);
     scan0.set("acquisitionStart", dateTimeStruct);
     dateTimeStruct.set("dateTimeValue", FloatNode(imf, acquisitionStartGpsTime, E57_DOUBLE));
@@ -1448,8 +1447,8 @@ void copyPerPointData(CommandLineOptions& options, LASReader& lasf, ImageFile im
         {
           unsigned short gpsWeek = 0;
           double         gpsTOW  = 0.0;
-          if (TIMECONV_GetGPSTimeFromYearAndDayOfYear(hdr.fileCreationYear, hdr.fileCreationDayOfYear, &gpsWeek, &gpsTOW))
-            lasTimeOffset = gpsWeek * SECONDS_IN_WEEK;
+          if (utils::gps_time_from_year_and_day_of_year(hdr.fileCreationYear, hdr.fileCreationDayOfYear, gpsWeek, gpsTOW))
+            lasTimeOffset = gpsWeek * utils::SECONDS_IN_A_WEEK;
           else
             lasTimeOffset = 0.0;
         }
@@ -1620,9 +1619,9 @@ void copyPerFileData(CommandLineOptions& /*options*/, LASReader& /*lasf*/, Image
   double         julian_date; // Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
   unsigned short gps_week;    // GPS week (0-1024+)            [week]
   double         gps_tow;     // GPS time of week (0-604800.0) [s]
-  if (!TIMECONV_GetSystemTime(&utc_year, &utc_month, &utc_day, &utc_hour, &utc_minute, &utc_seconds, &utc_offset, &julian_date, &gps_week, &gps_tow))
-    throw EXCEPTION("get system time failed");
-  double        gpsTime        = gps_week * SECONDS_IN_WEEK + gps_tow;
+  if (!utils::current_system_time(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds, utc_offset, julian_date, gps_week, gps_tow))
+    throw EXCEPTION("Failed to retrieve current system time");
+  double        gpsTime        = gps_week * utils::SECONDS_IN_A_WEEK + gps_tow;
   StructureNode dateTimeStruct = StructureNode(imf);
   root.set("creationDateTime", dateTimeStruct);
   dateTimeStruct.set("dateTimeValue", FloatNode(imf, gpsTime, E57_DOUBLE));
@@ -1684,8 +1683,8 @@ ustring guidUnparse(uint32_t data1, uint16_t data2, uint16_t data3, uint8_t data
 
 ustring gpsTimeUnparse(double gpsTime)
 {
-  unsigned short gpsWeek = static_cast<unsigned short>(floor(gpsTime / SECONDS_IN_WEEK));
-  double         gpsTOW  = gpsTime - gpsWeek * SECONDS_IN_WEEK;
+  unsigned short gpsWeek = static_cast<unsigned short>(floor(gpsTime / utils::SECONDS_IN_A_WEEK));
+  double         gpsTOW  = gpsTime - gpsWeek * utils::SECONDS_IN_A_WEEK;
 
   unsigned short utc_year;    //!< Universal Time Coordinated    [year]
   unsigned char  utc_month;   //!< Universal Time Coordinated    [1-12 months]
@@ -1694,7 +1693,8 @@ ustring gpsTimeUnparse(double gpsTime)
   unsigned char  utc_minute;  //!< Universal Time Coordinated    [minutes]
   float          utc_seconds; //!< Universal Time Coordinated    [s]
   ostringstream  ss;
-  if (TIMECONV_GetUTCTimeFromGPSTime(gpsWeek, gpsTOW, &utc_year, &utc_month, &utc_day, &utc_hour, &utc_minute, &utc_seconds))
+
+  if (utils::utc_time_from_gps_time(gpsWeek, gpsTOW, utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
   {
     ss << utc_year << "-" << (unsigned)utc_month << "-" << (unsigned)utc_day << " " << (unsigned)utc_hour << ":" << (unsigned)utc_minute << ":" << utc_seconds;
     return (ss.str());
