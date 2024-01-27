@@ -1,9 +1,11 @@
 # openE57
 
-## [master] - 2024-XX-XX
+## [1.7.0] - 2024-01-27
 
 ## Changed
 - Updated Boost Libraries to 1.84.0
+- Updated CRC32-Castagnoli to 1.2.0.0
+- Ported the Time Conversion library from C to C++
 
 ## [1.6.5] - 2024-01-24
 

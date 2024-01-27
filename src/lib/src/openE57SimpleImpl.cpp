@@ -859,7 +859,7 @@ bool ReaderImpl ::ReadData3D(int32_t dataIndex,   //!< This in the index into th
     if (scan.isDefined("cartesianBounds"))
     {
       StructureNode bbox(scan.get("cartesianBounds"));
-      if (bbox.get("xMinimum").type() == E57_SCALED_INTEGER)
+      if (bbox.get("xMinimum").type() == NodeType::E57_SCALED_INTEGER)
       {
         data3DHeader.cartesianBounds.xMinimum = (double)ScaledIntegerNode(bbox.get("xMinimum")).scaledValue();
         data3DHeader.cartesianBounds.xMaximum = (double)ScaledIntegerNode(bbox.get("xMaximum")).scaledValue();
@@ -868,7 +868,7 @@ bool ReaderImpl ::ReadData3D(int32_t dataIndex,   //!< This in the index into th
         data3DHeader.cartesianBounds.zMinimum = (double)ScaledIntegerNode(bbox.get("zMinimum")).scaledValue();
         data3DHeader.cartesianBounds.zMaximum = (double)ScaledIntegerNode(bbox.get("zMaximum")).scaledValue();
       }
-      else if (bbox.get("xMinimum").type() == E57_FLOAT)
+      else if (bbox.get("xMinimum").type() == NodeType::E57_FLOAT)
       {
         data3DHeader.cartesianBounds.xMinimum = FloatNode(bbox.get("xMinimum")).value();
         data3DHeader.cartesianBounds.xMaximum = FloatNode(bbox.get("xMaximum")).value();
@@ -882,34 +882,34 @@ bool ReaderImpl ::ReadData3D(int32_t dataIndex,   //!< This in the index into th
     if (scan.isDefined("sphericalBounds"))
     {
       StructureNode sbox(scan.get("sphericalBounds"));
-      if (sbox.get("rangeMinimum").type() == E57_SCALED_INTEGER)
+      if (sbox.get("rangeMinimum").type() == NodeType::E57_SCALED_INTEGER)
       {
         data3DHeader.sphericalBounds.rangeMinimum = (double)ScaledIntegerNode(sbox.get("rangeMinimum")).scaledValue();
         data3DHeader.sphericalBounds.rangeMaximum = (double)ScaledIntegerNode(sbox.get("rangeMaximum")).scaledValue();
       }
-      else if (sbox.get("rangeMinimum").type() == E57_FLOAT)
+      else if (sbox.get("rangeMinimum").type() == NodeType::E57_FLOAT)
       {
         data3DHeader.sphericalBounds.rangeMinimum = FloatNode(sbox.get("rangeMinimum")).value();
         data3DHeader.sphericalBounds.rangeMaximum = FloatNode(sbox.get("rangeMaximum")).value();
       }
 
-      if (sbox.get("elevationMinimum").type() == E57_SCALED_INTEGER)
+      if (sbox.get("elevationMinimum").type() == NodeType::E57_SCALED_INTEGER)
       {
         data3DHeader.sphericalBounds.elevationMinimum = (double)ScaledIntegerNode(sbox.get("elevationMinimum")).scaledValue();
         data3DHeader.sphericalBounds.elevationMaximum = (double)ScaledIntegerNode(sbox.get("elevationMaximum")).scaledValue();
       }
-      else if (sbox.get("elevationMinimum").type() == E57_FLOAT)
+      else if (sbox.get("elevationMinimum").type() == NodeType::E57_FLOAT)
       {
         data3DHeader.sphericalBounds.elevationMinimum = FloatNode(sbox.get("elevationMinimum")).value();
         data3DHeader.sphericalBounds.elevationMaximum = FloatNode(sbox.get("elevationMaximum")).value();
       }
 
-      if (sbox.get("azimuthStart").type() == E57_SCALED_INTEGER)
+      if (sbox.get("azimuthStart").type() == NodeType::E57_SCALED_INTEGER)
       {
         data3DHeader.sphericalBounds.azimuthStart = (double)ScaledIntegerNode(sbox.get("azimuthStart")).scaledValue();
         data3DHeader.sphericalBounds.azimuthEnd   = (double)ScaledIntegerNode(sbox.get("azimuthEnd")).scaledValue();
       }
-      else if (sbox.get("azimuthStart").type() == E57_FLOAT)
+      else if (sbox.get("azimuthStart").type() == NodeType::E57_FLOAT)
       {
         data3DHeader.sphericalBounds.azimuthStart = FloatNode(sbox.get("azimuthStart")).value();
         data3DHeader.sphericalBounds.azimuthEnd   = FloatNode(sbox.get("azimuthEnd")).value();
@@ -967,7 +967,7 @@ bool ReaderImpl ::ReadData3D(int32_t dataIndex,   //!< This in the index into th
 
     if (proto.isDefined("cartesianX"))
     {
-      if (proto.get("cartesianX").type() == E57_SCALED_INTEGER)
+      if (proto.get("cartesianX").type() == NodeType::E57_SCALED_INTEGER)
       {
         double  scale                                    = ScaledIntegerNode(proto.get("cartesianX")).scale();
         double  offset                                   = ScaledIntegerNode(proto.get("cartesianX")).offset();
@@ -977,7 +977,7 @@ bool ReaderImpl ::ReadData3D(int32_t dataIndex,   //!< This in the index into th
         data3DHeader.pointFields.pointRangeMaximum       = (double)maximum * scale + offset;
         data3DHeader.pointFields.pointRangeScaledInteger = scale;
       }
-      else if (proto.get("cartesianX").type() == E57_FLOAT)
+      else if (proto.get("cartesianX").type() == NodeType::E57_FLOAT)
       {
         data3DHeader.pointFields.pointRangeMinimum       = FloatNode(proto.get("cartesianX")).minimum();
         data3DHeader.pointFields.pointRangeMaximum       = FloatNode(proto.get("cartesianX")).maximum();
@@ -986,7 +986,7 @@ bool ReaderImpl ::ReadData3D(int32_t dataIndex,   //!< This in the index into th
     }
     else if (proto.isDefined("sphericalRange"))
     {
-      if (proto.get("sphericalRange").type() == E57_SCALED_INTEGER)
+      if (proto.get("sphericalRange").type() == NodeType::E57_SCALED_INTEGER)
       {
         double  scale                                    = ScaledIntegerNode(proto.get("sphericalRange")).scale();
         double  offset                                   = ScaledIntegerNode(proto.get("sphericalRange")).offset();
@@ -996,7 +996,7 @@ bool ReaderImpl ::ReadData3D(int32_t dataIndex,   //!< This in the index into th
         data3DHeader.pointFields.pointRangeMaximum       = (double)maximum * scale + offset;
         data3DHeader.pointFields.pointRangeScaledInteger = scale;
       }
-      else if (proto.get("sphericalRange").type() == E57_FLOAT)
+      else if (proto.get("sphericalRange").type() == NodeType::E57_FLOAT)
       {
         data3DHeader.pointFields.pointRangeMinimum       = FloatNode(proto.get("sphericalRange")).minimum();
         data3DHeader.pointFields.pointRangeMaximum       = FloatNode(proto.get("sphericalRange")).maximum();
@@ -1015,7 +1015,7 @@ bool ReaderImpl ::ReadData3D(int32_t dataIndex,   //!< This in the index into th
 
     if (proto.isDefined("sphericalAzimuth"))
     {
-      if (proto.get("sphericalAzimuth").type() == E57_SCALED_INTEGER)
+      if (proto.get("sphericalAzimuth").type() == NodeType::E57_SCALED_INTEGER)
       {
         double  scale                               = ScaledIntegerNode(proto.get("sphericalAzimuth")).scale();
         double  offset                              = ScaledIntegerNode(proto.get("sphericalAzimuth")).offset();
@@ -1025,7 +1025,7 @@ bool ReaderImpl ::ReadData3D(int32_t dataIndex,   //!< This in the index into th
         data3DHeader.pointFields.angleMaximum       = (double)maximum * scale + offset;
         data3DHeader.pointFields.angleScaledInteger = scale;
       }
-      else if (proto.get("sphericalAzimuth").type() == E57_FLOAT)
+      else if (proto.get("sphericalAzimuth").type() == NodeType::E57_FLOAT)
       {
         data3DHeader.pointFields.angleMinimum       = FloatNode(proto.get("sphericalAzimuth")).minimum();
         data3DHeader.pointFields.angleMaximum       = FloatNode(proto.get("sphericalAzimuth")).maximum();
@@ -1059,13 +1059,13 @@ bool ReaderImpl ::ReadData3D(int32_t dataIndex,   //!< This in the index into th
 
     if (proto.isDefined("timeStamp"))
     {
-      if (proto.get("timeStamp").type() == E57_INTEGER)
+      if (proto.get("timeStamp").type() == NodeType::E57_INTEGER)
       {
         data3DHeader.pointFields.timeMaximum       = (double)IntegerNode(proto.get("timeStamp")).maximum();
         data3DHeader.pointFields.timeMinimum       = (double)IntegerNode(proto.get("timeStamp")).minimum();
         data3DHeader.pointFields.timeScaledInteger = E57_NOT_SCALED_USE_FLOAT;
       }
-      else if (proto.get("timeStamp").type() == E57_SCALED_INTEGER)
+      else if (proto.get("timeStamp").type() == NodeType::E57_SCALED_INTEGER)
       {
         double  scale                              = ScaledIntegerNode(proto.get("timeStamp")).scale();
         double  offset                             = ScaledIntegerNode(proto.get("timeStamp")).offset();
@@ -1075,7 +1075,7 @@ bool ReaderImpl ::ReadData3D(int32_t dataIndex,   //!< This in the index into th
         data3DHeader.pointFields.timeMaximum       = (double)maximum * scale + offset;
         data3DHeader.pointFields.timeScaledInteger = scale;
       }
-      else if (proto.get("timeStamp").type() == E57_FLOAT)
+      else if (proto.get("timeStamp").type() == NodeType::E57_FLOAT)
       {
         data3DHeader.pointFields.timeMinimum       = FloatNode(proto.get("timeStamp")).minimum();
         data3DHeader.pointFields.timeMaximum       = FloatNode(proto.get("timeStamp")).maximum();
@@ -1092,17 +1092,17 @@ bool ReaderImpl ::ReadData3D(int32_t dataIndex,   //!< This in the index into th
     if (scan.isDefined("intensityLimits"))
     {
       StructureNode intbox(scan.get("intensityLimits"));
-      if (intbox.get("intensityMaximum").type() == E57_SCALED_INTEGER)
+      if (intbox.get("intensityMaximum").type() == NodeType::E57_SCALED_INTEGER)
       {
         data3DHeader.intensityLimits.intensityMaximum = (double)ScaledIntegerNode(intbox.get("intensityMaximum")).scaledValue();
         data3DHeader.intensityLimits.intensityMinimum = (double)ScaledIntegerNode(intbox.get("intensityMinimum")).scaledValue();
       }
-      else if (intbox.get("intensityMaximum").type() == E57_FLOAT)
+      else if (intbox.get("intensityMaximum").type() == NodeType::E57_FLOAT)
       {
         data3DHeader.intensityLimits.intensityMaximum = FloatNode(intbox.get("intensityMaximum")).value();
         data3DHeader.intensityLimits.intensityMinimum = FloatNode(intbox.get("intensityMinimum")).value();
       }
-      else if (intbox.get("intensityMaximum").type() == E57_INTEGER)
+      else if (intbox.get("intensityMaximum").type() == NodeType::E57_INTEGER)
       {
         data3DHeader.intensityLimits.intensityMaximum = (double)IntegerNode(intbox.get("intensityMaximum")).value();
         data3DHeader.intensityLimits.intensityMinimum = (double)IntegerNode(intbox.get("intensityMinimum")).value();
@@ -1110,7 +1110,7 @@ bool ReaderImpl ::ReadData3D(int32_t dataIndex,   //!< This in the index into th
     }
     if (proto.isDefined("intensity"))
     {
-      if (proto.get("intensity").type() == E57_INTEGER)
+      if (proto.get("intensity").type() == NodeType::E57_INTEGER)
       {
         if (data3DHeader.intensityLimits.intensityMaximum == 0.)
         {
@@ -1119,7 +1119,7 @@ bool ReaderImpl ::ReadData3D(int32_t dataIndex,   //!< This in the index into th
         }
         data3DHeader.pointFields.intensityScaledInteger = E57_NOT_SCALED_USE_INTEGER;
       }
-      else if (proto.get("intensity").type() == E57_SCALED_INTEGER)
+      else if (proto.get("intensity").type() == NodeType::E57_SCALED_INTEGER)
       {
         double scale  = ScaledIntegerNode(proto.get("intensity")).scale();
         double offset = ScaledIntegerNode(proto.get("intensity")).offset();
@@ -1133,7 +1133,7 @@ bool ReaderImpl ::ReadData3D(int32_t dataIndex,   //!< This in the index into th
         }
         data3DHeader.pointFields.intensityScaledInteger = scale;
       }
-      else if (proto.get("intensity").type() == E57_FLOAT)
+      else if (proto.get("intensity").type() == NodeType::E57_FLOAT)
       {
         if (data3DHeader.intensityLimits.intensityMaximum == 0.)
         {
@@ -1159,7 +1159,7 @@ bool ReaderImpl ::ReadData3D(int32_t dataIndex,   //!< This in the index into th
     if (scan.isDefined("colorLimits"))
     {
       StructureNode colorbox(scan.get("colorLimits"));
-      if (colorbox.get("colorRedMaximum").type() == E57_SCALED_INTEGER)
+      if (colorbox.get("colorRedMaximum").type() == NodeType::E57_SCALED_INTEGER)
       {
         data3DHeader.colorLimits.colorRedMaximum   = (double)ScaledIntegerNode(colorbox.get("colorRedMaximum")).scaledValue();
         data3DHeader.colorLimits.colorRedMinimum   = (double)ScaledIntegerNode(colorbox.get("colorRedMinimum")).scaledValue();
@@ -1168,7 +1168,7 @@ bool ReaderImpl ::ReadData3D(int32_t dataIndex,   //!< This in the index into th
         data3DHeader.colorLimits.colorBlueMaximum  = (double)ScaledIntegerNode(colorbox.get("colorBlueMaximum")).scaledValue();
         data3DHeader.colorLimits.colorBlueMinimum  = (double)ScaledIntegerNode(colorbox.get("colorBlueMinimum")).scaledValue();
       }
-      else if (colorbox.get("colorRedMaximum").type() == E57_FLOAT)
+      else if (colorbox.get("colorRedMaximum").type() == NodeType::E57_FLOAT)
       {
         data3DHeader.colorLimits.colorRedMaximum   = FloatNode(colorbox.get("colorRedMaximum")).value();
         data3DHeader.colorLimits.colorRedMinimum   = FloatNode(colorbox.get("colorRedMinimum")).value();
@@ -1177,7 +1177,7 @@ bool ReaderImpl ::ReadData3D(int32_t dataIndex,   //!< This in the index into th
         data3DHeader.colorLimits.colorBlueMaximum  = FloatNode(colorbox.get("colorBlueMaximum")).value();
         data3DHeader.colorLimits.colorBlueMinimum  = FloatNode(colorbox.get("colorBlueMinimum")).value();
       }
-      else if (colorbox.get("colorRedMaximum").type() == E57_INTEGER)
+      else if (colorbox.get("colorRedMaximum").type() == NodeType::E57_INTEGER)
       {
         data3DHeader.colorLimits.colorRedMaximum   = (double)IntegerNode(colorbox.get("colorRedMaximum")).value();
         data3DHeader.colorLimits.colorRedMinimum   = (double)IntegerNode(colorbox.get("colorRedMinimum")).value();
@@ -1190,17 +1190,17 @@ bool ReaderImpl ::ReadData3D(int32_t dataIndex,   //!< This in the index into th
 
     if ((data3DHeader.colorLimits.colorRedMaximum == 0.) && proto.isDefined("colorRed"))
     {
-      if (proto.get("colorRed").type() == E57_INTEGER)
+      if (proto.get("colorRed").type() == NodeType::E57_INTEGER)
       {
         data3DHeader.colorLimits.colorRedMinimum = (uint16_t)IntegerNode(proto.get("colorRed")).minimum();
         data3DHeader.colorLimits.colorRedMaximum = (uint16_t)IntegerNode(proto.get("colorRed")).maximum();
       }
-      else if (proto.get("colorRed").type() == E57_FLOAT)
+      else if (proto.get("colorRed").type() == NodeType::E57_FLOAT)
       {
         data3DHeader.colorLimits.colorRedMinimum = (uint16_t)FloatNode(proto.get("colorRed")).minimum();
         data3DHeader.colorLimits.colorRedMaximum = (uint16_t)FloatNode(proto.get("colorRed")).maximum();
       }
-      else if (proto.get("colorRed").type() == E57_SCALED_INTEGER)
+      else if (proto.get("colorRed").type() == NodeType::E57_SCALED_INTEGER)
       {
         double  scale                            = ScaledIntegerNode(proto.get("colorRed")).scale();
         double  offset                           = ScaledIntegerNode(proto.get("colorRed")).offset();
@@ -1212,17 +1212,17 @@ bool ReaderImpl ::ReadData3D(int32_t dataIndex,   //!< This in the index into th
     }
     if ((data3DHeader.colorLimits.colorGreenMaximum == 0.) && proto.isDefined("colorGreen"))
     {
-      if (proto.get("colorGreen").type() == E57_INTEGER)
+      if (proto.get("colorGreen").type() == NodeType::E57_INTEGER)
       {
         data3DHeader.colorLimits.colorGreenMinimum = (uint16_t)IntegerNode(proto.get("colorGreen")).minimum();
         data3DHeader.colorLimits.colorGreenMaximum = (uint16_t)IntegerNode(proto.get("colorGreen")).maximum();
       }
-      else if (proto.get("colorGreen").type() == E57_FLOAT)
+      else if (proto.get("colorGreen").type() == NodeType::E57_FLOAT)
       {
         data3DHeader.colorLimits.colorGreenMinimum = (uint16_t)FloatNode(proto.get("colorGreen")).minimum();
         data3DHeader.colorLimits.colorGreenMaximum = (uint16_t)FloatNode(proto.get("colorGreen")).maximum();
       }
-      else if (proto.get("colorGreen").type() == E57_SCALED_INTEGER)
+      else if (proto.get("colorGreen").type() == NodeType::E57_SCALED_INTEGER)
       {
         double  scale                              = ScaledIntegerNode(proto.get("colorGreen")).scale();
         double  offset                             = ScaledIntegerNode(proto.get("colorGreen")).offset();
@@ -1234,17 +1234,17 @@ bool ReaderImpl ::ReadData3D(int32_t dataIndex,   //!< This in the index into th
     }
     if ((data3DHeader.colorLimits.colorBlueMaximum == 0.) && proto.isDefined("colorBlue"))
     {
-      if (proto.get("colorBlue").type() == E57_INTEGER)
+      if (proto.get("colorBlue").type() == NodeType::E57_INTEGER)
       {
         data3DHeader.colorLimits.colorBlueMinimum = (uint16_t)IntegerNode(proto.get("colorBlue")).minimum();
         data3DHeader.colorLimits.colorBlueMaximum = (uint16_t)IntegerNode(proto.get("colorBlue")).maximum();
       }
-      else if (proto.get("colorBlue").type() == E57_FLOAT)
+      else if (proto.get("colorBlue").type() == NodeType::E57_FLOAT)
       {
         data3DHeader.colorLimits.colorBlueMinimum = (uint16_t)FloatNode(proto.get("colorBlue")).minimum();
         data3DHeader.colorLimits.colorBlueMaximum = (uint16_t)FloatNode(proto.get("colorBlue")).maximum();
       }
-      else if (proto.get("colorBlue").type() == E57_SCALED_INTEGER)
+      else if (proto.get("colorBlue").type() == NodeType::E57_SCALED_INTEGER)
       {
         double  scale                            = ScaledIntegerNode(proto.get("colorBlue")).scale();
         double  offset                           = ScaledIntegerNode(proto.get("colorBlue")).offset();
@@ -1449,7 +1449,7 @@ CompressedVectorReader ReaderImpl ::SetUpData3DPointsData(
   {
     ustring  name   = proto.get(protoIndex).elementName();
     NodeType type   = proto.get(protoIndex).type();
-    bool     scaled = type == E57_SCALED_INTEGER ? true : false;
+    bool     scaled = type == NodeType::E57_SCALED_INTEGER ? true : false;
 
     if ((name.compare("cartesianX") == 0) && proto.isDefined("cartesianX") && (cartesianX != NULL))
       destBuffers.push_back(SourceDestBuffer(imf_, "cartesianX", cartesianX, (unsigned)count, true, scaled));
@@ -2147,16 +2147,18 @@ int32_t WriterImpl ::NewData3D(Data3D& data3DHeader,                            
     if (data3DHeader.pointFields.pointRangeScaledInteger > 0.)
       proto.set("cartesianX", ScaledIntegerNode(imf_, 0, pointRangeMinimum, pointRangeMaximum, pointRangeScale, pointRangeOffset));
     else
-      proto.set("cartesianX", FloatNode(imf_, 0., (data3DHeader.pointFields.pointRangeScaledInteger < 0.) ? E57_DOUBLE : E57_SINGLE,
-                                        data3DHeader.pointFields.pointRangeMinimum, data3DHeader.pointFields.pointRangeMaximum));
+      proto.set("cartesianX",
+                FloatNode(imf_, 0., (data3DHeader.pointFields.pointRangeScaledInteger < 0.) ? FloatPrecision::E57_DOUBLE : FloatPrecision::E57_SINGLE,
+                          data3DHeader.pointFields.pointRangeMinimum, data3DHeader.pointFields.pointRangeMaximum));
   }
   if (data3DHeader.pointFields.cartesianYField)
   {
     if (data3DHeader.pointFields.pointRangeScaledInteger > 0.)
       proto.set("cartesianY", ScaledIntegerNode(imf_, 0, pointRangeMinimum, pointRangeMaximum, pointRangeScale, pointRangeOffset));
     else
-      proto.set("cartesianY", FloatNode(imf_, 0., (data3DHeader.pointFields.pointRangeScaledInteger < 0.) ? E57_DOUBLE : E57_SINGLE,
-                                        data3DHeader.pointFields.pointRangeMinimum, data3DHeader.pointFields.pointRangeMaximum));
+      proto.set("cartesianY",
+                FloatNode(imf_, 0., (data3DHeader.pointFields.pointRangeScaledInteger < 0.) ? FloatPrecision::E57_DOUBLE : FloatPrecision::E57_SINGLE,
+                          data3DHeader.pointFields.pointRangeMinimum, data3DHeader.pointFields.pointRangeMaximum));
   }
 #ifdef TEST_EXTENSIONS
   proto.set("ext:extraField1", IntegerNode(imf_, 0, 0, 255));
@@ -2166,8 +2168,9 @@ int32_t WriterImpl ::NewData3D(Data3D& data3DHeader,                            
     if (data3DHeader.pointFields.pointRangeScaledInteger > 0.)
       proto.set("cartesianZ", ScaledIntegerNode(imf_, 0, pointRangeMinimum, pointRangeMaximum, pointRangeScale, pointRangeOffset));
     else
-      proto.set("cartesianZ", FloatNode(imf_, 0., (data3DHeader.pointFields.pointRangeScaledInteger < 0.) ? E57_DOUBLE : E57_SINGLE,
-                                        data3DHeader.pointFields.pointRangeMinimum, data3DHeader.pointFields.pointRangeMaximum));
+      proto.set("cartesianZ",
+                FloatNode(imf_, 0., (data3DHeader.pointFields.pointRangeScaledInteger < 0.) ? FloatPrecision::E57_DOUBLE : FloatPrecision::E57_SINGLE,
+                          data3DHeader.pointFields.pointRangeMinimum, data3DHeader.pointFields.pointRangeMaximum));
   }
 
   if (data3DHeader.pointFields.sphericalRangeField)
@@ -2175,8 +2178,9 @@ int32_t WriterImpl ::NewData3D(Data3D& data3DHeader,                            
     if (data3DHeader.pointFields.pointRangeScaledInteger > 0.)
       proto.set("sphericalRange", ScaledIntegerNode(imf_, 0, pointRangeMinimum, pointRangeMaximum, pointRangeScale, pointRangeOffset));
     else
-      proto.set("sphericalRange", FloatNode(imf_, 0., (data3DHeader.pointFields.pointRangeScaledInteger < 0.) ? E57_DOUBLE : E57_SINGLE,
-                                            data3DHeader.pointFields.pointRangeMinimum, data3DHeader.pointFields.pointRangeMaximum));
+      proto.set("sphericalRange",
+                FloatNode(imf_, 0., (data3DHeader.pointFields.pointRangeScaledInteger < 0.) ? FloatPrecision::E57_DOUBLE : FloatPrecision::E57_SINGLE,
+                          data3DHeader.pointFields.pointRangeMinimum, data3DHeader.pointFields.pointRangeMaximum));
   }
 
   double  angleScale   = data3DHeader.pointFields.angleScaledInteger;
@@ -2189,8 +2193,9 @@ int32_t WriterImpl ::NewData3D(Data3D& data3DHeader,                            
     if (data3DHeader.pointFields.angleScaledInteger > 0.)
       proto.set("sphericalAzimuth", ScaledIntegerNode(imf_, 0, angleMinimum, angleMaximum, angleScale, angleOffset));
     else
-      proto.set("sphericalAzimuth", FloatNode(imf_, 0., (data3DHeader.pointFields.angleScaledInteger < 0.) ? E57_DOUBLE : E57_SINGLE,
-                                              data3DHeader.pointFields.angleMinimum, data3DHeader.pointFields.angleMaximum));
+      proto.set("sphericalAzimuth",
+                FloatNode(imf_, 0., (data3DHeader.pointFields.angleScaledInteger < 0.) ? FloatPrecision::E57_DOUBLE : FloatPrecision::E57_SINGLE,
+                          data3DHeader.pointFields.angleMinimum, data3DHeader.pointFields.angleMaximum));
   }
 
   if (data3DHeader.pointFields.sphericalElevationField)
@@ -2198,8 +2203,9 @@ int32_t WriterImpl ::NewData3D(Data3D& data3DHeader,                            
     if (data3DHeader.pointFields.angleScaledInteger > 0.)
       proto.set("sphericalElevation", ScaledIntegerNode(imf_, 0, angleMinimum, angleMaximum, angleScale, angleOffset));
     else
-      proto.set("sphericalElevation", FloatNode(imf_, 0., (data3DHeader.pointFields.angleScaledInteger < 0.) ? E57_DOUBLE : E57_SINGLE,
-                                                data3DHeader.pointFields.angleMinimum, data3DHeader.pointFields.angleMaximum));
+      proto.set("sphericalElevation",
+                FloatNode(imf_, 0., (data3DHeader.pointFields.angleScaledInteger < 0.) ? FloatPrecision::E57_DOUBLE : FloatPrecision::E57_SINGLE,
+                          data3DHeader.pointFields.angleMinimum, data3DHeader.pointFields.angleMaximum));
   }
 
 #ifdef TEST_EXTENSIONS
@@ -2217,7 +2223,8 @@ int32_t WriterImpl ::NewData3D(Data3D& data3DHeader,                            
       proto.set("intensity", ScaledIntegerNode(imf_, 0, rawIntegerMinimum, rawIntegerMaximum, scale, offset));
     }
     else if (data3DHeader.pointFields.intensityScaledInteger == E57_NOT_SCALED_USE_FLOAT)
-      proto.set("intensity", FloatNode(imf_, 0., E57_SINGLE, data3DHeader.intensityLimits.intensityMinimum, data3DHeader.intensityLimits.intensityMaximum));
+      proto.set("intensity",
+                FloatNode(imf_, 0., FloatPrecision::E57_SINGLE, data3DHeader.intensityLimits.intensityMinimum, data3DHeader.intensityLimits.intensityMaximum));
     else
       proto.set("intensity",
                 IntegerNode(imf_, 0, (int64_t)data3DHeader.intensityLimits.intensityMinimum, (int64_t)data3DHeader.intensityLimits.intensityMaximum));
@@ -2253,9 +2260,9 @@ int32_t WriterImpl ::NewData3D(Data3D& data3DHeader,                            
     else if (data3DHeader.pointFields.timeScaledInteger == E57_NOT_SCALED_USE_FLOAT)
     {
       if (data3DHeader.pointFields.timeMaximum == E57_FLOAT_MAX)
-        proto.set("timeStamp", FloatNode(imf_, 0., E57_SINGLE, E57_FLOAT_MIN, E57_FLOAT_MAX));
+        proto.set("timeStamp", FloatNode(imf_, 0., FloatPrecision::E57_SINGLE, E57_FLOAT_MIN, E57_FLOAT_MAX));
       else if (data3DHeader.pointFields.timeMaximum == E57_DOUBLE_MAX)
-        proto.set("timeStamp", FloatNode(imf_, 0., E57_DOUBLE, E57_DOUBLE_MIN, E57_DOUBLE_MAX));
+        proto.set("timeStamp", FloatNode(imf_, 0., FloatPrecision::E57_DOUBLE, E57_DOUBLE_MIN, E57_DOUBLE_MAX));
     }
     else
       proto.set("timeStamp", IntegerNode(imf_, 0, (int64_t)data3DHeader.pointFields.timeMinimum, (int64_t)data3DHeader.pointFields.timeMaximum));

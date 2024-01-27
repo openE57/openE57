@@ -26,8 +26,8 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-#ifndef E57FOUNDATION_H_INCLUDED
-#define E57FOUNDATION_H_INCLUDED
+#ifndef OPENE57_H_INCLUDED
+#define OPENE57_H_INCLUDED
 
 //! @file  openE57.h header file for the E57 Foundation API
 
@@ -60,83 +60,89 @@ using std::uint32_t;
 using std::uint64_t;
 using std::uint8_t;
 
+template <class E, class T = typename std::underlying_type<E>::type>
+T printable(E val)
+{
+  return T(val);
+}
+
 // Shorthand for unicode string
 //! @brief UTF-8 encodeded Unicode string
 typedef std::string ustring;
 
-//! @brief Identifiers for types of E57 elements
+/** @enum e57::NodeType
+ *  @brief Identifiers for types of E57 elements
+ */
 enum NodeType
 {
-  E57_STRUCTURE         = 1, //!< StructureNode class
-  E57_VECTOR            = 2, //!< VectorNode class
-  E57_COMPRESSED_VECTOR = 3, //!< CompressedVectorNode class
-  E57_INTEGER           = 4, //!< IntegerNode class
-  E57_SCALED_INTEGER    = 5, //!< ScaledIntegerNode class
-  E57_FLOAT             = 6, //!< FloatNode class
-  E57_STRING            = 7, //!< StringNode class
-  E57_BLOB              = 8  //!< BlobNode class
+  E57_STRUCTURE         = 1, /**< StructureNode class, coded as std::int8_t of value 1 */
+  E57_VECTOR            = 2, /**< VectorNode class, coded as std::int8_t of value 2 */
+  E57_COMPRESSED_VECTOR = 3, /**< CompressedVectorNode class, coded as std::int8_t of value 3 */
+  E57_INTEGER           = 4, /**< IntegerNode class, coded as std::int8_t of value 4 */
+  E57_SCALED_INTEGER    = 5, /**< ScaledIntegerNode class, coded as std::int8_t of value 5 */
+  E57_FLOAT             = 6, /**< FloatNode class, coded as std::int8_t of value 6 */
+  E57_STRING            = 7, /**< StringNode class, coded as std::int8_t of value 7 */
+  E57_BLOB              = 8  /**< BlobNode class, coded as std::int8_t of value 8 */
 };
 
-//! @brief The IEEE floating point number precisions supported
+/** @enum e57::FloatPrecision
+ *  @brief The IEEE floating point number precisions supported
+ */
 enum FloatPrecision
 {
-  E57_SINGLE = 1, //!< 32 bit IEEE floating point number format
-  E57_DOUBLE = 2  //!< 64 bit IEEE floating point number format
+  E57_SINGLE = 1, /**< 32 bit IEEE floating point number format, coded as std::int8_t of value 1 */
+  E57_DOUBLE = 2  /**< 64 bit IEEE floating point number format, coded as std::int8_t of value 1 */
 };
 
-//! @brief Identifies the representations of memory elements API can transfer data to/from
+/** @enum e57::MemoryRepresentation
+ *  @brief Identifies the representations of memory elements API can transfer data to/from
+ */
 enum MemoryRepresentation
 {
-  E57_INT8    = 1,  //!< 8 bit signed integer
-  E57_UINT8   = 2,  //!< 8 bit unsigned integer
-  E57_INT16   = 3,  //!< 16 bit signed integer
-  E57_UINT16  = 4,  //!< 16 bit unsigned integer
-  E57_INT32   = 5,  //!< 32 bit signed integer
-  E57_UINT32  = 6,  //!< 32 bit unsigned integer
-  E57_INT64   = 7,  //!< 64 bit signed integer
-  E57_BOOL    = 8,  //!< C++ boolean type
-  E57_REAL32  = 9,  //!< C++ float type
-  E57_REAL64  = 10, //!< C++ double type
-  E57_USTRING = 11  //!< Unicode UTF-8 std::string
+  E57_INT8    = 1,  /**< 8 bit signed integer, coded as std::int8_t of value 1 */
+  E57_UINT8   = 2,  /**< 8 bit unsigned integer, coded as std::int8_t of value 2 */
+  E57_INT16   = 3,  /**< 16 bit signed integer, coded as std::int8_t of value 3 */
+  E57_UINT16  = 4,  /**< 16 bit unsigned integer, coded as std::int8_t of value 4 */
+  E57_INT32   = 5,  /**< 32 bit signed integer, coded as std::int8_t of value 5 */
+  E57_UINT32  = 6,  /**< 32 bit unsigned integer, coded as std::int8_t of value 6 */
+  E57_INT64   = 7,  /**< 64 bit signed integer, coded as std::int8_t of value 7 */
+  E57_BOOL    = 8,  /**< C++ boolean type, coded as std::int8_t of value 8 */
+  E57_REAL32  = 9,  /**< C++ float type, coded as std::int8_t of value 9 */
+  E57_REAL64  = 10, /**< C++ double type, coded as std::int8_t of value 10 */
+  E57_USTRING = 11  /**< Unicode UTF-8 std::string, coded as std::int8_t of value 11 */
 };
-
-//! @brief The major version number of the Foundation API
-const int E57_FOUNDATION_API_MAJOR = 0;
-
-//! @brief The minor version number of the Foundation API
-const int E57_FOUNDATION_API_MINOR = 51;
 
 //! @brief The URI of ASTM E57 v1.0 standard XML namespace
 // Used to identify the standard field names and the grammar that relates them.
 // Will typically be associated with the default namespace in an E57 file.
-#define E57_V1_0_URI "http://www.astm.org/COMMIT/E57/2010-e57-v1.0"
+constexpr const char* E57_V1_0_URI = "http://www.astm.org/COMMIT/E57/2010-e57-v1.0";
 
 //! @cond documentNonPublic   The following aren't documented
 // Minimum and maximum values for integers
 // see https://en.cppreference.com/w/cpp/types/numeric_limits
 
-const int8_t  E57_INT8_MIN  = std::numeric_limits<int8_t>::lowest();
-const int8_t  E57_INT8_MAX  = std::numeric_limits<int8_t>::max();
-const int16_t E57_INT16_MIN = std::numeric_limits<int16_t>::lowest();
-const int16_t E57_INT16_MAX = std::numeric_limits<int16_t>::max();
-const int32_t E57_INT32_MIN = std::numeric_limits<int32_t>::lowest();
-const int32_t E57_INT32_MAX = std::numeric_limits<int32_t>::max();
-const int64_t E57_INT64_MIN = std::numeric_limits<int64_t>::lowest();
-const int64_t E57_INT64_MAX = std::numeric_limits<int64_t>::max();
+constexpr const int8_t  E57_INT8_MIN  = std::numeric_limits<int8_t>::lowest();
+constexpr const int8_t  E57_INT8_MAX  = std::numeric_limits<int8_t>::max();
+constexpr const int16_t E57_INT16_MIN = std::numeric_limits<int16_t>::lowest();
+constexpr const int16_t E57_INT16_MAX = std::numeric_limits<int16_t>::max();
+constexpr const int32_t E57_INT32_MIN = std::numeric_limits<int32_t>::lowest();
+constexpr const int32_t E57_INT32_MAX = std::numeric_limits<int32_t>::max();
+constexpr const int64_t E57_INT64_MIN = std::numeric_limits<int64_t>::lowest();
+constexpr const int64_t E57_INT64_MAX = std::numeric_limits<int64_t>::max();
 
-const uint8_t  E57_UINT8_MIN  = std::numeric_limits<uint8_t>::lowest();
-const uint8_t  E57_UINT8_MAX  = std::numeric_limits<uint8_t>::max();
-const uint16_t E57_UINT16_MIN = std::numeric_limits<uint16_t>::lowest();
-const uint16_t E57_UINT16_MAX = std::numeric_limits<uint16_t>::max();
-const uint32_t E57_UINT32_MIN = std::numeric_limits<uint32_t>::lowest();
-const uint32_t E57_UINT32_MAX = std::numeric_limits<uint32_t>::max();
-const uint64_t E57_UINT64_MIN = std::numeric_limits<uint64_t>::lowest();
-const uint64_t E57_UINT64_MAX = std::numeric_limits<uint64_t>::max();
+constexpr const uint8_t  E57_UINT8_MIN  = std::numeric_limits<uint8_t>::lowest();
+constexpr const uint8_t  E57_UINT8_MAX  = std::numeric_limits<uint8_t>::max();
+constexpr const uint16_t E57_UINT16_MIN = std::numeric_limits<uint16_t>::lowest();
+constexpr const uint16_t E57_UINT16_MAX = std::numeric_limits<uint16_t>::max();
+constexpr const uint32_t E57_UINT32_MIN = std::numeric_limits<uint32_t>::lowest();
+constexpr const uint32_t E57_UINT32_MAX = std::numeric_limits<uint32_t>::max();
+constexpr const uint64_t E57_UINT64_MIN = std::numeric_limits<uint64_t>::lowest();
+constexpr const uint64_t E57_UINT64_MAX = std::numeric_limits<uint64_t>::max();
 
-const float  E57_FLOAT_MIN  = std::numeric_limits<float>::lowest();
-const float  E57_FLOAT_MAX  = std::numeric_limits<float>::max();
-const double E57_DOUBLE_MIN = std::numeric_limits<double>::lowest();
-const double E57_DOUBLE_MAX = std::numeric_limits<double>::max();
+constexpr const float  E57_FLOAT_MIN  = std::numeric_limits<float>::lowest();
+constexpr const float  E57_FLOAT_MAX  = std::numeric_limits<float>::max();
+constexpr const double E57_DOUBLE_MIN = std::numeric_limits<double>::lowest();
+constexpr const double E57_DOUBLE_MAX = std::numeric_limits<double>::max();
 //! @endcond
 
 // Forward references to classes in this header
@@ -518,7 +524,7 @@ protected:                                                      //==============
 class FloatNode
 {
 public:
-  explicit FloatNode(ImageFile destImageFile, double value = 0.0, FloatPrecision precision = E57_DOUBLE, double minimum = E57_DOUBLE_MIN,
+  explicit FloatNode(ImageFile destImageFile, double value = 0.0, FloatPrecision precision = FloatPrecision::E57_DOUBLE, double minimum = E57_DOUBLE_MIN,
                      double maximum = E57_DOUBLE_MAX);
 
   double         value() const;
@@ -771,17 +777,24 @@ protected:        //=================
   //! \endcond
 };
 
+struct VersionInfo
+{
+  int     major;
+  int     minor;
+  ustring id;
+};
+
 class E57Utilities
 {
 public:
-  // Constructor (does nothing for now)
-  E57Utilities(const ustring& /*configuration*/ = ""){};
-
   // Get latest version of ASTM standard supported, and library id string
-  void getVersions(int& astmMajor, int& astmMinor, ustring& libraryId);
+  void getVersions(int& astmMajor, int& astmMinor, ustring& libraryId) noexcept;
+
+  // Get information about supported standard and library id
+  VersionInfo getVersion() noexcept;
 
   // Error code translation
-  ustring errorCodeToString(ErrorCode ecode);
+  ustring errorCodeToString(ErrorCode ecode) noexcept;
 
   // Direct read of XML representation in E57 file
   int64_t rawXmlLength(const ustring& fname);
@@ -792,4 +805,4 @@ public:
 } // end namespace e57
 #endif
 
-#endif // E57FOUNDATION_H_INCLUDED
+#endif // OPENE57_H_INCLUDED

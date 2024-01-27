@@ -42,7 +42,7 @@ Available conan options are the following ones:
 Platform independent:
 
 ```shell
-git clone https://github.com/madduci/openE57.git
+git clone https://github.com/openE57/openE57.git
 cd open57
 conan create . --build=missing
 ```
@@ -56,7 +56,7 @@ Available CMake Options are:
 * BUILD_DOCS - builds the Doxygen documentation (requires Doxygen and Graphviz)
 * BUILD_EXAMPLES - builds the API examples
 * BUILD_TOOLS - builds the binary tools to validate and dump E57 files
-* BUILD_TESTS - actually unsupported (no tests yet available)
+* BUILD_TESTS - builds tests
 * BUILD_SHARED_LIBS - actually unsupported (missing exported symbols)
 * BUILD_WITH_MT - instructs CMake to set the correct [`CMAKE_MSVC_RUNTIME_LIBRARY`](https://cmake.org/cmake/help/latest/variable/CMAKE_MSVC_RUNTIME_LIBRARY.html?highlight=cmake_msvc_runtime_library) flag for Visual Studio
 
@@ -66,22 +66,22 @@ Building with Position indipendent code on Unix can be activated with the option
 #### On Linux:
 
 ```shell
-git clone https://github.com/madduci/openE57.git
+git clone https://github.com/openE57/openE57.git
 cd open57
 mkdir build && cd build
-conan install .. --build=missing
-cmake .. -DCMAKE_BUILD_TYPE=Release
+conan install --output-folder . --build=missing -s compiler.cppstd=17 -o with_tests=True -o with_tools=True .. 
+cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DBUILD_TOOLS=ON
 cmake --build . --config Release --target install
 ```
 
 #### On Windows:
 
 ```cmd
-git clone https://github.com/madduci/openE57.git
+git clone https://github.com/openE57/openE57.git
 cd open57
 md build && cd build
-conan install .. --build=missing
-cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_MT=ON
+conan install --output-folder . --build=missing -s compiler.cppstd=17 -o with_tests=True -o with_tools=True .. 
+cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_MT=ON -DBUILD_TESTS=ON -DBUILD_TOOLS=ON
 cmake --build . --config Release --target install
 ```
 

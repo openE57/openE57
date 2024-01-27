@@ -178,8 +178,8 @@ public:
 //
 //! @brief The e57::DateTime is a structure for encoding date and time.
 /*! @details The date and time is encoded using a single
-  562 floating point number, stored as an E57 Float element which is based on the Global Positioning
-  563 System (GPS) time scale. */
+  floating point number, stored as an E57 Float element which is based on the Global Positioning
+  System (GPS) time scale. */
 
 class DateTime
 {
@@ -439,7 +439,7 @@ public:
   ustring sensorFirmwareVersion; //!< The version number for the firmware installed in the sensor at the time of data collection.
 
   float
-        temperature; //!< The ambient temperature, measured at the sensor, at the time of data collection (in degrees Celsius). Shall be ? ?273.15� (absolute zero).
+    temperature; //!< The ambient temperature, measured at the sensor, at the time of data collection (in degrees Celsius). Shall be ? ?273.15� (absolute zero).
   float relativeHumidity;    //!< The percentage relative humidity, measured at the sensor, at the time of data collection. Shall be in the interval [0, 100].
   float atmosphericPressure; //!< The atmospheric pressure, measured at the sensor, at the time of data collection (in Pascals). Shall be positive.
 
@@ -452,7 +452,7 @@ public:
   e57::CartesianBounds
     cartesianBounds; //!< The bounding region (in cartesian coordinates) of all the points in this Data3D (in the local coordinate system of the points).
   e57::SphericalBounds
-                       sphericalBounds; //!< The bounding region (in spherical coordinates) of all the points in this Data3D (in the local coordinate system of the points).
+    sphericalBounds; //!< The bounding region (in spherical coordinates) of all the points in this Data3D (in the local coordinate system of the points).
   e57::IntensityLimits intensityLimits; //!< The limits for the value of signal intensity that the sensor is capable of producing.
   e57::ColorLimits     colorLimits;     //!< The limits for the value of red, green, and blue color that the sensor is capable of producing.
 

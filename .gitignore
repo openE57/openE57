@@ -39,3 +39,4 @@ bin/*
 .vscode/
 
 test_package/CMakeUserPresets.json
+CMakeUserPresets.json

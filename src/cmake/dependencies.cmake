@@ -24,9 +24,15 @@ if(BUILD_TOOLS)
     set(Boost_USE_STATIC_RUNTIME ON)
   endif()
   set(Boost_USE_MULTITHREADED $<IF:$<AND:$<BOOL:${MSVC}>,$<NOT:$<BOOL:${BUILD_WITH_MT}>>>,OFF,ON>)
-  find_package(Boost 1.70.0 COMPONENTS program_options system thread filesystem REQUIRED)
+  find_package(Boost 1.70.0 REQUIRED)
   list(APPEND compiler_definitions
       BOOST_ALL_NO_LIB
       $<$<CONFIG:RELWITHDEBINFO>:${Boost_LIB_DIAGNOSTIC_DEFINITIONS}>
       $<$<CONFIG:DEBUG>:${Boost_LIB_DIAGNOSTIC_DEFINITIONS}>)
+endif()
+
+# Find doctest (Required by Tests)
+if(BUILD_TESTS)
+  find_package(doctest REQUIRED)
+  enable_testing()
 endif()

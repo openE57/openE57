@@ -2,7 +2,7 @@
 # implementation, with support for Conan targets, to make the dependency
 # management easier and reproducible on all the supported platforms
 #
-# Original   work Copyright 2010-2012   Roland Schwarz, Riegl LMS GmbH
+# Original work Copyright 2010-2012     Roland Schwarz, Riegl LMS GmbH
 # Modified work Copyright 2020-2024     Michele Adduci <adduci@tutanota.com>
 #
 # Permission is hereby granted, free of charge, to any person or organization
@@ -42,7 +42,7 @@ cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
 # Enables the CMAKE_MSVC_RUNTIME_LIBRARY property on targets
 cmake_policy(SET CMP0091 NEW)
 
-project(openE57 VERSION 1.6.3 LANGUAGES C CXX DESCRIPTION "openE57 is a library for handling E57 files")
+project(openE57 VERSION 1.7.0 LANGUAGES C CXX DESCRIPTION "openE57 is a library for handling E57 files")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
@@ -56,10 +56,10 @@ if("${isSystemDir}" STREQUAL "-1")
 endif("${isSystemDir}" STREQUAL "-1")
 
 option(BUILD_DOCS "Build documentation" FALSE)
-option(BUILD_EXAMPLES "Build opene57 examples" FALSE)
-option(BUILD_TOOLS "Build opene57 tools" FALSE)
-option(BUILD_TESTS "Build opene57 tests" FALSE)
-option(BUILD_SHARED_LIBS "Build opene57 shared libraries" FALSE)
+option(BUILD_EXAMPLES "Build openE57 examples" FALSE)
+option(BUILD_TOOLS "Build openE57 tools" FALSE)
+option(BUILD_TESTS "Build openE57 tests" FALSE)
+option(BUILD_SHARED_LIBS "Build openE57 shared libraries" FALSE)
 option(BUILD_WITH_MT "Build the project with /MT when using Visual Studio" FALSE)
 
 if(BUILD_SHARED_LIBS)
@@ -70,6 +70,11 @@ endif()
 
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
+endif()
+
+if(BUILD_TESTS)
+  message(STATUS "Enabling tests")
+  enable_testing()
 endif()
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src)
