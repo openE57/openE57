@@ -1,8 +1,7 @@
+#include <cmath>
+#include <ctime>
 #include <iostream>
-#include <math.h>
 #include <openE57/impl/time_conversion.h>
-#include <sys/timeb.h>
-#include <time.h>
 
 #define ERROR_MESSAGE(msg)                                                                                                                                     \
   {                                                                                                                                                            \
@@ -95,36 +94,15 @@ constexpr const int    DAYS_IN_DEC                   = 31;
 [[nodiscard]] bool e57::utils::current_julian_date(double& julian_date //!< Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
                                                    ) noexcept
 {
-#if defined(WIN32) && !defined(__GNUC__)
-  struct _timeb timebuffer; // found in <sys/timeb.h>
-#else
-  struct timeb timebuffer;
-#endif
+  std::timespec time_spec;
 
-#if defined(_CRT_SECURE_NO_DEPRECATE)
-  if (_ftime_s(&timebuffer) != 0)
+  if (std::timespec_get(&time_spec, TIME_UTC) == 0)
   {
-    ERROR_MESSAGE("if( _ftime_s( &timebuffer ) != 0 )");
-    return false;
-  }
-#else
-
-#if defined(WIN32) && !defined(__GNUC__)
-  if (_ftime64_s(&timebuffer) != 0)
-  {
-    ERROR_MESSAGE("ftime returned a non-zero result code");
+    ERROR_MESSAGE("Could not retrieve timespec for TIME_UTC");
     return false;
   };
-#else
-  if (ftime(&timebuffer) != 0)
-  {
-    ERROR_MESSAGE("ftime returned a non-zero result code");
-    return false;
-  };
-#endif
 
-#endif
-  const double timebuffer_time_in_seconds = timebuffer.time + timebuffer.millitm / 1000.0; // [s] with ms resolution
+  const double timebuffer_time_in_seconds = time_spec.tv_sec;
 
   // timebuffer_time_in_seconds is the time in seconds since midnight (00:00:00), January 1, 1970,
   // coordinated universal time (UTC). Julian date for (00:00:00), January 1, 1970 is: 2440587.5 [days]
