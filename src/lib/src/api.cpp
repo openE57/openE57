@@ -3,12 +3,12 @@
 
 using namespace e57;
 
-core::GpsTime::GpsTime(const double gps_time) : time{gps_time}
+time::GpsTime::GpsTime(const double gps_time) : time{gps_time}
 {
   unsigned short gps_week{};
   double         gps_tow{};
 
-  if (!utils::gps_time_from_value(gps_time, gps_week, gps_tow))
+  if (!time::gps_time_from_value(gps_time, gps_week, gps_tow))
   {
     this->week = 0;
     this->tow  = 0.0;
@@ -19,10 +19,10 @@ core::GpsTime::GpsTime(const double gps_time) : time{gps_time}
   this->tow  = gps_tow;
 }
 
-core::GpsTime::GpsTime(const uint16_t gps_week, const double gps_tow) : week{gps_week}, tow{gps_tow}
+time::GpsTime::GpsTime(const uint16_t gps_week, const double gps_tow) : week{gps_week}, tow{gps_tow}
 {
   double gps_time{};
-  if (!utils::gps_time_to_value(week, tow, gps_time))
+  if (!time::gps_time_to_value(week, tow, gps_time))
   {
     this->time = 0.0;
     return;
@@ -31,26 +31,20 @@ core::GpsTime::GpsTime(const uint16_t gps_week, const double gps_tow) : week{gps
   this->time = gps_time;
 }
 
-[[nodiscard]] core::GpsTime utils::current_gps_time() noexcept
+[[nodiscard]] time::GpsTime time::current_gps_time() noexcept
 {
   uint16_t gps_week{};
   double   gps_tow{};
-  double   gps_time{};
 
-  if (!utils::current_gps_time(gps_week, gps_tow))
+  if (!time::current_gps_time(gps_week, gps_tow))
   {
-    return core::GpsTime{};
+    return time::GpsTime{};
   }
 
-  if (!utils::gps_time_to_value(gps_week, gps_tow, gps_time))
-  {
-    return core::GpsTime(0.0);
-  }
-
-  return core::GpsTime(gps_time);
+  return time::GpsTime(gps_week, gps_tow);
 }
 
-[[nodiscard]] core::UtcTime utils::current_utc_time() noexcept
+[[nodiscard]] time::UtcTime time::current_utc_time() noexcept
 {
   unsigned short utc_year{};
   unsigned char  utc_month{};
@@ -59,15 +53,15 @@ core::GpsTime::GpsTime(const uint16_t gps_week, const double gps_tow) : week{gps
   unsigned char  utc_minute{};
   float          utc_seconds{};
 
-  if (!utils::current_utc_time(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
+  if (!time::current_utc_time(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
   {
-    return core::UtcTime{};
+    return time::UtcTime{};
   }
 
-  return core::UtcTime{utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds};
+  return time::UtcTime{utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds};
 }
 
-[[nodiscard]] core::UtcTime utils::utc_time_from_gps_time(const core::GpsTime& gps_time)
+[[nodiscard]] time::UtcTime time::utc_time_from_gps_time(const time::GpsTime& gps_time) noexcept
 {
   unsigned short utc_year{};
   unsigned char  utc_month{};
@@ -76,23 +70,35 @@ core::GpsTime::GpsTime(const uint16_t gps_week, const double gps_tow) : week{gps
   unsigned char  utc_minute{};
   float          utc_seconds{};
 
-  if (!utils::utc_time_from_gps_time(gps_time.week, gps_time.tow, utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
+  if (!time::utc_time_from_gps_time(gps_time.week, gps_time.tow, utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
   {
-    return core::UtcTime{};
+    return time::UtcTime{};
   }
 
-  return core::UtcTime{utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds};
+  return time::UtcTime{utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds};
 }
 
-[[nodiscard]] core::GpsTime utils::gps_time_from_utc_time(const core::UtcTime& utc_time)
+[[nodiscard]] time::GpsTime time::gps_time_from_utc_time(const time::UtcTime& utc_time) noexcept
 {
   unsigned short gps_week{};
   double         gps_tow{};
 
-  if (!utils::gps_time_from_utc_time(utc_time.year, utc_time.month, utc_time.day, utc_time.hour, utc_time.minute, utc_time.seconds, gps_week, gps_tow))
+  if (!time::gps_time_from_utc_time(utc_time.year, utc_time.month, utc_time.day, utc_time.hour, utc_time.minute, utc_time.seconds, gps_week, gps_tow))
   {
-    return core::GpsTime{};
+    return time::GpsTime{};
   }
 
-  return core::GpsTime(gps_week, gps_tow);
+  return time::GpsTime(gps_week, gps_tow);
+}
+
+[[nodiscard]] time::GpsTime time::gps_time_from_year_and_day(const unsigned short year, const unsigned short day_of_year) noexcept
+{
+  unsigned short gps_week{};
+  double         gps_tow{};
+  if (!time::gps_time_from_year_and_day_of_year(year, day_of_year, gps_week, gps_tow))
+  {
+    return time::GpsTime{};
+  }
+
+  return time::GpsTime(gps_week, gps_tow);
 }

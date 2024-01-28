@@ -9,16 +9,13 @@
   University of Calgary Graduate Course. \n
 */
 
-#ifndef TIME_CONVERSION_H
-#define TIME_CONVERSION_H
+#ifndef E57TIME_H_INCLUDED
+#  define E57TIME_H
 
 namespace e57
 {
-namespace utils
+namespace time
 {
-  // Constants definition
-  constexpr const double SECONDS_IN_A_DAY  = 86400.0;
-  constexpr const double SECONDS_IN_A_WEEK = SECONDS_IN_A_DAY * 7; // 604800.0
   /**
    * @brief Obtains the UTC time, GPS time, and Julian date from PC system time.
    *
@@ -302,8 +299,8 @@ namespace utils
                                          double&         gps_tow   //!< GPS time of week (0-604800.0) [s])
                                          ) noexcept;
 
-} // namespace utils
+} // namespace time
 
 } // namespace e57
 
-#endif // TIME_CONVERSION_H
+#endif // E57TIME_H

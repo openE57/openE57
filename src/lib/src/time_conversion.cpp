@@ -35,6 +35,8 @@ constexpr const double JULIAN_DATE_OFFSET_2006 = 2453736.5000; // Jan 01 2006 00
 constexpr const double JULIAN_DATE_OFFSET_2009 = 2454832.5000; // Jan 01 2009 00:00:00.0
 
 // Constants definition
+constexpr const double SECONDS_IN_A_DAY              = 86400.0;
+constexpr const double SECONDS_IN_A_WEEK             = SECONDS_IN_A_DAY * 7;    // 604800.0
 constexpr const double JULIAN_DATE_START_OF_GPS_TIME = JULIAN_DATE_OFFSET_1980; // [days]
 constexpr const double JULIAN_DATE_START_OF_PC_TIME  = 2440587.5;               // [days]
 constexpr const int    DAYS_IN_JAN                   = 31;
@@ -49,7 +51,7 @@ constexpr const int    DAYS_IN_OCT                   = 31;
 constexpr const int    DAYS_IN_NOV                   = 30;
 constexpr const int    DAYS_IN_DEC                   = 31;
 
-[[nodiscard]] bool e57::utils::current_system_time(
+[[nodiscard]] bool e57::time::current_system_time(
   unsigned short& utc_year,    //!< Universal Time Coordinated    [year]
   unsigned char&  utc_month,   //!< Universal Time Coordinated    [1-12 months]
   unsigned char&  utc_day,     //!< Universal Time Coordinated    [1-31 days]
@@ -62,25 +64,25 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   double&         gps_tow      //!< GPS time of week (0-604800.0) [s]
   ) noexcept
 {
-  if (!e57::utils::current_julian_date(julian_date))
+  if (!e57::time::current_julian_date(julian_date))
   {
     ERROR_MESSAGE("current_julian_date returned false.");
     return false;
   }
 
-  if (!e57::utils::determine_utc_offset(julian_date, utc_offset))
+  if (!e57::time::determine_utc_offset(julian_date, utc_offset))
   {
     ERROR_MESSAGE("determine_utc_offset returned false.");
     return false;
   }
 
-  if (!e57::utils::gps_time_from_julian_date(julian_date, utc_offset, gps_week, gps_tow))
+  if (!e57::time::gps_time_from_julian_date(julian_date, utc_offset, gps_week, gps_tow))
   {
     ERROR_MESSAGE("gps_time_from_julian_date returned false.");
     return false;
   }
 
-  if (!e57::utils::utc_time_from_julian_date(julian_date, utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
+  if (!e57::time::utc_time_from_julian_date(julian_date, utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
   {
     ERROR_MESSAGE("utc_time_from_julian_date returned false");
     return false;
@@ -89,8 +91,8 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   return true;
 }
 
-[[nodiscard]] bool e57::utils::current_julian_date(double& julian_date //!< Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
-                                                   ) noexcept
+[[nodiscard]] bool e57::time::current_julian_date(double& julian_date //!< Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
+                                                  ) noexcept
 {
   std::timespec time_spec;
 
@@ -114,26 +116,26 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   return true;
 }
 
-[[nodiscard]] bool e57::utils::current_gps_time(unsigned short& gps_week, //!< GPS week (0-1024+)            [week]
-                                                double&         gps_tow   //!< GPS time of week (0-604800.0) [s]
-                                                ) noexcept
+[[nodiscard]] bool e57::time::current_gps_time(unsigned short& gps_week, //!< GPS week (0-1024+)            [week]
+                                               double&         gps_tow   //!< GPS time of week (0-604800.0) [s]
+                                               ) noexcept
 {
   double        julian_date{};
   unsigned char utc_offset{};
 
-  if (!e57::utils::current_julian_date(julian_date))
+  if (!e57::time::current_julian_date(julian_date))
   {
     ERROR_MESSAGE("current_julian_date returned false.");
     return false;
   }
 
-  if (!e57::utils::determine_utc_offset(julian_date, utc_offset))
+  if (!e57::time::determine_utc_offset(julian_date, utc_offset))
   {
     ERROR_MESSAGE("determine_utc_offset returned false.");
     return false;
   }
 
-  if (!e57::utils::gps_time_from_julian_date(julian_date, utc_offset, gps_week, gps_tow))
+  if (!e57::time::gps_time_from_julian_date(julian_date, utc_offset, gps_week, gps_tow))
   {
     ERROR_MESSAGE("gps_time_from_julian_date returned false.");
     return false;
@@ -142,23 +144,23 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   return true;
 }
 
-[[nodiscard]] bool e57::utils::current_utc_time(unsigned short& utc_year,   //!< Universal Time Coordinated    [year]
-                                                unsigned char&  utc_month,  //!< Universal Time Coordinated    [1-12 months]
-                                                unsigned char&  utc_day,    //!< Universal Time Coordinated    [1-31 days]
-                                                unsigned char&  utc_hour,   //!< Universal Time Coordinated    [hours]
-                                                unsigned char&  utc_minute, //!< Universal Time Coordinated    [minutes]
-                                                float&          utc_seconds //!< Universal Time Coordinated    [s]
-                                                ) noexcept
+[[nodiscard]] bool e57::time::current_utc_time(unsigned short& utc_year,   //!< Universal Time Coordinated    [year]
+                                               unsigned char&  utc_month,  //!< Universal Time Coordinated    [1-12 months]
+                                               unsigned char&  utc_day,    //!< Universal Time Coordinated    [1-31 days]
+                                               unsigned char&  utc_hour,   //!< Universal Time Coordinated    [hours]
+                                               unsigned char&  utc_minute, //!< Universal Time Coordinated    [minutes]
+                                               float&          utc_seconds //!< Universal Time Coordinated    [s]
+                                               ) noexcept
 {
   double julian_date{};
 
-  if (!e57::utils::current_julian_date(julian_date))
+  if (!e57::time::current_julian_date(julian_date))
   {
     ERROR_MESSAGE("current_julian_date returned false.");
     return false;
   }
 
-  if (!e57::utils::utc_time_from_julian_date(julian_date, utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
+  if (!e57::time::utc_time_from_julian_date(julian_date, utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
   {
     ERROR_MESSAGE("utc_time_from_julian_date returned false");
     return false;
@@ -167,7 +169,7 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   return true;
 }
 
-[[nodiscard]] bool e57::utils::day_of_week_from_julian_date(
+[[nodiscard]] bool e57::time::day_of_week_from_julian_date(
   const double   julian_date, //!< Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
   unsigned char& day_of_week  //!< 0-Sunday, 1-Monday, 2-Tuesday, 3-Wednesday, 4-Thursday, 5-Friday, 6-Saturday [].
   ) noexcept
@@ -222,7 +224,7 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   return true;
 }
 
-[[nodiscard]] bool e57::utils::julian_date_from_gps_time(
+[[nodiscard]] bool e57::time::julian_date_from_gps_time(
   const unsigned short gps_week,   //!< GPS week (0-1024+)             [week]
   const double         gps_tow,    //!< GPS time of week (0-604800.0)  [s]
   const unsigned char  utc_offset, //!< Integer seconds that GPS is ahead of UTC time, always positive [s]
@@ -240,7 +242,7 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   return true;
 }
 
-[[nodiscard]] bool e57::utils::julian_date_from_utc_time(
+[[nodiscard]] bool e57::time::julian_date_from_utc_time(
   const unsigned short utc_year,    //!< Universal Time Coordinated  [year]
   const unsigned char  utc_month,   //!< Universal Time Coordinated  [1-12 months]
   const unsigned char  utc_day,     //!< Universal Time Coordinated  [1-31 days]
@@ -254,7 +256,7 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   double m{0.0}; // temp for month
 
   // Check the input.
-  if (!e57::utils::is_utc_time_valid(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
+  if (!e57::time::is_utc_time_valid(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
   {
     ERROR_MESSAGE("is_utc_time_valid returned false.");
     return false;
@@ -276,7 +278,7 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   return true;
 }
 
-[[nodiscard]] bool e57::utils::gps_time_from_julian_date(
+[[nodiscard]] bool e57::time::gps_time_from_julian_date(
   const double        julian_date, //!< Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
   const unsigned char utc_offset,  //!< Integer seconds that GPS is ahead of UTC time, always positive [s]
   unsigned short&     gps_week,    //!< GPS week (0-1024+)            [week]
@@ -309,7 +311,7 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   return true;
 }
 
-[[nodiscard]] bool e57::utils::utc_time_from_julian_date(
+[[nodiscard]] bool e57::time::utc_time_from_julian_date(
   const double    julian_date, //!< Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
   unsigned short& utc_year,    //!< Universal Time Coordinated    [year]
   unsigned char&  utc_month,   //!< Universal Time Coordinated    [1-12 months]
@@ -368,7 +370,7 @@ constexpr const int    DAYS_IN_DEC                   = 31;
         hour -= 24;
         day++;
 
-        if (!e57::utils::number_days_in_month(year, month, days_in_month))
+        if (!e57::time::number_days_in_month(year, month, days_in_month))
         {
           ERROR_MESSAGE("number_days_in_month returned false.");
           return false;
@@ -398,39 +400,39 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   return true;
 }
 
-[[nodiscard]] bool e57::utils::gps_time_from_utc_time(const unsigned short utc_year,    //!< Universal Time Coordinated    [year]
-                                                      const unsigned char  utc_month,   //!< Universal Time Coordinated    [1-12 months]
-                                                      const unsigned char  utc_day,     //!< Universal Time Coordinated    [1-31 days]
-                                                      const unsigned char  utc_hour,    //!< Universal Time Coordinated    [hours]
-                                                      const unsigned char  utc_minute,  //!< Universal Time Coordinated    [minutes]
-                                                      const float          utc_seconds, //!< Universal Time Coordinated    [s]
-                                                      unsigned short&      gps_week,    //!< GPS week (0-1024+)            [week]
-                                                      double&              gps_tow      //!< GPS time of week (0-604800.0) [s]
-                                                      ) noexcept
+[[nodiscard]] bool e57::time::gps_time_from_utc_time(const unsigned short utc_year,    //!< Universal Time Coordinated    [year]
+                                                     const unsigned char  utc_month,   //!< Universal Time Coordinated    [1-12 months]
+                                                     const unsigned char  utc_day,     //!< Universal Time Coordinated    [1-31 days]
+                                                     const unsigned char  utc_hour,    //!< Universal Time Coordinated    [hours]
+                                                     const unsigned char  utc_minute,  //!< Universal Time Coordinated    [minutes]
+                                                     const float          utc_seconds, //!< Universal Time Coordinated    [s]
+                                                     unsigned short&      gps_week,    //!< GPS week (0-1024+)            [week]
+                                                     double&              gps_tow      //!< GPS time of week (0-604800.0) [s]
+                                                     ) noexcept
 {
   double        julian_date{0.0};
   unsigned char utc_offset{0};
 
   // Check the input.
-  if (!e57::utils::is_utc_time_valid(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
+  if (!e57::time::is_utc_time_valid(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
   {
     ERROR_MESSAGE("is_utc_time_valid returned false.");
     return false;
   }
 
-  if (!e57::utils::julian_date_from_utc_time(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds, julian_date))
+  if (!e57::time::julian_date_from_utc_time(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds, julian_date))
   {
     ERROR_MESSAGE("julian_date_from_utc_time returned false.");
     return false;
   }
 
-  if (!e57::utils::determine_utc_offset(julian_date, utc_offset))
+  if (!e57::time::determine_utc_offset(julian_date, utc_offset))
   {
     ERROR_MESSAGE("determine_utc_offset returned false.");
     return false;
   }
 
-  if (!e57::utils::gps_time_from_julian_date(julian_date, utc_offset, gps_week, gps_tow))
+  if (!e57::time::gps_time_from_julian_date(julian_date, utc_offset, gps_week, gps_tow))
   {
     ERROR_MESSAGE("gps_time_from_julian_date returned false.");
     return false;
@@ -439,33 +441,33 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   return true;
 }
 
-[[nodiscard]] bool e57::utils::gps_time_from_rinex_time(const unsigned short utc_year,    //!< Universal Time Coordinated    [year]
-                                                        const unsigned char  utc_month,   //!< Universal Time Coordinated    [1-12 months]
-                                                        const unsigned char  utc_day,     //!< Universal Time Coordinated    [1-31 days]
-                                                        const unsigned char  utc_hour,    //!< Universal Time Coordinated    [hours]
-                                                        const unsigned char  utc_minute,  //!< Universal Time Coordinated    [minutes]
-                                                        const float          utc_seconds, //!< Universal Time Coordinated    [s]
-                                                        unsigned short&      gps_week,    //!< GPS week (0-1024+)            [week]
-                                                        double&              gps_tow      //!< GPS time of week (0-604800.0) [s]
-                                                        ) noexcept
+[[nodiscard]] bool e57::time::gps_time_from_rinex_time(const unsigned short utc_year,    //!< Universal Time Coordinated    [year]
+                                                       const unsigned char  utc_month,   //!< Universal Time Coordinated    [1-12 months]
+                                                       const unsigned char  utc_day,     //!< Universal Time Coordinated    [1-31 days]
+                                                       const unsigned char  utc_hour,    //!< Universal Time Coordinated    [hours]
+                                                       const unsigned char  utc_minute,  //!< Universal Time Coordinated    [minutes]
+                                                       const float          utc_seconds, //!< Universal Time Coordinated    [s]
+                                                       unsigned short&      gps_week,    //!< GPS week (0-1024+)            [week]
+                                                       double&              gps_tow      //!< GPS time of week (0-604800.0) [s]
+                                                       ) noexcept
 {
   double        julian_date{0.0};
   unsigned char utc_offset{0};
 
   // Check the input.
-  if (!e57::utils::is_utc_time_valid(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
+  if (!e57::time::is_utc_time_valid(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
   {
     ERROR_MESSAGE("is_utc_time_valid returned false.");
     return false;
   }
 
-  if (!e57::utils::julian_date_from_utc_time(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds, julian_date))
+  if (!e57::time::julian_date_from_utc_time(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds, julian_date))
   {
     ERROR_MESSAGE("julian_date_from_utc_time returned false.");
     return false;
   }
 
-  if (!e57::utils::gps_time_from_julian_date(julian_date, utc_offset, gps_week, gps_tow))
+  if (!e57::time::gps_time_from_julian_date(julian_date, utc_offset, gps_week, gps_tow))
   {
     ERROR_MESSAGE("GetGPSTimeFromJulianDate returned false.");
     return false;
@@ -474,15 +476,15 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   return true;
 }
 
-[[nodiscard]] bool e57::utils::utc_time_from_gps_time(const unsigned short gps_week,   //!< GPS week (0-1024+)            [week]
-                                                      const double         gps_tow,    //!< GPS time of week (0-604800.0) [s]
-                                                      unsigned short&      utc_year,   //!< Universal Time Coordinated    [year]
-                                                      unsigned char&       utc_month,  //!< Universal Time Coordinated    [1-12 months]
-                                                      unsigned char&       utc_day,    //!< Universal Time Coordinated    [1-31 days]
-                                                      unsigned char&       utc_hour,   //!< Universal Time Coordinated    [hours]
-                                                      unsigned char&       utc_minute, //!< Universal Time Coordinated    [minutes]
-                                                      float&               utc_seconds //!< Universal Time Coordinated    [s]
-                                                      ) noexcept
+[[nodiscard]] bool e57::time::utc_time_from_gps_time(const unsigned short gps_week,   //!< GPS week (0-1024+)            [week]
+                                                     const double         gps_tow,    //!< GPS time of week (0-604800.0) [s]
+                                                     unsigned short&      utc_year,   //!< Universal Time Coordinated    [year]
+                                                     unsigned char&       utc_month,  //!< Universal Time Coordinated    [1-12 months]
+                                                     unsigned char&       utc_day,    //!< Universal Time Coordinated    [1-31 days]
+                                                     unsigned char&       utc_hour,   //!< Universal Time Coordinated    [hours]
+                                                     unsigned char&       utc_minute, //!< Universal Time Coordinated    [minutes]
+                                                     float&               utc_seconds //!< Universal Time Coordinated    [s]
+                                                     ) noexcept
 {
   double        julian_date{0.0};
   unsigned char utc_offset{0};
@@ -497,20 +499,20 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   // iterate to get the right utc offset
   for (i = 0; i < 4; i++)
   {
-    if (!e57::utils::julian_date_from_gps_time(gps_week, gps_tow, utc_offset, julian_date))
+    if (!e57::time::julian_date_from_gps_time(gps_week, gps_tow, utc_offset, julian_date))
     {
       ERROR_MESSAGE("julian_date_from_gps_time returned false.");
       return false;
     }
 
-    if (!e57::utils::determine_utc_offset(julian_date, utc_offset))
+    if (!e57::time::determine_utc_offset(julian_date, utc_offset))
     {
       ERROR_MESSAGE("determine_utc_offset returned false.");
       return false;
     }
   }
 
-  if (!e57::utils::utc_time_from_julian_date(julian_date, utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
+  if (!e57::time::utc_time_from_julian_date(julian_date, utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
   {
     ERROR_MESSAGE("utc_time_from_julian_date returned false.");
     return false;
@@ -519,7 +521,7 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   return true;
 }
 
-[[nodiscard]] bool e57::utils::determine_utc_offset(
+[[nodiscard]] bool e57::time::determine_utc_offset(
   const double   julian_date, //!< Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
   unsigned char& utc_offset   //!< Integer seconds that GPS is ahead of UTC time, always positive             [s], obtained from a look up table
   ) noexcept
@@ -577,12 +579,12 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   return true;
 }
 
-[[nodiscard]] bool e57::utils::number_days_in_month(const unsigned short year,         //!< Universal Time Coordinated    [year]
-                                                    const unsigned char  month,        //!< Universal Time Coordinated    [1-12 months]
-                                                    unsigned char&       days_in_month //!< Days in the specified month   [1-28|29|30|31 days]
-                                                    ) noexcept
+[[nodiscard]] bool e57::time::number_days_in_month(const unsigned short year,         //!< Universal Time Coordinated    [year]
+                                                   const unsigned char  month,        //!< Universal Time Coordinated    [1-12 months]
+                                                   unsigned char&       days_in_month //!< Days in the specified month   [1-28|29|30|31 days]
+                                                   ) noexcept
 {
-  const bool    is_a_leapyear = e57::utils::is_leap_year(year);
+  const bool    is_a_leapyear = e57::time::is_leap_year(year);
   unsigned char utmp{0};
 
   switch (month)
@@ -642,7 +644,7 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   return true;
 }
 
-[[nodiscard]] bool e57::utils::is_leap_year(const unsigned short year) noexcept
+[[nodiscard]] bool e57::time::is_leap_year(const unsigned short year) noexcept
 {
   bool is_a_leap_year{false};
 
@@ -670,14 +672,14 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   return false;
 }
 
-[[nodiscard]] bool e57::utils::day_of_year(const unsigned short utc_year,   // Universal Time Coordinated           [year]
-                                           const unsigned char  utc_month,  // Universal Time Coordinated           [1-12 months]
-                                           const unsigned char  utc_day,    // Universal Time Coordinated           [1-31 days]
-                                           unsigned short&      day_of_year // the day of the year (1-366) [days]
-                                           ) noexcept
+[[nodiscard]] bool e57::time::day_of_year(const unsigned short utc_year,   // Universal Time Coordinated           [year]
+                                          const unsigned char  utc_month,  // Universal Time Coordinated           [1-12 months]
+                                          const unsigned char  utc_day,    // Universal Time Coordinated           [1-31 days]
+                                          unsigned short&      day_of_year // the day of the year (1-366) [days]
+                                          ) noexcept
 {
   unsigned char days_in_feb{0};
-  if (!e57::utils::number_days_in_month(utc_year, 2, days_in_feb))
+  if (!e57::time::number_days_in_month(utc_year, 2, days_in_feb))
   {
     ERROR_MESSAGE("number_days_in_month returned false.");
     return false;
@@ -731,11 +733,11 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   return true;
 }
 
-[[nodiscard]] bool e57::utils::gps_time_from_year_and_day_of_year(const unsigned short year,        // The year [year]
-                                                                  const unsigned short day_of_year, // The number of days into the year (1-366) [days]
-                                                                  unsigned short&      gps_week,    //!< GPS week (0-1024+)            [week]
-                                                                  double&              gps_tow      //!< GPS time of week (0-604800.0) [s]
-                                                                  ) noexcept
+[[nodiscard]] bool e57::time::gps_time_from_year_and_day_of_year(const unsigned short year,        // The year [year]
+                                                                 const unsigned short day_of_year, // The number of days into the year (1-366) [days]
+                                                                 unsigned short&      gps_week,    //!< GPS week (0-1024+)            [week]
+                                                                 double&              gps_tow      //!< GPS time of week (0-604800.0) [s]
+                                                                 ) noexcept
 {
   double        julian_date{0.0};
   unsigned char utc_offset{};
@@ -746,13 +748,13 @@ constexpr const int    DAYS_IN_DEC                   = 31;
     return false;
   }
 
-  if (!e57::utils::julian_date_from_utc_time(year, 1, 1, 0, 0, 0, julian_date))
+  if (!e57::time::julian_date_from_utc_time(year, 1, 1, 0, 0, 0, julian_date))
   {
     ERROR_MESSAGE("julian_date_from_utc_time returned false.");
     return false;
   }
 
-  if (!e57::utils::determine_utc_offset(julian_date, utc_offset))
+  if (!e57::time::determine_utc_offset(julian_date, utc_offset))
   {
     ERROR_MESSAGE("determine_utc_offset returned false.");
     return false;
@@ -760,7 +762,7 @@ constexpr const int    DAYS_IN_DEC                   = 31;
 
   julian_date += day_of_year - 1; // at the start of the day so -1.
 
-  if (!e57::utils::gps_time_from_julian_date(julian_date, utc_offset, gps_week, gps_tow))
+  if (!e57::time::gps_time_from_julian_date(julian_date, utc_offset, gps_week, gps_tow))
   {
     ERROR_MESSAGE("gps_time_from_julian_date returned false.");
     return false;
@@ -769,13 +771,13 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   return true;
 }
 
-[[nodiscard]] bool e57::utils::is_utc_time_valid(const unsigned short utc_year,   //!< Universal Time Coordinated  [year]
-                                                 const unsigned char  utc_month,  //!< Universal Time Coordinated  [1-12 months]
-                                                 const unsigned char  utc_day,    //!< Universal Time Coordinated  [1-31 days]
-                                                 const unsigned char  utc_hour,   //!< Universal Time Coordinated  [hours]
-                                                 const unsigned char  utc_minute, //!< Universal Time Coordinated  [minutes]
-                                                 const float          utc_seconds //!< Universal Time Coordinated  [s]
-                                                 ) noexcept
+[[nodiscard]] bool e57::time::is_utc_time_valid(const unsigned short utc_year,   //!< Universal Time Coordinated  [year]
+                                                const unsigned char  utc_month,  //!< Universal Time Coordinated  [1-12 months]
+                                                const unsigned char  utc_day,    //!< Universal Time Coordinated  [1-31 days]
+                                                const unsigned char  utc_hour,   //!< Universal Time Coordinated  [hours]
+                                                const unsigned char  utc_minute, //!< Universal Time Coordinated  [minutes]
+                                                const float          utc_seconds //!< Universal Time Coordinated  [s]
+                                                ) noexcept
 {
   unsigned char daysInMonth;
   if (utc_month == 0 || utc_month > 12)
@@ -799,7 +801,7 @@ constexpr const int    DAYS_IN_DEC                   = 31;
     return false;
   }
 
-  if (!e57::utils::number_days_in_month(utc_year, utc_month, daysInMonth))
+  if (!e57::time::number_days_in_month(utc_year, utc_month, daysInMonth))
   {
     ERROR_MESSAGE("number_days_in_month returned false.");
     return false;
@@ -814,10 +816,10 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   return true;
 }
 
-[[nodiscard]] bool e57::utils::gps_time_to_value(const unsigned short gps_week, //!< GPS week (0-1024+)            [week]
-                                                 const double         gps_tow,  //!< GPS time of week (0-604800.0) [s])
-                                                 double&              gps_time  //!< GPS time expressed as a single double value)
-                                                 ) noexcept
+[[nodiscard]] bool e57::time::gps_time_to_value(const unsigned short gps_week, //!< GPS week (0-1024+)            [week]
+                                                const double         gps_tow,  //!< GPS time of week (0-604800.0) [s])
+                                                double&              gps_time  //!< GPS time expressed as a single double value)
+                                                ) noexcept
 {
   if (gps_tow < 0.0 || gps_tow > SECONDS_IN_A_WEEK)
   {
@@ -830,10 +832,10 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   return true;
 }
 
-[[nodiscard]] bool e57::utils::gps_time_from_value(const double    gps_time, //!< GPS time expressed as a single double value)
-                                                   unsigned short& gps_week, //!< GPS week (0-1024+)            [week]
-                                                   double&         gps_tow   //!< GPS time of week (0-604800.0) [s])
-                                                   ) noexcept
+[[nodiscard]] bool e57::time::gps_time_from_value(const double    gps_time, //!< GPS time expressed as a single double value)
+                                                  unsigned short& gps_week, //!< GPS week (0-1024+)            [week]
+                                                  double&         gps_tow   //!< GPS time of week (0-604800.0) [s])
+                                                  ) noexcept
 {
   if (gps_time <= 0.0)
   {

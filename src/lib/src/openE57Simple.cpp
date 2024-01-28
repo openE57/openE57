@@ -3,7 +3,7 @@
 //  openE57Simple.cpp - private implementation header of E57 format reference implementation.
 //
 //	Copyright (c) 2010 Stan Coleby (scoleby@intelisum.com)
-//	Copyright (c) 2020 - 2022 Michele Adduci (adduci@tutanota.com)
+//	Copyright (c) 2020 - 2024 Michele Adduci (adduci@tutanota.com)
 //	All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person or organization

@@ -27,8 +27,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 #include <openE57/LAS/openE57las.h>
+#include <openE57/api.h>
 #include <openE57/openE57.h>
-//#include <time_conversion/time_conversion.h> // code from Essential GNSS Project
 
 #include <fstream> // std::ifstream
 #include <iomanip>
@@ -52,9 +52,24 @@
 using namespace std;
 using namespace e57;
 
-/// Define the following symbols to get various amounts of debug printing:
-//#define E57_VERBOSE 1
-//#define E57_MAX_VERBOSE 1
+inline ustring exception_string(const char* errorName, const char* fileName, int lineNumber)
+{
+  std::ostringstream ss;
+  ss << errorName << " at " << fileName << ":" << lineNumber;
+  return (ss.str());
+}
+
+/// Create whitespace of given length, for indenting printouts in dump() functions
+inline std::string space(const size_t n)
+{
+  return (std::string(n, ' '));
+}
+
+#define EXCEPTION(e_name) (std::runtime_error(exception_string((e_name), __FILE__, __LINE__)))
+
+// Constants definition
+constexpr const double SECONDS_IN_A_DAY  = 86400.0;
+constexpr const double SECONDS_IN_A_WEEK = SECONDS_IN_A_DAY * 7; // 604800.0
 
 /// Declare local functions:
 ustring guidUnparse(uint32_t data1, uint16_t data2, uint16_t data3, uint8_t data4[8]);
@@ -1114,13 +1129,16 @@ void copyPerScanData(CommandLineOptions& options, LASReader& lasf, ImageFile imf
   /// Path name: "/data3D/0/acquisitionStart/dateTimeValue"
   if (hdr.fileCreationDayOfYear > 0 && hdr.fileCreationYear > 0)
   {
-    unsigned short year      = static_cast<unsigned short>(hdr.fileCreationYear);
-    unsigned short dayOfYear = static_cast<unsigned short>(hdr.fileCreationDayOfYear);
-    unsigned short gpsWeek   = 0;
-    double         gpsTOW    = 0.0;
-    if (!utils::gps_time_from_year_and_day_of_year(year, dayOfYear, gpsWeek, gpsTOW))
+    const unsigned short year      = static_cast<unsigned short>(hdr.fileCreationYear);
+    const unsigned short dayOfYear = static_cast<unsigned short>(hdr.fileCreationDayOfYear);
+
+    const auto gpsTime = time::gps_time_from_year_and_day(year, dayOfYear);
+    if (gpsTime.week == 0 && gpsTime.tow == 0.0)
+    {
       throw EXCEPTION("bad year,day");
-    double        acquisitionStartGpsTime = gpsWeek * utils::SECONDS_IN_A_WEEK + gpsTOW;
+    }
+
+    const double  acquisitionStartGpsTime = gpsTime.time;
     StructureNode dateTimeStruct          = StructureNode(imf);
     scan0.set("acquisitionStart", dateTimeStruct);
     dateTimeStruct.set("dateTimeValue", FloatNode(imf, acquisitionStartGpsTime, E57_DOUBLE));
@@ -1445,10 +1463,9 @@ void copyPerPointData(CommandLineOptions& options, LASReader& lasf, ImageFile im
         /// We assume that the gps week is the one that contains the file creation day.
         if (hdr.fileCreationDayOfYear > 0 && hdr.fileCreationYear > 0)
         {
-          unsigned short gpsWeek = 0;
-          double         gpsTOW  = 0.0;
-          if (utils::gps_time_from_year_and_day_of_year(hdr.fileCreationYear, hdr.fileCreationDayOfYear, gpsWeek, gpsTOW))
-            lasTimeOffset = gpsWeek * utils::SECONDS_IN_A_WEEK;
+          const auto gpsTime = time::gps_time_from_year_and_day(hdr.fileCreationYear, hdr.fileCreationDayOfYear);
+          if (gpsTime.week != 0)
+            lasTimeOffset = gpsTime.week * SECONDS_IN_A_WEEK;
           else
             lasTimeOffset = 0.0;
         }
@@ -1607,30 +1624,15 @@ void copyPerFileData(CommandLineOptions& /*options*/, LASReader& /*lasf*/, Image
   root.set("versionMajor", IntegerNode(imf, astmMajor, 0, E57_UINT8_MAX));
   root.set("versionMinor", IntegerNode(imf, astmMinor, 0, E57_UINT8_MAX));
 
-  /// Mark file with current GPS time (the time the file was opened for writing).
-  /// Path name: "/creationDateTime/dateTimeValue"
-  unsigned short utc_year;    // Universal Time Coordinated    [year]
-  unsigned char  utc_month;   // Universal Time Coordinated    [1-12 months]
-  unsigned char  utc_day;     // Universal Time Coordinated    [1-31 days]
-  unsigned char  utc_hour;    // Universal Time Coordinated    [hours]
-  unsigned char  utc_minute;  // Universal Time Coordinated    [minutes]
-  float          utc_seconds; // Universal Time Coordinated    [s]
-  unsigned char  utc_offset;  // Integer seconds that GPS is ahead of UTC time; always positive             [s], obtained from a look up table
-  double         julian_date; // Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
-  unsigned short gps_week;    // GPS week (0-1024+)            [week]
-  double         gps_tow;     // GPS time of week (0-604800.0) [s]
-  if (!utils::current_system_time(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds, utc_offset, julian_date, gps_week, gps_tow))
-    throw EXCEPTION("Failed to retrieve current system time");
-  double        gpsTime        = gps_week * utils::SECONDS_IN_A_WEEK + gps_tow;
+  const auto gpsTime = time::current_gps_time();
+  if (gpsTime.week == 0 && gpsTime.tow == 0.0 && gpsTime.time == 0.0)
+  {
+    throw EXCEPTION("Failed to retrieve current GPS time");
+  }
+
   StructureNode dateTimeStruct = StructureNode(imf);
   root.set("creationDateTime", dateTimeStruct);
-  dateTimeStruct.set("dateTimeValue", FloatNode(imf, gpsTime, E57_DOUBLE));
-#ifdef E57_MAX_VERBOSE
-  cout << "utc_year=" << utc_year << " utc_month=" << static_cast<unsigned>(utc_month) << " utc_day=" << static_cast<unsigned>(utc_day)
-       << " utc_hour=" << static_cast<unsigned>(utc_hour) << " utc_minute=" << static_cast<unsigned>(utc_minute) << " utc_seconds=" << utc_seconds
-       << " utc_offset=" << static_cast<unsigned>(utc_offset) << endl;
-  cout << "julian_date=" << julian_date << " gps_week=" << gps_week << " gps_tow=" << gps_tow << " gpsTime=" << gpsTime << endl;
-#endif
+  dateTimeStruct.set("dateTimeValue", FloatNode(imf, gpsTime.time, E57_DOUBLE));
 
   /// The guid in the LAS file uniquely ids the project, not the file.
   /// The combination of the projectID and fileSourceId uniquely ids the original source, but this file might contain processed data.
@@ -1681,22 +1683,15 @@ ustring guidUnparse(uint32_t data1, uint16_t data2, uint16_t data3, uint8_t data
   return (guid.str());
 }
 
-ustring gpsTimeUnparse(double gpsTime)
+ustring gpsTimeUnparse(double gpsTimeInSeconds)
 {
-  unsigned short gpsWeek = static_cast<unsigned short>(floor(gpsTime / utils::SECONDS_IN_A_WEEK));
-  double         gpsTOW  = gpsTime - gpsWeek * utils::SECONDS_IN_A_WEEK;
+  const time::GpsTime gpsTime(gpsTimeInSeconds);
+  const auto          utcTime = time::utc_time_from_gps_time(gpsTime);
 
-  unsigned short utc_year;    //!< Universal Time Coordinated    [year]
-  unsigned char  utc_month;   //!< Universal Time Coordinated    [1-12 months]
-  unsigned char  utc_day;     //!< Universal Time Coordinated    [1-31 days]
-  unsigned char  utc_hour;    //!< Universal Time Coordinated    [hours]
-  unsigned char  utc_minute;  //!< Universal Time Coordinated    [minutes]
-  float          utc_seconds; //!< Universal Time Coordinated    [s]
-  ostringstream  ss;
-
-  if (utils::utc_time_from_gps_time(gpsWeek, gpsTOW, utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds))
+  std::ostringstream ss;
+  if (utcTime.year != 0)
   {
-    ss << utc_year << "-" << (unsigned)utc_month << "-" << (unsigned)utc_day << " " << (unsigned)utc_hour << ":" << (unsigned)utc_minute << ":" << utc_seconds;
+    ss << utcTime.year << "-" << utcTime.month << "-" << utcTime.day << " " << utcTime.hour << ":" << utcTime.minute << ":" << utcTime.seconds;
     return (ss.str());
   }
   else

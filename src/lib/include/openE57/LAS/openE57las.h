@@ -29,16 +29,17 @@
 #ifndef LASREADER_INCLUDED
 #define LASREADER_INCLUDED
 
+#include <cstring>
 #include <fstream>
-#include <iostream>
-#include <vector>
-#ifndef E57FOUNDATIONIMPL_H_INCLUDED
-#  include <openE57/impl/openE57Impl.h>
-#  include <openE57/impl/time_conversion.h>
-#endif
+#include <openE57/openE57.h>
 
 namespace e57
 {
+// The URI of the LAS extension.
+// Used to identify the extended field names for encoding data from LAS files (LAS versions 1.0 to 1.3).
+// By convention, will typically be used with prefix "las".  ???"las13"?
+constexpr const char* LAS_V1_0_URI = "http://www.astm.org/COMMIT/E57/2010-las-v1.0";
+
 struct LASPublicHeaderBlock
 {                                               //                   file format#:  1.0 1.1 1.2 1.3
   char     fileSignature[4];                    // required   4   4   4   4

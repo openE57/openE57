@@ -104,7 +104,10 @@ namespace core
     double colorBlueMinimum{0.0};  //!< The minimum producible blue color value. Unit is unspecified.
     double colorBlueMaximum{0.0};  //!< The maximum producible blue color value. Unit is unspecified.
   };
+} // namespace core
 
+namespace time
+{
   /**
    * @brief The UtcTime structure defines a valid UTC Date Time representation.
    */
@@ -142,16 +145,12 @@ namespace core
      */
     GpsTime(const uint16_t gps_week, const double gps_tow);
   };
-} // namespace core
-
-namespace utils
-{
   /**
    * @brief This function returns the current GPS time as core::GpsTime.
    *
    * @return the current GPS Time as core::GpsTime
    */
-  [[nodiscard]] core::GpsTime current_gps_time() noexcept;
+  [[nodiscard]] GpsTime current_gps_time() noexcept;
 
   /**
    * @brief This function returns the current UTC time as core::UtcTime.
@@ -161,7 +160,7 @@ namespace utils
    *
    * @return the current Date/Time as core::UtcTime
    */
-  [[nodiscard]] core::UtcTime current_utc_time() noexcept;
+  [[nodiscard]] UtcTime current_utc_time() noexcept;
 
   /**
    * @brief This function converts the date and time from the double dateTimeValue.
@@ -172,7 +171,7 @@ namespace utils
    * @param gps_time the value holding the GPS Date/Time value as core::GpsTime structure
    * @return the UTC Date/Time as core::UtcTime
    */
-  [[nodiscard]] core::UtcTime utc_time_from_gps_time(const core::GpsTime& gps_time);
+  [[nodiscard]] UtcTime utc_time_from_gps_time(const GpsTime& gps_time) noexcept;
 
   /**
    * @brief This function converts the date and time from the structure core::UtcTime dateTimeValue.
@@ -183,9 +182,21 @@ namespace utils
    * @param utc_time the value holding the UTC Date/Time value as core::UtcTime structure
    * @return the GPS Date/Time as core::GpsTime
    */
-  [[nodiscard]] core::GpsTime gps_time_from_utc_time(const core::UtcTime& utc_time);
+  [[nodiscard]] GpsTime gps_time_from_utc_time(const UtcTime& utc_time) noexcept;
 
-} // namespace utils
+  /**
+   * @brief This function determines the time as core::GpsTime of the start of a day from the day of year and the year.
+   * @details The date and time is encoded using a single
+   * floating point number, stored as an E57 Float element which is based on the Global Positioning
+   * System (GPS) time scale.
+   *
+   * @param year the year to be converted from
+   * @param day_of_year the number of days into the year (1-366) [days]
+   * @return the GPS Date/Time as core::GpsTime
+   */
+  [[nodiscard]] GpsTime gps_time_from_year_and_day(const unsigned short year, const unsigned short day_of_year) noexcept;
+
+} // namespace time
 
 } // namespace e57
 

@@ -3,7 +3,7 @@
 //  openE57Simple.h - public header of E57 Simple API for reading/writing .e57 files.
 //
 //	Copyright (c) 2010 Stan Coleby (scoleby@intelisum.com)
-//  Copyright (c) 2020 - 2022 Michele Adduci (adduci@tutanota.com)
+//  Copyright (c) 2020 - 2024 Michele Adduci (adduci@tutanota.com)
 //
 //	All rights reserved.
 //
