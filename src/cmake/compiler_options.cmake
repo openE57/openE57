@@ -38,8 +38,10 @@ else(MSVC)
       -Wall
       -Wextra
       -Wpedantic
-      $<$<CONFIG:RELEASE>:-O2>
-      $<$<CONFIG:DEBUG>:-O0 -g -p -pg>)
+      $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:RELWITHDEBINFO>>:-O2>
+      $<$<CONFIG:DEBUG>:-O0 -g>
+      $<$<AND:$<CONFIG:DEBUG>,$<CXX_COMPILER_ID:GNU>>:-p -pg>
+  )
 
   list(APPEND compiler_definitions
     CRCPP_INCLUDE_ESOTERIC_CRC_DEFINITIONS

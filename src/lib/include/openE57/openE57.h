@@ -44,6 +44,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <cinttypes>
 
 #ifndef DOXYGEN // Doxygen is not handling namespaces well in @includelineno commands, so disable
 namespace e57

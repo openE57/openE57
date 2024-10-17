@@ -23,9 +23,9 @@ generate_export_header(${PROJECT_NAME})
 set_target_properties(${PROJECT_NAME} PROPERTIES 
   DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
   MSVC_RUNTIME_LIBRARY "${CMAKE_MSVC_RUNTIME_LIBRARY}")
-target_compile_options(${PROJECT_NAME} PUBLIC ${compiler_options})
-target_compile_definitions(${PROJECT_NAME} PUBLIC ${compiler_definitions})
-target_link_options(${PROJECT_NAME} PUBLIC ${linker_flags})
+target_compile_options(${PROJECT_NAME} PRIVATE ${compiler_options})
+target_compile_definitions(${PROJECT_NAME} PRIVATE ${compiler_definitions})
+target_link_options(${PROJECT_NAME} PRIVATE ${linker_flags})
 
 target_include_directories(${PROJECT_NAME}
     PRIVATE 
@@ -47,9 +47,9 @@ add_library(${PROJECT_NAME}las ${LIBRARY_TYPE}
 set_target_properties(${PROJECT_NAME}las PROPERTIES 
   DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
   MSVC_RUNTIME_LIBRARY "${CMAKE_MSVC_RUNTIME_LIBRARY}")
-target_compile_options(${PROJECT_NAME}las PUBLIC ${compiler_options})
-target_compile_definitions(${PROJECT_NAME}las PUBLIC ${compiler_definitions})
-target_link_options(${PROJECT_NAME}las PUBLIC ${linker_flags})
+target_compile_options(${PROJECT_NAME}las PRIVATE ${compiler_options})
+target_compile_definitions(${PROJECT_NAME}las PRIVATE ${compiler_definitions})
+target_link_options(${PROJECT_NAME}las PRIVATE ${linker_flags})
 
 target_include_directories(${PROJECT_NAME}las
     PRIVATE 
