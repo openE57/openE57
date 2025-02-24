@@ -41,7 +41,7 @@
 #    include <unistd.h>
 
 #    include <fcntl.h>
-#    include <sys\stat.h>
+#    include <sys/stat.h>
 #  else
 #    error "no supported compiler defined"
 #  endif
