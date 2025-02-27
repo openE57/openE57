@@ -92,6 +92,12 @@ constexpr const int    DAYS_IN_DEC                   = 31;
 [[nodiscard]] bool e57::utils::current_julian_date(double& julian_date //!< Number of days since noon Universal Time Jan 1, 4713 BCE (Julian calendar) [days]
                                                    ) noexcept
 {
+#if defined(WIN32) && defined(__GNUC__)
+  // Use time() for MinGW which doesn't support timespec_get
+  time_t current_time;
+  time(&current_time);
+  const double timebuffer_time_in_seconds = static_cast<double>(current_time);
+#else
   std::timespec time_spec;
 
   if (std::timespec_get(&time_spec, TIME_UTC) == 0)
@@ -101,6 +107,7 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   };
 
   const double timebuffer_time_in_seconds = time_spec.tv_sec;
+#endif
 
   // timebuffer_time_in_seconds is the time in seconds since midnight (00:00:00), January 1, 1970,
   // coordinated universal time (UTC). Julian date for (00:00:00), January 1, 1970 is: 2440587.5 [days]
