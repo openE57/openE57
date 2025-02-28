@@ -44,6 +44,8 @@ cmake_policy(SET CMP0091 NEW)
 
 project(openE57 VERSION 1.7.0 LANGUAGES C CXX DESCRIPTION "openE57 is a library for handling E57 files")
 
+set(XERCES_C_DEFAULT_FETCH_TAG "v3.3.0" CACHE STRING "Tag that is used for fetching xerces-c library")
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)

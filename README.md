@@ -58,6 +58,7 @@ Available CMake Options are:
 * BUILD_TOOLS - builds the binary tools to validate and dump E57 files
 * BUILD_TESTS - builds tests
 * BUILD_SHARED_LIBS - actually unsupported (missing exported symbols)
+* XERCES_C_DEFAULT_FETCH_TAG - tag that is used for fetching and building xerces-c library from sources (if it's not found on your system)
 * BUILD_WITH_MT - instructs CMake to set the correct [`CMAKE_MSVC_RUNTIME_LIBRARY`](https://cmake.org/cmake/help/latest/variable/CMAKE_MSVC_RUNTIME_LIBRARY.html?highlight=cmake_msvc_runtime_library) flag for Visual Studio
 
 Building with Position indipendent code on Unix can be activated with the option [`CMAKE_POSITION_INDEPENDENT_CODE`](https://cmake.org/cmake/help/latest/variable/CMAKE_POSITION_INDEPENDENT_CODE.html?highlight=cmake_position_independent_code).
