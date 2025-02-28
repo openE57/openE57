@@ -39,12 +39,17 @@
 #  include <stdlib.h>
 #endif
 
+#include <cinttypes>
 #include <iostream>
 #include <limits> // standard integers definition and numeric limits
 #include <memory>
 #include <string>
 #include <vector>
-#include <cinttypes>
+
+#if defined(WIN32) && defined(__GNUC__)
+#  include <sysinfoapi.h>
+#  include <timezoneapi.h>
+#endif
 
 #ifndef DOXYGEN // Doxygen is not handling namespaces well in @includelineno commands, so disable
 namespace e57

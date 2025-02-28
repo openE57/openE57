@@ -48,8 +48,8 @@
 #    define __LARGE64_FILES
 #    include <cstring>
 #    include <fcntl.h>
+#    include <sys/stat.h>
 #    include <sys/types.h>
-#    include <sys\stat.h>
 #    include <unistd.h>
 #  else
 #    error "no supported compiler defined"

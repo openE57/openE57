@@ -3,8 +3,8 @@ if(NOT DEFINED CMAKE_DEBUG_POSTFIX)
 endif()
 
 if(MSVC)
-  
-  list(APPEND compiler_options 
+
+  list(APPEND compiler_options
     /W4
     /permissive-
     $<$<CONFIG:RELEASE>:/O2 /Ob2 >
@@ -26,15 +26,40 @@ if(MSVC)
   list(APPEND linker_flags
     $<$<BOOL:${BUILD_SHARED_LIBS}>:/LTCG>
   )
-  
+
   if(BUILD_WITH_MT)
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
     message(STATUS "Selected MSVC_RUNTIME_LIBRARY: ${CMAKE_MSVC_RUNTIME_LIBRARY}")
   endif()
 
-else(MSVC)
+elseif(WIN32 AND CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+  # MinGW compiler on Windows
+  list(APPEND compiler_options
+      -Wall
+      -Wextra
+      -Wpedantic
+      $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:RELWITHDEBINFO>>:-O2>
+      $<$<CONFIG:DEBUG>:-O0 -g>
+  )
 
-  list(APPEND compiler_options 
+  list(APPEND compiler_definitions
+    WIN32
+    WINDOWS
+    CRCPP_INCLUDE_ESOTERIC_CRC_DEFINITIONS
+    CRCPP_USE_CPP11
+    $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>>:_FORTIFY_SOURCE=2>
+  )
+
+  list(APPEND linker_flags
+    $<$<CONFIG:DEBUG>:-fno-omit-frame-pointer>
+    $<$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>:-static>
+    $<$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>:-static-libgcc>
+    $<$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>:-static-libstdc++>
+  )
+
+else() # MSVC
+
+  list(APPEND compiler_options
       -Wall
       -Wextra
       -Wpedantic
@@ -48,7 +73,7 @@ else(MSVC)
     CRCPP_USE_CPP11
     $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>>:_FORTIFY_SOURCE=2>
   )
- 
+
   list(APPEND linker_flags
     $<$<NOT:$<CXX_COMPILER_ID:AppleClang>>:-Wl,-z,defs>
     $<$<NOT:$<CXX_COMPILER_ID:AppleClang>>:-Wl,-z,now>
