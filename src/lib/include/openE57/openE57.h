@@ -46,7 +46,7 @@
 #include <string>
 #include <vector>
 
-#if defined(WIN32)
+#if defined(WIN32) && defined(__GNUC__)
 #  include <sysinfoapi.h>
 #  include <timezoneapi.h>
 #endif
