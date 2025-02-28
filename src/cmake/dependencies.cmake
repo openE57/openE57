@@ -18,7 +18,7 @@ else()
       xerces-c
       EXCLUDE_FROM_ALL
       GIT_REPOSITORY ${XERCES_C_REPO}
-      GIT_TAG v3.3.0
+      GIT_TAG ${XERCES_C_DEFAULT_FETCH_TAG}
       GIT_SHALLOW TRUE
     )
     FetchContent_MakeAvailable(xerces-c)
