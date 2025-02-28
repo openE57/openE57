@@ -28,9 +28,14 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE ${compiler_definitions})
 target_link_options(${PROJECT_NAME} PRIVATE ${linker_flags})
 
 target_include_directories(${PROJECT_NAME}
-    PRIVATE 
+    PUBLIC 
       $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
       ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+target_include_directories(${PROJECT_NAME}
+    PRIVATE
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
       ${XML_INCLUDE_DIRS} 
 )
 
@@ -52,9 +57,14 @@ target_compile_definitions(${PROJECT_NAME}las PRIVATE ${compiler_definitions})
 target_link_options(${PROJECT_NAME}las PRIVATE ${linker_flags})
 
 target_include_directories(${PROJECT_NAME}las
-    PRIVATE 
+    PUBLIC 
       $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
       ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+target_include_directories(${PROJECT_NAME}las
+    PRIVATE
+      $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
       ${XML_INCLUDE_DIRS}
 )
 
