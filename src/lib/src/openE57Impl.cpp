@@ -828,7 +828,7 @@ void StructureNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile
   /// don't checkImageFileOpen
 
   ustring fieldName;
-  if (forcedFieldName != NULL)
+  if (forcedFieldName != nullptr)
     fieldName = forcedFieldName;
   else
     fieldName = elementName_;
@@ -964,7 +964,7 @@ void VectorNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& c
   /// don't checkImageFileOpen
 
   ustring fieldName;
-  if (forcedFieldName != NULL)
+  if (forcedFieldName != nullptr)
     fieldName = forcedFieldName;
   else
     fieldName = elementName_;
@@ -1089,7 +1089,7 @@ SourceDestBufferImpl::SourceDestBufferImpl(std::weak_ptr<ImageFileImpl> destImag
   /// don't checkImageFileOpen, checkState_ will do it
 
   /// Set capacity_ after testing that b is OK
-  if (b == NULL)
+  if (b == nullptr)
     throw E57_EXCEPTION2(E57_ERROR_BAD_BUFFER, "sdbuf.pathName=" + pathName);
   capacity_ = b->size();
 
@@ -1113,7 +1113,7 @@ void SourceDestBufferImpl::checkState_()
 
   if (memoryRepresentation_ != E57_USTRING)
   {
-    if (base_ == NULL)
+    if (base_ == nullptr)
       throw E57_EXCEPTION2(E57_ERROR_BAD_BUFFER, "pathName=" + pathName_);
     if (stride_ == 0)
       throw E57_EXCEPTION2(E57_ERROR_BAD_BUFFER, "pathName=" + pathName_);
@@ -1122,7 +1122,7 @@ void SourceDestBufferImpl::checkState_()
   }
   else
   {
-    if (ustrings_ == NULL)
+    if (ustrings_ == nullptr)
       throw E57_EXCEPTION2(E57_ERROR_BAD_BUFFER, "pathName=" + pathName_);
   }
 }
@@ -2033,7 +2033,7 @@ void CompressedVectorNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> imf, Chec
   // don't checkImageFileOpen
 
   ustring fieldName;
-  if (forcedFieldName != NULL)
+  if (forcedFieldName != nullptr)
     fieldName = forcedFieldName;
   else
     fieldName = elementName_;
@@ -2250,7 +2250,7 @@ void IntegerNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf???*/, Checke
   // don't checkImageFileOpen
 
   ustring fieldName;
-  if (forcedFieldName != NULL)
+  if (forcedFieldName != nullptr)
     fieldName = forcedFieldName;
   else
     fieldName = elementName_;
@@ -2421,7 +2421,7 @@ void ScaledIntegerNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf*/, Che
   // don't checkImageFileOpen
 
   ustring fieldName;
-  if (forcedFieldName != NULL)
+  if (forcedFieldName != nullptr)
     fieldName = forcedFieldName;
   else
     fieldName = elementName_;
@@ -2568,7 +2568,7 @@ void FloatNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf*/, CheckedFile
   // don't checkImageFileOpen
 
   ustring fieldName;
-  if (forcedFieldName != NULL)
+  if (forcedFieldName != nullptr)
     fieldName = forcedFieldName;
   else
     fieldName = elementName_;
@@ -2690,7 +2690,7 @@ void StringNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf*/, CheckedFil
   // don't checkImageFileOpen
 
   ustring fieldName;
-  if (forcedFieldName != NULL)
+  if (forcedFieldName != nullptr)
     fieldName = forcedFieldName;
   else
     fieldName = elementName_;
@@ -2891,7 +2891,7 @@ void BlobNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf*/, CheckedFile&
   // don't checkImageFileOpen
 
   ustring fieldName;
-  if (forcedFieldName != NULL)
+  if (forcedFieldName != nullptr)
     fieldName = forcedFieldName;
   else
     fieldName = elementName_;
@@ -3178,7 +3178,7 @@ void E57XmlParser::startElement(const XMLCh* const uri, const XMLCh* const local
 #if defined(_MSC_VER)
       pi.minimum = _atoi64(minimum_str.c_str());
 #elif defined(__GNUC__)
-      pi.minimum = strtoll(minimum_str.c_str(), NULL, 10);          //??? check endptr?
+      pi.minimum = strtoll(minimum_str.c_str(), nullptr, 10);       //??? check endptr?
 #else
 #  error "no supported compiler defined"
 #endif
@@ -3195,7 +3195,7 @@ void E57XmlParser::startElement(const XMLCh* const uri, const XMLCh* const local
 #if defined(_MSC_VER)
       pi.maximum = _atoi64(maximum_str.c_str());
 #elif defined(__GNUC__)
-      pi.maximum = strtoll(maximum_str.c_str(), NULL, 10);          //??? check endptr?
+      pi.maximum = strtoll(maximum_str.c_str(), nullptr, 10);       //??? check endptr?
 #else
 #  error "no supported compiler defined"
 #endif
@@ -3223,7 +3223,7 @@ void E57XmlParser::startElement(const XMLCh* const uri, const XMLCh* const local
 #if defined(_MSC_VER)
       pi.minimum = _atoi64(minimum_str.c_str());
 #elif defined(__GNUC__)
-      pi.minimum = strtoll(minimum_str.c_str(), NULL, 10);          //??? check endptr?
+      pi.minimum = strtoll(minimum_str.c_str(), nullptr, 10);       //??? check endptr?
 #else
 #  error "no supported compiler defined"
 #endif
@@ -3240,7 +3240,7 @@ void E57XmlParser::startElement(const XMLCh* const uri, const XMLCh* const local
 #if defined(_MSC_VER)
       pi.maximum = _atoi64(maximum_str.c_str());
 #elif defined(__GNUC__)
-      pi.maximum = strtoll(maximum_str.c_str(), NULL, 10);          //??? check endptr?
+      pi.maximum = strtoll(maximum_str.c_str(), nullptr, 10);       //??? check endptr?
 #else
 #  error "no supported compiler defined"
 #endif
@@ -3357,7 +3357,7 @@ void E57XmlParser::startElement(const XMLCh* const uri, const XMLCh* const local
 #if defined(_MSC_VER)
     pi.fileOffset = _atoi64(fileOffset_str.c_str());
 #elif defined(__GNUC__)
-    pi.fileOffset = strtoll(fileOffset_str.c_str(), NULL, 10);      //??? check endptr?
+    pi.fileOffset = strtoll(fileOffset_str.c_str(), nullptr, 10);   //??? check endptr?
 #else
 #  error "no supported compiler defined"
 #endif
@@ -3367,7 +3367,7 @@ void E57XmlParser::startElement(const XMLCh* const uri, const XMLCh* const local
 #if defined(_MSC_VER)
     pi.length = _atoi64(length_str.c_str());
 #elif defined(__GNUC__)
-    pi.length     = strtoll(length_str.c_str(), NULL, 10);          //??? check endptr?
+    pi.length     = strtoll(length_str.c_str(), nullptr, 10);       //??? check endptr?
 #else
 #  error "no supported compiler defined"
 #endif
@@ -3441,7 +3441,7 @@ void E57XmlParser::startElement(const XMLCh* const uri, const XMLCh* const local
 #if defined(_MSC_VER)
       int64_t i64 = _atoi64(allowHetero_str.c_str());
 #elif defined(__GNUC__)
-      int64_t i64 = strtoll(allowHetero_str.c_str(), NULL, 10); //??? check endptr?
+      int64_t i64 = strtoll(allowHetero_str.c_str(), nullptr, 10);  //??? check endptr?
 #else
 #  error "no supported compiler defined"
 #endif
@@ -3480,7 +3480,7 @@ void E57XmlParser::startElement(const XMLCh* const uri, const XMLCh* const local
 #if defined(_MSC_VER)
     pi.fileOffset = _atoi64(fileOffset_str.c_str());
 #elif defined(__GNUC__)
-    pi.fileOffset  = strtoll(fileOffset_str.c_str(), NULL, 10);     //??? check endptr?
+    pi.fileOffset  = strtoll(fileOffset_str.c_str(), nullptr, 10);  //??? check endptr?
 #else
 #  error "no supported compiler defined"
 #endif
@@ -3490,7 +3490,7 @@ void E57XmlParser::startElement(const XMLCh* const uri, const XMLCh* const local
 #if defined(_MSC_VER)
     pi.recordCount = _atoi64(recordCount_str.c_str());
 #elif defined(__GNUC__)
-    pi.recordCount = strtoll(recordCount_str.c_str(), NULL, 10);    //??? check endptr?
+    pi.recordCount = strtoll(recordCount_str.c_str(), nullptr, 10); //??? check endptr?
 #else
 #  error "no supported compiler defined"
 #endif
@@ -3498,7 +3498,7 @@ void E57XmlParser::startElement(const XMLCh* const uri, const XMLCh* const local
     /// Create container now, so can hold children
     std::shared_ptr<CompressedVectorNodeImpl> cv_ni(new CompressedVectorNodeImpl(imf_));
     cv_ni->setRecordCount(pi.recordCount);
-    cv_ni->setBinarySectionLogicalStart(imf_->file_->physicalToLogical(pi.fileOffset)); //??? what if file_ is NULL?
+    cv_ni->setBinarySectionLogicalStart(imf_->file_->physicalToLogical(pi.fileOffset)); //??? what if file_ is nullptr?
     pi.container_ni = cv_ni;
 
     /// Push info so far onto stack
@@ -3548,7 +3548,7 @@ void E57XmlParser::endElement(const XMLCh* const uri, const XMLCh* const localNa
 #if defined(_MSC_VER)
       intValue = _atoi64(pi.childText.c_str());
 #elif defined(__GNUC__)
-      intValue = strtoll(pi.childText.c_str(), NULL, 10);           //??? check endptr?
+      intValue = strtoll(pi.childText.c_str(), nullptr, 10);        //??? check endptr?
 #else
 #  error "no supported compiler defined"
 #endif
@@ -3567,7 +3567,7 @@ void E57XmlParser::endElement(const XMLCh* const uri, const XMLCh* const localNa
 #if defined(_MSC_VER)
       intValue = _atoi64(pi.childText.c_str());
 #elif defined(__GNUC__)
-      intValue = strtoll(pi.childText.c_str(), NULL, 10);           //??? check endptr?
+      intValue = strtoll(pi.childText.c_str(), nullptr, 10);        //??? check endptr?
 #else
 #  error "no supported compiler defined"
 #endif
@@ -3806,7 +3806,7 @@ void ImageFileImpl::construct2(const ustring& fileName, const ustring& mode, con
     throw E57_EXCEPTION2(E57_ERROR_BAD_API_ARGUMENT, "mode=" + ustring(mode));
 
   /// If mode is read, do it
-  file_ = NULL;
+  file_ = nullptr;
   if (!isWriter_)
   {
     try
@@ -3828,15 +3828,15 @@ void ImageFileImpl::construct2(const ustring& fileName, const ustring& mode, con
     catch (...)
     {
       /// Remember to close file if got any exception
-      if (file_ != NULL)
+      if (file_ != nullptr)
       {
         delete file_;
-        file_ = NULL;
+        file_ = nullptr;
       }
       throw; // rethrow
     }
 
-    SAX2XMLReader* xmlReader = NULL;
+    SAX2XMLReader* xmlReader = nullptr;
 
     // Initialize the XML4C2 system
     try
@@ -3876,15 +3876,15 @@ void ImageFileImpl::construct2(const ustring& fileName, const ustring& mode, con
     }
     catch (...)
     {
-      if (xmlReader != NULL)
+      if (xmlReader != nullptr)
       {
         delete xmlReader;
-        xmlReader = NULL;
+        xmlReader = nullptr;
       }
-      if (file_ != NULL)
+      if (file_ != nullptr)
       {
         delete file_;
-        file_ = NULL;
+        file_ = nullptr;
       }
       throw; // rethrow
     }
@@ -3910,10 +3910,10 @@ void ImageFileImpl::construct2(const ustring& fileName, const ustring& mode, con
     catch (...)
     {
       /// Remember to close file if got any exception
-      if (file_ != NULL)
+      if (file_ != nullptr)
       {
         delete file_;
-        file_ = NULL;
+        file_ = nullptr;
       }
       throw; // rethrow
     }
@@ -4011,7 +4011,7 @@ void ImageFileImpl::close()
   //??? flush, close
 
   /// If file already closed, have nothing to do
-  if (file_ == NULL)
+  if (file_ == nullptr)
     return;
 
   if (isWriter_)
@@ -4058,13 +4058,13 @@ void ImageFileImpl::close()
   }
 
   delete file_;
-  file_ = NULL;
+  file_ = nullptr;
 }
 
 void ImageFileImpl::cancel()
 {
   /// If file already closed, have nothing to do
-  if (file_ == NULL)
+  if (file_ == nullptr)
     return;
 
   /// Close the file and ulink (delete) it.
@@ -4075,12 +4075,12 @@ void ImageFileImpl::cancel()
     file_->close();
 
   delete file_;
-  file_ = NULL;
+  file_ = nullptr;
 }
 
 bool ImageFileImpl::isOpen()
 {
-  return (file_ != NULL);
+  return (file_ != nullptr);
 }
 
 bool ImageFileImpl::isWriter()
@@ -4110,10 +4110,10 @@ ImageFileImpl::~ImageFileImpl()
   {};
 
   /// Just in case cancel failed without freeing file_, do free here.
-  if (file_ != NULL)
+  if (file_ != nullptr)
   {
     delete file_;
-    file_ = NULL;
+    file_ = nullptr;
   }
 }
 
@@ -6354,7 +6354,7 @@ CompressedVectorReaderImpl::CompressedVectorReaderImpl(std::shared_ptr<Compresse
 
   /// Verify that packet given by dataPhysicalOffset is actually a data packet, init channels
   {
-    char*                       anyPacket  = NULL;
+    char*                       anyPacket  = nullptr;
     std::unique_ptr<PacketLock> packetLock = cache_->lock(dataLogicalOffset, anyPacket);
 
     DataPacket* dpkt = reinterpret_cast<DataPacket*>(anyPacket);
@@ -6455,7 +6455,7 @@ unsigned CompressedVectorReaderImpl::read()
   /// Allow decoders to use data they already have in their queue to fill newly empty dbufs
   /// This helps to keep decoder input queues smaller, which reduces backtracking in the packet cache.
   for (unsigned i = 0; i < channels_.size(); i++)
-    channels_[i].decoder->inputProcess(NULL, 0);
+    channels_[i].decoder->inputProcess(nullptr, 0);
 
   /// Loop until every dbuf is full or we have reached end of the binary section.
   while (1)
@@ -6520,7 +6520,7 @@ void CompressedVectorReaderImpl::feedPacketToDecoders(uint64_t currentPacketLogi
   uint64_t nextPacketLogicalOffset   = E57_UINT64_MAX;
   {
     /// Get packet at currentPacketLogicalOffset into memory.
-    char*                       anyPacket  = NULL;
+    char*                       anyPacket  = nullptr;
     std::unique_ptr<PacketLock> packetLock = cache_->lock(currentPacketLogicalOffset, anyPacket);
     DataPacket*                 dpkt       = reinterpret_cast<DataPacket*>(anyPacket);
 
@@ -6589,7 +6589,7 @@ void CompressedVectorReaderImpl::feedPacketToDecoders(uint64_t currentPacketLogi
     if (nextPacketLogicalOffset < E57_UINT64_MAX)
     { //??? huh?
       /// Get packet at nextPacketLogicalOffset into memory.
-      char*                       anyPacket  = NULL;
+      char*                       anyPacket  = nullptr;
       std::unique_ptr<PacketLock> packetLock = cache_->lock(nextPacketLogicalOffset, anyPacket);
       DataPacket*                 dpkt       = reinterpret_cast<DataPacket*>(anyPacket);
 
@@ -6646,7 +6646,7 @@ uint64_t CompressedVectorReaderImpl::findNextDataPacket(uint64_t nextPacketLogic
   /// Starting at nextPacketLogicalOffset, search for next data packet until hit end of binary section.
   while (nextPacketLogicalOffset < sectionEndLogicalOffset_)
   {
-    char*                       anyPacket  = NULL;
+    char*                       anyPacket  = nullptr;
     std::unique_ptr<PacketLock> packetLock = cache_->lock(nextPacketLogicalOffset, anyPacket);
 
     /// Guess it's a data packet, if not continue to next packet
@@ -6702,7 +6702,7 @@ void CompressedVectorReaderImpl::close()
   channels_.clear();
 
   delete cache_;
-  cache_ = NULL;
+  cache_ = nullptr;
 
   isOpen_ = false;
 }
@@ -7910,7 +7910,7 @@ PacketReadCache::~PacketReadCache()
   for (unsigned i = 0; i < entries_.size(); i++)
   {
     delete[] entries_.at(i).buffer_;
-    entries_.at(i).buffer_ = NULL;
+    entries_.at(i).buffer_ = nullptr;
   }
 }
 

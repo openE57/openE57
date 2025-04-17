@@ -6,7 +6,7 @@
 #define ERROR_MESSAGE(msg)                                                                                                                                     \
   {                                                                                                                                                            \
     const char* themsg = msg;                                                                                                                                  \
-    if (themsg != NULL)                                                                                                                                        \
+    if (themsg != nullptr)                                                                                                                                        \
     {                                                                                                                                                          \
       printf("\n%s,\n%s, %d,\n%s\n", __FILE__, __func__, __LINE__, themsg);                                                                                    \
     }                                                                                                                                                          \

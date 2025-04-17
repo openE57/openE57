@@ -4422,7 +4422,7 @@ Since @a buf is a byte buffer, byte ordering is irrelevant (it will come out in 
 There is no constraint on the ordering of reads.
 Any part of the Blob data can be read zero or more times.
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
-@pre     buf != NULL
+@pre     buf != nullptr
 @pre     0 <= @a start < byteCount()
 @pre     0 <= count
 @pre     (@a start + @a count) < byteCount()
@@ -4457,7 +4457,7 @@ The BlobNode is one of the two node types that must be attached to the root of a
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @pre     The associated destImageFile must have been opened in write mode (i.e. destImageFile().isWritable()).
 @pre     The BlobNode must be attached to an ImageFile (i.e. isAttached()).
-@pre     buf != NULL
+@pre     buf != nullptr
 @pre     0 <= @a start < byteCount()
 @pre     0 <= count
 @pre     (@a start + @a count) < byteCount()
@@ -5059,9 +5059,9 @@ E57Exception::E57Exception(ErrorCode ecode, const ustring context, const char* s
 
 /*================*/ /*!
 @brief   Print error information on a given output stream.
-@param   [in] reportingFileName     Name of file where catch statement caught the exception.  NULL if unknown.
+@param   [in] reportingFileName     Name of file where catch statement caught the exception.  nullptr if unknown.
 @param   [in] reportingLineNumber   Number of source code line where catch statement caught the exception.  0 if unknown.
-@param   [in] reportingFunctionName String name of function containing catch statement that caught the exception.  NULL if unknown.
+@param   [in] reportingFunctionName String name of function containing catch statement that caught the exception.  nullptr if unknown.
 @param   [in] os Output string to print a summary of exception information and location of catch statement.
 @details
 The amount of information printed to output stream may depend on whether the E57 Foundation Implementation was built with debugging enabled.
@@ -5076,12 +5076,12 @@ void E57Exception::report(const char* reportingFileName, int reportingLineNumber
   os << "  Debug info: " << std::endl;
   os << "    context: " << context_ << std::endl;
   os << "    sourceFunctionName: " << sourceFunctionName_ << std::endl;
-  if (reportingFunctionName != NULL)
+  if (reportingFunctionName != nullptr)
     os << "    reportingFunctionName: " << reportingFunctionName << std::endl;
 
   /*** Add a line in error message that a smart editor (gnu emacs) can interpret as a link to the source code: */
   os << sourceFileName_ << "(" << sourceLineNumber_ << ") : error C" << errorCode_ << ":  <--- occurred on" << std::endl;
-  if (reportingFileName != NULL)
+  if (reportingFileName != nullptr)
     os << reportingFileName << "(" << reportingLineNumber << ") : error C0:  <--- reported on" << std::endl;
 #endif
 }
