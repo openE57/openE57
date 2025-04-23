@@ -2986,7 +2986,7 @@ XMLSize_t E57FileInputStream::readBytes(XMLByte* const toFill, const XMLSize_t m
   else
   {
     /// size_t is smaller than int64_t, Calc max that size_t can hold
-    const int64_t size_max = std::numeric_limits<size_t>::max();
+    constexpr int64_t size_max = std::numeric_limits<size_t>::max();
 
     /// read smaller of size_max, available
     ///??? redo
