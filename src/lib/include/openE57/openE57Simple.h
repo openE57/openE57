@@ -125,7 +125,7 @@ public:
   double elevationMinimum; //!< The minimum extent of the bounding region from the horizontal plane
   double elevationMaximum; //!< The maximum extent of the bounding region from the horizontal plane
   double azimuthStart;     //!< The starting azimuth angle defining the extent of the bounding region around the z axis
-  double azimuthEnd;       //!< The ending azimuth angle defining the extent of the bounding region around the z axix
+  double azimuthEnd;       //!< The ending azimuth angle defining the extent of the bounding region around the z axis
 };
 
 ////////////////////////////////////////////////////////////////////
@@ -319,7 +319,7 @@ public:
                                   //!< -E57_DOUBLE_MAX. If using a ScaledIntegerNode then this needs to be a minimum range value.
   double pointRangeMaximum;       //!< Indicates that the PointRecord cartesian and range fields should be configured with this maximum value E57_FLOAT_MAX or
                                   //!< E57_DOUBLE_MAX. If using a ScaledIntegerNode then this needs to be a maximum range value.
-  double pointRangeScaledInteger; //!< Indicates that the PointRecord cartesain and range fields should be configured as a ScaledIntegerNode with this scale
+  double pointRangeScaledInteger; //!< Indicates that the PointRecord cartesian and range fields should be configured as a ScaledIntegerNode with this scale
                                   //!< setting. If 0. then use FloatNode.
 
   double angleMinimum; //!< Indicates that the PointRecord angle fields should be configured with this minimum value -E57_FLOAT_MAX or -E57_DOUBLE_MAX. If using
@@ -630,7 +630,7 @@ public:
   //
   //! @brief This function returns the file header information
   bool GetE57Root(E57Root& fileHeader //!< This is the main header information
-  ) const;                            //!< @return Returns true if sucessful
+  ) const;                            //!< @return Returns true if successful
 
   ////////////////////////////////////////////////////////////////////
   //
@@ -642,7 +642,7 @@ public:
   //! @brief This function returns the image2D header and positions the cursor
   bool ReadImage2D(int32_t  imageIndex,   //!< This in the index into the image2D vector
                    Image2D& image2DHeader //!< pointer to the Image2D structure to receive the picture information
-  ) const;                                //!< @return Returns true if sucessful
+  ) const;                                //!< @return Returns true if successful
 
   //! @brief This function returns the size of the image data
   /*! @details The e57::Image2DType identifies the format representation for the image data
@@ -674,7 +674,7 @@ public:
                        int64_t&                imageSize,       //!< This is the total number of bytes for the image blob.
                        e57::Image2DType&       imageMaskType,   //!< This is E57_PNG_IMAGE_MASK if "imageMask" is defined in the projection
                        e57::Image2DType&       imageVisualType  //!< This is image type of the VisualReferenceRepresentation if given.
-  ) const;                                                      //!< @return Returns true if sucessful
+  ) const;                                                      //!< @return Returns true if successful
 
   //! @brief This function reads the block
   int64_t ReadImage2DData(int32_t                imageIndex,      //!< picture block index
@@ -695,17 +695,17 @@ public:
   //! @brief This function returns the Data3D header and positions the cursor
   bool ReadData3D(int32_t dataIndex,   //!< This in the index into the images3D vector
                   Data3D& data3DHeader //!< pointer to the Data3D structure to receive the image information
-  ) const;                             //!< @return Returns true if sucessful
+  ) const;                             //!< @return Returns true if successful
 
   //! @brief This function returns the size of the point data
   bool GetData3DSizes(int32_t  dataIndex,   //!< This in the index into the images3D vector
                       int64_t& rowMax,      //!< This is the maximum row size
                       int64_t& columnMax,   //!< This is the maximum column size
                       int64_t& pointsSize,  //!< This is the total number of point records
-                      int64_t& groupsSize,  //!< This is the total number of group reocrds
+                      int64_t& groupsSize,  //!< This is the total number of group records
                       int64_t& countSize,   //!< This is the maximum point count per group
                       bool&    bColumnIndex //!< This indicates that the idElementName is "columnIndex"
-  ) const;                                  //!< @return Return true if sucessful, false otherwise
+  ) const;                                  //!< @return Return true if successful, false otherwise
 
   //! @brief This funtion writes out the group data.
   bool ReadData3DGroupsData(int32_t  dataIndex,       //!< data block index given by the NewData3D
@@ -713,7 +713,7 @@ public:
                             int64_t* idElementValue,  //!< index for this group
                             int64_t* startPointIndex, //!< Starting index in to the "points" data vector for the groups
                             int64_t* pointCount       //!< size of the groups given
-  ) const;                                            //!< @return Return true if sucessful, false otherwise
+  ) const;                                            //!< @return Return true if successful, false otherwise
 
   //! @brief This function sets up the point data fields
   /*! @details All the non-nullptr buffers in the call below have number of elements = pointCount.
@@ -757,7 +757,7 @@ public:
     int8_t* isTimeStampInvalid = nullptr, //!< Value = 0 if the timeStamp is considered valid, 1 otherwise
     bool (*pointDataExtension)(ImageFile imf, StructureNode proto, int protoIndex, std::vector<SourceDestBuffer>& destBuffers) = nullptr
 
-  ) const; //!< @return Return true if sucessful, false otherwise
+  ) const; //!< @return Return true if successful, false otherwise
 
   ////////////////////////////////////////////////////////////////////
   //
@@ -872,7 +872,7 @@ public:
                              int64_t* idElementValue,  //!< index for this group
                              int64_t* startPointIndex, //!< Starting index in to the "points" data vector for the groups
                              int64_t* pointCount       //!< size of the groups given
-  ) const;                                             //!< @return Return true if sucessful, false otherwise
+  ) const;                                             //!< @return Return true if successful, false otherwise
 
   ////////////////////////////////////////////////////////////////////
   //

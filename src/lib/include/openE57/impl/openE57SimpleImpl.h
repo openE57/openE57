@@ -120,7 +120,7 @@ public:
   //
   //! This function returns the file header information
   virtual bool GetE57Root(E57Root& fileHeader //!< This is the main header information
-  );                                          //!< /return Returns true if sucessful
+  );                                          //!< /return Returns true if successful
 
   ////////////////////////////////////////////////////////////////////
   //
@@ -132,7 +132,7 @@ public:
   //! This function returns the Image2Ds header and positions the cursor
   virtual bool ReadImage2D(int32_t  imageIndex,   //!< This in the index into the Image2Ds vector
                            Image2D& Image2DHeader //!< pointer to the Image2D structure to receive the picture information
-  );                                              //!< /return Returns true if sucessful
+  );                                              //!< /return Returns true if successful
 
   //! This function returns the size of the image data
   virtual bool GetImage2DSizes(int32_t                 imageIndex,      //!< This in the index into the image2D vector
@@ -143,7 +143,7 @@ public:
                                int64_t&                imageSize,       //!< This is the total number of bytes for the image blob.
                                e57::Image2DType&       imageMaskType,   //!< This is E57_PNG_IMAGE_MASK if "imageMask" is defined in the projection
                                e57::Image2DType&       imageVisualType  //!< This is image type of the VisualReferenceRepresentation if given.
-  );                                                                    //!< /return Returns true if sucessful
+  );                                                                    //!< /return Returns true if successful
 
   //! This function reads the block
   virtual int64_t ReadImage2DData(int32_t                imageIndex,      //!< picture block index
@@ -161,7 +161,7 @@ public:
                                    int64_t&           imageHeight,  //!< The image height (in pixels).
                                    int64_t&           imageSize,    //!< This is the total number of bytes for the image blob.
                                    e57::Image2DType&  imageMaskType //!< This is E57_PNG_IMAGE_MASK if "imageMask" is defined in the projection
-  );                                                                //!< /return Returns true if sucessful
+  );                                                                //!< /return Returns true if successful
 
   virtual int64_t ReadImage2DNode(e57::StructureNode image,     //!< 1 of 3 projects or the visual
                                   e57::Image2DType   imageType, //!< identifies the image format desired.
@@ -180,14 +180,14 @@ public:
   //! This function returns the Data3D header and positions the cursor
   virtual bool ReadData3D(int32_t dataIndex,   //!< This in the index into the images3D vector
                           Data3D& data3DHeader //!< pointer to the Data3D structure to receive the image information
-  );                                           //!< /return Returns true if sucessful
+  );                                           //!< /return Returns true if successful
 
   //! This function returns the size of the point data
   virtual bool GetData3DSizes(int32_t  dataIndex,   //!< This in the index into the images3D vector
                               int64_t& rowMax,      //!< This is the maximum row size
                               int64_t& columnMax,   //!< This is the maximum column size
                               int64_t& pointsSize,  //!< This is the total number of point records
-                              int64_t& groupsSize,  //!< This is the total number of group reocrds
+                              int64_t& groupsSize,  //!< This is the total number of group records
                               int64_t& countSize,   //!< This is the maximum point count per group
                               bool&    bColumnIndex //!< This indicates that the idElementName is "columnIndex"
   );
@@ -198,7 +198,7 @@ public:
                                     int64_t* idElementValue,  //!< index for this group
                                     int64_t* startPointIndex, //!< Starting index in to the "points" data vector for the groups
                                     int64_t* pointCount       //!< size of the groups given
-  );                                                          //!< \return Return true if sucessful, false otherwise
+  );                                                          //!< \return Return true if successful, false otherwise
 
   //! This function sets up the point data fields
   /* All the non-nullptr buffers in the call below have number of elements = pointCount.
@@ -366,7 +366,7 @@ public:
                                      int64_t* idElementValue,  //!< index for this group
                                      int64_t* startPointIndex, //!< Starting index in to the "points" data vector for the groups
                                      int64_t* pointCount       //!< size of the groups given
-  );                                                           //!< \return Return true if sucessful, false otherwise
+  );                                                           //!< \return Return true if successful, false otherwise
 
   //! This function returns the file raw E57Root Structure Node
   virtual StructureNode GetRawE57Root(void); //!< /return Returns the E57Root StructureNode

@@ -975,7 +975,7 @@ In a production version, the buffer would be much larger than 8 characters.
 The buffers are sent to the @c cout ostream on <b>source line 39</b>, with appropriate casts to keep the compiler happy.
 The XML is not parsed, just read in blocks.
 If the file is corrupted and has checksum errors, the raw XML utility functions will fail.
-There are no E57 Fountation API functions to read a corrupt E57 file (a .e57 file with checksum errors).
+There are no E57 Foundation API functions to read a corrupt E57 file (a .e57 file with checksum errors).
 
 The following console output is produced:
 @includelineno RawXML.out
@@ -1723,7 +1723,7 @@ Newly constructed nodes (before they are inserted into an ImageFile tree) start 
 It is possible to temporarily create small trees that are unattached to any ImageFile.
 In these temporary trees, the top-most node will be a root node.
 After the tree is attached to the ImageFile tree, the only root node will be the pre-created one of the ImageTree (the one returned by ImageFile::root).
-The concept of @em attachement is slightly larger than that of the parent-child relationship (see Node::isAttached and CompressedVectorNode::CompressedVectorNode for more details).
+The concept of @em attachment is slightly larger than that of the parent-child relationship (see Node::isAttached and CompressedVectorNode::CompressedVectorNode for more details).
 @pre     The destination ImageFile must be open (i.e. destImageFile().isOpen()).
 @post    No visible state is modified.
 @return  true if this node is a root node.
@@ -1747,7 +1747,7 @@ Due to the set-once design of the API, a parent-child relationship cannot be mod
 A child node can be any of the 8 node types, but a parent node can only be one of the 3 container node types (E57_STRUCTURE, E57_VECTOR, and E57_COMPRESSED_VECTOR).
 Each parent-child link has a string name (the elementName) associated with it (See Node::elementName for more details).
 More than one tree can be formed at any given time.
-Typically small trees are temporarily constructed before attachement to an ImageFile so that they will be written to the disk.
+Typically small trees are temporarily constructed before attachment to an ImageFile so that they will be written to the disk.
 
 @b Warning: user algorithms that use this function to walk the tree must take care to handle the case where a node is its own parent (it is a root node).
 Use Node::isRoot to avoid infinite loops or infinite recursion.
@@ -1914,7 +1914,7 @@ See Node class discussion for discussion of the common functions that StructureN
 A class invariant is a list of statements about an object that are always true before and after any operation on the object.
 An invariant is useful for testing correct operation of an implementation.
 Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API
-user. The following C++ code checks externally visible state for consistancy and throws an exception if the invariant is violated:
+user. The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
 @dontinclude E57Foundation.cpp
 @skip begin StructureNode::checkInvariant
 @skip checkInvariant(
@@ -3611,7 +3611,7 @@ See Node class discussion for discussion of the common functions that StructureN
 A class invariant is a list of statements about an object that are always true before and after any operation on the object.
 An invariant is useful for testing correct operation of an implementation.
 Statements in an invariant can involve only externally visible state, or can refer to internal implementation-specific state that is not visible to the API
-user. The following C++ code checks externally visible state for consistancy and throws an exception if the invariant is violated:
+user. The following C++ code checks externally visible state for consistency and throws an exception if the invariant is violated:
 @dontinclude E57Foundation.cpp
 @skip begin ScaledIntegerNode::checkInvariant
 @skip checkInvariant(
@@ -5005,7 +5005,7 @@ ImageFile::ImageFile(std::shared_ptr<ImageFileImpl> imfi) : impl_(imfi) {}
 @class E57Exception
 @brief   Object thrown by E57 Foundation API functions to communicate the conditions of an error.
 @details
-The E57Exception object communicates information about errors occuring in calls to the E57 Foundation API functions.
+The E57Exception object communicates information about errors occurring in calls to the E57 Foundation API functions.
 The error information is communicated from the location in the E57 Foundation Implementation where the error was detected to the @c catch statement in the code
 of the API user. The state of E57Exception object has one mandatory field, the errorCode, and several optional fields that can be set depending on the debug
 level of the E57 Foundation Implementation. There are three optional fields that encode the location in the source code of the E57 Foundation Implementation
@@ -5038,7 +5038,7 @@ Almost all of the API functions can throw the following two ErrorCodes: E57_ERRO
 In some E57 Foundation Implementations, the tree information may be stored on disk rather than in memory.
 If the disk file is closed, even the most basic information may not be available about nodes in the tree.
 So if the ImageFile is closed (by calling ImageFile::close), the API user must be ready for many of the API functions to throw
-E57Exception(E57_ERROR_IMAGEFILE_NOT_OPEN). Secondly, regarding the E57_ERROR_INTERNAL error, there is a lot of consistancy checking in the Reference
+E57Exception(E57_ERROR_IMAGEFILE_NOT_OPEN). Secondly, regarding the E57_ERROR_INTERNAL error, there is a lot of consistency checking in the Reference
 Implementation, and there may be much more added. Even if some API routines do not now throw E57_ERROR_INTERNAL, they could some time in the future, or in
 different implementations. So the right to throw E57_ERROR_INTERNAL is reserved for every API function (except those that by design can't throw E57Exceptions).
 

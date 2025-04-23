@@ -1195,7 +1195,7 @@ int64_t SourceDestBufferImpl::getNextInt64(double scale, double offset)
 
   /// Reverse scale (undo scaling) of a user's number to get raw value to put in file.
 
-  /// Encorporating the scale is optional (requested by user when constructing the sdbuf).
+  /// Incorporating the scale is optional (requested by user when constructing the sdbuf).
   /// If the user did not request scaling, then we get raw values from user's buffer.
   if (!doScaling_)
   {
@@ -1519,9 +1519,9 @@ void SourceDestBufferImpl::setNextInt64(int64_t value, double scale, double offs
 {
   /// don't checkImageFileOpen
 
-  /// Apply a scale and offset to numbers from file before puting in user's buffer.
+  /// Apply a scale and offset to numbers from file before putting in user's buffer.
 
-  /// Encorporating the scale is optional (requested by user when constructing the sdbuf).
+  /// Incorporating the scale is optional (requested by user when constructing the sdbuf).
   /// If the user did not request scaling, then we send raw values to user's buffer.
   if (!doScaling_)
   {
@@ -2709,7 +2709,7 @@ void StringNodeImpl::writeXml(std::shared_ptr<ImageFileImpl> /*imf*/, CheckedFil
     size_t currentPosition = 0;
     size_t len             = value_.length();
 
-    /// Loop, searching for occurences of "]]>", which will be split across two CDATA directives
+    /// Loop, searching for occurrences of "]]>", which will be split across two CDATA directives
     while (currentPosition < len)
     {
       size_t found = value_.find("]]>", currentPosition);
@@ -3083,7 +3083,7 @@ private:
     int64_t        length;                     // used in E57_BLOB
     bool           allowHeterogeneousChildren; // used in E57_VECTOR
     int64_t        recordCount;                // used in E57_COMPRESSED_VECTOR
-    ustring        childText;                  // used by all types, accumlates all child text between tags
+    ustring        childText;                  // used by all types, accumulates all child text between tags
 
     /// Holds node for Structure, Vector, and CompressedVector so can append child elements
     std::shared_ptr<NodeImpl> container_ni;
@@ -4100,7 +4100,7 @@ int ImageFileImpl::readerCount()
 
 ImageFileImpl::~ImageFileImpl()
 {
-  /// Try to cancel if not already closed, but don't allow any exceptions to propogate to caller (because in dtor).
+  /// Try to cancel if not already closed, but don't allow any exceptions to propagate to caller (because in dtor).
   /// If writing, this will unlink the file, so make sure call ImageFileImpl::close explicitly before dtor runs.
   try
   {
@@ -5390,7 +5390,7 @@ char* DataPacket::getBytestream(unsigned bytestreamNumber, unsigned& byteCount)
   uint16_t* bsbLength  = reinterpret_cast<uint16_t*>(&payload[0]);
   char*     streamBase = reinterpret_cast<char*>(&bsbLength[bytestreamCount]);
 
-  /// Sum size of preceeding stream buffers to get position
+  /// Sum size of preceding stream buffers to get position
   unsigned totalPreceeding = 0;
   for (unsigned i = 0; i < bytestreamNumber; i++)
     totalPreceeding += bsbLength[i];
@@ -7081,7 +7081,7 @@ uint64_t BitpackFloatEncoder::processRecords(size_t recordCount)
 #ifdef E57_MAX_VERBOSE
       cout << "encoding float: " << outp[i] << endl;
 #endif
-      SWAB(&outp[i]); /// swab if neccesary
+      SWAB(&outp[i]); /// swab if necessary
     }
   }
   else
@@ -7096,7 +7096,7 @@ uint64_t BitpackFloatEncoder::processRecords(size_t recordCount)
 #ifdef E57_MAX_VERBOSE
       cout << "encoding double: " << outp[i] << endl;
 #endif
-      SWAB(&outp[i]); /// swab if neccesary
+      SWAB(&outp[i]); /// swab if necessary
     }
   }
 
@@ -7357,7 +7357,7 @@ std::shared_ptr<Decoder> Decoder::DecoderFactory(unsigned                       
     unsigned bitsPerRecord = imf->bitsNeeded(sini->minimum(), sini->maximum());
 
     //!!! need to pick smarter channel buffer sizes, here and elsewhere
-    /// Constuct ScaledInteger dencoder with appropriate register size, based on number of bits stored.
+    /// Construct ScaledInteger decoder with appropriate register size, based on number of bits stored.
     if (bitsPerRecord == 0)
     {
       std::shared_ptr<Decoder> decoder(
@@ -7468,7 +7468,7 @@ size_t BitpackDecoder::inputProcess(const char* source, const size_t availableBy
     /// ??? fix doc for new bit interface
     /// Now that we have input stored in an aligned buffer, call derived class to try to eat some
     /// Note that end of filled buffer may not be at a natural boundary.
-    /// The subclass may transfer this partial word in a full word transfer, but it must be carefull to only use the defined bits.
+    /// The subclass may transfer this partial word in a full word transfer, but it must be careful to only use the defined bits.
     /// inBuffer_ is a multiple of largest word size, so this full word transfer off the end will always be in defined memory.
 
     size_t firstWord       = inBufferFirstBit_ / bitsPerWord_;
@@ -7607,7 +7607,7 @@ size_t BitpackFloatDecoder::inputProcessAligned(const char* inbuf, const size_t 
     for (unsigned i = 0; i < n; i++)
     {
       float value = *inp;
-      SWAB(&value); /// swab if neccesary
+      SWAB(&value); /// swab if necessary
 #ifdef E57_MAX_VERBOSE
       cout << "  got float value=" << value << endl;
 #endif
@@ -7624,7 +7624,7 @@ size_t BitpackFloatDecoder::inputProcessAligned(const char* inbuf, const size_t 
     for (unsigned i = 0; i < n; i++)
     {
       double value = *inp;
-      SWAB(&value); /// swab if neccesary
+      SWAB(&value); /// swab if necessary
 #ifdef E57_MAX_VERBOSE
       cout << "  got double value=" << value << endl;
 #endif
@@ -8012,7 +8012,7 @@ void PacketReadCache::readPacket(unsigned oldestEntry, uint64_t packetLogicalOff
   cout << "PacketReadCache::readPacket() called, oldestEntry=" << oldestEntry << " packetLogicalOffset=" << packetLogicalOffset << endl;
 #endif
 
-  /// Read header of packet first to get length.  Use EmptyPacketHeader since it has the commom fields to all packets.
+  /// Read header of packet first to get length.  Use EmptyPacketHeader since it has the common fields to all packets.
   EmptyPacketHeader header;
   cFile_->seek(packetLogicalOffset, CheckedFile::logical);
   cFile_->read(reinterpret_cast<char*>(&header), sizeof(header));
@@ -8294,7 +8294,7 @@ uint64_t BitpackIntegerEncoder<RegisterT>::processRecords(size_t recordCount)
       }
 #endif
       outp[outTransferred] = register_;
-      SWAB(&outp[outTransferred]); /// swab if neccesary
+      SWAB(&outp[outTransferred]); /// swab if necessary
       outTransferred++;
 
       register_         = 0;
@@ -8590,7 +8590,7 @@ size_t BitpackIntegerDecoder<RegisterT>::inputProcessAligned(const char* inbuf, 
     else
       destBuffer_->setNextInt64(value);
 
-    /// Store the result in next avaiable position in the user's dest buffer
+    /// Store the result in next available position in the user's dest buffer
 
     /// Calc next bit alignment and which word it starts in
     bitOffset += bitsPerRecord_;

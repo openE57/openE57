@@ -390,7 +390,7 @@ int32_t ReaderImpl ::GetImage2DCount(void)
 //! This function returns the Image2Ds header and positions the cursor
 bool ReaderImpl ::ReadImage2D(int32_t  imageIndex,   //!< This in the index into the Image2Ds vector
                               Image2D& image2DHeader //!< pointer to the Image2D structure to receive the picture information
-                              )                      //!< /return Returns true if sucessful
+                              )                      //!< /return Returns true if successful
 {
   if (IsOpen())
   {
@@ -755,7 +755,7 @@ ImageFile ReaderImpl ::GetRawIMF(void)
 //! This function returns the Data3D header and positions the cursor
 bool ReaderImpl ::ReadData3D(int32_t dataIndex,   //!< This in the index into the images3D vector
                              Data3D& data3DHeader //!< pointer to the Data3D structure to receive the image information
-                             )                    //!< /return Returns true if sucessful
+                             )                    //!< /return Returns true if successful
 {
   if (IsOpen())
   {
@@ -1354,7 +1354,7 @@ bool ReaderImpl ::ReadData3DGroupsData(int32_t  dataIndex,       //!< data block
                                        int64_t* idElementValue,  //!< index for this group
                                        int64_t* startPointIndex, //!< Starting index in to the "points" data vector for the groups
                                        int64_t* pointCount       //!< size of the groups given
-                                       )                         //!< \return Return true if sucessful, false otherwise
+                                       )                         //!< \return Return true if successful, false otherwise
 {
   if ((dataIndex < 0) || (dataIndex >= data3D_.childCount()))
     return false;
@@ -1516,7 +1516,7 @@ WriterImpl::WriterImpl(const ustring& filePath, const ustring& coordinateMetadat
 {
   /// We are using the E57 v1.0 data format standard fieldnames.
   /// The standard fieldnames are used without an extension prefix (in the default namespace).
-  /// We explicitly register it for completeness (the reference implementaion would do it for us, if we didn't).
+  /// We explicitly register it for completeness (the reference implementation would do it for us, if we didn't).
   imf_.extensionsAdd("", E57_V1_0_URI);
 
 #ifdef TEST_EXTENSIONS
@@ -2425,7 +2425,7 @@ bool WriterImpl ::WriteData3DGroupsData(int32_t  dataIndex,       //!< data bloc
                                         int64_t* idElementValue,  //!< index for this group
                                         int64_t* startPointIndex, //!< Starting index in to the "points" data vector for the groups
                                         int64_t* pointCount       //!< size of each of the groups given
-                                        )                         //!< \return Return true if sucessful, false otherwise
+                                        )                         //!< \return Return true if successful, false otherwise
 {
   if ((dataIndex < 0) || (dataIndex >= data3D_.childCount()))
     return false;
