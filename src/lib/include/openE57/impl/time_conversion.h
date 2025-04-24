@@ -248,7 +248,7 @@ namespace utils
 
   /**
    * @brief Determines the number of day in year given the year, month, and day
-   * @remarks Performed independant comparison with http://www.mbari.org/staff/coletti/doytable.html
+   * @remarks Performed independent comparison with http://www.mbari.org/staff/coletti/doytable.html
    *
    * @return true if successful, false otherwise
    */

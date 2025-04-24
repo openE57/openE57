@@ -1905,7 +1905,7 @@ void E57Validator::validatePointRecordContents(CompressedVectorNode cv, Structur
 
           /// Get lineIndex from row or column
           bool    usesLineGroups = lineGrouping.isDefined();
-          int64_t lineIndex;
+          int64_t lineIndex{0};
           if (usesLineGroups)
           {
             if (lineGrouping.isByRow())
@@ -2053,7 +2053,7 @@ void E57Validator::validatePointRecordContents(CompressedVectorNode cv, Structur
 
           /// Get lineIndex from row or column
           bool    usesLineGroups = lineGrouping.isDefined();
-          int64_t lineIndex;
+          int64_t lineIndex{0};
           if (usesLineGroups)
           {
             if (lineGrouping.isByRow())

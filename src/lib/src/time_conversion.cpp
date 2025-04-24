@@ -6,7 +6,7 @@
 #define ERROR_MESSAGE(msg)                                                                                                                                     \
   {                                                                                                                                                            \
     const char* themsg = msg;                                                                                                                                  \
-    if (themsg != NULL)                                                                                                                                        \
+    if (themsg != nullptr)                                                                                                                                        \
     {                                                                                                                                                          \
       printf("\n%s,\n%s, %d,\n%s\n", __FILE__, __func__, __LINE__, themsg);                                                                                    \
     }                                                                                                                                                          \
@@ -570,7 +570,7 @@ constexpr const int    DAYS_IN_DEC                   = 31;
   else
     utc_offset = 15;
   /*
-   * 12/Sep/2009 (KA): The following program will print out the required julian date for the next leap second (after editting year/month).
+   * 12/Sep/2009 (KA): The following program will print out the required julian date for the next leap second (after editing year/month).
    * #include <iostream>
    * #include <iomanip>
    * #include "time_conversion.h"

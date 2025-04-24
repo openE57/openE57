@@ -140,27 +140,27 @@ An example of a typical use of this interface would be as follows:
 
 //Setup buffers
 
-   int8_t * isInvalidData = NULL;
+   int8_t * isInvalidData = nullptr;
    if(scanHeader.pointFields.cartesianInvalidStateField)
      isInvalidData = new int8_t[nSize];
 
 //Setup Points Buffers
 
-   double * xData = NULL;
+   double * xData = nullptr;
    if(scanHeader.pointFields.cartesianXField)
      xData = new double[nSize];
 
-   double * yData = NULL;
+   double * yData = nullptr;
    if(scanHeader.pointFields.cartesianYField)
      yData = new double[nSize];
 
-   double * zData = NULL;
+   double * zData = nullptr;
    if(scanHeader.pointFields.cartesianZField)
      zData = new double[nSize];
 
 //Setup intensity buffers if present
 
-   double *	intData = NULL;
+   double *	intData = nullptr;
    bool		bIntensity = false;
    double		intRange = 0;
    double		intOffset = 0;
@@ -175,9 +175,9 @@ An example of a typical use of this interface would be as follows:
 
 //Setup color buffers if present
 
-   uint16_t *	redData = NULL;
-   uint16_t *	greenData = NULL;
-   uint16_t *	blueData = NULL;
+   uint16_t *	redData = nullptr;
+   uint16_t *	greenData = nullptr;
+   uint16_t *	blueData = nullptr;
    bool		bColor = false;
    int32_t		colorRedRange = 1;
    int32_t		colorRedOffset = 0;
@@ -202,9 +202,9 @@ An example of a typical use of this interface would be as follows:
 
 //Setup the GroupByLine buffers information
 
-   int64_t * idElementValue = NULL;
-   int64_t * startPointIndex = NULL;
-   int64_t * pointCount = NULL;
+   int64_t * idElementValue = nullptr;
+   int64_t * startPointIndex = nullptr;
+   int64_t * pointCount = nullptr;
    if(nGroupsSize > 0)
    {
      idElementValue = new int64_t[nGroupsSize];
@@ -218,8 +218,8 @@ An example of a typical use of this interface would be as follows:
 
 //Setup row/column index information
 
-   int32_t * rowIndex = NULL;
-   int32_t * columnIndex = NULL;
+   int32_t * rowIndex = nullptr;
+   int32_t * columnIndex = nullptr;
    if(scanHeader.pointFields.rowIndexField)
      rowIndex = new int32_t[nSize];
    if(scanHeader.pointFields.columnIndexField)
@@ -235,14 +235,14 @@ An example of a typical use of this interface would be as follows:
        zData,				//!< pointer to a buffer with the z data
        isInvalidData,		//!< pointer to a buffer with the valid indication
        intData,			//!< pointer to a buffer with the lidar return intesity
-       NULL,
+       nullptr,
        redData,			//!< pointer to a buffer with the color red data
        greenData,			//!< pointer to a buffer with the color green data
        blueData,			//!< pointer to a buffer with the color blue data
-       NULL,
-       NULL,
-       NULL,
-       NULL,
+       nullptr,
+       nullptr,
+       nullptr,
+       nullptr,
        rowIndex,			//!< pointer to a buffer with the rowIndex
        columnIndex			//!< pointer to a buffer with the columnIndex
        );
@@ -373,7 +373,7 @@ An example of a typical use of this interface would be as follows:
 
 //Read the picture data
 
-   eReader.ReadImage2DData(imageIndex, imageProjection, imageType, jpegBuffer, 0, nImagesSizw);
+   eReader.ReadImage2DData(imageIndex, imageProjection, imageType, jpegBuffer, 0, nImagesSize);
 
 // ... access the picture and decode ...
 
@@ -381,7 +381,7 @@ An example of a typical use of this interface would be as follows:
 
    delete jpegBuffer;
 
-   eReaer.Close();
+   eReader.Close();
 
 ///////////////////////////////////////////////////////////////////////
 // CATCH THE ERRORS
@@ -519,9 +519,9 @@ An example of a typical use of this interface would be as follows:
 
 //Setup Color
 
-   uint16_t * redData = NULL;
-   uint16_t * greenData = NULL;
-   uint16_t * blueData = NULL;
+   uint16_t * redData = nullptr;
+   uint16_t * greenData = nullptr;
+   uint16_t * blueData = nullptr;
    if(exportColor)
    {
      scanHeader.pointFields.colorRedField = true;
@@ -541,7 +541,7 @@ An example of a typical use of this interface would be as follows:
 
 //Setup Intensity
 
-   double * intData = NULL;
+   double * intData = nullptr;
    if(exportIntensity)
    {
      scanHeader.pointFields.intensityField = true;
@@ -565,12 +565,12 @@ An example of a typical use of this interface would be as follows:
        yData,				//!< pointer to a buffer with the y data
        zData,				//!< pointer to a buffer with the z data
        isInvalidData,		//!< pointer to a buffer with the valid indication
-       intData,			//!< pointer to a buffer with the lidar return intesity
-       NULL,
+       intData,			//!< pointer to a buffer with the lidar return intensity
+       nullptr,
        redData,			//!< pointer to a buffer with the color red data
        greenData,			//!< pointer to a buffer with the color green data
        blueData,			//!< pointer to a buffer with the color blue data
-       NULL
+       nullptr
        );
 
 /////////////////////////////////////////////////////////////////
@@ -1129,7 +1129,7 @@ VectorNode Reader ::GetRawImages2D(void)
 
 bool Reader ::ReadData3D(int32_t dataIndex,   // This in the index into the images3D vector
                          Data3D& data3DHeader // pointer to the Data3D structure to receive the image information
-) const                                       // /return Returns true if sucessful
+) const                                       // /return Returns true if successful
 {
   return impl_->ReadData3D(dataIndex, data3DHeader);
 }
@@ -1138,7 +1138,7 @@ bool Reader ::GetData3DSizes(int32_t  dataIndex,   // This in the index into the
                              int64_t& rowMax,      // This is the maximum row size
                              int64_t& columnMax,   // This is the maximum column size
                              int64_t& pointsSize,  // This is the total number of point records
-                             int64_t& groupsSize,  // This is the total number of group reocrds
+                             int64_t& groupsSize,  // This is the total number of group records
                              int64_t& countSize,   //!< This is the maximum point count per group
                              bool&    bColumnIndex //!< This indicates that the idElementName is "columnIndex"
 ) const
@@ -1151,7 +1151,7 @@ bool Reader ::ReadData3DGroupsData(int32_t  dataIndex,       // data block index
                                    int64_t* idElementValue,  // index for this group
                                    int64_t* startPointIndex, // Starting index in to the "points" data vector for the groups
                                    int64_t* pointCount       // size of the groups given
-) const                                                      // \return Return true if sucessful, false otherwise
+) const                                                      // \return Return true if successful, false otherwise
 {
   return impl_->ReadData3DGroupsData(dataIndex, groupCount, idElementValue, startPointIndex, pointCount);
 }
@@ -1312,7 +1312,7 @@ bool Writer ::WriteData3DGroupsData(int32_t  dataIndex,       // data block inde
                                     int64_t* idElementValue,  // index for this group
                                     int64_t* startPointIndex, // Starting index in to the "points" data vector for the groups
                                     int64_t* pointCount       // size of the groups given
-) const                                                       // \return Return true if sucessful, false otherwise
+) const                                                       // \return Return true if successful, false otherwise
 {
   return impl_->WriteData3DGroupsData(dataIndex, groupCount, idElementValue, startPointIndex, pointCount);
 }

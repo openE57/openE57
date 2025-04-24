@@ -56,7 +56,7 @@ namespace e57
 {
 #endif
 
-// Use std type names for signed/unsigned integers in various witdths
+// Use std type names for signed/unsigned integers in various widths
 using std::int16_t;
 using std::int32_t;
 using std::int64_t;
@@ -757,7 +757,7 @@ enum ErrorCode
 class E57Exception : public std::exception
 {
 public:
-  virtual void        report(const char* reportingFileName = NULL, int reportingLineNumber = 0, const char* reportingFunctionName = NULL,
+  virtual void        report(const char* reportingFileName = nullptr, int reportingLineNumber = 0, const char* reportingFunctionName = nullptr,
                              std::ostream& os = std::cout) const;
   virtual ErrorCode   errorCode() const;
   virtual ustring     context() const;
@@ -769,7 +769,7 @@ public:
   virtual int         sourceLineNumber() const;
 
   //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
-  E57Exception(ErrorCode ecode, const ustring context, const char* srcFileName = NULL, int srcLineNumber = 0, const char* srcFunctionName = NULL);
+  E57Exception(ErrorCode ecode, const ustring context, const char* srcFileName = nullptr, int srcLineNumber = 0, const char* srcFunctionName = nullptr);
   ~E57Exception() throw(){};
 
 private:          //=================

@@ -125,7 +125,7 @@ public:
   double elevationMinimum; //!< The minimum extent of the bounding region from the horizontal plane
   double elevationMaximum; //!< The maximum extent of the bounding region from the horizontal plane
   double azimuthStart;     //!< The starting azimuth angle defining the extent of the bounding region around the z axis
-  double azimuthEnd;       //!< The ending azimuth angle defining the extent of the bounding region around the z axix
+  double azimuthEnd;       //!< The ending azimuth angle defining the extent of the bounding region around the z axis
 };
 
 ////////////////////////////////////////////////////////////////////
@@ -319,7 +319,7 @@ public:
                                   //!< -E57_DOUBLE_MAX. If using a ScaledIntegerNode then this needs to be a minimum range value.
   double pointRangeMaximum;       //!< Indicates that the PointRecord cartesian and range fields should be configured with this maximum value E57_FLOAT_MAX or
                                   //!< E57_DOUBLE_MAX. If using a ScaledIntegerNode then this needs to be a maximum range value.
-  double pointRangeScaledInteger; //!< Indicates that the PointRecord cartesain and range fields should be configured as a ScaledIntegerNode with this scale
+  double pointRangeScaledInteger; //!< Indicates that the PointRecord cartesian and range fields should be configured as a ScaledIntegerNode with this scale
                                   //!< setting. If 0. then use FloatNode.
 
   double angleMinimum; //!< Indicates that the PointRecord angle fields should be configured with this minimum value -E57_FLOAT_MAX or -E57_DOUBLE_MAX. If using
@@ -439,7 +439,7 @@ public:
   ustring sensorFirmwareVersion; //!< The version number for the firmware installed in the sensor at the time of data collection.
 
   float
-    temperature; //!< The ambient temperature, measured at the sensor, at the time of data collection (in degrees Celsius). Shall be ? ?273.15� (absolute zero).
+        temperature; //!< The ambient temperature, measured at the sensor, at the time of data collection (in degrees Celsius). Shall be ? ?273.15� (absolute zero).
   float relativeHumidity;    //!< The percentage relative humidity, measured at the sensor, at the time of data collection. Shall be in the interval [0, 100].
   float atmosphericPressure; //!< The atmospheric pressure, measured at the sensor, at the time of data collection (in Pascals). Shall be positive.
 
@@ -452,7 +452,7 @@ public:
   e57::CartesianBounds
     cartesianBounds; //!< The bounding region (in cartesian coordinates) of all the points in this Data3D (in the local coordinate system of the points).
   e57::SphericalBounds
-    sphericalBounds; //!< The bounding region (in spherical coordinates) of all the points in this Data3D (in the local coordinate system of the points).
+                       sphericalBounds; //!< The bounding region (in spherical coordinates) of all the points in this Data3D (in the local coordinate system of the points).
   e57::IntensityLimits intensityLimits; //!< The limits for the value of signal intensity that the sensor is capable of producing.
   e57::ColorLimits     colorLimits;     //!< The limits for the value of red, green, and blue color that the sensor is capable of producing.
 
@@ -630,7 +630,7 @@ public:
   //
   //! @brief This function returns the file header information
   bool GetE57Root(E57Root& fileHeader //!< This is the main header information
-  ) const;                            //!< @return Returns true if sucessful
+  ) const;                            //!< @return Returns true if successful
 
   ////////////////////////////////////////////////////////////////////
   //
@@ -642,7 +642,7 @@ public:
   //! @brief This function returns the image2D header and positions the cursor
   bool ReadImage2D(int32_t  imageIndex,   //!< This in the index into the image2D vector
                    Image2D& image2DHeader //!< pointer to the Image2D structure to receive the picture information
-  ) const;                                //!< @return Returns true if sucessful
+  ) const;                                //!< @return Returns true if successful
 
   //! @brief This function returns the size of the image data
   /*! @details The e57::Image2DType identifies the format representation for the image data
@@ -674,7 +674,7 @@ public:
                        int64_t&                imageSize,       //!< This is the total number of bytes for the image blob.
                        e57::Image2DType&       imageMaskType,   //!< This is E57_PNG_IMAGE_MASK if "imageMask" is defined in the projection
                        e57::Image2DType&       imageVisualType  //!< This is image type of the VisualReferenceRepresentation if given.
-  ) const;                                                      //!< @return Returns true if sucessful
+  ) const;                                                      //!< @return Returns true if successful
 
   //! @brief This function reads the block
   int64_t ReadImage2DData(int32_t                imageIndex,      //!< picture block index
@@ -695,17 +695,17 @@ public:
   //! @brief This function returns the Data3D header and positions the cursor
   bool ReadData3D(int32_t dataIndex,   //!< This in the index into the images3D vector
                   Data3D& data3DHeader //!< pointer to the Data3D structure to receive the image information
-  ) const;                             //!< @return Returns true if sucessful
+  ) const;                             //!< @return Returns true if successful
 
   //! @brief This function returns the size of the point data
   bool GetData3DSizes(int32_t  dataIndex,   //!< This in the index into the images3D vector
                       int64_t& rowMax,      //!< This is the maximum row size
                       int64_t& columnMax,   //!< This is the maximum column size
                       int64_t& pointsSize,  //!< This is the total number of point records
-                      int64_t& groupsSize,  //!< This is the total number of group reocrds
+                      int64_t& groupsSize,  //!< This is the total number of group records
                       int64_t& countSize,   //!< This is the maximum point count per group
                       bool&    bColumnIndex //!< This indicates that the idElementName is "columnIndex"
-  ) const;                                  //!< @return Return true if sucessful, false otherwise
+  ) const;                                  //!< @return Return true if successful, false otherwise
 
   //! @brief This funtion writes out the group data.
   bool ReadData3DGroupsData(int32_t  dataIndex,       //!< data block index given by the NewData3D
@@ -713,49 +713,51 @@ public:
                             int64_t* idElementValue,  //!< index for this group
                             int64_t* startPointIndex, //!< Starting index in to the "points" data vector for the groups
                             int64_t* pointCount       //!< size of the groups given
-  ) const;                                            //!< @return Return true if sucessful, false otherwise
+  ) const;                                            //!< @return Return true if successful, false otherwise
 
   //! @brief This function sets up the point data fields
-  /*! @details All the non-NULL buffers in the call below have number of elements = pointCount.
+  /*! @details All the non-nullptr buffers in the call below have number of elements = pointCount.
   Call the CompressedVectorReader::read() until all data is read.
   */
   CompressedVectorReader SetUpData3DPointsData(
     int32_t dataIndex,  //!< data block index given by the NewData3D
     int64_t pointCount, //!< size of each element buffer.
 
-    double* cartesianX,                   //!< pointer to a buffer with the X coordinate (in meters) of the point in Cartesian coordinates
-    double* cartesianY,                   //!< pointer to a buffer with the Y coordinate (in meters) of the point in Cartesian coordinates
-    double* cartesianZ,                   //!< pointer to a buffer with the Z coordinate (in meters) of the point in Cartesian coordinates
-    int8_t* cartesianInvalidState = NULL, //!< Value = 0 if the point is considered valid, 1 otherwise
+    double* cartesianX,                      //!< pointer to a buffer with the X coordinate (in meters) of the point in Cartesian coordinates
+    double* cartesianY,                      //!< pointer to a buffer with the Y coordinate (in meters) of the point in Cartesian coordinates
+    double* cartesianZ,                      //!< pointer to a buffer with the Z coordinate (in meters) of the point in Cartesian coordinates
+    int8_t* cartesianInvalidState = nullptr, //!< Value = 0 if the point is considered valid, 1 otherwise
 
-    double* intensity          = NULL, //!< pointer to a buffer with the Point response intensity. Unit is unspecified
-    int8_t* isIntensityInvalid = NULL, //!< Value = 0 if the intensity is considered valid, 1 otherwise
+    double* intensity          = nullptr, //!< pointer to a buffer with the Point response intensity. Unit is unspecified
+    int8_t* isIntensityInvalid = nullptr, //!< Value = 0 if the intensity is considered valid, 1 otherwise
 
-    uint16_t* colorRed       = NULL, //!< pointer to a buffer with the Red color coefficient. Unit is unspecified
-    uint16_t* colorGreen     = NULL, //!< pointer to a buffer with the Green color coefficient. Unit is unspecified
-    uint16_t* colorBlue      = NULL, //!< pointer to a buffer with the Blue color coefficient. Unit is unspecified
-    int8_t*   isColorInvalid = NULL, //!< Value = 0 if the color is considered valid, 1 otherwise
+    uint16_t* colorRed       = nullptr, //!< pointer to a buffer with the Red color coefficient. Unit is unspecified
+    uint16_t* colorGreen     = nullptr, //!< pointer to a buffer with the Green color coefficient. Unit is unspecified
+    uint16_t* colorBlue      = nullptr, //!< pointer to a buffer with the Blue color coefficient. Unit is unspecified
+    int8_t*   isColorInvalid = nullptr, //!< Value = 0 if the color is considered valid, 1 otherwise
 
-    double* sphericalRange        = NULL, //!< pointer to a buffer with the range (in meters) of points in spherical coordinates. Shall be non-negative
-    double* sphericalAzimuth      = NULL, //!< pointer to a buffer with the Azimuth angle (in radians) of point in spherical coordinates
-    double* sphericalElevation    = NULL, //!< pointer to a buffer with the Elevation angle (in radians) of point in spherical coordinates
-    int8_t* sphericalInvalidState = NULL, //!< Value = 0 if the range is considered valid, 1 otherwise
+    double* sphericalRange        = nullptr, //!< pointer to a buffer with the range (in meters) of points in spherical coordinates. Shall be non-negative
+    double* sphericalAzimuth      = nullptr, //!< pointer to a buffer with the Azimuth angle (in radians) of point in spherical coordinates
+    double* sphericalElevation    = nullptr, //!< pointer to a buffer with the Elevation angle (in radians) of point in spherical coordinates
+    int8_t* sphericalInvalidState = nullptr, //!< Value = 0 if the range is considered valid, 1 otherwise
 
-    int32_t* rowIndex = NULL,    //!< pointer to a buffer with the row number of point (zero based). This is useful for data that is stored in a regular grid.
+    int32_t* rowIndex = nullptr, //!< pointer to a buffer with the row number of point (zero based). This is useful for data that is stored in a regular grid.
                                  //!< Shall be in the interval (0, 2^31).
-    int32_t* columnIndex = NULL, //!< pointer to a buffer with the column number of point (zero based). This is useful for data that is stored in a regular
-                                 //!< grid. Shall be in the interval (0, 2^31).
-    int8_t* returnIndex = NULL,  //!< pointer to a buffer with the number of this return (zero based). That is, 0 is the first return, 1 is the second, and so
-                                 //!< on. Shall be in the interval (0, returnCount). Only for multi-return sensors.
-    int8_t* returnCount = NULL,  //!< pointer to a buffer with the total number of returns for the pulse that this corresponds to. Shall be in the interval (0,
-                                 //!< 2^7). Only for multi-return sensors.
+    int32_t* columnIndex = nullptr, //!< pointer to a buffer with the column number of point (zero based). This is useful for data that is stored in a regular
+                                    //!< grid. Shall be in the interval (0, 2^31).
+    int8_t* returnIndex = nullptr, //!< pointer to a buffer with the number of this return (zero based). That is, 0 is the first return, 1 is the second, and so
+                                   //!< on. Shall be in the interval (0, returnCount). Only for multi-return sensors.
+    int8_t* returnCount = nullptr, //!< pointer to a buffer with the total number of returns for the pulse that this corresponds to. Shall be in the interval
+                                   //!< (0,
+                                   //!< 2^7). Only for multi-return sensors.
 
-    double* timeStamp = NULL, //!< pointer to a buffer with the time (in seconds) since the start time for the data, which is given by acquisitionStart in the
-                              //!< parent Data3D Structure. Shall be non-negative
-    int8_t* isTimeStampInvalid = NULL, //!< Value = 0 if the timeStamp is considered valid, 1 otherwise
-    bool (*pointDataExtension)(ImageFile imf, StructureNode proto, int protoIndex, std::vector<SourceDestBuffer>& destBuffers) = NULL
+    double* timeStamp = nullptr, //!< pointer to a buffer with the time (in seconds) since the start time for the data, which is given by acquisitionStart in
+                                 //!< the
+                                 //!< parent Data3D Structure. Shall be non-negative
+    int8_t* isTimeStampInvalid = nullptr, //!< Value = 0 if the timeStamp is considered valid, 1 otherwise
+    bool (*pointDataExtension)(ImageFile imf, StructureNode proto, int protoIndex, std::vector<SourceDestBuffer>& destBuffers) = nullptr
 
-  ) const; //!< @return Return true if sucessful, false otherwise
+  ) const; //!< @return Return true if successful, false otherwise
 
   ////////////////////////////////////////////////////////////////////
   //
@@ -822,44 +824,47 @@ public:
   //* @details The user needs to config a Data3D structure with all the scanning information before making this call. */
 
   int32_t NewData3D(Data3D& data3DHeader, //!< pointer to the Data3D structure to receive the image information
-                    bool (*pointExtension)(ImageFile imf, StructureNode proto) = NULL) const; //!< @return Returns the index of the new scan's data3D block.
+                    bool (*pointExtension)(ImageFile imf, StructureNode proto) = nullptr) const; //!< @return Returns the index of the new scan's data3D block.
 
   //! @brief This function writes out blocks of point data
   CompressedVectorWriter SetUpData3DPointsData(
-    int32_t dataIndex,                    //!< data block index given by the NewData3D
-    int64_t pointCount,                   //!< size of each of the buffers given
-    double* cartesianX,                   //!< pointer to a buffer with the X coordinate (in meters) of the point in Cartesian coordinates
-    double* cartesianY,                   //!< pointer to a buffer with the Y coordinate (in meters) of the point in Cartesian coordinates
-    double* cartesianZ,                   //!< pointer to a buffer with the Z coordinate (in meters) of the point in Cartesian coordinates
-    int8_t* cartesianInvalidState = NULL, //!< Value = 0 if the point is considered valid, 1 otherwise
+    int32_t dataIndex,                       //!< data block index given by the NewData3D
+    int64_t pointCount,                      //!< size of each of the buffers given
+    double* cartesianX,                      //!< pointer to a buffer with the X coordinate (in meters) of the point in Cartesian coordinates
+    double* cartesianY,                      //!< pointer to a buffer with the Y coordinate (in meters) of the point in Cartesian coordinates
+    double* cartesianZ,                      //!< pointer to a buffer with the Z coordinate (in meters) of the point in Cartesian coordinates
+    int8_t* cartesianInvalidState = nullptr, //!< Value = 0 if the point is considered valid, 1 otherwise
 
-    double* intensity          = NULL, //!< pointer to a buffer with the Point response intensity. Unit is unspecified
-    int8_t* isIntensityInvalid = NULL, //!< Value = 0 if the intensity is considered valid, 1 otherwise
+    double* intensity          = nullptr, //!< pointer to a buffer with the Point response intensity. Unit is unspecified
+    int8_t* isIntensityInvalid = nullptr, //!< Value = 0 if the intensity is considered valid, 1 otherwise
 
-    uint16_t* colorRed       = NULL, //!< pointer to a buffer with the Red color coefficient. Unit is unspecified
-    uint16_t* colorGreen     = NULL, //!< pointer to a buffer with the Green color coefficient. Unit is unspecified
-    uint16_t* colorBlue      = NULL, //!< pointer to a buffer with the Blue color coefficient. Unit is unspecified
-    int8_t*   isColorInvalid = NULL, //!< Value = 0 if the color is considered valid, 1 otherwise
+    uint16_t* colorRed       = nullptr, //!< pointer to a buffer with the Red color coefficient. Unit is unspecified
+    uint16_t* colorGreen     = nullptr, //!< pointer to a buffer with the Green color coefficient. Unit is unspecified
+    uint16_t* colorBlue      = nullptr, //!< pointer to a buffer with the Blue color coefficient. Unit is unspecified
+    int8_t*   isColorInvalid = nullptr, //!< Value = 0 if the color is considered valid, 1 otherwise
 
-    double* sphericalRange        = NULL, //!< pointer to a buffer with the range (in meters) of points in spherical coordinates. Shall be non-negative
-    double* sphericalAzimuth      = NULL, //!< pointer to a buffer with the Azimuth angle (in radians) of point in spherical coordinates
-    double* sphericalElevation    = NULL, //!< pointer to a buffer with the Elevation angle (in radians) of point in spherical coordinates
-    int8_t* sphericalInvalidState = NULL, //!< Value = 0 if the range is considered valid, 1 otherwise
+    double* sphericalRange        = nullptr, //!< pointer to a buffer with the range (in meters) of points in spherical coordinates. Shall be non-negative
+    double* sphericalAzimuth      = nullptr, //!< pointer to a buffer with the Azimuth angle (in radians) of point in spherical coordinates
+    double* sphericalElevation    = nullptr, //!< pointer to a buffer with the Elevation angle (in radians) of point in spherical coordinates
+    int8_t* sphericalInvalidState = nullptr, //!< Value = 0 if the range is considered valid, 1 otherwise
 
-    int32_t* rowIndex = NULL, //!< pointer to a buffer with the row number of point (zero based). This is useful for data that is stored in a regular grid.Shall
-                              //!< be in the interval (0, 2^31).
-    int32_t* columnIndex = NULL, //!< pointer to a buffer with the column number of point (zero based). This is useful for data that is stored in a regular
-                                 //!< grid. Shall be in the interval (0, 2^31).
-    int8_t* returnIndex = NULL,  //!< pointer to a buffer with the number of this return (zero based). That is, 0 is the first return, 1 is the second, and so
-                                 //!< on. Shall be in the interval (0, returnCount). Only for multi-return sensors.
-    int8_t* returnCount = NULL,  //!< pointer to a buffer with the total number of returns for the pulse that this corresponds to. Shall be in the interval (0,
-                                 //!< 2^7). Only for multi-return sensors.
+    int32_t* rowIndex = nullptr,    //!< pointer to a buffer with the row number of point (zero based). This is useful for data that is stored in a regular
+                                    //!< grid.Shall
+                                    //!< be in the interval (0, 2^31).
+    int32_t* columnIndex = nullptr, //!< pointer to a buffer with the column number of point (zero based). This is useful for data that is stored in a regular
+                                    //!< grid. Shall be in the interval (0, 2^31).
+    int8_t* returnIndex = nullptr, //!< pointer to a buffer with the number of this return (zero based). That is, 0 is the first return, 1 is the second, and so
+                                   //!< on. Shall be in the interval (0, returnCount). Only for multi-return sensors.
+    int8_t* returnCount = nullptr, //!< pointer to a buffer with the total number of returns for the pulse that this corresponds to. Shall be in the interval
+                                   //!< (0,
+                                   //!< 2^7). Only for multi-return sensors.
 
-    double* timeStamp = NULL, //!< pointer to a buffer with the time (in seconds) since the start time for the data, which is given by acquisitionStart in the
-                              //!< parent Data3D Structure. Shall be non-negative
-    int8_t* isTimeStampInvalid = NULL, //!< Value = 0 if the timeStamp is considered valid, 1 otherwise
+    double* timeStamp = nullptr, //!< pointer to a buffer with the time (in seconds) since the start time for the data, which is given by acquisitionStart in
+                                 //!< the
+                                 //!< parent Data3D Structure. Shall be non-negative
+    int8_t* isTimeStampInvalid = nullptr, //!< Value = 0 if the timeStamp is considered valid, 1 otherwise
     bool (*pointDataExtension)(ImageFile imf, StructureNode proto, std::vector<SourceDestBuffer>& sourceBuffers)
-    = NULL) const; //!< @return Return true if sucessful, false otherwise
+    = nullptr) const; //!< @return Return true if sucessful, false otherwise
 
   //! @brief This funtion writes out the group data
   bool WriteData3DGroupsData(int32_t  dataIndex,       //!< data block index given by the NewData3D
@@ -867,7 +872,7 @@ public:
                              int64_t* idElementValue,  //!< index for this group
                              int64_t* startPointIndex, //!< Starting index in to the "points" data vector for the groups
                              int64_t* pointCount       //!< size of the groups given
-  ) const;                                             //!< @return Return true if sucessful, false otherwise
+  ) const;                                             //!< @return Return true if successful, false otherwise
 
   ////////////////////////////////////////////////////////////////////
   //
