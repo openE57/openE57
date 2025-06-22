@@ -42,7 +42,7 @@ cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
 # Enables the CMAKE_MSVC_RUNTIME_LIBRARY property on targets
 cmake_policy(SET CMP0091 NEW)
 
-project(openE57 VERSION 1.7.0 LANGUAGES C CXX DESCRIPTION "openE57 is a library for handling E57 files")
+project(openE57 VERSION 1.7.3 LANGUAGES C CXX DESCRIPTION "openE57 is a library for handling E57 files")
 
 set(XERCES_C_DEFAULT_FETCH_TAG "v3.3.0" CACHE STRING "Tag that is used for fetching xerces-c library")
 
