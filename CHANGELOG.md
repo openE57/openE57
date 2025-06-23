@@ -1,5 +1,22 @@
 # openE57
 
+## [1.7.3] - 2025-06-22
+
+## Changed
+- Skip linking ICU explicitly, if Xerces-C is dynamically linked
+
+## [1.7.2] - 2025-04-24
+
+## Changed
+- Modernization of codebase
+- Reduction of MSVC compiler warnings
+
+## [1.7.1] - 2025-02-28
+
+## Changed
+- Fixed build for mingw-w64
+- CMake Build improvements
+
 ## [1.7.0] - 2024-01-27
 
 ## Changed
