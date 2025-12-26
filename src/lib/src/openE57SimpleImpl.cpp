@@ -238,7 +238,7 @@ double e57::GetGPSDateTimeFromUTC(int   utc_year,   //!< The year 1900-9999
   sysTim.wHour         = utc_hour;
   sysTim.wMinute       = utc_minute;
   sysTim.wSecond       = (WORD)(floor(utc_seconds));
-  sysTim.wMilliseconds = (WORD)((utc_seconds)*1000);
+  sysTim.wMilliseconds = (WORD)((utc_seconds) * 1000);
 
   return e57::GetGPSDateTimeFromSystemTime(sysTim);
 #else
@@ -277,12 +277,12 @@ void e57::GetUTCFromGPSDateTime(double gpsTime,    //!< GPS Date Time
   utc_seconds += sysTim.wMilliseconds / 1000;
 #else
   ignore(gpsTime);
-  utc_Year      = 2022; //!< The year 1900-9999
-  utc_Month     = 1;    //!< The month 0-11
-  utc_Day       = 1;    //!< The day 1-31
-  utc_Hour      = 0;    //!< The hour 0-23
-  utc_Minute    = 0;    //!< The minute 0-59
-  utc_seconds   = 0.0;  //!< The seconds 0.0 - 59.999
+  utc_Year    = 2022; //!< The year 1900-9999
+  utc_Month   = 1;    //!< The month 0-11
+  utc_Day     = 1;    //!< The day 1-31
+  utc_Hour    = 0;    //!< The hour 0-23
+  utc_Minute  = 0;    //!< The minute 0-59
+  utc_seconds = 0.0;  //!< The seconds 0.0 - 59.999
 #endif
 }
 ////////////////////////////////////////////////////////////////////
@@ -1505,7 +1505,7 @@ CompressedVectorReader ReaderImpl ::SetUpData3DPointsData(
   return reader;
 }
 
-//#define TEST_EXTENSIONS
+// #define TEST_EXTENSIONS
 ////////////////////////////////////////////////////////////////////
 //
 //	e57::Writer

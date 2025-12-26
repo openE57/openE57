@@ -152,7 +152,7 @@ struct BlobSectionHeader
 #ifdef E57_BIGENDIAN
   void swab();
 #else
-  void swab(){};
+  void swab() {};
 #endif
 #ifdef E57_DEBUG
   void dump(int indent = 0, std::ostream& os = std::cout);
@@ -2155,8 +2155,8 @@ std::shared_ptr<CompressedVectorReaderImpl> CompressedVectorNodeImpl::reader(vec
   if (!cai) // check if failed
     throw E57_EXCEPTION2(E57_ERROR_INTERNAL, "this->elementName=" + this->elementName() + " elementName=" + ni->elementName());
 #ifdef E57_MAX_VERBOSE
-    // cout<<"constructing CAReader, cai:"<<endl;
-    // cai->dump(4);
+  // cout<<"constructing CAReader, cai:"<<endl;
+  // cai->dump(4);
 #endif
   /// Return a std::shared_ptr to new object
   std::shared_ptr<CompressedVectorReaderImpl> cvri(new CompressedVectorReaderImpl(cai, dbufs));
@@ -2939,7 +2939,7 @@ class E57FileInputStream : public BinInputStream
 {
 public:
   E57FileInputStream(CheckedFile* cf, uint64_t logicalStart, uint64_t logicalLength);
-  virtual ~E57FileInputStream(){};
+  virtual ~E57FileInputStream() {};
   virtual XMLFilePos curPos() const
   {
     return (logicalPosition_);
@@ -3009,7 +3009,7 @@ class E57FileInputSource : public InputSource
 {
 public:
   E57FileInputSource(CheckedFile* cf, uint64_t logicalStart, uint64_t logicalLength);
-  ~E57FileInputSource(){};
+  ~E57FileInputSource() {};
   BinInputStream* makeStream() const;
 
 private:
@@ -3178,7 +3178,7 @@ void E57XmlParser::startElement(const XMLCh* const uri, const XMLCh* const local
 #if defined(_MSC_VER)
       pi.minimum = _atoi64(minimum_str.c_str());
 #elif defined(__GNUC__)
-      pi.minimum = strtoll(minimum_str.c_str(), nullptr, 10);       //??? check endptr?
+      pi.minimum = strtoll(minimum_str.c_str(), nullptr, 10); //??? check endptr?
 #else
 #  error "no supported compiler defined"
 #endif
@@ -3195,7 +3195,7 @@ void E57XmlParser::startElement(const XMLCh* const uri, const XMLCh* const local
 #if defined(_MSC_VER)
       pi.maximum = _atoi64(maximum_str.c_str());
 #elif defined(__GNUC__)
-      pi.maximum = strtoll(maximum_str.c_str(), nullptr, 10);       //??? check endptr?
+      pi.maximum = strtoll(maximum_str.c_str(), nullptr, 10); //??? check endptr?
 #else
 #  error "no supported compiler defined"
 #endif
@@ -3223,7 +3223,7 @@ void E57XmlParser::startElement(const XMLCh* const uri, const XMLCh* const local
 #if defined(_MSC_VER)
       pi.minimum = _atoi64(minimum_str.c_str());
 #elif defined(__GNUC__)
-      pi.minimum = strtoll(minimum_str.c_str(), nullptr, 10);       //??? check endptr?
+      pi.minimum = strtoll(minimum_str.c_str(), nullptr, 10); //??? check endptr?
 #else
 #  error "no supported compiler defined"
 #endif
@@ -3240,7 +3240,7 @@ void E57XmlParser::startElement(const XMLCh* const uri, const XMLCh* const local
 #if defined(_MSC_VER)
       pi.maximum = _atoi64(maximum_str.c_str());
 #elif defined(__GNUC__)
-      pi.maximum = strtoll(maximum_str.c_str(), nullptr, 10);       //??? check endptr?
+      pi.maximum = strtoll(maximum_str.c_str(), nullptr, 10); //??? check endptr?
 #else
 #  error "no supported compiler defined"
 #endif
@@ -3357,7 +3357,7 @@ void E57XmlParser::startElement(const XMLCh* const uri, const XMLCh* const local
 #if defined(_MSC_VER)
     pi.fileOffset = _atoi64(fileOffset_str.c_str());
 #elif defined(__GNUC__)
-    pi.fileOffset = strtoll(fileOffset_str.c_str(), nullptr, 10);   //??? check endptr?
+    pi.fileOffset = strtoll(fileOffset_str.c_str(), nullptr, 10); //??? check endptr?
 #else
 #  error "no supported compiler defined"
 #endif
@@ -3367,7 +3367,7 @@ void E57XmlParser::startElement(const XMLCh* const uri, const XMLCh* const local
 #if defined(_MSC_VER)
     pi.length = _atoi64(length_str.c_str());
 #elif defined(__GNUC__)
-    pi.length     = strtoll(length_str.c_str(), nullptr, 10);       //??? check endptr?
+    pi.length = strtoll(length_str.c_str(), nullptr, 10); //??? check endptr?
 #else
 #  error "no supported compiler defined"
 #endif
@@ -3441,7 +3441,7 @@ void E57XmlParser::startElement(const XMLCh* const uri, const XMLCh* const local
 #if defined(_MSC_VER)
       int64_t i64 = _atoi64(allowHetero_str.c_str());
 #elif defined(__GNUC__)
-      int64_t i64 = strtoll(allowHetero_str.c_str(), nullptr, 10);  //??? check endptr?
+      int64_t i64 = strtoll(allowHetero_str.c_str(), nullptr, 10); //??? check endptr?
 #else
 #  error "no supported compiler defined"
 #endif
@@ -3480,7 +3480,7 @@ void E57XmlParser::startElement(const XMLCh* const uri, const XMLCh* const local
 #if defined(_MSC_VER)
     pi.fileOffset = _atoi64(fileOffset_str.c_str());
 #elif defined(__GNUC__)
-    pi.fileOffset  = strtoll(fileOffset_str.c_str(), nullptr, 10);  //??? check endptr?
+    pi.fileOffset = strtoll(fileOffset_str.c_str(), nullptr, 10); //??? check endptr?
 #else
 #  error "no supported compiler defined"
 #endif
@@ -3548,7 +3548,7 @@ void E57XmlParser::endElement(const XMLCh* const uri, const XMLCh* const localNa
 #if defined(_MSC_VER)
       intValue = _atoi64(pi.childText.c_str());
 #elif defined(__GNUC__)
-      intValue = strtoll(pi.childText.c_str(), nullptr, 10);        //??? check endptr?
+      intValue = strtoll(pi.childText.c_str(), nullptr, 10); //??? check endptr?
 #else
 #  error "no supported compiler defined"
 #endif
@@ -3567,7 +3567,7 @@ void E57XmlParser::endElement(const XMLCh* const uri, const XMLCh* const localNa
 #if defined(_MSC_VER)
       intValue = _atoi64(pi.childText.c_str());
 #elif defined(__GNUC__)
-      intValue = strtoll(pi.childText.c_str(), nullptr, 10);        //??? check endptr?
+      intValue = strtoll(pi.childText.c_str(), nullptr, 10); //??? check endptr?
 #else
 #  error "no supported compiler defined"
 #endif
@@ -5948,11 +5948,11 @@ void CompressedVectorWriterImpl::write(const size_t requestedRecordCount)
     if (totalRecordCount == 0)
       break;
 
-      /// Estimate how many records can write before have enough data to fill data packet to efficient length
-      /// Efficient packet length is >= 75% of maximum packet length.
-      /// It is OK if get too much data (more than one packet) in an iteration.
-      /// Reader will be able to handle packets whose streams are not exactly synchronized to the record boundaries.
-      /// But try to do a good job of keeping the stream synchronization "close enough" (so a reader that can cache only two packets is efficient).
+    /// Estimate how many records can write before have enough data to fill data packet to efficient length
+    /// Efficient packet length is >= 75% of maximum packet length.
+    /// It is OK if get too much data (more than one packet) in an iteration.
+    /// Reader will be able to handle packets whose streams are not exactly synchronized to the record boundaries.
+    /// But try to do a good job of keeping the stream synchronization "close enough" (so a reader that can cache only two packets is efficient).
 
 #ifdef E57_MAX_VERBOSE
     cout << "  currentPacketSize()=" << currentPacketSize() << endl; //???

@@ -1,5 +1,15 @@
 # openE57
 
+## [1.7.4] - 2025-12-26
+
+## Changed
+- Bumped Conan requirement to 2.0.0
+- Updated Boost Libraries to 1.90.0
+- Updated Xerces Libraries to 3.3.0
+- Updated ICU to 78.1
+- Updated Doctest to 2.4.12
+- Updated Doxygen to 1.15.0
+
 ## [1.7.3] - 2025-06-22
 
 ## Changed

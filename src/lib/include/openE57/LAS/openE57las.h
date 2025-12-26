@@ -189,7 +189,7 @@ class LASReader
 public:
   LASReader(ustring fname);
   void operator~();
-  void close(){/*???*/}; //???TODO implement
+  void close() { /*???*/ }; //???TODO implement
 
   void                 getHeader(LASPublicHeaderBlock& h);
   std::vector<uint8_t> getRawHeader();
