@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, macos-latest]
+        os: [ubuntu-latest, macos-latest]
         build_type: [Debug, Release]
 
     runs-on: ${{ matrix.os }}
@@ -24,9 +24,9 @@ jobs:
         uses: actions/checkout@v3
         
       - name: Install Python environment 
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v6
         with:
-          python-version: '3.12'
+          python-version: '3.14'
         
       - name: Install conan
         run: |
@@ -37,7 +37,7 @@ jobs:
             conan profile detect --force
                     
       - name: Linux build
-        if: matrix.os == 'ubuntu-22.04'
+        if: matrix.os == 'ubuntu-latest'
         run: |
             conan create . -o openE57/*:with_tools=True -s build_type=${{ matrix.build_type }} -s compiler.cppstd=17 --build=missing
             
