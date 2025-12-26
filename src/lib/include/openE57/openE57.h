@@ -32,7 +32,7 @@
 //! @file  openE57.h header file for the E57 Foundation API
 
 // Define the following symbol to enable heap corruption and memory leakage debugging:
-//#define E57_DEBUG_MEMORY 1
+// #define E57_DEBUG_MEMORY 1
 #if E57_DEBUG_MEMORY
 #  define _CRTDBG_MAP_ALLOC
 #  include <crtdbg.h>
@@ -770,7 +770,7 @@ public:
 
   //! \cond documentNonPublic   The following isn't part of the API, and isn't documented.
   E57Exception(ErrorCode ecode, const ustring context, const char* srcFileName = nullptr, int srcLineNumber = 0, const char* srcFunctionName = nullptr);
-  ~E57Exception() throw(){};
+  ~E57Exception() throw() {};
 
 private:          //=================
   E57Exception(); // No default constructor is defined for E57Exception

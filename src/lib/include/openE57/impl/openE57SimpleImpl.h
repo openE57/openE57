@@ -253,7 +253,7 @@ public:
   virtual VectorNode GetRawImages2D(void); //!< /return Returns the raw Image2D VectorNode
   //! This function returns the ram ImageFile Node which is need to add enhancements
   virtual ImageFile GetRawIMF(void); //!< /return Returns the raw ImageFile
-};                                   // end Reader class
+}; // end Reader class
 
 ////////////////////////////////////////////////////////////////////
 //

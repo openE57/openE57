@@ -54,12 +54,12 @@
 #define E57_MAX_DEBUG 1
 
 // Uncomment the lines below to enable various levels of printing to the console of what is going on in the code.
-//#define E57_VERBOSE     1
-//#define E57_MAX_VERBOSE 1
+// #define E57_VERBOSE     1
+// #define E57_MAX_VERBOSE 1
 
 // Uncomment the line below to enable invariance checking before and after API calls
 // ??? This debug option is not implemented yet, don't uncomment below
-//#define E57_DEBUG_INVARIANCE 1
+// #define E57_DEBUG_INVARIANCE 1
 
 #ifdef E57_DEBUG_INVARIANCE
 #  define CHECK_THIS_INVARIANCE()                                                                                                                              \
@@ -79,7 +79,7 @@
 #endif
 
 // Uncomment the line below to enable writing packets that are correct but will stress the reader.
-//#define E57_WRITE_CRAZY_PACKET_MODE 1
+// #define E57_WRITE_CRAZY_PACKET_MODE 1
 
 #ifdef _MSC_VER
 // Disable MSVC warning: warning C4224: nonstandard extension used : formal parameter 'locale' was previously defined as a type
@@ -90,7 +90,7 @@
 #include <stdexcept>
 
 // Turn off DLL input/export mechanism for Xerces library (usually done by defining in compile command line).
-//#define XERCES_STATIC_LIBRARY 1
+// #define XERCES_STATIC_LIBRARY 1
 
 // The XML parser headers
 #include <xercesc/sax2/Attributes.hpp>
@@ -403,7 +403,7 @@ public:
 
   virtual void writeXml(std::shared_ptr<ImageFileImpl> imf, CheckedFile& cf, int indent, const char* forcedFieldName = nullptr) = 0;
 
-  virtual ~NodeImpl(){};
+  virtual ~NodeImpl() {};
 
 #ifdef E57_DEBUG
   virtual void dump(int indent = 0, std::ostream& os = std::cout);
@@ -437,7 +437,7 @@ class StructureNodeImpl : public NodeImpl
 {
 public:
   StructureNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile);
-  virtual ~StructureNodeImpl(){};
+  virtual ~StructureNodeImpl() {};
 
   virtual NodeType type();
   virtual bool     isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
@@ -474,7 +474,7 @@ class VectorNodeImpl : public StructureNodeImpl
 {
 public:
   explicit VectorNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, bool allowHeteroChildren);
-  virtual ~VectorNodeImpl(){};
+  virtual ~VectorNodeImpl() {};
 
   virtual NodeType type();
   virtual bool     isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
@@ -616,7 +616,7 @@ class CompressedVectorNodeImpl : public NodeImpl
 {
 public:
   CompressedVectorNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile);
-  virtual ~CompressedVectorNodeImpl(){};
+  virtual ~CompressedVectorNodeImpl() {};
 
   virtual NodeType type();
   virtual bool     isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
@@ -676,7 +676,7 @@ class IntegerNodeImpl : public NodeImpl
 {
 public:
   IntegerNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, int64_t value = 0, int64_t minimum = 0, int64_t maximum = 0);
-  virtual ~IntegerNodeImpl(){};
+  virtual ~IntegerNodeImpl() {};
 
   virtual NodeType type();
   virtual bool     isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
@@ -712,7 +712,7 @@ public:
   ScaledIntegerNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, // Added by SC
                         double scaledValue = 0., double scaledMinimum = 0., double scaledMaximum = 0., double scale = 1.0, double offset = 0.0);
 
-  virtual ~ScaledIntegerNodeImpl(){};
+  virtual ~ScaledIntegerNodeImpl() {};
 
   virtual NodeType type();
   virtual bool     isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
@@ -751,7 +751,7 @@ class FloatNodeImpl : public NodeImpl
 public:
   FloatNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, double value = 0, FloatPrecision precision = FloatPrecision::E57_DOUBLE,
                 double minimum = E57_DOUBLE_MIN, double maximum = E57_DOUBLE_MAX);
-  virtual ~FloatNodeImpl(){};
+  virtual ~FloatNodeImpl() {};
 
   virtual NodeType type();
   virtual bool     isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
@@ -784,7 +784,7 @@ class StringNodeImpl : public NodeImpl
 {
 public:
   explicit StringNodeImpl(std::weak_ptr<ImageFileImpl> destImageFile, const ustring value = "");
-  virtual ~StringNodeImpl(){};
+  virtual ~StringNodeImpl() {};
 
   virtual NodeType type();
   virtual bool     isTypeEquivalent(std::shared_ptr<NodeImpl> ni);
@@ -854,7 +854,7 @@ struct E57FileHeader
 #ifdef E57_BIGENDIAN
   void swab();
 #else
-  void     swab(){};
+  void swab() {};
 #endif
 #ifdef E57_DEBUG
   void dump(int indent = 0, std::ostream& os = std::cout);
@@ -925,7 +925,7 @@ protected: //=================
   {
     ustring prefix;
     ustring uri;
-    NameSpace(ustring prefix0, ustring uri0) : prefix(prefix0), uri(uri0){};
+    NameSpace(ustring prefix0, ustring uri0) : prefix(prefix0), uri(uri0) {};
   };
 
   //??? copy, default ctor, assign
@@ -958,7 +958,7 @@ class SeekIndex
 public:
   ///!!! implement seek
 #ifdef E57_DEBUG
-  void dump(int /*indent*/ = 0, std::ostream& /*os*/ = std::cout){/*???*/};
+  void dump(int /*indent*/ = 0, std::ostream& /*os*/ = std::cout) { /*???*/ };
 #endif
 };
 
@@ -977,7 +977,7 @@ struct CompressedVectorSectionHeader
 #ifdef E57_BIGENDIAN
   void swab();
 #else
-  void     swab(){};
+  void swab() {};
 #endif
 #ifdef E57_DEBUG
   void dump(int indent = 0, std::ostream& os = std::cout);
@@ -1000,7 +1000,7 @@ struct DataPacketHeader
 #ifdef E57_BIGENDIAN
   void swab();
 #else
-  void     swab(){};
+  void swab() {};
 #endif
 #ifdef E57_DEBUG
   void dump(int indent = 0, std::ostream& os = std::cout);
@@ -1025,7 +1025,7 @@ struct DataPacket
 #ifdef E57_BIGENDIAN
   void swab(bool toLittleEndian); //??? change to swabIfBigEndian() and elsewhere
 #else
-  void     swab(bool /*toLittleEndian*/){};
+  void swab(bool /*toLittleEndian*/) {};
 #endif
 #ifdef E57_DEBUG
   void dump(int indent = 0, std::ostream& os = std::cout);
@@ -1045,7 +1045,7 @@ struct EmptyPacketHeader
 #ifdef E57_BIGENDIAN
   void swab();
 #else
-  void     swab(){};
+  void swab() {};
 #endif
 #ifdef E57_DEBUG
   void dump(int indent = 0, std::ostream& os = std::cout);
@@ -1176,7 +1176,7 @@ public:
   static std::shared_ptr<Encoder> EncoderFactory(unsigned bytestreamNumber, std::shared_ptr<CompressedVectorNodeImpl> cVector,
                                                  std::vector<SourceDestBuffer>& sbuf, ustring& codecPath);
 
-  virtual ~Encoder(){};
+  virtual ~Encoder() {};
 
   virtual uint64_t processRecords(size_t recordCount) = 0;
   virtual unsigned sourceBufferNextIndex()            = 0;
@@ -1347,7 +1347,7 @@ class Decoder
 public:
   static std::shared_ptr<Decoder> DecoderFactory(unsigned bytestreamNumber, std::shared_ptr<CompressedVectorNodeImpl> cVector,
                                                  std::vector<SourceDestBuffer>& dbufs, const ustring& codecPath);
-  virtual ~Decoder(){};
+  virtual ~Decoder() {};
 
   virtual void     destBufferSetNew(std::vector<SourceDestBuffer>& dbufs) = 0;
   virtual uint64_t totalRecordsCompleted()                                = 0;
@@ -1645,7 +1645,7 @@ struct IndexPacket
 #ifdef E57_BIGENDIAN
   void swab(bool toLittleEndian);
 #else
-  void     swab(bool /*toLittleEndian*/){};
+  void swab(bool /*toLittleEndian*/) {};
 #endif
 #ifdef E57_DEBUG
   void dump(int indent = 0, std::ostream& os = std::cout);
