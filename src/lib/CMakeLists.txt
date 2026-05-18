@@ -97,6 +97,26 @@ if(BUILD_TESTS)
   list(APPEND TEST_CASES
     time_conversion_test
     api_time_conversion_test
+    e57_golden_test
+    imagefile_test
+    terminal_nodes_test
+    scaled_integer_blob_test
+    structure_vector_test
+    compressed_vector_test
+    modern_api_test
+    error_handling_test
+    exception_utilities_test
+    image2d_test
+    image2d_io_test
+    impl_paths_test
+    las_reader_test
+    las_reader_comprehensive_test
+    datetime_utilities_test
+    time_conversion_comprehensive_test
+    simple_impl_comprehensive_test
+    node_advanced_test
+    source_dest_buffer_types_test
+    simple_api_advanced_test
   )
 
   foreach(TEST_CASE ${TEST_CASES})
@@ -123,6 +143,12 @@ if(BUILD_TESTS)
         ${XML_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT}
     )
+    
+    # LAS reader tests need the LAS library
+    if(${TEST_CASE} STREQUAL "las_reader_test" OR ${TEST_CASE} STREQUAL "las_reader_comprehensive_test")
+      target_link_libraries(${TEST_CASE} PRIVATE ${PROJECT_NAME}las)
+    endif()
+    
     target_clangformat_setup(${TEST_CASE})
   endforeach(TEST_CASE ${TEST_CASES})
 
