@@ -65,7 +65,7 @@ else() # MSVC
       -Wpedantic
       $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:RELWITHDEBINFO>>:-O2>
       $<$<CONFIG:DEBUG>:-O0 -g>
-      $<$<AND:$<CONFIG:DEBUG>,$<CXX_COMPILER_ID:GNU>>:-p -pg>
+      $<$<AND:$<CONFIG:DEBUG>,$<CXX_COMPILER_ID:GNU>,$<NOT:$<BOOL:${BUILD_COVERAGE}>>>:-p -pg>
   )
 
   list(APPEND compiler_definitions
@@ -73,6 +73,13 @@ else() # MSVC
     CRCPP_USE_CPP11
     $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>>:_FORTIFY_SOURCE=2>
   )
+
+  # Code coverage flags (GCC only, must be linked with --coverage)
+  if(BUILD_COVERAGE AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    list(APPEND compiler_options --coverage)
+    list(APPEND linker_flags --coverage)
+    message(STATUS "Code coverage instrumentation enabled (GCC)")
+  endif()
 
   list(APPEND linker_flags
     $<$<NOT:$<CXX_COMPILER_ID:AppleClang>>:-Wl,-z,defs>
@@ -84,9 +91,9 @@ else() # MSVC
     $<$<AND:$<NOT:$<CXX_COMPILER_ID:AppleClang>>,$<NOT:$<CXX_COMPILER_ID:Clang>>,$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>>:-pipe>
     $<$<AND:$<NOT:$<CXX_COMPILER_ID:AppleClang>>,$<NOT:$<CXX_COMPILER_ID:Clang>>,$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>>:-static-libstdc++>
     $<$<CONFIG:DEBUG>:-fno-omit-frame-pointer>
-    $<$<CONFIG:DEBUG>:-fsanitize=address>
-    $<$<CONFIG:DEBUG>:-fsanitize=leak>
-    $<$<CONFIG:DEBUG>:-fsanitize=undefined>
+    $<$<AND:$<CONFIG:DEBUG>,$<NOT:$<BOOL:${BUILD_COVERAGE}>>>:-fsanitize=address>
+    $<$<AND:$<CONFIG:DEBUG>,$<NOT:$<BOOL:${BUILD_COVERAGE}>>>:-fsanitize=leak>
+    $<$<AND:$<CONFIG:DEBUG>,$<NOT:$<BOOL:${BUILD_COVERAGE}>>>:-fsanitize=undefined>
     $<$<AND:$<NOT:$<CXX_COMPILER_ID:AppleClang>>,$<NOT:$<CXX_COMPILER_ID:Clang>>>:-fstack-clash-protection>
     $<$<AND:$<NOT:$<CXX_COMPILER_ID:AppleClang>>,$<NOT:$<CXX_COMPILER_ID:Clang>>>:-fbounds-check>
     -fstack-protector

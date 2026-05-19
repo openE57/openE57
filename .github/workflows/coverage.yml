@@ -1,0 +1,98 @@
+name: code-coverage
+
+on:
+  push:
+    branches: [master, main, tests]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write
+
+    env:
+      CONAN_USER_HOME: "${{ github.workspace }}/conan-cache"
+      CONAN_USER_HOME_SHORT: "${{ github.workspace }}/conan-cache/short"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install Conan and gcovr
+        run: |
+          pip install conan --upgrade
+          pip install gcovr
+
+      - name: Create Conan profile
+        run: conan profile detect --force
+
+      - name: Install dependencies via Conan
+        run: |
+          conan install . \
+            --output-folder build \
+            --build=missing \
+            -s compiler.cppstd=17 \
+            -s build_type=Debug \
+            -o with_tests=True
+
+      - name: Debug Conan output
+        run: ls -la build/
+
+      - name: Configure CMake with coverage
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DBUILD_TESTS=ON \
+            -DBUILD_COVERAGE=ON
+
+      - name: Build
+        run: cmake --build build --config Debug
+
+      - name: Run tests
+        working-directory: build
+        run: ctest --output-on-failure --timeout 120
+
+      - name: Generate Cobertura coverage report
+        working-directory: build
+        run: |
+          gcovr \
+            --root .. \
+            --txt-metric branch \
+            --cobertura-pretty \
+            --cobertura coverage.xml \
+            --exclude '.*/test/.*' \
+            --exclude '.*/_deps/.*' \
+            --exclude '.*/examples/.*' \
+            --exclude '.*/tools/.*' \
+            --exclude '.*openE57las.*' \
+            --print-summary
+
+      - name: Code Coverage Summary
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        with:
+          filename: build/coverage.xml
+          badge: true
+          fail_below_min: false
+          format: markdown
+          hide_branch_rate: false
+          hide_complexity: true
+          indicators: true
+          output: both
+          thresholds: "60 80"
+
+      - name: Add Coverage PR Comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        if: github.event_name == 'pull_request'
+        with:
+          recreate: true
+          path: code-coverage-results.md

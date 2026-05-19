@@ -61,6 +61,7 @@ option(BUILD_DOCS "Build documentation" FALSE)
 option(BUILD_EXAMPLES "Build openE57 examples" FALSE)
 option(BUILD_TOOLS "Build openE57 tools" FALSE)
 option(BUILD_TESTS "Build openE57 tests" FALSE)
+option(BUILD_COVERAGE "Build with code coverage instrumentation (GCC/Linux only)" FALSE)
 option(BUILD_SHARED_LIBS "Build openE57 shared libraries" FALSE)
 option(BUILD_WITH_MT "Build the project with /MT when using Visual Studio" FALSE)
 
