@@ -65,6 +65,7 @@
 #endif
 
 #include <openE57/impl/openE57SimpleImpl.h>
+#include <openE57/impl/time_conversion.h>
 #include <random>
 #include <sstream>
 
@@ -158,7 +159,29 @@ double e57::GetGPSTime(void)
   GetSystemTime(&currentSystemTime); // current UTC Time
   return e57::GetGPSDateTimeFromSystemTime(currentSystemTime);
 #else
-  return 0.0;
+  unsigned short utc_year    = 0;
+  unsigned char  utc_month   = 0;
+  unsigned char  utc_day     = 0;
+  unsigned char  utc_hour    = 0;
+  unsigned char  utc_minute  = 0;
+  float          utc_seconds = 0.0f;
+  unsigned char  utc_offset  = 0;
+  double         julian_date = 0.0;
+  unsigned short gps_week    = 0;
+  double         gps_tow     = 0.0;
+
+  if (!e57::utils::current_system_time(utc_year, utc_month, utc_day, utc_hour, utc_minute, utc_seconds, utc_offset, julian_date, gps_week, gps_tow))
+  {
+    return 0.0;
+  }
+
+  double gps_time = 0.0;
+  if (!e57::utils::gps_time_to_value(gps_week, gps_tow, gps_time))
+  {
+    return 0.0;
+  }
+
+  return gps_time;
 #endif
 }
 #if defined(WIN32)
@@ -242,13 +265,22 @@ double e57::GetGPSDateTimeFromUTC(int   utc_year,   //!< The year 1900-9999
 
   return e57::GetGPSDateTimeFromSystemTime(sysTim);
 #else
-  ignore(utc_year);
-  ignore(utc_month);
-  ignore(utc_day);
-  ignore(utc_hour);
-  ignore(utc_minute);
-  ignore(utc_seconds);
-  return 0;
+  unsigned short gps_week = 0;
+  double         gps_tow  = 0.0;
+
+  if (!e57::utils::gps_time_from_utc_time(static_cast<unsigned short>(utc_year), static_cast<unsigned char>(utc_month + 1), static_cast<unsigned char>(utc_day),
+                                          static_cast<unsigned char>(utc_hour), static_cast<unsigned char>(utc_minute), utc_seconds, gps_week, gps_tow))
+  {
+    return 0.0;
+  }
+
+  double gps_time = 0.0;
+  if (!e57::utils::gps_time_to_value(gps_week, gps_tow, gps_time))
+  {
+    return 0.0;
+  }
+
+  return gps_time;
 #endif
 }
 ////////////////////////////////////////////////////////////////////
@@ -276,13 +308,55 @@ void e57::GetUTCFromGPSDateTime(double gpsTime,    //!< GPS Date Time
   utc_seconds = sysTim.wSecond; //!< The seconds 0.0 - 59.999
   utc_seconds += sysTim.wMilliseconds / 1000;
 #else
-  ignore(gpsTime);
-  utc_Year    = 2022; //!< The year 1900-9999
-  utc_Month   = 1;    //!< The month 0-11
-  utc_Day     = 1;    //!< The day 1-31
-  utc_Hour    = 0;    //!< The hour 0-23
-  utc_Minute  = 0;    //!< The minute 0-59
-  utc_seconds = 0.0;  //!< The seconds 0.0 - 59.999
+  if (gpsTime <= 0.0)
+  {
+    utc_Year    = 2022;
+    utc_Month   = 1;
+    utc_Day     = 1;
+    utc_Hour    = 0;
+    utc_Minute  = 0;
+    utc_seconds = 0.0;
+    return;
+  }
+
+  unsigned short gps_week = 0;
+  double         gps_tow  = 0.0;
+
+  if (!e57::utils::gps_time_from_value(gpsTime, gps_week, gps_tow))
+  {
+    utc_Year    = 2022;
+    utc_Month   = 1;
+    utc_Day     = 1;
+    utc_Hour    = 0;
+    utc_Minute  = 0;
+    utc_seconds = 0.0;
+    return;
+  }
+
+  unsigned short year    = 0;
+  unsigned char  month   = 0;
+  unsigned char  day     = 0;
+  unsigned char  hour    = 0;
+  unsigned char  minute  = 0;
+  float          seconds = 0.0f;
+
+  if (!e57::utils::utc_time_from_gps_time(gps_week, gps_tow, year, month, day, hour, minute, seconds))
+  {
+    utc_Year    = 2022;
+    utc_Month   = 1;
+    utc_Day     = 1;
+    utc_Hour    = 0;
+    utc_Minute  = 0;
+    utc_seconds = 0.0;
+    return;
+  }
+
+  utc_Year    = year;
+  utc_Month   = month - 1;
+  utc_Day     = day;
+  utc_Hour    = hour;
+  utc_Minute  = minute;
+  utc_seconds = seconds;
 #endif
 }
 ////////////////////////////////////////////////////////////////////
