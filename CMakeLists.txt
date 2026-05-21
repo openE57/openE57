@@ -27,9 +27,12 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 #
-# Requirements: 
-# * Xerces library: http://xerces.apache.org/ 
-# * Boost library: http://www.boost.org
+# Requirements:
+# * One of the following XML libraries:
+#   * Xerces library: https://xerces.apache.org/
+#   * libxml2 library: https://gitlab.gnome.org/GNOME/libxml2
+#   * pugixml library: https://pugixml.org/
+# * Boost library (for examples): https://www.boost.org
 #
 # Notes: Since there is not standard cmake module to find the xerces library we
 # provide one with this distribution. It should be able to find the library from
@@ -43,8 +46,6 @@ cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
 cmake_policy(SET CMP0091 NEW)
 
 project(openE57 VERSION 1.7.4 LANGUAGES C CXX DESCRIPTION "openE57 is a library for handling E57 files")
-
-set(XERCES_C_DEFAULT_FETCH_TAG "v3.3.0" CACHE STRING "Tag that is used for fetching xerces-c library")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
@@ -64,6 +65,7 @@ option(BUILD_TESTS "Build openE57 tests" FALSE)
 option(BUILD_COVERAGE "Build with code coverage instrumentation (GCC/Linux only)" FALSE)
 option(BUILD_SHARED_LIBS "Build openE57 shared libraries" FALSE)
 option(BUILD_WITH_MT "Build the project with /MT when using Visual Studio" FALSE)
+set(XERCES_C_DEFAULT_FETCH_TAG "v3.3.0" CACHE STRING "Tag that is used for fetching xerces-c library")
 
 if(BUILD_SHARED_LIBS)
   message(FATAL_ERROR "Shared Libraries are not supported due to missing exported symbols")
@@ -82,7 +84,7 @@ endif()
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
-# 
+#
 # Install Artifacts
 #
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/CHANGELOG.md

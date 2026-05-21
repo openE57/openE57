@@ -12,6 +12,7 @@ jobs:
         os: [windows-latest]
         build_type: [Release, Debug]
         runtime_type: [static, dynamic]
+        xml_backend: [xerces, libxml2, pugixml]
 
     runs-on: ${{ matrix.os }}
     
@@ -40,9 +41,9 @@ jobs:
       - name: Windows Release build
         if: matrix.build_type == 'Release'
         run: |
-            conan create . -o openE57/*:with_tools=True --build=missing -s build_type=${{ matrix.build_type }} -s compiler.cppstd=17 -s compiler.runtime=${{ matrix.runtime_type }}
+            conan create . -o opene57/*:with_tools=True -o opene57/*:xml_backend=${{ matrix.xml_backend }} --build=missing -s build_type=${{ matrix.build_type }} -s compiler.cppstd=17 -s compiler.runtime=${{ matrix.runtime_type }}
       
       - name: Windows Debug build
         if: matrix.build_type == 'Debug'
         run: |
-            conan create . --build=missing -s build_type=${{ matrix.build_type }} -s compiler.cppstd=17 -s compiler.runtime=${{ matrix.runtime_type }}
+            conan create . -o opene57/*:xml_backend=${{ matrix.xml_backend }} --build=missing -s build_type=${{ matrix.build_type }} -s compiler.cppstd=17 -s compiler.runtime=${{ matrix.runtime_type }}

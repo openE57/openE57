@@ -117,6 +117,7 @@ if(BUILD_TESTS)
     node_advanced_test
     source_dest_buffer_types_test
     simple_api_advanced_test
+    concurrent_parsing_test
   )
 
   foreach(TEST_CASE ${TEST_CASES})

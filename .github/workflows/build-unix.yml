@@ -11,6 +11,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest]
         build_type: [Debug, Release]
+        xml_backend: [xerces, libxml2, pugixml]
 
     runs-on: ${{ matrix.os }}
     
@@ -39,10 +40,10 @@ jobs:
       - name: Linux build
         if: matrix.os == 'ubuntu-latest'
         run: |
-            conan create . -o openE57/*:with_tools=True -s build_type=${{ matrix.build_type }} -s compiler.cppstd=17 --build=missing
+            conan create . -o opene57/*:with_tools=True -o opene57/*:xml_backend=${{ matrix.xml_backend }} -s build_type=${{ matrix.build_type }} -s compiler.cppstd=17 --build=missing
             
       - name: Mac build
         if: matrix.os == 'macos-latest'
         run: |
-            conan create . -s build_type=${{ matrix.build_type }} -s compiler.cppstd=17 --build=missing
+            conan create . -o opene57/*:xml_backend=${{ matrix.xml_backend }} -s build_type=${{ matrix.build_type }} -s compiler.cppstd=17 --build=missing
             

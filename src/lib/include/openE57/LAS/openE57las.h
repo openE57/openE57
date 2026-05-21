@@ -36,6 +36,7 @@
 #  include <openE57/impl/openE57Impl.h>
 #  include <openE57/impl/time_conversion.h>
 #endif
+#include <cstring>
 
 namespace e57
 {

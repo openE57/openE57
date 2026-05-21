@@ -2,9 +2,9 @@ name: code-coverage
 
 on:
   push:
-    branches: [master, main, tests]
+    branches: [master]
   pull_request:
-    branches: [master, main]
+    branches: [master]
 
 jobs:
   coverage:
@@ -68,6 +68,7 @@ jobs:
           gcovr \
             --root .. \
             --txt-metric branch \
+            --gcov-ignore-parse-errors=negative_hits.warn_once_per_file \
             --cobertura-pretty \
             --cobertura coverage.xml \
             --exclude '.*/test/.*' \
@@ -91,7 +92,7 @@ jobs:
           thresholds: "60 80"
 
       - name: Add Coverage PR Comment
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@v3
         if: github.event_name == 'pull_request'
         with:
           recreate: true

@@ -34,6 +34,7 @@
 #include <algorithm>
 #include <iomanip>
 #include <iostream>
+#include <memory>
 #include <set>
 #include <sstream>
 #include <string>
@@ -89,17 +90,7 @@
 #include <stack>
 #include <stdexcept>
 
-// Turn off DLL input/export mechanism for Xerces library (usually done by defining in compile command line).
-// #define XERCES_STATIC_LIBRARY 1
-
-// The XML parser headers
-#include <xercesc/sax2/Attributes.hpp>
-#include <xercesc/sax2/DefaultHandler.hpp>
-#include <xercesc/sax2/SAX2XMLReader.hpp>
-#include <xercesc/sax2/XMLReaderFactory.hpp>
-
-// Use Xerces namespace (the current version defined in Xerces header)
-XERCES_CPP_NAMESPACE_USE
+#include <openE57/xml/xml_backend.hpp>
 
 namespace e57
 {
@@ -935,7 +926,7 @@ protected: //=================
   int     writerCount_;
   int     readerCount_;
 
-  CheckedFile* file_;
+  std::unique_ptr<CheckedFile> file_;
 
   /// Read file attributes
   uint64_t xmlLogicalOffset_;
