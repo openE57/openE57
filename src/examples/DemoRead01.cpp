@@ -2,7 +2,7 @@
  * DemoRead01.cpp - small read demo using the E57 format Foundation API.
  *
  * Copyright (c) 2009 - 2010 Kevin Ackley (kackley@gwi.net)
- * Copyright (c) 2020 - 2022 Michele Adduci (adduci@tutanota.com)
+ * Copyright (c) 2020 - 2026 Michele Adduci (michele@adduci.org)
  *
  * Permission is hereby granted, free of charge, to any person or organization
  * obtaining a copy of the software and accompanying documentation covered by

@@ -13,7 +13,7 @@ required_conan_version = ">=2.0.0"
 
 class Opene57Conan(ConanFile):
     name = "opene57"
-    version = "1.7.4"
+    version = "1.8.0"
     description = "A C++ library for reading and writing E57 files, " \
                   "fork of the original libE57 (http://libe57.org)"
     topics = ("e57", "libe57", "3d", "astm")
@@ -87,20 +87,20 @@ class Opene57Conan(ConanFile):
         if self.options.xml_backend == "xerces":
             self.requires("xerces-c/3.3.0")
             if self.settings.os != "Windows":
-                self.requires("icu/78.1")
+                self.requires("icu/78.2")
         elif self.options.xml_backend == "libxml2":
-            self.requires("libxml2/2.13.4")
+            self.requires("libxml2/2.15.3")
         else:
-            self.requires("pugixml/1.14")
+            self.requires("pugixml/1.15")
 
         if self.options.with_tests:
-            self.requires("doctest/2.4.12")
+            self.requires("doctest/2.5.2")
 
         if self.options.with_tools:
-            self.requires("boost/1.90.0")
+            self.requires("boost/1.91.0")
 
         if self.options.with_docs:
-            self.requires("doxygen/1.15.0")
+            self.requires("doxygen/1.17.0")
 
     def generate(self):
         tc = CMakeToolchain(self)

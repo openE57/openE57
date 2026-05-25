@@ -2,7 +2,7 @@
  * openE57Impl.h - private implementation header of E57 format reference implementation.
  *
  * Copyright (c) 2009 - 2010 Kevin Ackley (kackley@gwi.net)
- * Copyright (c) 2020 - 2022 Michele Adduci (adduci@tutanota.com)
+ * Copyright (c) 2020 - 2026 Michele Adduci (michele@adduci.org)
  *
  * Permission is hereby granted, free of charge, to any person or organization
  * obtaining a copy of the software and accompanying documentation covered by
