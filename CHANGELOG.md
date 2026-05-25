@@ -1,5 +1,20 @@
 # openE57
 
+## [1.8.0] - 2026-05-25
+
+## Added
+
+- Added support for different XML Backends (`xerces`, `libxml2`, `pugixml`) [PR #47](https://github.com/openE57/openE57/pull/47)
+- Unit Tests [PR #45](https://github.com/openE57/openE57/pull/45) and [PR #46](https://github.com/openE57/openE57/pull/46)
+
+## Changed
+- Updated Boost Libraries to 1.91.0
+- Updated ICU to 78.2
+- Updated Doctest to 2.5.2
+- Updated Doxygen to 1.17.0
+- Update Pugixml to 1.15
+- Updated libxml2 to 2.15.3
+
 ## [1.7.4] - 2025-12-26
 
 ## Changed

@@ -3,7 +3,7 @@
 # management easier and reproducible on all the supported platforms
 #
 # Original work Copyright 2010-2012     Roland Schwarz, Riegl LMS GmbH
-# Modified work Copyright 2020-2025     Michele Adduci <adduci@tutanota.com>
+# Modified work Copyright 2020-2026     Michele Adduci <michele@adduci.org>
 #
 # Permission is hereby granted, free of charge, to any person or organization
 # obtaining a copy of the software and accompanying documentation covered by
@@ -45,7 +45,7 @@ cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
 # Enables the CMAKE_MSVC_RUNTIME_LIBRARY property on targets
 cmake_policy(SET CMP0091 NEW)
 
-project(openE57 VERSION 1.7.4 LANGUAGES C CXX DESCRIPTION "openE57 is a library for handling E57 files")
+project(openE57 VERSION 1.8.0 LANGUAGES C CXX DESCRIPTION "openE57 is a library for handling E57 files")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
@@ -90,7 +90,7 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src)
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/CHANGELOG.md
         DESTINATION .)
 
-set(CPACK_PACKAGE_VENDOR "Michele Adduci <adduci@tutanota.com>")
+set(CPACK_PACKAGE_VENDOR "Michele Adduci <michele@adduci.org>")
 set(CPACK_PACKAGE_DESCRIPTION "${PROJECT_DESCRIPTION}")
 set(CPACK_PACKAGE_CHECKSUM SHA256)
 set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")

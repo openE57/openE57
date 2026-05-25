@@ -4,6 +4,7 @@ Contributors
 This is the list of contributors to this project source code, in alphabetical order.
 
 - Kevin Ackley (kackley@e57consulting.com) - libE57
-- Michele Adduci (adduci@tutanota.com) - openE57
+- Michele Adduci (michele@adduci.org) - openE57
 - Roland Schwarz (rschwarz@riegl.co.at) - libE57
 - Stan Coleby (stan.coleby@gmail.com) - libE57
+- Tom Royls [(@TomRoyls)](https://github.com/TomRoyls)
