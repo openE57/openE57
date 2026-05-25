@@ -22,7 +22,7 @@ You need the following tools to build this library:
 
 * A C++17 compiler (MSVC 2017+, gcc 8+, clang 8+)
 * A recent version of CMake (3.15+)
-* A recent version of conan (2.0+)
+* A recent version of conan (2.0+) (optional)
 
 ## Build Instructions
 
@@ -58,7 +58,8 @@ Available CMake Options are:
 * BUILD_TOOLS - builds the binary tools to validate and dump E57 files
 * BUILD_TESTS - builds tests
 * BUILD_SHARED_LIBS - actually unsupported (missing exported symbols)
-* XERCES_C_DEFAULT_FETCH_TAG - tag that is used for fetching and building xerces-c library from sources (if it's not found on your system)
+* E57_XML_BACKEND - selects the XML parser backend (`auto`, `xerces`, `libxml2`, `pugixml`; default: `auto`)
+* XERCES_C_DEFAULT_FETCH_TAG - tag used for fetching and building xerces-c from source (default: `v3.3.0`)
 * BUILD_WITH_MT - instructs CMake to set the correct [`CMAKE_MSVC_RUNTIME_LIBRARY`](https://cmake.org/cmake/help/latest/variable/CMAKE_MSVC_RUNTIME_LIBRARY.html?highlight=cmake_msvc_runtime_library) flag for Visual Studio
 
 Building with Position indipendent code on Unix can be activated with the option [`CMAKE_POSITION_INDEPENDENT_CODE`](https://cmake.org/cmake/help/latest/variable/CMAKE_POSITION_INDEPENDENT_CODE.html?highlight=cmake_position_independent_code).
@@ -92,6 +93,56 @@ The Project offers the possibility to run the auto-formatter (clang-format) on t
 
 ```sh
 cmake --build . --target clangformat
+```
+
+#### XML Library Resolution
+
+openE57 uses an XML abstraction layer that supports multiple XML parser backends. The backend is selected at compile time via the `E57_XML_BACKEND` CMake option.
+
+**Supported backends:**
+
+| Backend | Description |
+|---------|-------------|
+| `xerces` | Xerces-C++ — full-featured, schema validation |
+| `libxml2` | libxml2 — widely available on Linux/macOS (system-provided only) |
+| `pugixml` | pugixml — lightweight, minimal dependencies |
+
+**Auto-detection (default):**
+
+When `E57_XML_BACKEND` is set to `auto` (the default), the build system searches for available XML libraries in the following priority order:
+
+1. **Xerces-C** (`find_package(XercesC)`)
+2. **libxml2** (`find_package(LibXml2)`)
+3. **pugixml** (`find_package(pugixml)`)
+
+If none of the above are found on the system, the fallback is:
+
+- If `XERCES_C_DEFAULT_FETCH_TAG` is set → fetch and build Xerces-C from source
+- Otherwise → fetch and build pugixml from source
+
+**Explicit selection:**
+
+To force a specific backend, pass `-DE57_XML_BACKEND=<backend>` to CMake:
+
+```sh
+# Use libxml2 (must be installed on the system)
+cmake .. -DE57_XML_BACKEND=libxml2
+
+# Use pugixml (will be fetched if not found)
+cmake .. -DE57_XML_BACKEND=pugixml
+
+# Use xerces (will be fetched if not found)
+cmake .. -DE57_XML_BACKEND=xerces
+```
+
+**Conan package:**
+
+When building via Conan, select the backend with the `xml_backend` option:
+
+```sh
+conan create . -o opene57/*:xml_backend=libxml2 --build=missing
+conan create . -o opene57/*:xml_backend=xerces --build=missing
+conan create . -o opene57/*:xml_backend=pugixml --build=missing
 ```
 
 #### Building the documentation

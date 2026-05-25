@@ -27,7 +27,8 @@ class Opene57Conan(ConanFile):
                 "with_examples": [True, False],
                 "with_docs":  [True, False],
                 "shared": [True, False],
-                "fPIC": [True, False]
+                "fPIC": [True, False],
+                "xml_backend": ["xerces", "libxml2", "pugixml"]
                }
     default_options = {
                 "with_tools": False,
@@ -35,7 +36,8 @@ class Opene57Conan(ConanFile):
                 "with_examples": False,
                 "with_docs":  False,
                 "shared": False,
-                "fPIC": True
+                "fPIC": True,
+                "xml_backend": "xerces"
                }
 
     @property
@@ -62,6 +64,7 @@ class Opene57Conan(ConanFile):
 
         if self.options.with_tools:
             self.options['boost'].multithreading = True
+            self.options['boost'].without_stacktrace = True
 
     def config_options(self):
         if self.settings.os == "Windows":
@@ -81,6 +84,15 @@ class Opene57Conan(ConanFile):
             raise ConanInvalidConfiguration("C++17 support required, which your compiler does not support.")
         
     def requirements(self):
+        if self.options.xml_backend == "xerces":
+            self.requires("xerces-c/3.3.0")
+            if self.settings.os != "Windows":
+                self.requires("icu/78.1")
+        elif self.options.xml_backend == "libxml2":
+            self.requires("libxml2/2.13.4")
+        else:
+            self.requires("pugixml/1.14")
+
         if self.options.with_tests:
             self.requires("doctest/2.4.12")
 
@@ -90,11 +102,6 @@ class Opene57Conan(ConanFile):
         if self.options.with_docs:
             self.requires("doxygen/1.15.0")
 
-        if self.settings.os != "Windows":
-            self.requires("icu/78.1")
-
-        self.requires("xerces-c/3.3.0")
-
     def generate(self):
         tc = CMakeToolchain(self)
         tc.variables["PROJECT_VERSION"] = self.version
@@ -102,6 +109,7 @@ class Opene57Conan(ConanFile):
         tc.variables["BUILD_TOOLS"] = self.options.with_tools
         tc.variables["BUILD_TESTS"] = self.options.with_tests
         tc.variables["BUILD_DOCS"] = self.options.with_docs
+        tc.variables["E57_XML_BACKEND"] = self.options.xml_backend
 
         if is_msvc(self):
             tc.variables["BUILD_WITH_MT"] = is_msvc_static_runtime(self)
@@ -133,6 +141,10 @@ class Opene57Conan(ConanFile):
         self.cpp_info.libs = [f"openE57{lib_suffix}", f"openE57las{lib_suffix}"]
 
         self.cpp_info.defines.append(f"E57_REFIMPL_REVISION_ID={self.name}-{self.version}")
-        self.cpp_info.defines.append("XERCES_STATIC_LIBRARY")
+        if self.options.xml_backend == "xerces":
+            self.cpp_info.defines.append("XERCES_STATIC_LIBRARY")
         self.cpp_info.defines.append("CRCPP_INCLUDE_ESOTERIC_CRC_DEFINITIONS")
         self.cpp_info.defines.append("CRCPP_USE_CPP11")
+
+        backend_name = str(self.options.xml_backend).upper().replace("-", "")
+        self.cpp_info.defines.append(f"E57_XML_BACKEND_{backend_name}")

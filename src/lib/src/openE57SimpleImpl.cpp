@@ -145,7 +145,7 @@ double GetGPSDateTimeFromSystemTime(SYSTEMTIME sysTim //!< Windows System Time
 );
 void   GetSystemTimeFromGPSDateTime(double      gpsTime, //!< GPS Date Time
                                     SYSTEMTIME& sysTim   //!< Windows System Time
-  );
+);
 #endif
 } // namespace e57
 ////////////////////////////////////////////////////////////////////
