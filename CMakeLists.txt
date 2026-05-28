@@ -32,7 +32,6 @@
 #   * Xerces library: https://xerces.apache.org/
 #   * libxml2 library: https://gitlab.gnome.org/GNOME/libxml2
 #   * pugixml library: https://pugixml.org/
-# * Boost library (for examples): https://www.boost.org
 #
 # Notes: Since there is not standard cmake module to find the xerces library we
 # provide one with this distribution. It should be able to find the library from

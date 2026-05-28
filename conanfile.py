@@ -62,10 +62,6 @@ class Opene57Conan(ConanFile):
         if self.options.shared:
             del self.options.fPIC
 
-        if self.options.with_tools:
-            self.options['boost'].multithreading = True
-            self.options['boost'].without_stacktrace = True
-
     def config_options(self):
         if self.settings.os == "Windows":
             del self.options.fPIC
@@ -96,8 +92,6 @@ class Opene57Conan(ConanFile):
         if self.options.with_tests:
             self.requires("doctest/2.5.2")
 
-        if self.options.with_tools:
-            self.requires("boost/1.91.0")
 
         if self.options.with_docs:
             self.requires("doxygen/1.17.0")

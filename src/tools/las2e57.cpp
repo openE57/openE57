@@ -45,9 +45,8 @@
 #  endif
 #endif
 
-#include <boost/uuid/uuid.hpp>
-#include <boost/uuid/uuid_generators.hpp>
-#include <boost/uuid/uuid_io.hpp>
+#include <array>
+#include <random>
 
 using namespace std;
 using namespace e57;
@@ -479,7 +478,7 @@ void DenseGroupingScheme::addMember(int64_t id, double coords[3], int64_t record
 {
   if (id < minimumId || maximumId < id)
     throw EXCEPTION("group identifier out of bounds");
-  if (!isFixedSize && id - minimumId + 1 > static_cast<boost::int64_t>(groups.size()))
+  if (!isFixedSize && id - minimumId + 1 > static_cast<int64_t>(groups.size()))
   { // %%% Truncation possible.
     const size_t oldSize = groups.size();
     groups.resize(static_cast<size_t>(id - minimumId + 1)); // %%% Possible truncation.
@@ -1643,29 +1642,45 @@ void copyPerFileData(CommandLineOptions& /*options*/, LASReader& /*lasf*/, Image
 
 ustring generateUuidString()
 {
-  // use boost uuid for portability
-#if 0
-    UUID uuid;
-    memset(&uuid, 0, sizeof(UUID));
+  std::random_device              rd;
+  std::mt19937                    gen(rd());
+  std::uniform_int_distribution<uint32_t> dist(0, 0xFFFFFFFF);
 
-    // Create uuid or load from a string by UuidFromString() function
-    ::UuidCreate(&uuid); //!!! has return?
+  std::array<uint8_t, 16> uuid;
+  for (int i = 0; i < 16; i += 4)
+  {
+    uint32_t val = dist(gen);
+    uuid[i]     = static_cast<uint8_t>((val >> 24) & 0xFF);
+    uuid[i + 1] = static_cast<uint8_t>((val >> 16) & 0xFF);
+    uuid[i + 2] = static_cast<uint8_t>((val >> 8) & 0xFF);
+    uuid[i + 3] = static_cast<uint8_t>(val & 0xFF);
+  }
 
-#  ifdef E57_VERBOSE
-    cout << "generateUuidString: Data1=" << hexString(static_cast<uint32_t>(uuid.Data1))
-         << " Data2=" << hexString(static_cast<uint16_t>(uuid.Data2))
-         << " Data3=" << hexString(static_cast<uint16_t>(uuid.Data3))
-         << " Data4=";
-    for (int i=0;i<8;i++)
-        cout << hexString(static_cast<uint8_t>(uuid.Data4[i])) << ' ';
-    cout << endl;
-#  endif
-    return(guidUnparse(uuid.Data1, uuid.Data2, uuid.Data3, uuid.Data4));
-#endif
-  boost::uuids::uuid id = boost::uuids::random_generator()();
-  stringstream       s;
-  s << id;
-  return s.str();
+  // Set version to 4 (random UUID)
+  uuid[6] = (uuid[6] & 0x0F) | 0x40;
+  // Set variant to RFC 4122
+  uuid[8] = (uuid[8] & 0x3F) | 0x80;
+
+  ostringstream ss;
+  ss << std::hex << std::setfill('0');
+  ss << std::setw(2) << static_cast<unsigned>(uuid[0]);
+  ss << std::setw(2) << static_cast<unsigned>(uuid[1]);
+  ss << std::setw(2) << static_cast<unsigned>(uuid[2]);
+  ss << std::setw(2) << static_cast<unsigned>(uuid[3]);
+  ss << '-';
+  ss << std::setw(2) << static_cast<unsigned>(uuid[4]);
+  ss << std::setw(2) << static_cast<unsigned>(uuid[5]);
+  ss << '-';
+  ss << std::setw(2) << static_cast<unsigned>(uuid[6]);
+  ss << std::setw(2) << static_cast<unsigned>(uuid[7]);
+  ss << '-';
+  ss << std::setw(2) << static_cast<unsigned>(uuid[8]);
+  ss << std::setw(2) << static_cast<unsigned>(uuid[9]);
+  ss << '-';
+  for (int i = 10; i < 16; ++i)
+    ss << std::setw(2) << static_cast<unsigned>(uuid[i]);
+
+  return ss.str();
 }
 
 ustring guidUnparse(uint32_t data1, uint16_t data2, uint16_t data3, uint8_t data4[8])

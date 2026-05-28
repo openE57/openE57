@@ -36,8 +36,7 @@
 #include <openE57/impl/openE57Impl.h> //??? for exceptions, should be in separate file
 #include <openE57/openE57.h>
 
-#include <boost/math/special_functions/fpclassify.hpp>
-using boost::math::fpclassify;
+#include <cmath>
 
 using namespace e57;
 using namespace std;
@@ -444,7 +443,7 @@ void calcDoubleStats(OccurrenceStats* occur, const char* measure, double value, 
     occur->zero.count++;
   }
 
-  switch (boost::math::fpclassify(value))
+  switch (std::fpclassify(value))
   {
   case FP_NAN: // Quiet NaN
     if (occur->quietNan.count == 0)
