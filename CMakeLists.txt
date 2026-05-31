@@ -32,7 +32,6 @@
 #   * Xerces library: https://xerces.apache.org/
 #   * libxml2 library: https://gitlab.gnome.org/GNOME/libxml2
 #   * pugixml library: https://pugixml.org/
-# * Boost library (for examples): https://www.boost.org
 #
 # Notes: Since there is not standard cmake module to find the xerces library we
 # provide one with this distribution. It should be able to find the library from
@@ -45,7 +44,7 @@ cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
 # Enables the CMAKE_MSVC_RUNTIME_LIBRARY property on targets
 cmake_policy(SET CMP0091 NEW)
 
-project(openE57 VERSION 1.8.0 LANGUAGES C CXX DESCRIPTION "openE57 is a library for handling E57 files")
+project(openE57 VERSION 1.9.0 LANGUAGES C CXX DESCRIPTION "openE57 is a library for handling E57 files")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)

@@ -1,5 +1,9 @@
 # openE57
 
+## [1.9.0] - 2026-05-31
+
+- Removed Boost library dependency from tools (making library Boost free)
+
 ## [1.8.0] - 2026-05-25
 
 ## Added
@@ -182,4 +186,3 @@
 ### Changed
 - Update to use boost version 1.46.1
 - Streamlined cmake files for better static linking
-    
