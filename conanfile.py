@@ -8,12 +8,12 @@ from conan.tools.files import copy, export_conandata_patches, get, replace_in_fi
 from conan.tools.microsoft import is_msvc, is_msvc_static_runtime
 from conan.tools.scm import Version
 
-required_conan_version = ">=2.0.0"
+required_conan_version = ">=2.2.8"
 
 
 class Opene57Conan(ConanFile):
     name = "opene57"
-    version = "1.8.0"
+    version = "1.9.1"
     description = "A C++ library for reading and writing E57 files, " \
                   "fork of the original libE57 (http://libe57.org)"
     topics = ("e57", "libe57", "3d", "astm")
@@ -85,16 +85,16 @@ class Opene57Conan(ConanFile):
             if self.settings.os != "Windows":
                 self.requires("icu/78.2")
         elif self.options.xml_backend == "libxml2":
-            self.requires("libxml2/2.15.3")
+            self.requires("libxml2/2.15.4")
         else:
-            self.requires("pugixml/1.15")
+            self.requires("pugixml/1.16")
 
         if self.options.with_tests:
-            self.requires("doctest/2.5.2")
+            self.requires("doctest/2.5.3")
 
 
         if self.options.with_docs:
-            self.requires("doxygen/1.17.0")
+            self.requires("doxygen/1.18.0")
 
     def generate(self):
         tc = CMakeToolchain(self)

@@ -1,5 +1,9 @@
 # openE57
 
+## [1.9.1] - 2026-10-21
+
+- Updating dependencies
+
 ## [1.9.0] - 2026-05-31
 
 - Removed Boost library dependency from tools (making library Boost free)
